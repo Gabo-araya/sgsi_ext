@@ -18,6 +18,7 @@ from importlib.util import find_spec
 from pathlib import Path
 
 # django
+from django.contrib.messages import constants as messages
 from django.urls import reverse_lazy
 
 
@@ -514,3 +515,9 @@ CELERY_BEAT_SCHEDULE = {
 # It needs to be higher than the frequency of the schedulers to avoid unnecessary
 # is_due() calls
 CELERY_BEAT_MAX_LOOP_INTERVAL = 300  # 5 minutes
+
+# Message level tags
+MESSAGE_TAGS = {
+    messages.DEBUG: "dark",
+    messages.ERROR: "danger",
+}
