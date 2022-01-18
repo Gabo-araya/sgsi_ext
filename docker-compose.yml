@@ -4,11 +4,18 @@ services:
     image: "postgres:14-alpine"
     env_file:
       - docker/development.env
-    # TODO remove ports after the django service is defined
-    ports:
-      - "5432:5432"
+    network_mode: "host"
     volumes:
       - postgres-pgdata:/var/lib/postgresql/data/pgdata
+  django:
+    build: .
+    env_file:
+      - docker/development.env
+    network_mode: "host"
+    depends_on:
+      - postgres
+    volumes:
+      - .:/usr/src/app
 
 volumes:
   postgres-pgdata:

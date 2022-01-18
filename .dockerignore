@@ -1,0 +1,11 @@
+.git
+.DS_Store
+docker
+node_modules
+**/*.dump
+**/*.log
+**/*.pyc
+**/*.tags
+**/*.tgz
+**/__pycache__
+**/.vscode
