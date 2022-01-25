@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Format helpers
+# Format helpers for color_print
 green="\033[0;32m"
 cyan="\033[0;36m"
 yellow="\033[0;33m"
@@ -8,7 +8,16 @@ red="\033[0;31m"
 default="\033[0m"
 
 function color_print() {
-  echo -e "\n$1$2${default}\n"
+  local color=$1
+  local message=$2
+
+  echo -e "${color}${message}${default}\n"
+}
+
+function title_print() {
+  local message=$1
+
+  echo -e "\n\033[44;1;37m ▸ ${message} ${default}\n"
 }
 
 function prompt() {
@@ -22,5 +31,6 @@ function prompt() {
 
 function random_chars() {
   local count=$1
+
   chars=$(tr -dc A-Za-z0-9 </dev/urandom | head -c $count)
 }
