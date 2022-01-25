@@ -18,6 +18,7 @@ function title_print() {
   local message=$1
 
   echo -e "\n\033[44;1;37m ▸ ${message} ${default}\n"
+  sleep 1
 }
 
 function prompt() {
