@@ -1,11 +1,22 @@
-.git
-.DS_Store
+# Docker related files
 docker
+Dockerfile
+.dockerignore
+
+# Host setup scripts
+quickstart.sh
+scripts
+
+# Installed dependencies if project is run on host
 node_modules
+
+# Other unnecessary files and folders
+.DS_Store
+.git
+**/__pycache__
+**/.vscode
 **/*.dump
 **/*.log
 **/*.pyc
 **/*.tags
 **/*.tgz
-**/__pycache__
-**/.vscode
