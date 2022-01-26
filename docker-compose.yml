@@ -13,7 +13,9 @@ services:
     volumes:
       - postgres-pgdata:/var/lib/postgresql/data/pgdata
   django:
-    build: .
+    build:
+      context: .
+      target: production
     env_file:
       - docker/development.env
     network_mode: "host"
