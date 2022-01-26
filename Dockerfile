@@ -6,14 +6,13 @@ FROM python:3.9.9-slim-bullseye AS python-node-base
 WORKDIR /usr/src/app
 
 # Install prerequisites
-RUN apt-get update && apt-get install -y gcc curl libpq-dev gettext
+RUN apt-get update && apt-get install -y gcc curl libpq-dev gettext \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install Node
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get install -y nodejs
-
-# Clean apt lists
-RUN rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+  && apt-get install -y nodejs \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
 RUN pip install poetry
