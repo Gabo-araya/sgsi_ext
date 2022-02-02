@@ -29,13 +29,11 @@ RUN poetry install --no-dev
 # COPY django/package.json django/package-lock.json ./
 # RUN npm install
 
-# Copy rest of the project
-COPY . .
-
 #####################################
 # Development image
 #####################################
 FROM project-dependencies AS development
+# No need to copy the project, it's in a volume and prevents rebuilds.
 # Install Poetry dev-dependencies:
 RUN poetry install
 RUN apt-get update && apt-get install -y git htop zsh \
@@ -48,4 +46,6 @@ CMD ["/bin/sh", "-c", "\"while sleep 1000; do :; done\""]
 # Production image
 #####################################
 FROM project-dependencies AS production
+# Copy rest of the project
+COPY . .
 CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
