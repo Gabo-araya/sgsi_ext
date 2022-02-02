@@ -26,8 +26,8 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev
 
 # Install javascript dependencies
-# COPY django/package.json django/package-lock.json ./
-# RUN npm install
+# COPY package.json package-lock.json ./
+# RUN npm ci
 
 #####################################
 # Development image
