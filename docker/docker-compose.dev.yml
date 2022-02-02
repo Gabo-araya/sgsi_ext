@@ -28,8 +28,16 @@ services:
       # See https://aka.ms/vscode-remote/samples/docker-from-docker-compose for details.
       # - /var/run/docker.sock:/var/run/docker.sock
 
+      # Make SSH work inside the container:
+      - $SSH_AUTH_SOCK:/run/ssh-agent
+      # TODO: document and test on OSX, they will have to override the variable when running compose.
+      # See comment at https://stackoverflow.com/questions/18136389/using-ssh-keys-inside-docker-container/36648428#36648428
+
       # TODO: ipython history
       # TODO: zsh history?
+
+    environment:
+      SSH_AUTH_SOCK: /run/ssh-agent
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
     # cap_add:
