@@ -18,7 +18,7 @@ fi
 
 # Check if we are allowed to manage docker as a non-root
 if ! id -ng "$USER" | grep -qw docker; then
-  sudo groupadd docker || true
+  sudo groupadd docker &>/dev/null || true
   sudo usermod -aG docker "$USER"
   echo "Please reboot your computer to use Docker without sudo." > quickstart-messages.log
 fi
