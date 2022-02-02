@@ -38,6 +38,7 @@ services:
 
     environment:
       SSH_AUTH_SOCK: /run/ssh-agent
+      ANSIBLE_CONFIG: /usr/src/app/ansible/ansible.cfg
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
     # cap_add:
