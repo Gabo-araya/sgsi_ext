@@ -16,7 +16,6 @@ else
   # Allow us to manage docker as a non-root
   sudo groupadd docker || true
   sudo usermod -aG docker $USER
-  newgrp docker
 
   color_print $green "Docker installation completed."
 fi
