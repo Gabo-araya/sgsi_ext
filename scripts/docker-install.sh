@@ -20,7 +20,7 @@ fi
 if ! id -ng "$USER" | grep -qw docker; then
   sudo groupadd docker &>/dev/null || true
   sudo usermod -aG docker "$USER"
-  echo "Please reboot your computer to use Docker without sudo." > quickstart-messages.log
+  echo "Please reboot your computer to use Docker without sudo." >> quickstart-messages.log
 fi
 
 title_print "Installing Docker-compose..."
