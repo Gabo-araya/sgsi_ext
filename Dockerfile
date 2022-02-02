@@ -23,7 +23,7 @@ RUN pip install poetry
 FROM python-node-base AS project-dependencies
 # Install python dependencies
 COPY pyproject.toml poetry.lock ./
-RUN poetry install
+RUN poetry install --no-dev
 
 # Install javascript dependencies
 # COPY django/package.json django/package-lock.json ./
@@ -36,6 +36,8 @@ COPY . .
 # Development image
 #####################################
 FROM project-dependencies AS development
+# Install Poetry dev-dependencies:
+RUN poetry install
 RUN apt-get update && apt-get install -y git htop zsh \
   && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
   && rm -rf /var/lib/apt/lists/*
