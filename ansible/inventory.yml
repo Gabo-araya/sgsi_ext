@@ -1,10 +1,15 @@
 all:
   hosts:
+    # dev:
+    #   ansible_host: 12.34.56.78
+    #   server_domain: django3-dev.do.magnet.cl
+    #   branch: dev
+
+    # TODO: remove
     playg:
       ansible_host: 198.199.90.71
       server_domain: tomas-playg.do.magnet.cl
       branch: main
-      ansible_user: root ########## TODO: remove
 
   vars:
     ansible_user: magnet

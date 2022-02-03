@@ -45,7 +45,7 @@ FROM project-dependencies AS development
 # No need to copy the project, it's in a volume and prevents rebuilds.
 # Install Poetry dev-dependencies:
 RUN poetry install
-RUN apt-get update && apt-get install -y git htop zsh \
+RUN apt-get update && apt-get install -y git htop jq zsh \
   && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
   && rm -rf /var/lib/apt/lists/*
 # Prevent development container shutdown

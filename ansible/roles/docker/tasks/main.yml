@@ -1,0 +1,13 @@
+- name: copy created .env from controller
+  copy:
+    src: ../.deploy.env
+    dest: "{{ project_name }}/.env"
+    mode: "600"
+    force: no
+  when: lookup("env", "create_dotenv")|default("0") == "1"
+  register: dotenv_copy
+
+  failed_when: not dotenv_copy.changed
+  # If the file didn't change, it already existed,
+  # so stop because we're not using the file we wanted to.
+  # The existing file won't be overriden because of "force: no".
