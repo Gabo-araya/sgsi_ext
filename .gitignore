@@ -108,6 +108,7 @@ propagate.sh
 webpack-stats.json
 
 .vscode/
+docker-compose.override.yml
 *.dump
 .tags
 test-results/
