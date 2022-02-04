@@ -2,15 +2,15 @@
 set -e
 source scripts/utils.sh
 
-env_file='docker/development.env'
+env_file='.env'
 
 # Create a new env file if it does not exist
 title_print "Checking .env files..."
 if [ -f "$env_file" ]; then
-  echo "Using existing development.env"
+  echo "Using existing .env"
 else
-  echo "Creating development.env file..."
-  cp "$env_file.example" "$env_file"
+  echo "Creating .env file..."
+  cp "docker/.env.example" "$env_file"
 
   # Prompt for inputs
   prompt "Postgres host?" "localhost"
