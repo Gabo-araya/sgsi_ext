@@ -46,5 +46,11 @@ services:
     # security_opt:
     #   - seccomp:unconfined
 
+    # Easily connect to internal services without having to inspect the container for its IP or forward ports:
+    network_mode: host
+
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/sh -c "while sleep 1000; do :; done"
+
+  postgres:
+    network_mode: host
