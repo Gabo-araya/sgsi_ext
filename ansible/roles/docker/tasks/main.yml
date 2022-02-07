@@ -11,3 +11,26 @@
   # If the file didn't change, it already existed,
   # so stop because we're not using the file we wanted to.
   # The existing file won't be overriden because of "force: no".
+
+- name: install pip (for ansible requirements)
+  apt:
+    name: python3-pip
+    state: present
+  become: yes
+
+- name: install ansible requirements
+  pip:
+    name:
+      - docker==5.0.3
+      - docker-compose==1.29.2  # (yes, they use it as a library, instead of /usr/local/bin/docker-compose)
+    state: present
+
+# TODO: avoid running out of space, with https://docs.ansible.com/ansible/latest/collections/community/docker/docker_prune_module.html
+
+- name: build and start containers
+  # "dcupbd"
+  community.docker.docker_compose:
+    state: present
+    project_src: "{{ project_name }}"
+    build: yes
+    remove_orphans: yes
