@@ -12,6 +12,12 @@
   # so stop because we're not using the file we wanted to.
   # The existing file won't be overriden because of "force: no".
 
+- name: set ALLOWED_HOST
+  lineinfile:
+    path: "{{ project_name }}/.env"
+    regexp: ^ALLOWED_HOST=
+    line: ALLOWED_HOST={{ server_domain }}
+
 - name: install pip (for ansible requirements)
   apt:
     name: python3-pip
