@@ -30,6 +30,15 @@ RUN poetry install --no-dev
 # RUN npm ci
 
 #####################################
+# Production image
+#####################################
+# Place Production image above development, so docker-compose on servers stop building after this one.
+FROM project-dependencies AS production
+# Copy rest of the project
+COPY . .
+CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+#####################################
 # Development image
 #####################################
 FROM project-dependencies AS development
@@ -41,11 +50,3 @@ RUN apt-get update && apt-get install -y git htop zsh \
   && rm -rf /var/lib/apt/lists/*
 # Prevent development container shutdown
 CMD ["/bin/sh", "-c", "\"while sleep 1000; do :; done\""]
-
-#####################################
-# Production image
-#####################################
-FROM project-dependencies AS production
-# Copy rest of the project
-COPY . .
-CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
