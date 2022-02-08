@@ -36,7 +36,7 @@ RUN poetry install --no-dev
 FROM project-dependencies AS production
 # Copy rest of the project
 COPY . .
-CMD ["poetry", "run", "gunicorn", "project.wsgi:application", "--config", "docker/gunicorn_conf.py"]
+CMD ["poetry", "run", "gunicorn", "project.wsgi:application", "--config", "gunicorn_conf.py"]
 
 #####################################
 # Development image
