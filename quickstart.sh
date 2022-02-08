@@ -12,6 +12,8 @@ source scripts/utils.sh
 title_print 'Building containers...'
 echo "docker-compose up --detach --build" | newgrp docker
 
+# TODO: createsuperuser
+
 # Done
 color_print $green 'Completed! http://localhost:8000'
 if [ -f quickstart-messages.log ]; then
