@@ -40,7 +40,15 @@ FROM project-dependencies AS production
 
 # Copy rest of the project
 COPY . .
+
+# "collectstatic" here, as we serve files with nginx
+RUN poetry run ./manage.py collectstatic --noinput
+
+# TODO: compilemessages
+# TODO: django-cron
+
 CMD ["poetry", "run", "gunicorn", "project.wsgi:application", "--config", "gunicorn_conf.py"]
+# TODO: migrate
 
 #####################################
 # Development image

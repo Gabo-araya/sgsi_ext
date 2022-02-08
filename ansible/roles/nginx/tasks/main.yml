@@ -1,0 +1,5 @@
+# - name: make a test request
+#   uri:
+#     url: http://{{ server_domain }}
+#     force: yes  # Ensure no cache
+#   tags: update

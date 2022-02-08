@@ -1,0 +1,9 @@
+services:
+  # TODO
+  # nginx:
+  #   image: nginx:1.21-alpine
+  #   volumes:
+
+  # TODO
+  # memcached:
+  # https://docs.djangoproject.com/en/3.2/topics/cache/#memcached
