@@ -34,6 +34,10 @@ RUN poetry install --no-dev
 #####################################
 # Place Production image above development, so docker-compose on servers stop building after this one.
 FROM project-dependencies AS production
+
+# COPY assets webpack.*.js ./
+# RUN npm run build
+
 # Copy rest of the project
 COPY . .
 CMD ["poetry", "run", "gunicorn", "project.wsgi:application", "--config", "gunicorn_conf.py"]
