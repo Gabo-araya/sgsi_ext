@@ -146,7 +146,11 @@ EMAIL_SENDER_NAME = os.environ.get("EMAIL_SENDER_NAME", "Sender Name")
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = PROJECT_DIR / "static"
 STATIC_URL = "/static/"
+
+# TODO: STATICFILES_STORAGE for S3 / DO spaces
+# see 'formy-plus.prod' for reference
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
