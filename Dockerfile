@@ -47,8 +47,7 @@ RUN poetry run ./manage.py collectstatic --noinput
 # TODO: compilemessages
 # TODO: django-cron
 
-CMD ["poetry", "run", "gunicorn", "project.wsgi:application", "--config", "gunicorn_conf.py"]
-# TODO: migrate
+CMD ["docker/prod_entrypoint.sh"]
 
 #####################################
 # Development image
