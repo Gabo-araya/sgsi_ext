@@ -40,3 +40,4 @@
     project_src: "{{ project_name }}"
     build: yes
     remove_orphans: yes
+  tags: update

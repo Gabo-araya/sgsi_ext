@@ -1,6 +1,10 @@
 - name: deploy
   hosts: all
+
   roles:
-    - git
-    - docker
-    - nginx
+    - role: git
+      tags: update
+
+    - role: docker
+
+    - role: nginx
