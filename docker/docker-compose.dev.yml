@@ -30,9 +30,14 @@ services:
       # See https://aka.ms/vscode-remote/samples/docker-from-docker-compose for details.
       # - /var/run/docker.sock:/var/run/docker.sock
 
-      # Make SSH work inside the container:
+      # TODO:
+      # - ~/.ssh:/root/.ssh
+      # Unfortunately this results in "Bad owner or permissions on /root/.ssh/config"
+      # Alternatives: use non-root user, or use the agent only, and duplicate known_hosts entries
+
+      # Don't ask passphrase again:
       - $SSH_AUTH_SOCK:/run/ssh-agent
-      # TODO: document and test on OSX, they will have to override the variable when running compose.
+      # Note: for this to work in OSX, the variable has to be overriden.
       # See comment at https://stackoverflow.com/questions/18136389/using-ssh-keys-inside-docker-container/36648428#36648428
 
       # TODO: ipython history
