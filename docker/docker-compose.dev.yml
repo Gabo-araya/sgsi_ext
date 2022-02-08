@@ -20,6 +20,8 @@ services:
     # Uncomment if you want to override the service's Dockerfile with another one
     #   dockerfile: .devcontainer/Dockerfile
 
+    restart: "no"
+
     volumes:
       # Update this to wherever you want to mount the folder of your project
       - .:/usr/src/app
@@ -53,4 +55,5 @@ services:
     command: /bin/sh -c "while sleep 1000; do :; done"
 
   postgres:
+    restart: "no"
     network_mode: host
