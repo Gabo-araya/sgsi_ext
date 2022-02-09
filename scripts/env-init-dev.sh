@@ -2,11 +2,7 @@
 set -e
 source scripts/utils.sh
 
-if (( $# == 0 )); then
-  env_file='.env'
-else
-  env_file=$1
-fi
+env_file='.env'
 
 # Create a new env file if it does not exist
 title_print "Checking $env_file file..."

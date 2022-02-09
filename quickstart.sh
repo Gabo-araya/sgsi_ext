@@ -3,7 +3,7 @@ set -e
 source scripts/utils.sh
 
 # Create a local .env file if it does not exist
-./scripts/env-init.sh
+./scripts/env-init-dev.sh
 
 # Install docker and docker-compose
 ./scripts/docker-install.sh

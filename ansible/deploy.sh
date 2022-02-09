@@ -24,8 +24,7 @@ else
   elif (( stat_dotenv_res == 1 )); then
     # Prompt for new .env file
     cd ..
-    (umask 177; scripts/env-init.sh .deploy.env)
-    sed -i 's/DEBUG=True/DEBUG=False/' .deploy.env
+    (umask 177; scripts/env-init-prod.sh .deploy.env)
     cd ansible
     trap "rm ../.deploy.env" EXIT
     export create_dotenv=1
