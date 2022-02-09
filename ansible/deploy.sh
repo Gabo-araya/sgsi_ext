@@ -35,3 +35,8 @@ fi
 
 # shellcheck disable=SC2086
 ansible-playbook --limit "$limit" $tags deploy.yml
+
+if [[ "$(basename "$0")" != "update.sh" ]]; then
+  : # TODO: "./manage.py createsuperuser" if none exists
+  # https://raw.githubusercontent.com/selivan/ansible-ssh/892c48c828ee0f56d897706009096327076429f9/ansible-ssh
+fi
