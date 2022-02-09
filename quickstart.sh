@@ -10,7 +10,11 @@ source scripts/utils.sh
 
 # Build and start the containers
 title_print 'Building containers...'
-docker-compose up --detach --build
+echo "docker-compose up --detach --build" | newgrp docker
 
 # Done
 color_print $green 'Completed! http://localhost:8000'
+if [ -f quickstart-messages.log ]; then
+  color_print $yellow "$(cat quickstart-messages.log)"
+  rm quickstart-messages.log
+fi

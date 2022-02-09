@@ -13,12 +13,14 @@ else
   sudo ./get-docker.sh
   rm get-docker.sh
 
-  # Allow us to manage docker as a non-root
-  sudo groupadd docker || true
-  sudo usermod -aG docker $USER
-  newgrp docker
-
   color_print $green "Docker installation completed."
+fi
+
+# Check if we are allowed to manage docker as a non-root
+if ! id -ng "$USER" | grep -qw docker; then
+  sudo groupadd docker &>/dev/null || true
+  sudo usermod -aG docker "$USER"
+  echo "Please reboot your computer to use Docker without sudo." >> quickstart-messages.log
 fi
 
 title_print "Installing Docker-compose..."
