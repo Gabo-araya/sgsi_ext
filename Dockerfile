@@ -41,9 +41,6 @@ FROM project-dependencies AS production
 # Copy rest of the project
 COPY . .
 
-# "collectstatic" here, as we serve files with nginx
-RUN SECRET_KEY=dont_care poetry run ./manage.py collectstatic --noinput
-
 # TODO: compilemessages
 # TODO: django-cron
 
