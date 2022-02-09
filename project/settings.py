@@ -149,7 +149,10 @@ EMAIL_SENDER_NAME = os.environ.get("EMAIL_SENDER_NAME", "Sender Name")
 STATIC_ROOT = PROJECT_DIR / "static"
 STATIC_URL = "/static/"
 
-# TODO: STATICFILES_STORAGE for S3 / DO spaces
+MEDIA_ROOT = PROJECT_DIR / "media"
+MEDIA_URL = "/media/"
+
+# TODO: STATICFILES_STORAGE and DEFAULT_FILE_STORAGE for S3 / DO spaces
 # see 'formy-plus.prod' for reference
 
 # Default primary key field type

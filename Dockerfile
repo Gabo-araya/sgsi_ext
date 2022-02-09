@@ -42,7 +42,7 @@ FROM project-dependencies AS production
 COPY . .
 
 # "collectstatic" here, as we serve files with nginx
-RUN poetry run ./manage.py collectstatic --noinput
+RUN SECRET_KEY=dont_care poetry run ./manage.py collectstatic --noinput
 
 # TODO: compilemessages
 # TODO: django-cron
