@@ -20,6 +20,10 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
+    volumes:
+      - static:/usr/src/app/project/static
+      - ./project/media:/usr/src/app/project/media
 
 volumes:
   postgres-pgdata:
+  static:
