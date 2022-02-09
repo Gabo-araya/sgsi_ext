@@ -94,12 +94,13 @@ ENV/
 *.sql
 *.sqlite3
 
+# Installed dependencies if project is run on host
 node_modules
 
 test_app
 
-project/media
-project/static
+/project/media
+/project/static
 
 propagate.sh
 .idea/
@@ -108,8 +109,9 @@ propagate.sh
 webpack-stats.json
 
 .vscode/
-docker-compose.override.yml
+/docker-compose.override.yml
 *.dump
+*.tgz
 .tags
 test-results/
 .coverage
