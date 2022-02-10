@@ -36,6 +36,8 @@ server {
   # Only allow small files by default
   client_max_body_size 1m;
 
+  charset utf-8;
+
   gzip on;
   gzip_min_length 1000;
   gzip_proxied any;
