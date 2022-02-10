@@ -1,17 +1,13 @@
 # This is a template because env vars are replaced.
 # https://github.com/docker-library/docs/blob/0887f5ea78ec3e3f0c0804fdd4a320e1f88baea2/nginx/README.md#using-environment-variables-in-nginx-configuration-new-in-119
 
-server {
-  listen 80 default_server;
-  server_name _;
-
-  return 444;
-}
+# SSL config built-in because https://github.com/JonasAlfredsson/docker-nginx-certbot
+# obtains certificate only.
 
 # Reference: https://docs.gunicorn.org/en/stable/deploy.html
 
 server {
-  listen 80 deferred;
+  listen 443 ssl deferred;
   server_name ${SERVER_DOMAIN} www.${SERVER_DOMAIN};
 
   root /usr/share/nginx;
@@ -52,4 +48,9 @@ server {
     application/javascript
     application/x-javascript
     text/javascript;
+
+    ssl_certificate         /etc/letsencrypt/live/${SERVER_DOMAIN}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/${SERVER_DOMAIN}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/${SERVER_DOMAIN}/chain.pem;
+    ssl_dhparam             /etc/letsencrypt/dhparams/dhparam.pem;
 }
