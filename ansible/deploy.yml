@@ -64,6 +64,7 @@
         name:
           - docker==5.0.3
           - docker-compose==1.29.2  # (yes, they use it as a library, instead of /usr/local/bin/docker-compose)
+          # TODO: fork compose to solve startup hang bug
         state: present
 
     # TODO: avoid running out of space, with https://docs.ansible.com/ansible/latest/collections/community/docker/docker_prune_module.html
