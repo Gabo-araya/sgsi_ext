@@ -7,7 +7,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+      - ./docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
       - static:/usr/share/nginx/static
       - ./project/media:/usr/share/nginx/media
 
