@@ -8,3 +8,5 @@
     - role: docker
 
     - role: nginx
+
+# TODO: poetry run ./manage.py check --deploy
