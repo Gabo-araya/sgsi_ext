@@ -2,7 +2,7 @@ services:
   nginx:
     # TODO: certbot
     image: nginx:1.21-alpine
-    env_file: nginx.env
+    env_file: docker/nginx.env
     ports:
       - "80:80"
       - "443:443"
