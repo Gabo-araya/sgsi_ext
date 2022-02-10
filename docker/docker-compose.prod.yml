@@ -7,7 +7,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+      - type: bind
+        source: ./docker/nginx/default.conf.template
+        target: /etc/nginx/templates/default.conf.template
+        read_only: yes
       - static:/usr/share/nginx/static
       - ./project/media:/usr/share/nginx/media
 
