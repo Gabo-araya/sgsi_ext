@@ -1,3 +1,16 @@
+- name: create nginx.env
+  template:
+    src: templates/nginx.env.j2
+    dest: "{{ project_name }}/docker/nginx.env"
+    force: yes  # Overwrites in case server_domain changes
+
+
+
+
+
+
+
+
 # - name: make a test request
 #   uri:
 #     url: http://{{ server_domain }}

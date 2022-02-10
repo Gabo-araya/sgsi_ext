@@ -1,8 +1,15 @@
 services:
-  # TODO
-  # nginx:
-  #   image: nginx:1.21-alpine
-  #   volumes:
+  nginx:
+    # TODO: certbot
+    image: nginx:1.21-alpine
+    env_file: nginx.env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+      - static:/usr/share/nginx/static
+      - ./project/media:/usr/share/nginx/media
 
   # TODO
   # memcached:

@@ -1,0 +1,53 @@
+# This is a template because env vars are replaced.
+# https://github.com/docker-library/docs/blob/0887f5ea78ec3e3f0c0804fdd4a320e1f88baea2/nginx/README.md#using-environment-variables-in-nginx-configuration-new-in-119
+
+server {
+  listen 80 default_server;
+  server_name _;
+
+  return 444;
+}
+
+# Reference: https://docs.gunicorn.org/en/stable/deploy.html
+
+server {
+  listen 80 deferred;
+  server_name ${SERVER_DOMAIN} www.${SERVER_DOMAIN};
+
+  root /usr/share/nginx;
+
+  location /static {
+    try_files $uri =404;
+  }
+
+  location /media {
+    try_files $uri =404;
+  }
+
+  location / {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_redirect off;
+    proxy_pass http://django:8000;
+  }
+
+  # Only allow small files by default
+  client_max_body_size 1m;
+
+  gzip on;
+  gzip_min_length 1000;
+  gzip_proxied any;
+
+  gzip_types
+    text/plain
+    text/css
+    text/xml
+    application/xml
+    application/xml+rss
+    application/json
+    application/javascript
+    application/x-javascript
+    text/javascript;
+}
