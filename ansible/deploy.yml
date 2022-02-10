@@ -46,6 +46,13 @@
         dest: "{{ project_name }}/docker/nginx.env"
         force: yes  # Overwrites in case server_domain changes
 
+    - name: symlink default override file to production compose
+      # This is to use docker-compose CLI without "-f"
+      file:
+        src: "docker/docker-compose.prod.yml"
+        path: "{{ project_name }}/docker-compose.override.yml"
+        state: link
+
     - name: install pip (for ansible requirements)
       apt:
         name: python3-pip
@@ -66,6 +73,9 @@
       community.docker.docker_compose:
         state: present
         project_src: "{{ project_name }}"
+        files:
+          - docker-compose.yml
+          - docker/docker-compose.prod.yml
         build: yes
         remove_orphans: yes
       tags: update
