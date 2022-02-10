@@ -1,0 +1,1 @@
+TODO: remove this folder (`compilemessages` fails if it can't locate one)

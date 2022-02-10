@@ -41,7 +41,8 @@ FROM project-dependencies AS production
 # Copy rest of the project
 COPY . .
 
-# TODO: compilemessages
+RUN poetry run django-admin compilemessages
+
 # TODO: django-cron
 
 CMD ["docker/prod_entrypoint.sh"]
