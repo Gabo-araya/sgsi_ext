@@ -20,13 +20,20 @@ else
   tags=""
 
   echo "Checking for .env existance on $limit..."
-  stat_dotenv_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$limit" utils/stat_dotenv.yml)
-  stat_dotenv_res=0
-  echo "$stat_dotenv_json" | jq --exit-status '.plays[0].tasks[0].hosts[].stat.exists' >/dev/null || stat_dotenv_res=$?
 
-  if (( stat_dotenv_res > 1 )); then
-    exit $stat_dotenv_res
-  elif (( stat_dotenv_res == 1 )); then
+  stat_ansible_res=0
+  stat_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$limit" utils/stat_dotenv.yml) || stat_ansible_res=$?
+  if (( stat_ansible_res > 0 )); then
+    echo "$stat_json" | jq
+    exit $stat_ansible_res
+  fi
+
+  stat_jq_res=0
+  echo "$stat_json" | jq --exit-status '.plays[0].tasks[0].hosts[].stat.exists' >/dev/null || stat_jq_res=$?
+  if (( stat_jq_res > 1 )); then
+    exit $stat_jq_res
+
+  elif (( stat_jq_res == 1 )); then
     # Prompt for new .env file
     cd ..
     (umask 177; scripts/env-init-prod.sh .deploy.env)
