@@ -2,8 +2,7 @@ version: '3'
 services:
   postgres:
     image: "postgres:14-alpine"
-    env_file:
-      - docker/development.env
+    env_file: .env
     network_mode: "host"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
@@ -16,14 +15,11 @@ services:
     build:
       context: .
       target: production
-    env_file:
-      - docker/development.env
+    env_file: .env
     network_mode: "host"
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - .:/usr/src/app
 
 volumes:
   postgres-pgdata:
