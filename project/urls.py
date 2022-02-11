@@ -19,9 +19,12 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 
+from django.http import HttpResponse    # FIXME: remove this
+
 urlpatterns = [
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
+    path("", lambda req: HttpResponse("hello world")),  # FIXME: remove this
 ]
 
 if settings.DEBUG:
