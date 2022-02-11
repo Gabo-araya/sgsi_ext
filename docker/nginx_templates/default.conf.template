@@ -58,6 +58,7 @@ server {
 }
 
 # Close connection to wrong domains
+# (http://1.2.3.4 returns 301 to https://1.2.3.4, which then nginx rejects)
 # https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v3.0.0-nginx1.21.3/docs/nginx_tips.md#reject-unknown-server-name
 server {
   listen 443 ssl default_server;
