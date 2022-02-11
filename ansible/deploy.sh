@@ -9,6 +9,11 @@ else
   limit=$1
 fi
 
+if [[ $# -gt 1 && $2 == '--recreate' ]]; then
+  export recreate=1
+  echo "Will recreate containers."
+fi
+
 if [[ "$(basename "$0")" == "update.sh" ]]; then
   tags="--tags update"
 else

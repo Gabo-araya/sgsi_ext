@@ -79,6 +79,9 @@
           - docker/docker-compose.prod.yml
         build: yes
         remove_orphans: yes
+        recreate: "{{ 'always' if env_recreate == '1' else 'smart' }}"
+      vars:
+        env_recreate: "{{ lookup('env', 'recreate')|default('0') }}"
       tags: update
 
     - name: make a test request
