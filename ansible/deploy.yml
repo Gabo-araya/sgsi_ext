@@ -1,5 +1,6 @@
 - name: deploy
   hosts: all
+  gather_facts: no
 
   tasks:
     - name: clone/pull repository
