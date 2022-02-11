@@ -22,7 +22,6 @@ from django.urls import path
 urlpatterns = [
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
-    path("temp/", include('temp.urls')),
 ]
 
 if settings.DEBUG:
