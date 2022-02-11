@@ -85,10 +85,16 @@
         env_recreate: "{{ lookup('env', 'recreate')|default('0') }}"
       tags: update
 
-    - name: make a test request
+    # TODO: poetry run ./manage.py check --deploy
+
+    - name: make a test request to http://{{ server_domain }}
       uri:
         url: http://{{ server_domain }}
         force: yes  # Ensure no cache
       tags: update
 
-    # TODO: poetry run ./manage.py check --deploy
+      # Some retries because nginx may not be ready yet:
+      register: test_req
+      until: test_req is succeeded
+      retries: 10
+      delay: 1
