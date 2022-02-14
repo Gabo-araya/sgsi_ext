@@ -16,9 +16,11 @@
       tags: update
 
     - name: backup DB on code change
-      debug:
-        msg: "TODO: backup DB"
-      when: git_result.changed
+      include_role:
+        name: backup-db
+      when:                               # Skip backup on:
+        - git_result.changed              #   - no changes, or
+        - git_result.before is not none   #   - first clone.
       tags: update
 
     - name: copy created .env from controller
@@ -84,6 +86,13 @@
       vars:
         env_recreate: "{{ lookup('env', 'recreate')|default('0') }}"
       tags: update
+
+    - name: remove root ownership from db_dumps/
+      # Can't do this with a script in /docker-entrypoint-initdb.d/ in postgres container, because they don't run as root.
+      file:
+        path: "{{ project_name }}/db_dumps/"
+        owner: "{{ ansible_user }}"
+        # group: not straightforward
 
     # TODO: poetry run ./manage.py check --deploy
 

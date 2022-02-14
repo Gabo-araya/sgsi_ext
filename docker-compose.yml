@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-pgdata:/var/lib/postgresql/data/pgdata
+      - ./db_dumps:/db_dumps
   django:
     build:
       context: .
