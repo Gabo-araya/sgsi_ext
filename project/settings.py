@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "loginas",
     # internal
     "parameters",
+    "regions",
 ]
 
 MIDDLEWARE = [

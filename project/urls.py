@@ -25,6 +25,7 @@ urlpatterns = [
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("users.urls")),
+    path("regions/", include("regions.urls")),
     path("", base_views.index, name="home"),
 ]
 
