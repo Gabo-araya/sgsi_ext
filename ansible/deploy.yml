@@ -89,14 +89,6 @@
         env_recreate: "{{ lookup('env', 'recreate')|default('0') }}"
       tags: update
 
-    - name: remove root ownership from db_dumps/
-      # Can't do this with a script in /docker-entrypoint-initdb.d/ in postgres container, because they don't run as root.
-      file:
-        path: "{{ project_name }}/db_dumps/"
-        owner: "{{ ansible_user }}"
-        # group: not straightforward
-      become: yes
-
     # TODO: poetry run ./manage.py check --deploy
 
     - name: make a test request to http://{{ server_domain }}
