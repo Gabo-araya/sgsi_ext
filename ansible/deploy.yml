@@ -93,6 +93,7 @@
         path: "{{ project_name }}/db_dumps/"
         owner: "{{ ansible_user }}"
         # group: not straightforward
+      become: yes
 
     # TODO: poetry run ./manage.py check --deploy
 
