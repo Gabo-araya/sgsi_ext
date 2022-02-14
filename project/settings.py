@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "base.apps.BaseConfig",
     # external
     "loginas",
+    # internal
+    "parameters",
 ]
 
 MIDDLEWARE = [
