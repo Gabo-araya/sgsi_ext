@@ -19,13 +19,25 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 
-from django.http import HttpResponse    # FIXME: remove this
+from base import views as base_views
 
 urlpatterns = [
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
-    path("", lambda req: HttpResponse("hello world")),  # FIXME: remove this
+    path("accounts/", include("users.urls")),
+    path("", base_views.index, name="home"),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG and not settings.TEST:
+    import debug_toolbar
+
+    urlpatterns = (
+        [
+            path("__debug__/", include(debug_toolbar.urls)),
+        ]
+        + urlpatterns
+        + static(
+            settings.MEDIA_URL,
+            document_root=settings.MEDIA_ROOT,
+        )
+    )
