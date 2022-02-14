@@ -1,6 +1,6 @@
 - name: set dump variable with current UTC time
   set_fact:
-    dump_name: "{{ lookup('pipe', 'date --utc +%F_%R.dump') }}"
+    dump_name: "{{ lookup('pipe', 'date --utc +%Y-%m-%d_%H-%M-%S.dump') }}"
     # This runs in controller, faster than gathering remote facts
 
 - name: run pg_dump
