@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # required apps
     "base.apps.BaseConfig",
+    "users",
     # external
     "loginas",
     # internal
@@ -128,6 +129,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = "users.User"
 
 
 # Internationalization
