@@ -46,7 +46,7 @@ else
 fi
 
 # shellcheck disable=SC2086
-ansible-playbook --limit "$limit" $tags deploy.yml
+ansible-playbook --limit "$limit" $tags playbooks/deploy.yml
 
 if [[ "$(basename "$0")" != "update.sh" ]]; then
   : # TODO: "./manage.py createsuperuser" if none exists
