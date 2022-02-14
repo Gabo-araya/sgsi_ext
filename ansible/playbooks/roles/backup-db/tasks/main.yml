@@ -24,3 +24,6 @@
       # Output to bind-mounted folder:
       - --file=/db_dumps/{{ dump_name }}
     chdir: "{{ project_name }}"
+
+
+# TODO: does this work for RDS?
