@@ -14,9 +14,6 @@ echo "docker-compose up --detach --build" | newgrp docker
 
 # TODO: createsuperuser
 
-# Ensure ownership of db_dumps/
-[ -O db_dumps/ ] || sudo chown "$UID:$(id -g)" db_dumps/
-
 # Done
 color_print $green 'Completed! http://localhost:8000'
 if [ -f quickstart-messages.log ]; then
