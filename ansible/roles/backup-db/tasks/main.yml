@@ -1,6 +1,7 @@
-- name: set dump variable with current time
+- name: set dump variable with current UTC time
   set_fact:
-    dump_name: "{{ '%Y-%m-%d-%H-%M-%S' | strftime(ansible_date_time.epoch) }}.dump"
+    dump_name: "{{ lookup('pipe', 'date --utc +%F_%R.dump') }}"
+    # This runs in controller, faster than gathering remote facts
 
 - name: run pg_dump
   # Just use "docker-compose exec ..."
