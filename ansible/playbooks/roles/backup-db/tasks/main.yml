@@ -1,7 +1,9 @@
-- name: set dump variable with current UTC time
+- name: set dump_name
   set_fact:
-    dump_name: "{{ lookup('pipe', 'date --utc +%Y-%m-%d_%H-%M-%S.dump') }}"
-    # This runs in controller, faster than gathering remote facts
+    dump_name: "{{ ansible_limit }}-{{ cur_date }}.dump"
+  vars:
+    # This runs in controller, faster than gathering remote facts:
+    cur_date: "{{ lookup('pipe', 'date --utc +%Y-%m-%d_%H-%M-%S') }}"
 
 - name: run pg_dump
   # Just use "docker-compose exec ..."
