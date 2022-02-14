@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 # standard library
 from pathlib import Path
 import os
+import sys
 
 # django
 from django.urls import reverse_lazy
@@ -33,6 +34,11 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+SITE_ID = 1
+
+# TEST should be true if we are running python tests
+TEST = "test" in sys.argv or "pytest" in sys.argv[0]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.sites",
     "django.contrib.staticfiles",
     # external
     "loginas",
