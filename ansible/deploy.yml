@@ -18,6 +18,8 @@
     - name: backup DB on code change
       include_role:
         name: backup-db
+        apply:
+          tags: update
       when:                               # Skip backup on:
         - git_result.changed              #   - no changes, or
         - git_result.before is not none   #   - first clone.
