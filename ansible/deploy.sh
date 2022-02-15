@@ -21,7 +21,7 @@ else
   echo "Checking for .env existance on $limit..."
 
   stat_ansible_res=0
-  stat_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$limit" utils/stat_dotenv.yml) || stat_ansible_res=$?
+  stat_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$limit" playbooks/stat_dotenv.yml) || stat_ansible_res=$?
   if (( stat_ansible_res > 0 )); then
     echo "$stat_json" | jq
     exit $stat_ansible_res
