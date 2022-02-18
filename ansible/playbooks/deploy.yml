@@ -27,7 +27,7 @@
 
     - name: copy created .env from controller
       copy:
-        src: ../.deploy.env
+        src: ../../.deploy.env
         dest: "{{ project_name }}/.env"
         mode: "600"
         force: no
