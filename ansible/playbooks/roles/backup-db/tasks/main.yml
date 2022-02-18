@@ -9,22 +9,8 @@
   # Just use "docker-compose exec ..."
   # https://github.com/v4dkou/ansible-remote-docker tried to do it the nice way
   # (ansible controlling container instead of host), but with unreliable results.
-  command:
-    argv:
-      - docker-compose
-      - exec
-      - postgres
-      - pg_dump
-      - --format=custom
-      # No need to drop and create DB before restoring:
-      - --clean
-      - --if-exists
-      - --create
-      # No need to specify this options when restoring:
-      - --no-owner
-      - --no-acl
-      # Output to bind-mounted folder:
-      - --file=/db_dumps/{{ dump_name }}
+  command: docker-compose exec postgres pg_dump --format=custom --file=/db_dumps/{{ dump_name }}
+  args:
     chdir: "{{ project_name }}"
 
 

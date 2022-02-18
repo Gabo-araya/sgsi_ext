@@ -17,6 +17,9 @@ services:
       context: .
       target: production
     env_file: .env
+    environment:
+      # To be set in this container only, so the postgres container still uses the passwordless socket.
+      PGHOST: $POSTGRES_HOST
     depends_on:
       postgres:
         condition: service_healthy
