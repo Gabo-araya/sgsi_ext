@@ -34,9 +34,18 @@ RUN poetry install --no-dev
 #####################################
 # Place Production image above development, so docker-compose on servers stop building after this one.
 FROM project-dependencies AS production
+
+# COPY assets webpack.*.js ./
+# RUN npm run build
+
 # Copy rest of the project
 COPY . .
-CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+RUN poetry run django-admin compilemessages
+
+# TODO: django-cron
+
+CMD ["docker/prod_entrypoint.sh"]
 
 #####################################
 # Development image
@@ -45,7 +54,7 @@ FROM project-dependencies AS development
 # No need to copy the project, it's in a volume and prevents rebuilds.
 # Install Poetry dev-dependencies:
 RUN poetry install
-RUN apt-get update && apt-get install -y git htop zsh \
+RUN apt-get update && apt-get install -y git htop jq zsh \
   && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
   && rm -rf /var/lib/apt/lists/*
 # Prevent development container shutdown

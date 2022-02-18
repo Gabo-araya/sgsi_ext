@@ -1,0 +1,6 @@
+- name: stat {{ project_name }}/.env
+  hosts: all
+  gather_facts: no
+  tasks:
+    - stat:
+        path: "{{ project_name }}/.env"

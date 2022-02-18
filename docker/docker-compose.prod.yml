@@ -1,0 +1,25 @@
+services:
+  nginx:
+    image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
+    env_file: docker/nginx.env
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - django  # To prevent '[emerg] host not found in upstream "django"'
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./docker/nginx_templates/
+        target: /etc/nginx/templates/
+        read_only: yes
+      - static:/usr/share/nginx/static
+      - ./project/media:/usr/share/nginx/media
+      - nginx_secrets:/etc/letsencrypt
+
+  # TODO
+  # memcached:
+  # https://docs.djangoproject.com/en/3.2/topics/cache/#memcached
+
+volumes:
+  nginx_secrets:

@@ -1,0 +1,66 @@
+# This is a template because env vars are replaced.
+# https://github.com/docker-library/docs/blob/0887f5ea78ec3e3f0c0804fdd4a320e1f88baea2/nginx/README.md#using-environment-variables-in-nginx-configuration-new-in-119
+
+# SSL config built-in because https://github.com/JonasAlfredsson/docker-nginx-certbot
+# obtains certificate only.
+
+# Reference: https://docs.gunicorn.org/en/stable/deploy.html
+
+server {
+  listen 443 ssl deferred;
+  server_name ${SERVER_DOMAIN};
+
+  root /usr/share/nginx;
+
+  location /static {
+    try_files $uri =404;
+  }
+
+  location /media {
+    try_files $uri =404;
+  }
+
+  location / {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_redirect off;
+    proxy_pass http://django:8000;
+  }
+
+  # Only allow small files by default
+  client_max_body_size 1m;
+
+  charset utf-8;
+
+  gzip on;
+  gzip_min_length 1000;
+  gzip_proxied any;
+
+  gzip_types
+    text/plain
+    text/css
+    text/xml
+    application/xml
+    application/xml+rss
+    application/json
+    application/javascript
+    application/x-javascript
+    text/javascript;
+
+    # To force-renew certificate, run "docker-compose exec nginx /scripts/run_certbot.sh force"
+    # https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v3.0.0-nginx1.21.3/docs/advanced_usage.md#manualforce-renewal
+    ssl_certificate         /etc/letsencrypt/live/${SERVER_DOMAIN}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/${SERVER_DOMAIN}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/${SERVER_DOMAIN}/chain.pem;
+    ssl_dhparam             /etc/letsencrypt/dhparams/dhparam.pem;
+}
+
+# Close connection to wrong domains
+# (http://1.2.3.4 returns 301 to https://1.2.3.4, which then nginx rejects)
+# https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v3.0.0-nginx1.21.3/docs/nginx_tips.md#reject-unknown-server-name
+server {
+  listen 443 ssl default_server;
+  ssl_reject_handshake on;
+}

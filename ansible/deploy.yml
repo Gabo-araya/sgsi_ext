@@ -1,0 +1,100 @@
+- name: deploy
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: clone/pull repository
+      git:
+        repo: "{{ git_url }}"
+        version: "{{ branch }}"
+        dest: "{{ project_name }}"
+      # Remotes are sometimes flaky, so:
+      register: git_result
+      retries: 2
+      delay: 5
+      until: git_result is succeeded
+      tags: update
+
+    - name: backup DB on code change
+      debug:
+        msg: "TODO: backup DB"
+      when: git_result.changed
+      tags: update
+
+    - name: copy created .env from controller
+      copy:
+        src: ../.deploy.env
+        dest: "{{ project_name }}/.env"
+        mode: "600"
+        force: no
+      when: lookup("env", "create_dotenv")|default("0") == "1"
+      register: dotenv_copy
+
+      failed_when: not dotenv_copy.changed
+      # If the file didn't change, it already existed,
+      # so stop because we're not using the file we wanted to.
+      # The existing file won't be overriden because of "force: no".
+
+    - name: set ALLOWED_HOST
+      lineinfile:
+        path: "{{ project_name }}/.env"
+        regexp: ^ALLOWED_HOST=
+        line: ALLOWED_HOST={{ server_domain }}
+
+    - name: create nginx.env
+      template:
+        src: templates/nginx.env.j2
+        dest: "{{ project_name }}/docker/nginx.env"
+        force: yes  # Overwrites in case server_domain changes
+
+    - name: symlink default override file to production compose
+      # This is to use docker-compose CLI without "-f"
+      file:
+        src: "docker/docker-compose.prod.yml"
+        path: "{{ project_name }}/docker-compose.override.yml"
+        state: link
+
+    - name: install pip (for ansible requirements)
+      apt:
+        name: python3-pip
+        state: present
+      become: yes
+
+    - name: install ansible requirements
+      pip:
+        name:
+          - docker==5.0.3
+          - docker-compose==1.29.2  # (yes, they use it as a library, instead of /usr/local/bin/docker-compose)
+          # TODO: fork compose to solve startup hang bug
+        state: present
+
+    # TODO: avoid running out of space, with https://docs.ansible.com/ansible/latest/collections/community/docker/docker_prune_module.html
+
+    - name: build and start containers
+      # "dcupbd"
+      community.docker.docker_compose:
+        state: present
+        project_src: "{{ project_name }}"
+        files:
+          - docker-compose.yml
+          - docker/docker-compose.prod.yml
+        build: yes
+        remove_orphans: yes
+        recreate: "{{ 'always' if env_recreate == '1' else 'smart' }}"
+      vars:
+        env_recreate: "{{ lookup('env', 'recreate')|default('0') }}"
+      tags: update
+
+    # TODO: poetry run ./manage.py check --deploy
+
+    - name: make a test request to http://{{ server_domain }}
+      uri:
+        url: http://{{ server_domain }}
+        force: yes  # Ensure no cache
+      tags: update
+
+      # Some retries because nginx may not be ready yet:
+      register: test_req
+      until: test_req is succeeded
+      retries: 10
+      delay: 1

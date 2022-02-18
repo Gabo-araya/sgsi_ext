@@ -5,11 +5,11 @@ source scripts/utils.sh
 env_file='.env'
 
 # Create a new env file if it does not exist
-title_print "Checking .env files..."
+title_print "Checking $env_file file..."
 if [ -f "$env_file" ]; then
-  echo "Using existing .env"
+  echo "Using existing $env_file"
 else
-  echo "Creating .env file..."
+  echo "Creating $env_file file..."
   cp "docker/.env.example" "$env_file"
 
   # Prompt for inputs

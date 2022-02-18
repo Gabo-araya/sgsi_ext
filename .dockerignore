@@ -1,12 +1,3 @@
-# Docker related files
-docker
-Dockerfile
-.dockerignore
-
-# Host setup scripts
-quickstart.sh
-scripts
-
 .git
 
 # Other gitignored files and folders
