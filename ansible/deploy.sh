@@ -35,7 +35,7 @@ else
   elif (( stat_jq_res == 1 )); then
     # Prompt for new .env file
     cd ..
-    (umask 177; scripts/env-init-prod.sh .deploy.env)
+    (umask 177; scripts/env-init-prod.sh)
     cd ansible
     trap "rm ../.deploy.env" EXIT
     export create_dotenv=1
