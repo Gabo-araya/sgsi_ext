@@ -51,11 +51,21 @@ CMD ["docker/django/prod_entrypoint.sh"]
 # Development image
 #####################################
 FROM project-dependencies AS development
+
 # No need to copy the project, it's in a volume and prevents rebuilds.
+
+RUN \
+  # PostgreSQL client is required to pg_restore from Django container into Postgres container
+  curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update && apt-get install -y git htop jq zsh postgresql-client-14 \
+  && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+  && rm -rf /var/lib/apt/lists/* \
+  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
+  && pip3 install yq
+
 # Install Poetry dev-dependencies:
 RUN poetry install
-RUN apt-get update && apt-get install -y git htop jq zsh \
-  && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
-  && rm -rf /var/lib/apt/lists/*
-# Prevent development container shutdown
+
+# Prevent development container shutdown:
 CMD ["/bin/sh", "-c", "\"while sleep 1000; do :; done\""]

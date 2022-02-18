@@ -58,9 +58,11 @@
         path: "{{ project_name }}/docker-compose.override.yml"
         state: link
 
-    - name: install pip (for ansible requirements)
+    - name: install apt packages
       apt:
-        name: python3-pip
+        name:
+          - python3-pip   # For ansible requirements
+          - pv            # Progress for dump download
         state: present
       become: yes
 
