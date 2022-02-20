@@ -8,10 +8,10 @@
         repo: "{{ git_url }}"
         version: "{{ branch }}"
         dest: "{{ project_name }}"
-      # Remotes are sometimes flaky, so:
+      # Remotes sometimes fail once, so:
       register: git_result
-      retries: 2
-      delay: 5
+      retries: 1
+      delay: 3
       until: git_result is succeeded
       tags: update
 
