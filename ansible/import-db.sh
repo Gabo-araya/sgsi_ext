@@ -64,3 +64,6 @@ createdb "$PGDATABASE"
 pg_restore --dbname="$PGDATABASE" --no-owner --no-acl --jobs="$(nproc)" "$local_dump_path"
 
 color_print "$green" "Done"
+
+# TODO: run "../manage.py migrate --check >/dev/null" and check for unapplied migrations,
+# and for extra migrations.
