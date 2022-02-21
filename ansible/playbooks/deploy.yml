@@ -5,7 +5,7 @@
   tasks:
     - name: clone/pull repository
       git:
-        repo: "{{ git_url }}"
+        repo: "{{ git_repo }}"
         version: "{{ branch }}"
         dest: "{{ project_name }}"
       # Remotes sometimes fail once, so:
