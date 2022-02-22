@@ -3,11 +3,6 @@ services:
   postgres:   # Don't change this exact "postgres" name as it's hardcoded in other places
     build: ./docker/postgres/
     env_file: .env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data/
@@ -17,9 +12,7 @@ services:
       context: .
       target: production
     env_file: .env
-    depends_on:
-      postgres:
-        condition: service_healthy
+    init: yes
     restart: unless-stopped
     volumes:
       - static:/usr/src/app/project/static
