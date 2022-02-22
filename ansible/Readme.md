@@ -52,3 +52,8 @@ Create the database instance before running delpoy. The database (as in `databas
   - DigitalOcean databases: After it's created, instead of using the `defaultdb`, go to the _Users & Databases_ tab in the resource page, and create another one.
 
 The `postgres` container in docker-compose.yml has to be kept. It has a custom entrypoint to avoid running another postgres server and creating another database in this case. With its env vars, commands like `pg_dump` automatically target the remote DB.
+
+So you can run queries on this remote DB running this command from server:
+```sh
+docker-compose exec postgres psql
+```
