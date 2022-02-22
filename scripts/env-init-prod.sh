@@ -39,8 +39,6 @@ select db_loc in Local Remote; do
 done
 
 secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
-prompt "Secret key?" "$secret_key"
-secret_key=$input
 
 django_debug=False
 
