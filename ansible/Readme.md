@@ -44,3 +44,11 @@ You can also append the file name of the dump, for example:
 ansible/import-db.sh stg stg-2022-02-18_17-10-00.dump
 ```
 which won't create a new dump, and just download the existing one if it's not present in your computer, and then restore it. This makes the process faster and more reproducible, as developers can work on the same dump by running the same `import-db` command.
+
+## External database
+
+Create the database instance before running delpoy. The database (as in `database-name`) has to be manually created.
+  - AWS RDS: At the _Create database_ wizard, under _Additional configuration_ specify _Initial database name_.
+  - DigitalOcean databases: After it's created, instead of using the `defaultdb`, go to the _Users & Databases_ tab in the resource page, and create another one.
+
+The `postgres` container in docker-compose.yml has to be kept. It has a custom entrypoint to avoid running another postgres server and creating another database in this case. With its env vars, commands like `pg_dump` automatically target the remote DB.
