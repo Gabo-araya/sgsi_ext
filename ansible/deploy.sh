@@ -37,7 +37,8 @@ else
     cd ..
     (umask 177; scripts/env-init-prod.sh "$limit")
     cd ansible
-    trap "rm ../.deploy.env" EXIT
+    # shellcheck disable=SC2064  # Expand $limit now
+    trap "rm -f ../deploy.$limit.env" EXIT  # Avoid keeping plaintext secrets outside server
     export create_dotenv=1
   else
     export create_dotenv=0

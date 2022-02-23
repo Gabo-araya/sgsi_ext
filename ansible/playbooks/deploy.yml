@@ -2,6 +2,10 @@
   hosts: all
   gather_facts: no
 
+  vars:
+    create_dotenv: "{{ lookup('env', 'create_dotenv')|default('0') == '1' }}"
+    created_env_path: ../../deploy.{{ ansible_limit }}.env
+
   tasks:
     - name: clone/pull repository
       git:
@@ -27,17 +31,25 @@
 
     - name: copy created .env from controller
       copy:
-        src: ../../.deploy.env
+        src: "{{ created_env_path }}"
         dest: "{{ project_name }}/.env"
         mode: "600"
         force: no
-      when: lookup("env", "create_dotenv")|default("0") == "1"
+      when: create_dotenv
       register: dotenv_copy
 
       failed_when: not dotenv_copy.changed
       # If the file didn't change, it already existed,
       # so stop because we're not using the file we wanted to.
       # The existing file won't be overriden because of "force: no".
+
+    - name: delete created .env from controller
+      # To avoid keeping plaintext secrets outside server
+      local_action:
+        module: file
+        path: "{{ created_env_path }}"
+        state: absent
+      when: create_dotenv
 
     - name: set ALLOWED_HOST
       lineinfile:
