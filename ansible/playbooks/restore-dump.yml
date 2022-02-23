@@ -40,8 +40,15 @@
           --dbname="$PGDATABASE"
           --no-owner
           --no-acl
-          --jobs="$(nproc)"
+          --jobs="{{ jobs }}"
           "db_dumps/{{ dump_name | quote }}"
+
+        # man says: "A good place to start is the number of CPU cores on the server"
+        # but if server is remote, just assume 1.
+        jobs: $( {{ host_is_remote_test }} && echo 1 || nproc )
+
+        # From magnet-entrypoint.sh:
+        host_is_remote_test: '[[ "$PGHOST" != "localhost" && "$PGHOST" != "postgres" ]]'
 
     - name: start django
       # The entrypoint will run migrations
