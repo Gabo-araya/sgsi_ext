@@ -12,22 +12,8 @@ limit=$1
 readonly LOCAL_DUMPS_PATH=../db_dumps
 
 if (( $# == 1 )); then
-  color_print "$cyan" "Creating a new backup..."
-
-  # Horrible way of showing nice output and getting the db_dump with the same command.
-  # It's extracted from:
-  #
-  #   TASK [backup-db : set dump_name]
-  #   ok: [playg] => {
-  #       "ansible_facts": {
-  #           "dump_name": "playg-2022-02-14_22-49-05.dump"
-  #       },
-
-  dump_name=$(\
-    ANSIBLE_FORCE_COLOR=True ansible-playbook -v --limit "$limit" playbooks/backup-db.yml \
-      | tee /dev/tty \
-      | grep -Po '"dump_name": "\K.+\.dump(?=")')
-
+  create_dump_limit=$limit
+  source scripts/create_dump.sh
 else
   dump_name=$2
 fi
@@ -44,13 +30,16 @@ if [ ! -f "$local_dump_path" ]; then
 
   remote_dump_path="$(yq -r .project_name group_vars/all.yml)/db_dumps/$dump_name"
 
-  ansible-ssh "$limit" "pv -f $remote_dump_path" > $LOCAL_DUMPS_PATH/__tmp__.dump
+  ansible-ssh "$limit" "pv -f \"$remote_dump_path\"" > $LOCAL_DUMPS_PATH/__tmp__.dump
   # Download to temp file to avoid storing a partial file with the same name,
   # and not downloading again if previous download is interrupted
   mv $LOCAL_DUMPS_PATH/__tmp__.dump "$local_dump_path"
 fi
 
 color_print "$cyan" "Restoring $dump_name ..."
+
+# Delete and create DB before pg_restore because --clean "(drops) database objects before recreating them",
+# so it leaves association tables that conflict with migrations. Also, --create has problems with the DB name.
 
 drop_status=0
 drop_output=$(dropdb "$PGDATABASE") || drop_status=$?

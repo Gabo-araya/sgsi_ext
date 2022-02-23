@@ -1,6 +1,8 @@
 version: '3'
 services:
-  postgres:   # Don't change this exact "postgres" name as it's hardcoded in other places
+  # Note: don't change service names as they are hardcoded in other places.
+
+  postgres:
     build: ./docker/postgres/
     env_file: .env
     restart: unless-stopped

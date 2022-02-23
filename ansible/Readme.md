@@ -48,8 +48,12 @@ which won't create a new dump, and just download the existing one if it's not pr
 ## External database
 
 Create the database instance before running delpoy. The database (as in `database-name`) has to be manually created.
+
   - AWS RDS: At the _Create database_ wizard, under _Additional configuration_ specify _Initial database name_.
-  - DigitalOcean databases: After it's created, instead of using the `defaultdb`, go to the _Users & Databases_ tab in the resource page, and create another one.
+
+  - DigitalOcean databases: After it's created, instead of using the `defaultdb`, go to the _Users & Databases_ tab in the resource page, and create another one with a better name.
+
+    **Also create a `postgres` DB**, else `dropdb`/`createdb` will fail. (This is because DO doesn't give us the password for the postgres user, which is the owner of the template0/1 databases. However a `postgres` database solves this.)
 
 The `postgres` container in docker-compose.yml has to be kept. It has a custom entrypoint to avoid running another postgres server and creating another database in this case. With its env vars, commands like `pg_dump` automatically target the remote DB.
 
