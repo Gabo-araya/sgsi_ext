@@ -10,6 +10,12 @@ source scripts/utils.sh
 
 # Build and start the containers
 title_print 'Building containers...'
+
+if [[ ! -e docker-compose.override.yml ]]; then
+  color_print "$cyan" "Linking compose override to dev version..."
+  ln -s docker/docker-compose.dev.yml docker-compose.override.yml
+fi
+
 echo "docker-compose up --detach --build" | newgrp docker
 
 # TODO: createsuperuser
