@@ -74,7 +74,18 @@
           # TODO: fork compose to solve startup hang bug
         state: present
 
-    # TODO: avoid running out of space, with https://docs.ansible.com/ansible/latest/collections/community/docker/docker_prune_module.html
+    - name: make free space by pruning dangling images
+      community.docker.docker_prune:
+        images: yes
+        images_filters:
+          dangling: yes
+      register: prune
+      tags: update
+
+    - name: show freed space
+      debug:
+        msg: Freed {{ prune.images_space_reclaimed | human_readable }}
+      tags: update
 
     - name: build and start containers
       # "dcupbd"
