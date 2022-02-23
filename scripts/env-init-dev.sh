@@ -10,12 +10,19 @@ if [ -f "$env_file" ]; then
 else
   cp "docker/.env.example" "$env_file"
 
+  # For servers, project_name has to be stable, so it's commited in group_vars/all.yml
+  # and parsed with ansible or yq inside contaier.
+  # But this script runs outside container, so no ansible or yq, and stability is not important,
+  # and if user cloned repo to a folder with different name it could be more recognizable with
+  # that name, so use project folder name:
+  project_name=$(basename "$(dirname "$(dirname "$(realpath "$0")")")")
+
   # Assume defaults
   postgres_host="localhost"
   postgres_port="5432"
   postgres_user="postgres"
   postgres_password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
-  postgres_db="project-name"  # TODO (yq? grep+cut? dirname+basename?)
+  postgres_db=$project_name
   secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
   django_debug=True
 

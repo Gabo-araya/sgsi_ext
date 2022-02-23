@@ -4,9 +4,16 @@ source scripts/utils.sh
 
 env_file='.deploy.env'
 
+if (( $# == 0 )); then
+  echo "No limit"
+  exit 1
+fi
+limit=$1
+
 cp "docker/.env.example" "$env_file"
 
-postgres_db="project-name"  # TODO: also add $limit
+project_name=$(yq -r .project_name ansible/group_vars/all.yml)
+postgres_db=$project_name-$limit
 
 color_print "$cyan" "Postgres database location?"
 
