@@ -7,6 +7,7 @@ if (( $# == 0 )); then
   exit 1
 fi
 limit=$1
+# TODO: implement update for two servers at same time
 
 if [[ $# -gt 1 && $2 == '--recreate' ]]; then
   export recreate=1
