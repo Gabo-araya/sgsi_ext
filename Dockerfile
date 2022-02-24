@@ -91,7 +91,7 @@ RUN \
   # base installation:
   && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
   # customization:
-  && ln -s /usr/src/app/docker/load-devcontainer-customs.zsh /root/.oh-my-zsh/custom/ \
+  && ln -s /usr/src/app/docker/zsh/load-devcontainer-customs.zsh /root/.oh-my-zsh/custom/ \
   && ln -s /usr/src/app/docker/zsh/custom/ /root/.oh-my-zsh/custom/project \
   # /root/.oh-my-zsh/custom/shared will be bind-mounted by compose.
   # theme:
