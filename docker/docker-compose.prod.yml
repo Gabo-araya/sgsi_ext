@@ -1,13 +1,4 @@
 services:
-  # Healthchecks and dependencies in production only
-  # because they delay django container startup by 10s.
-  postgres:
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
     env_file: docker/nginx.env
