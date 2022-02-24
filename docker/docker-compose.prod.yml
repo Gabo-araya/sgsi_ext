@@ -8,10 +8,6 @@ services:
       timeout: 5s
       retries: 5
 
-  django:
-    depends_on:
-      postgres:
-
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
     env_file: docker/nginx.env
