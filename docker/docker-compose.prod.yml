@@ -11,7 +11,6 @@ services:
   django:
     depends_on:
       postgres:
-        condition: service_healthy
 
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
