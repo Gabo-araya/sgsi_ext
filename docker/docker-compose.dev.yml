@@ -43,7 +43,6 @@ services:
       - ~/.local/share/magnet-django-devcontainer/zshcustom:/root/.oh-my-zsh/custom/shared
 
       # TODO: ipython history
-      # TODO: zsh history?
 
     environment:
       SSH_AUTH_SOCK: /run/ssh-agent
