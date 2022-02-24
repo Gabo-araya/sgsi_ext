@@ -45,7 +45,7 @@ RUN poetry run django-admin compilemessages
 
 # TODO: django-cron
 
-CMD ["docker/django/prod_entrypoint.sh"]
+CMD ["docker/django/production_cmd.sh"]
 
 #####################################
 # Development image
