@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "django3-project-template"
 version = "0.1.0"
-description = "A project template for Django 2.2 in Python 3. This project tries to solve problems or features that commonly appear on Magnet projects. The idea is that you start your project using this code as the base."
+description = "A project template for Django 3.2. This project tries to solve problems or features that commonly appear on Magnet projects. The idea is that you start your project using this code as the base."
 authors = ["Your Name <you@example.com>"]
 license = "MIT"
 
@@ -26,6 +26,7 @@ flake8 = "4.0.1"
 pytest-cov = "^3.0.0"
 pytest-django = "^4.5.2"
 ansible = "^5.3.0"
+yq = "^2.14.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
