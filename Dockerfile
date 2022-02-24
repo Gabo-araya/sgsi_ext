@@ -61,6 +61,8 @@ FROM project-dependencies AS development
 
 # "Prints" to locate which command is running:
 COPY scripts/utils.sh scripts/utils.sh
+# This was getting too long to keep in Dockerfile:
+COPY docker/zsh/setup.sh docker/zsh/setup.sh
 
 RUN \
   # Source utils containing "title_print":
@@ -88,15 +90,7 @@ RUN \
     vim nano \
 \
   && title_print "Installing oh-my-zsh" \
-  # base installation:
-  && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
-  # customization:
-  && ln -s /usr/src/app/docker/zsh/load-devcontainer-customs.zsh /root/.oh-my-zsh/custom/ \
-  && ln -s /usr/src/app/docker/zsh/custom/ /root/.oh-my-zsh/custom/project \
-  # /root/.oh-my-zsh/custom/shared will be bind-mounted by compose.
-  # theme:
-  && ln -s /usr/src/app/docker/zsh/robbyrussell-poetryenv.zsh-theme  /root/.oh-my-zsh/custom/themes/ \
-  && sed -i 's/ZSH_THEME=".*"/ZSH_THEME="robbyrussell-poetryenv"/' /root/.zshrc \
+  && docker/zsh/setup.sh \
 \
   && title_print "Finishing" \
   # Reduce image size and prevent use of potentially obsolete lists:
