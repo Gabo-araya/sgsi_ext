@@ -39,10 +39,9 @@ services:
       # Note: for this to work in OSX, the variable has to be overriden.
       # See comment at https://stackoverflow.com/questions/18136389/using-ssh-keys-inside-docker-container/36648428#36648428
 
-      # oh-my-zsh custom config shared between devcontainers:
+      # Custom config shared between devcontainers:
       - ~/.local/share/magnet-django-devcontainer/zshcustom:/root/.oh-my-zsh/custom/shared
-
-      # TODO: ipython history
+      - ~/.local/share/magnet-django-devcontainer/.ipython:/root/.ipython
 
     environment:
       SSH_AUTH_SOCK: /run/ssh-agent
