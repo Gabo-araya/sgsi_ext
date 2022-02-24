@@ -14,3 +14,11 @@ ln -s /usr/src/app/docker/zsh/custom/ /root/.oh-my-zsh/custom/project
 # Theme:
 ln -s /usr/src/app/docker/zsh/robbyrussell-poetryenv.zsh-theme  /root/.oh-my-zsh/custom/themes/
 sed -i 's/ZSH_THEME=".*"/ZSH_THEME="robbyrussell-poetryenv"/' /root/.zshrc
+
+# History:
+# Use history file inside separate folder, because while the file is being updated,
+# a .LOCK is created next to it (so it's not enough to bind-mount the file).
+# Sharing history with host is complicated (write to host ~/.zsh_history{,.LOCK} only for isolation,
+# maybe preventing root ownership) but at least we can keep it and share it between containers.
+# Prepend: (1i: insert before line 1)
+sed -i '1i HISTFILE=/root/.oh-my-zsh/custom/shared/.zsh_history' /root/.zshrc
