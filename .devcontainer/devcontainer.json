@@ -4,13 +4,11 @@
 {
 	"name": "Existing Docker Compose (Extend)",
 
-	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
-	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
-	"dockerComposeFile": [
-		"../docker-compose.yml",
-		"../docker/docker-compose.dev.yml"
-		// TODO: what about docker-compose.override.yml ?
-	],
+	// The symlink docker-compose.override.yml --> docker/docker-compose.dev.yml provides config
+	// for Remote-Containers and docker-compose CLI, so this should be blank.
+	// https://github.com/microsoft/vscode-remote-release/issues/1080#issuecomment-824087033
+	// https://docs.docker.com/compose/extends/#understanding-multiple-compose-files
+	"dockerComposeFile": [],
 
 	// The 'service' property is the name of the service for the container that VS Code should
 	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
