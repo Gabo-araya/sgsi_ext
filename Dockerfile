@@ -9,17 +9,30 @@ WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
 
+# "Prints" to locate which command is running:
+COPY scripts/utils.sh scripts/utils.sh
 RUN \
-  # Install prerequisites
-  apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext \
-  # Add nodejs repos
+  # Source utils containing "title_print":
+  source scripts/utils.sh \
+\
+  && title_print "Installing prerequisites" \
+  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext \
+\
+  && title_print "Adding nodejs repo" \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
-  # Install from new repos
-  && apt-get install -y nodejs \
+\
+  && title_print "Adding Postgres repo" \
+  # The PostgreSQL client provides pg_isready for production, and pg_restore for development.
+  && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+\
+  && title_print "Installing from new repos" \
+  && apt-get update && apt-get install -y nodejs postgresql-client-14 \
+\
   # Reduce image size and prevent use of potentially obsolete lists:
   && rm -rf /var/lib/apt/lists/* \
 \
-  # Install Poetry
+  && title_print "Installing Poetry" \
   && pip install poetry
 
 # Install python dependencies
@@ -56,20 +69,12 @@ FROM project-dependencies AS development
 
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
-# "Prints" to locate which command is running:
-COPY scripts/utils.sh scripts/utils.sh
 # This was getting too long to keep in Dockerfile:
 COPY docker/zsh/setup.sh docker/zsh/setup.sh
 
 RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
-\
-  # PostgreSQL client is required to pg_restore from Django container into Postgres container.
-\
-  && title_print "Adding Postgres repo" \
-  && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 \
   && title_print "apt update + install" \
   && apt-get update && apt-get install -y \
@@ -81,8 +86,6 @@ RUN \
     htop \
     # parse ansible outputs:
     jq \
-    # postgres-client programs:
-    postgresql-client-14 \
     # something to quickly edit a file:
     vim nano \
 \
