@@ -1,7 +1,7 @@
 #####################################
 # Base image python + node + poetry
 #####################################
-FROM python:3.9.9-slim-bullseye AS python-node-base
+FROM python:3.9.9-slim-bullseye AS project-dependencies
 
 WORKDIR /usr/src/app
 
@@ -9,22 +9,19 @@ WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
 
-# Install prerequisites
-RUN apt-get update && apt-get install -y gcc curl libpq-dev gettext \
-  && rm -rf /var/lib/apt/lists/*
-
-# Install Node
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+RUN \
+  # Install prerequisites
+  apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext \
+  # Add nodejs repos
+  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+  # Install from new repos
   && apt-get install -y nodejs \
-  && rm -rf /var/lib/apt/lists/*
+  # Reduce image size and prevent use of potentially obsolete lists:
+  && rm -rf /var/lib/apt/lists/* \
+\
+  # Install Poetry
+  && pip install poetry
 
-# Install Poetry
-RUN pip install poetry
-
-#####################################
-# Add python+node dependencies
-#####################################
-FROM python-node-base AS project-dependencies
 # Install python dependencies
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev
@@ -98,7 +95,7 @@ RUN \
   # "install editable" ansible-ssh:
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
-# Install Poetry dev-dependencies (in separate layer because they should change less often):
+# Install Poetry dev-dependencies (in separate layer because they should change more often):
 RUN poetry install
 
 # Prevent development container shutdown:
