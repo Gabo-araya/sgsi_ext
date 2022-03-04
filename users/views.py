@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ The users app views"""
 
 # django

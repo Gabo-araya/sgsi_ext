@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Models for the base application.
 
 All apps should use the BaseModel as parent for all models

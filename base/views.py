@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ This file contains some generic purpouse views """
 
 # standard library

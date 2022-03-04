@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Models for the parameters application. """
 #  standard library
 import json

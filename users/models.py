@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Models for the users application.
 
 All apps should use the users.User model for all users

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Administration classes for the parameters application. """
 # standard library
 
