@@ -19,7 +19,9 @@
 	"workspaceFolder": "/usr/src/app",
 
 	// Set *default* container specific settings.json values on container create.
-	"settings": {},
+	"settings": {
+		"terminal.integrated.defaultProfile.linux": "zsh",
+	},
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
@@ -29,6 +31,7 @@
 		"visualstudioexptteam.vscodeintellicode",
 		"shardulm94.trailing-spaces"
 	]
+	// improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

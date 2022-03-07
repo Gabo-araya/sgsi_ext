@@ -1,11 +1,5 @@
 ### Devcontainer configuration
 
-#### Default vscode terminal
-
-Select `zsh` as your default by clicking:
-
-![](docker/readme/vscode_default_terminal.png)
-
 #### Shared configuration
 
 Shared configuration is bind-mounted in the container, stored locally at ~/.local/share/magnet-django-devcontainer
