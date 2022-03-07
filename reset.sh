@@ -7,17 +7,9 @@ if [[ $DEBUG != "True" ]]; then
   exit 1
 fi
 
-color_print "$cyan" "dropdb $PGDATABASE"
-drop_status=0
-drop_output=$(dropdb "$PGDATABASE") || drop_status=$?
-# Fail if dropdb failed, except in case of "does not exist"
-if [[ $drop_status != 0 && "$drop_output" != *" does not exist" ]]; then
-  echo "$drop_output"
-  exit $drop_status
-fi
+psql \
+  -c "drop database if exists \"$PGDATABASE\";" \
+  -c "create database \"$PGDATABASE\";" \
+  postgres
 
-color_print "$cyan" "createdb $PGDATABASE"
-createdb "$PGDATABASE"
-
-color_print "$cyan" "./manage.py migrate"
 ./manage.py migrate
