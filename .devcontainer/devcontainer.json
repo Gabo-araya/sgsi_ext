@@ -30,7 +30,7 @@
 		"ms-python.vscode-pylance",
 		"visualstudioexptteam.vscodeintellicode",
 		"shardulm94.trailing-spaces"
-	]
+	],
 	// improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -47,4 +47,7 @@
 
 	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode"
+
+	// See 90-vscode-env.zsh
+	"postStartCommand": "printenv > /dev/shm/env_from_vscode_terminal",
 }
