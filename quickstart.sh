@@ -20,6 +20,18 @@ mkdir -p ~/.local/share/magnet-django-devcontainer/zshcustom
 
 echo "docker-compose up --detach --build" | newgrp docker
 
+# Set vscode to use python in poetry env
+mkdir -p .vscode
+if [[ ! -f .vscode/settings.json ]]; then
+  poetryenv_path=$(docker-compose exec -T django poetry env info --path)
+
+  echo \
+'{
+  "python.defaultInterpreterPath": "'"$poetryenv_path"'/bin/python",
+}' > .vscode/settings.json
+
+fi
+
 # TODO: createsuperuser
 
 # Done
