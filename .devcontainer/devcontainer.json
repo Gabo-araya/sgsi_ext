@@ -20,7 +20,10 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
+		// Default to zsh:
 		"terminal.integrated.defaultProfile.linux": "zsh",
+		// Activate environment with 10-poetry-shell.zsh, which is less verbose and also works in external terminal:
+		"python.terminal.activateEnvironment": false
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
