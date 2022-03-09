@@ -61,3 +61,25 @@ So you can run queries on this remote DB running this command from server:
 ```sh
 docker-compose exec postgres psql
 ```
+
+## S3
+
+### Provided by Amazon
+
+TODO
+
+### Provided by DigitalOcean
+
+Note that **credentials give access to all the spaces in the account**
+[¹](https://www.digitalocean.com/community/questions/spaces-different-keys-per-bucket)
+[²](https://www.digitalocean.com/community/questions/when-if-ever-will-spaces-support-individual-access-keys)
+[³](https://ideas.digitalocean.com/storage/p/access-key-per-space),
+so create a dedicated account for the project, so only staging and production share credentials.
+
+Create the space in the cloud console, enabling _CDN_. Set `AWS_STORAGE_BUCKET_NAME` and `DIGITALOCEAN_SPACES_REGION` in `.env`.
+
+Then in _API_, in _Spaces access keys_ click _Generate New Key_. Set it in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+### TODO: CORS?
+
+https://care-stg.aws.magnet.cl/admin/ couldn't load https://care-stg.s3.amazonaws.com/static/djangocms_admin_style/fonts/django-admin-iconfont.woff2?v=3.2.0 and had no plus and pencil icons

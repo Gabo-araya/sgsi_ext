@@ -142,18 +142,40 @@ EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD", None)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "webmaster@localhost")
 EMAIL_SENDER_NAME = os.environ.get("EMAIL_SENDER_NAME", "Sender Name")
 
+# Credentials for AWS services
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", None)
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = PROJECT_DIR / "static"
-STATIC_URL = "/static/"
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
+if AWS_STORAGE_BUCKET_NAME:
+    # Store static and media in S3 (or compatible).
+    # This requires the packages "django-storages" and "boto3"
+    # (not included by default because of their size).
+    AWS_DEFAULT_ACL = None
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-MEDIA_ROOT = PROJECT_DIR / "media"
-MEDIA_URL = "/media/"
+    DIGITALOCEAN_SPACES_REGION = os.environ.get("DIGITALOCEAN_SPACES_REGION", None)
+    if DIGITALOCEAN_SPACES_REGION:
+        AWS_S3_ENDPOINT_URL = f"https://{DIGITALOCEAN_SPACES_REGION}.digitaloceanspaces.com"
+        AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{DIGITALOCEAN_SPACES_REGION}.cdn.digitaloceanspaces.com"
 
-# TODO: STATICFILES_STORAGE and DEFAULT_FILE_STORAGE for S3 / DO spaces
-# see 'formy-plus.prod' for reference
+        ################ TODO: useful?
+        # AWS_S3_OBJECT_PARAMETERS = {
+        #     'CacheControl': 'max-age=86400',
+        # }
+
+    STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
+    DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
+
+else:
+    STATIC_ROOT = PROJECT_DIR / "static"
+    STATIC_URL = "/static/"
+
+    MEDIA_ROOT = PROJECT_DIR / "media"
+    MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

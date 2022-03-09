@@ -49,6 +49,8 @@ secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
 
 django_debug=False
 
+# TODO: ask for S3 config, so no statics get collected into local
+
 # Replace placeholders from template env file
 sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
 sed -i "s|{{postgres_port}}|$postgres_port|g" $env_file
