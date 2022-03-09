@@ -66,7 +66,29 @@ docker-compose exec postgres psql
 
 ### Provided by Amazon
 
-TODO
+Create the bucket with:
+- _Object Ownership: ACLs enabled_
+- all _Block public access_ settings off
+
+And create an IAM user with this policy:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::bucket-name",
+                "arn:aws:s3:::bucket-name/*"
+            ]
+        }
+    ]
+}
+```
+It gives access to `bucket-name` only.
+
+Then set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_STORAGE_BUCKET_NAME` in `.env`.
 
 ### Provided by DigitalOcean
 
