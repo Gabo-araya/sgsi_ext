@@ -1,4 +1,11 @@
 services:
+  django:
+    healthcheck:
+      test: ["CMD-SHELL", "wait-for-it localhost:8000 --timeout=5"]
+      interval: 10s
+      timeout: 6s
+      start_period: 30s
+
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
     env_file: docker/nginx.env

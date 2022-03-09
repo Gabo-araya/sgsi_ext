@@ -16,7 +16,7 @@ RUN \
   source scripts/utils.sh \
 \
   && title_print "Installing prerequisites" \
-  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext \
+  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext wait-for-it \
 \
   && title_print "Adding nodejs repo" \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
