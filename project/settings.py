@@ -136,9 +136,9 @@ if DEBUG or not ENABLE_EMAILS:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("SMTP_HOST", None)
+EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 EMAIL_HOST_USER = os.environ.get("SMTP_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD", None)
-EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "webmaster@localhost")
 EMAIL_SENDER_NAME = os.environ.get("EMAIL_SENDER_NAME", "Sender Name")
 
