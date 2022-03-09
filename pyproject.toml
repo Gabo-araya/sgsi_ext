@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "django3-project-template"
 version = "0.1.0"
-description = "A project template for Django 2.2 in Python 3. This project tries to solve problems or features that commonly appear on Magnet projects. The idea is that you start your project using this code as the base."
+description = "The project template for Django 3.2 in Python 3. This project aims to provide a common starting point for Magnet projects."
 authors = ["Magnet DPT3 Team <dpt3@magnet.cl>"]
 license = "MIT"
 
