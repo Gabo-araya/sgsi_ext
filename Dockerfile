@@ -58,7 +58,9 @@ COPY . .
 RUN poetry run django-admin compilemessages
 
 # TODO: django-cron
-# TODO: zsh with poetry shell, dj aliases and scary production theme ($PGDATABASE as prompt)
+# TODO: source poetry env in entrypoint
+# TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
+# TODO: ipython history in a volume
 
 CMD ["docker/django/production_cmd.sh"]
 
