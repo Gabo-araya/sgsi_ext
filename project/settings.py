@@ -151,9 +151,7 @@ AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
 if AWS_STORAGE_BUCKET_NAME:
-    # Store static and media in S3 (or compatible).
-    # This requires the packages "django-storages" and "boto3"
-    # (not included by default because of their size).
+    # Store static and media in S3 or DigitalOcean spaces.
     AWS_DEFAULT_ACL = None
     AWS_S3_SIGNATURE_VERSION = "s3v4"
 
