@@ -83,17 +83,17 @@ Add this CORS configuration (bucket --> _Permissions_ tab --> _CORS_ at the bott
 And create an IAM user with this policy:
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::bucket-name",
-                "arn:aws:s3:::bucket-name/*"
-            ]
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::bucket-name",
+        "arn:aws:s3:::bucket-name/*"
+      ]
+    }
+  ]
 }
 ```
 It gives access to `bucket-name` only.
