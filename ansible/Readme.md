@@ -98,7 +98,7 @@ Note that **credentials give access to all the spaces in the account**
 [³](https://ideas.digitalocean.com/storage/p/access-key-per-space),
 so create a dedicated account for the project, so only staging and production share credentials.
 
-Create the space in the cloud console, enabling _CDN_. Set `AWS_STORAGE_BUCKET_NAME` and `DIGITALOCEAN_SPACES_REGION` in `.env`.
+Create the space in the cloud console. Set `AWS_STORAGE_BUCKET_NAME` and `DO_SPACES_REGION` in `.env`.
 
 Then in _API_, in _Spaces access keys_ click _Generate New Key_. Set it in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 

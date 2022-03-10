@@ -155,15 +155,12 @@ if AWS_STORAGE_BUCKET_NAME:
     AWS_DEFAULT_ACL = None
     AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-    DIGITALOCEAN_SPACES_REGION = os.environ.get("DIGITALOCEAN_SPACES_REGION", None)
-    if DIGITALOCEAN_SPACES_REGION:
-        AWS_S3_ENDPOINT_URL = f"https://{DIGITALOCEAN_SPACES_REGION}.digitaloceanspaces.com"
-        AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{DIGITALOCEAN_SPACES_REGION}.cdn.digitaloceanspaces.com"
+    DO_SPACES_REGION = os.environ.get("DO_SPACES_REGION", None)
+    DO_SPACES_CDN_ENABLED = False
 
-        ################ TODO: useful?
-        # AWS_S3_OBJECT_PARAMETERS = {
-        #     'CacheControl': 'max-age=86400',
-        # }
+    if DO_SPACES_REGION:
+        AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
+        DO_SPACES_CDN_ENABLED = os.environ.get("DO_SPACES_CDN_ENABLED", True) == "True"
 
     STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
     DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
