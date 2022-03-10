@@ -70,6 +70,16 @@ Create the bucket with:
 - _Object Ownership: ACLs enabled_
 - all _Block public access_ settings off
 
+Add this CORS configuration (bucket --> _Permissions_ tab --> _CORS_ at the bottom), replacing with the correct Origin:
+```json
+[
+  {
+    "AllowedMethods": ["GET", "HEAD"],
+    "AllowedOrigins": ["https://django3-stg.do.magnet.cl"]
+  }
+]
+```
+
 And create an IAM user with this policy:
 ```json
 {
@@ -100,8 +110,8 @@ so create a dedicated account for the project, so only staging and production sh
 
 Create the space in the cloud console. Set `AWS_STORAGE_BUCKET_NAME` and `DO_SPACES_REGION` in `.env`.
 
+In the settings of the space in the cloud console, in _CORS Configurations_ click _Add_. Add the server's url and allow `GET` and `HEAD`.
+
 Then in _API_, in _Spaces access keys_ click _Generate New Key_. Set it in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
-### TODO: CORS?
-
-https://care-stg.aws.magnet.cl/admin/ couldn't load https://care-stg.s3.amazonaws.com/static/djangocms_admin_style/fonts/django-admin-iconfont.woff2?v=3.2.0 and had no plus and pencil icons
+TODO: Cache-Control?
