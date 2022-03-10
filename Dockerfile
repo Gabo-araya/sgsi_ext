@@ -1,7 +1,7 @@
 #####################################
 # Base image python + node + poetry
 #####################################
-FROM python:3.9.9-slim-bullseye AS python-node-base
+FROM python:3.9.10-slim-bullseye AS python-node-base
 
 WORKDIR /usr/src/app
 
