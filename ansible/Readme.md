@@ -113,5 +113,3 @@ Create the space in the cloud console. Set `AWS_STORAGE_BUCKET_NAME` and `DO_SPA
 In the settings of the space in the cloud console, in _CORS Configurations_ click _Add_. Add the server's url and allow `GET` and `HEAD`.
 
 Then in _API_, in _Spaces access keys_ click _Generate New Key_. Set it in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
-
-TODO: Cache-Control?
