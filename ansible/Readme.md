@@ -98,8 +98,6 @@ And create an IAM user with this policy:
 ```
 It gives access to `bucket-name` only.
 
-Then set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_STORAGE_BUCKET_NAME` in `.env`.
-
 ### Provided by DigitalOcean
 
 Note that **credentials give access to all the spaces in the account**
@@ -108,8 +106,8 @@ Note that **credentials give access to all the spaces in the account**
 [³](https://ideas.digitalocean.com/storage/p/access-key-per-space),
 so create a dedicated account for the project, so only staging and production share credentials.
 
-Create the space in the cloud console. Set `AWS_STORAGE_BUCKET_NAME` and `DO_SPACES_REGION` in `.env`.
+Create the space in the cloud console. Take note of the space name and region, to set them when `deploy.sh` is run.
 
 In the settings of the space in the cloud console, in _CORS Configurations_ click _Add_. Add the server's url and allow `GET` and `HEAD`.
 
-Then in _API_, in _Spaces access keys_ click _Generate New Key_. Set it in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+Then in _API_, in _Spaces access keys_ click _Generate New Key_. Take note of the key and its secret.
