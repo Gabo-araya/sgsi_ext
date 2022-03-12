@@ -110,7 +110,7 @@
         remove_orphans: yes
         recreate: "{{ 'always' if env_recreate == '1' else 'smart' }}"
       vars:
-        env_recreate: "{{ lookup('env', 'recreate')|default('0') }}"
+        env_recreate: "{{ lookup('env', 'deploy_recreate')|default('0') }}"
       tags: update
 
     # TODO: poetry run ./manage.py check --deploy

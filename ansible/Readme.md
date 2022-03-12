@@ -16,7 +16,7 @@ For faster deployments after the first one, you may use:
 ansible/update.sh dev
 ```
 
-Containers will be recreated if their image is updated, or "when their configuration differs from the service definition". So if there have been changes to .env files, or bind-mounted configuration files, append `--recreate` to deploy/update.sh to load changes.
+Containers will be recreated if their image is updated, or "when their configuration differs from the service definition". So if there have been changes to .env files, or bind-mounted configuration files, run `deploy/update.sh -r ...` to load changes.
 
 ## Database backups
 
