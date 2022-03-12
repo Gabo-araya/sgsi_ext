@@ -4,10 +4,13 @@ cd "$(dirname "$0")"
 
 deploy_recreate=0
 
-while getopts r opt; do
+while getopts rc opt; do
   case $opt in
     r)
       deploy_recreate=1
+      ;;
+    c)
+      deploy_cache_ignore=1
       ;;
     ?)
       exit 1
@@ -15,6 +18,7 @@ while getopts r opt; do
 done
 
 export deploy_recreate
+export deploy_cache_ignore
 shift $((OPTIND - 1))
 
 if (( $# == 0 )); then

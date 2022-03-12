@@ -18,6 +18,8 @@ ansible/update.sh dev
 
 Containers will be recreated if their image is updated, or "when their configuration differs from the service definition". So if there have been changes to .env files, or bind-mounted configuration files, run `deploy/update.sh -r ...` to load changes.
 
+To upgrade unversioned dependencies, for example apt packages, instead of running _update && upgrade_ inside the container, rebuild the images ignoring cache, by running `update.sh` with `-c`.
+
 ## Database backups
 
 The database is automatically backed up by update.sh/deploy.sh when `git pull` changes commit.
