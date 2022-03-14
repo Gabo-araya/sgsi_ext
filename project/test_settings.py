@@ -10,3 +10,7 @@ from .settings import *  # noqa:F401,F403
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
 ]
+
+# Code should not behave differently when running tests.
+# Access this setting only if strictly required.
+TEST = True
