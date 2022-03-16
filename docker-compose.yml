@@ -11,11 +11,15 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-pgdata:/var/lib/postgresql/data/pgdata
+      - ./db_dumps:/db_dumps
   django:
     build:
       context: .
       target: production
     env_file: .env
+    environment:
+      # To be set in this container only, so the postgres container still uses the passwordless socket.
+      PGHOST: $POSTGRES_HOST
     depends_on:
       postgres:
         condition: service_healthy

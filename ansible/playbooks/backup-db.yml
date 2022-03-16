@@ -1,0 +1,5 @@
+- name: backup DB
+  hosts: all
+  gather_facts: no
+  roles:
+    - backup-db

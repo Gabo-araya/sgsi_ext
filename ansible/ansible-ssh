@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# From https://github.com/selivan/ansible-ssh/ but faster because it handles less cases.
+
+set -euo pipefail
+
+if (( $# == 0 )); then
+  echo "Please specify target server"
+  exit 1
+fi
+
+inventory=$(ansible-inventory --host "$1")
+shift   # All other arguments are ssh arguments
+host=$(echo "$inventory" | jq --raw-output .ansible_host)
+user=$(echo "$inventory" | jq --raw-output .ansible_user)
+port=$(echo "$inventory" | jq --raw-output ".ansible_port // empty")
+if [ -n "$port" ]; then
+  port=-p$port
+fi
+
+# shellcheck disable=SC2086
+exec ssh $port "$user@$host" "$@"

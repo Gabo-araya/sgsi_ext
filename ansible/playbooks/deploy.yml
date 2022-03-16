@@ -8,22 +8,26 @@
         repo: "{{ git_url }}"
         version: "{{ branch }}"
         dest: "{{ project_name }}"
-      # Remotes are sometimes flaky, so:
+      # Remotes sometimes fail once, so:
       register: git_result
-      retries: 2
-      delay: 5
+      retries: 1
+      delay: 3
       until: git_result is succeeded
       tags: update
 
     - name: backup DB on code change
-      debug:
-        msg: "TODO: backup DB"
-      when: git_result.changed
+      include_role:
+        name: backup-db
+        apply:
+          tags: update
+      when:                               # Skip backup on:
+        - git_result.changed              #   - no changes, or
+        - git_result.before is not none   #   - first clone.
       tags: update
 
     - name: copy created .env from controller
       copy:
-        src: ../.deploy.env
+        src: ../../.deploy.env
         dest: "{{ project_name }}/.env"
         mode: "600"
         force: no
@@ -54,9 +58,11 @@
         path: "{{ project_name }}/docker-compose.override.yml"
         state: link
 
-    - name: install pip (for ansible requirements)
+    - name: install apt packages
       apt:
-        name: python3-pip
+        name:
+          - python3-pip   # For ansible requirements
+          - pv            # Progress for dump download
         state: present
       become: yes
 
