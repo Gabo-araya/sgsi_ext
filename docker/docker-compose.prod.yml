@@ -31,6 +31,8 @@ services:
       - memcached
       - --memory-limit=${MEMCACHED_MEMORY}
       - --threads=${MEMCACHED_THREADS}
+      # Uncomment to check for activity:
+      # - -vv
 
 volumes:
   nginx_secrets:
