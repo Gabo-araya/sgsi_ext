@@ -53,6 +53,7 @@ if [[ $input_lower == y ]]; then
       echo "exec \
         docker-compose exec django poetry run ./manage.py createsuperuser \
         0<&3 3<&-" | newgrp docker
+      echo -e "\n"
     fi
   fi
 fi
