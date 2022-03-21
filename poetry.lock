@@ -632,6 +632,17 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "pymemcache"
+version = "3.5.1"
+description = "A comprehensive, fast, pure Python memcached client"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+
+[[package]]
 name = "pyparsing"
 version = "3.0.6"
 description = "Python parsing module"
@@ -876,7 +887,7 @@ tests = ["coverage", "flake8", "wheel"]
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.9"
-content-hash = "e7cc7dcd22c32d772bdaf2a7e657149e71ddb722c89d8cc66a37ea18a0931fc3"
+content-hash = "f6c0983bb562f8649f0881f89ea2b816ace1ace97c3f35848cd37e190b74ed03"
 
 [metadata.files]
 ansible = [
@@ -1275,6 +1286,10 @@ pyflakes = [
 pygments = [
     {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},
     {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
+]
+pymemcache = [
+    {file = "pymemcache-3.5.1-py2.py3-none-any.whl", hash = "sha256:91ca2afe0eff777d5f4c848affee5e469384a680a29bd6968186db940c7f56b7"},
+    {file = "pymemcache-3.5.1.tar.gz", hash = "sha256:c072a17366188294fd012a37fcb4d238e6dd27b96679982b11681c8baab6de59"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.6-py3-none-any.whl", hash = "sha256:04ff808a5b90911829c55c4e26f75fa5ca8a2f5f36aa3a51f68e27033341d3e4"},

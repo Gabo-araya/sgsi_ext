@@ -24,9 +24,13 @@ services:
       - ./project/media:/usr/share/nginx/media
       - nginx_secrets:/etc/letsencrypt
 
-  # TODO
-  # memcached:
-  # https://docs.djangoproject.com/en/3.2/topics/cache/#memcached
+  memcached:
+    image: memcached:1.6-alpine
+    restart: unless-stopped
+    command:
+      - memcached
+      - --memory-limit=${MEMCACHED_MEMORY}
+      - --threads=${MEMCACHED_THREADS}
 
 volumes:
   nginx_secrets:
