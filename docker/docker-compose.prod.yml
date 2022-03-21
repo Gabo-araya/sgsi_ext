@@ -5,6 +5,8 @@ services:
       interval: 10s
       timeout: 6s
       start_period: 30s
+    depends_on:
+      - memcached
 
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
