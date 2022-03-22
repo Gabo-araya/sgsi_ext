@@ -301,3 +301,6 @@ SECURE_HSTS_SECONDS = 0
 
 SECURE_SSL_REDIRECT = True
 # Requests are redirected by nginx, but setting this here silences a warning.
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
