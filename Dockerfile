@@ -116,7 +116,7 @@ RUN \
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
 # Install Poetry dev-dependencies (in separate layer because they should change more often):
-RUN poetry install
+RUN poetry install -E "code-format" -E "ansible"
 # FIXME: this step is super slow.
 
 # Prevent development container shutdown:
