@@ -23,7 +23,7 @@ else
   postgres_user="postgres"
   postgres_password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
   postgres_db=$project_name
-  secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
+  secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
   django_debug=True
   aws_access_key_id=
   aws_secret_access_key=
