@@ -82,6 +82,13 @@ RUN poetry run django-admin compilemessages
 CMD ["docker/django/prod_cmd.sh"]
 
 #####################################
+# CI Test image
+#####################################
+FROM production AS test
+# Make sure linters, style checkers and test runners get installed.
+RUN poetry install
+
+#####################################
 # Development image
 #####################################
 FROM project-dependencies AS development
