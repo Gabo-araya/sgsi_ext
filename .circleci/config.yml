@@ -1,0 +1,91 @@
+version: 2.1
+executors:
+  base-executor:
+    resource_class: medium
+    docker:
+      - image: cimg/base:stable
+        user: root
+    working_directory: ~/app
+jobs:
+  build:
+    executor: base-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.11
+      - restore_cache:
+          keys:
+            - v1-prd-{{ .Branch }}
+            - v1-prd-
+          paths:
+            - ~/output/app.tar.gz
+      - run:
+          name: Create output directory
+          command: |
+            mkdir -p ~/output
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            gunzip -c ~/output/app.tar.gz | docker load | true
+      - run:
+          name: Build production environment
+          command: |
+            docker build --target production -t app .
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            docker save app | gzip > ~/output/app.tar.gz
+      - save_cache:
+          key: v1-prd-{{ .Branch }}-{{ epoch }}
+          paths:
+            - ~/output/app.tar.gz
+      - persist_to_workspace:
+          root: ~/output
+          paths:
+            - app.tar.gz
+  test:
+    executor: base-executor
+    steps:
+      - attach_workspace:
+          at: ~/output
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.11
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            gunzip -c ~/output/app.tar.gz | docker load | true
+      - run:
+          name: Start artifact collector
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run --user root artifact-collector
+          background: true
+      - run:
+          name: Prepare test environment
+          command: |
+            COMPOSE_DOCKER_CLI_BUILD=1 \
+            docker-compose -f docker/docker-compose.ci.yml build app-test
+      - run:
+          name: Run tests
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run pytest
+      - run:
+          name: Copy artifacts
+          when: always
+          command: |
+            mkdir -p ~/artifacts
+            docker cp $(docker-compose -f docker/docker-compose.ci.yml ps -q artifact-collector):/artifacts ~/artifacts
+            ls ~/artifacts
+      - store_test_results:
+          path: ~/artifacts/
+
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
