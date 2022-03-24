@@ -91,6 +91,11 @@
         msg: Freed {{ prune.images_space_reclaimed | human_readable }}
       tags: update
 
+    - name: check if nginx will take a long time to start
+      stat:
+        path: "{{ project_name }}/docker/volumes/nginx_secrets/"
+      register: stat_nginx_secrets
+
     - name: build and start containers
       # "dcupbd"
       community.docker.docker_compose:
@@ -129,10 +134,14 @@
         url: https://{{ server_domain }}
         force: yes  # Ensure no cache
       tags: update
+      # Skip this check on first deploy, because dhparams generation takes a long time:
+      when: >
+        stat_nginx_secrets is not defined
+        or stat_nginx_secrets.stat.exists
+      # "is not defined" because task that registers it has no "update" tag
 
       # Some retries because nginx may not be ready yet:
       register: test_req
       until: test_req is succeeded
       retries: 3
       delay: 1
-      # TODO: skip on first deploy
