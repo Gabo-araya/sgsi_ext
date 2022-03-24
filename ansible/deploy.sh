@@ -25,12 +25,11 @@ if (( $# == 0 )); then
   echo "Please specify target server"
   exit 1
 fi
-limit=$1
-# improvement: implement update for two servers at same time
+target=$1
 
 
 ansible-role() {
-  ansible "$limit" --playbook-dir playbooks/ -m include_role -a name="$1"
+  ansible "$target" --playbook-dir playbooks/ -m include_role -a name="$1"
 }
 
 
@@ -39,10 +38,10 @@ if [[ "$(basename "$0")" == "update.sh" ]]; then
 else
   tags=""
 
-  echo "Checking for .env existance on $limit..."
+  echo "Checking for .env existance on $target..."
 
   stat_ansible_rc=0
-  stat_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$limit" playbooks/check-cloned.yml) || stat_ansible_rc=$?
+  stat_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$target" playbooks/check-cloned.yml) || stat_ansible_rc=$?
   if (( stat_ansible_rc > 0 )); then
     echo "$stat_json" | jq
     exit $stat_ansible_rc
@@ -70,10 +69,10 @@ else
   if (( env_jq_rc == 1 )); then
     # Prompt for new .env file
     cd ..
-    (umask 177; scripts/env-init-prod.sh "$limit")
+    (umask 177; scripts/env-init-prod.sh "$target")
     cd ansible
-    # shellcheck disable=SC2064  # Expand $limit now
-    trap "rm -f ../deploy.$limit.env" EXIT  # Avoid keeping plaintext secrets outside server
+    # shellcheck disable=SC2064  # Expand $target now
+    trap "rm -f ../deploy.$target.env" EXIT  # Avoid keeping plaintext secrets outside server
     export create_dotenv=1
   else
     export create_dotenv=0
@@ -81,8 +80,8 @@ else
 fi
 
 # shellcheck disable=SC2086
-ansible-playbook --limit "$limit" $tags playbooks/deploy.yml
+ansible-playbook --limit "$target" $tags playbooks/deploy.yml
 
 if [[ "$(basename "$0")" != "update.sh" ]]; then
-  ansible-ssh "$limit" -t "$(yq -r .project_name group_vars/all.yml)/ansible/scripts/offer_superuser.sh"
+  ansible-ssh "$target" -t "$(yq -r .project_name group_vars/all.yml)/ansible/scripts/offer_superuser.sh"
 fi
