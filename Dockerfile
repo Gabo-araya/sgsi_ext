@@ -58,8 +58,6 @@ COPY . .
 
 RUN poetry run django-admin compilemessages
 
-# TODO: shortcut script to dj
-
 # TODO: django-cron
 # TODO: source poetry env in entrypoint
 # TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
