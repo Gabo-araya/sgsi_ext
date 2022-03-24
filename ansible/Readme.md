@@ -115,3 +115,16 @@ Create the space in the cloud console. Take note of the space name and region, t
 In the settings of the space in the cloud console, in _CORS Configurations_ click _Add_. Add the server's url and allow `GET` and `HEAD`.
 
 Then in _API_, in _Spaces access keys_ click _Generate New Key_. Take note of the key and its secret.
+
+## Logs
+
+If you are not familiar with docker-compose:
+- Run `docker-compose logs django` to see the output of the `django` container
+- Add `-f` after `logs` to wait for new messages
+- Add `-t` after `logs` if you want extra timestamps
+
+### Cron logs
+
+Running `docker-compose logs ofelia` gives you the output of the `runcrons` management command, which is usually nothing. The logs are in `www.example.com/admin/django_cron/cronjoblog/`
+
+TODO: replace previous paragraph if an alternative to django-cron is installed, or remove this note when django-cron is installed.
