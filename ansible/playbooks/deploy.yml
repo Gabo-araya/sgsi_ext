@@ -7,28 +7,6 @@
     created_env_path: ../../deploy.{{ ansible_limit }}.env
 
   tasks:
-    - name: clone/pull repository
-      git:
-        repo: "{{ git_repo }}"
-        version: "{{ branch }}"
-        dest: "{{ project_name }}"
-      # Remotes sometimes fail once, so:
-      register: git_result
-      retries: 1
-      delay: 3
-      until: git_result is succeeded
-      tags: update
-
-    - name: backup DB on code change
-      include_role:
-        name: backup-db
-        apply:
-          tags: update
-      when:                               # Skip backup on:
-        - git_result.changed              #   - no changes, or
-        - git_result.before is not none   #   - first clone.
-      tags: update
-
     - name: copy created .env from controller
       copy:
         src: "{{ created_env_path }}"
@@ -50,6 +28,21 @@
         path: "{{ created_env_path }}"
         state: absent
       when: create_dotenv
+
+    - import_role:
+        name: git-clonepull
+      tags: update
+
+    - name: backup DB on code changes
+      include_role:
+        name: backup-db
+        apply:
+          tags: update
+      # Skip backup if no changes:
+      # (or if this was the first clone, ran by deploy.sh,
+      # and then no changes with pull in this playbook)
+      when: git_result.changed
+      tags: update
 
     - name: set ALLOWED_HOST
       lineinfile:
@@ -140,5 +133,6 @@
       # Some retries because nginx may not be ready yet:
       register: test_req
       until: test_req is succeeded
-      retries: 10
+      retries: 3
       delay: 1
+      # TODO: skip on first deploy

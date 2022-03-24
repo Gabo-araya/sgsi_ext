@@ -1,0 +1,10 @@
+- name: clone/pull repository
+  git:
+    repo: "{{ git_repo }}"
+    version: "{{ branch }}"
+    dest: "{{ project_name }}"
+  # Remotes sometimes fail once, so:
+  register: git_result
+  retries: 1
+  delay: 1
+  until: git_result is succeeded
