@@ -5,6 +5,9 @@ executors:
     docker:
       - image: cimg/base:stable
         user: root
+        environment:
+          DOCKER_BUILDKIT: 1
+          COMPOSE_DOCKER_CLI_BUILD: 1
     working_directory: ~/app
 jobs:
   build:
@@ -56,7 +59,7 @@ jobs:
           name: Load Docker image layer cache
           command: |
             set +o pipefail
-            gunzip -c ~/output/app.tar.gz | docker load | true
+            gunzip -c ~/output/app.tar.gz | docker load
       - run:
           name: Start artifact collector
           command: |
@@ -65,7 +68,6 @@ jobs:
       - run:
           name: Prepare test environment
           command: |
-            COMPOSE_DOCKER_CLI_BUILD=1 \
             docker-compose -f docker/docker-compose.ci.yml build app-test
       - run:
           name: Run tests
