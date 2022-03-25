@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   db:
-    image: "postgres:12-alpine"
+    image: "postgres:14-alpine"
     env_file: "ci_env"
 
   app-test:
