@@ -1,3 +1,4 @@
+# TODO: match new env vars
 # PostgreSQL settings
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
