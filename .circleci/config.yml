@@ -5,9 +5,9 @@ executors:
     docker:
       - image: cimg/base:stable
         user: root
-        environment:
-          DOCKER_BUILDKIT: 1
-          COMPOSE_DOCKER_CLI_BUILD: 1
+    environment:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
     working_directory: ~/app
 jobs:
   build:
@@ -32,13 +32,17 @@ jobs:
             set +o pipefail
             gunzip -c ~/output/app.tar.gz | docker load | true
       - run:
-          name: Build production environment
+          name: Build production image
           command: |
             docker build --progress=plain --target production -t app .
       - run:
+          name: Build test image
+          command: |
+            docker build --progress=plain --target test -t app-test .
+      - run:
           name: Save Docker image layer cache
           command: |
-            docker save app | gzip > ~/output/app.tar.gz
+            docker save app app-test | gzip > ~/output/app.tar.gz
       - save_cache:
           key: v1-prd-{{ .Branch }}-{{ epoch }}
           paths:
@@ -65,10 +69,6 @@ jobs:
           command: |
             docker-compose -f docker/docker-compose.ci.yml run --user root artifact-collector
           background: true
-      - run:
-          name: Prepare test environment
-          command: |
-            docker-compose -f docker/docker-compose.ci.yml build --progress=plain app-test
       - run:
           name: Run tests
           command: |
