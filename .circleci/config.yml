@@ -34,7 +34,7 @@ jobs:
       - run:
           name: Build production environment
           command: |
-            docker build --target production -t app .
+            docker build --progress=plain --target production -t app .
       - run:
           name: Save Docker image layer cache
           command: |
@@ -68,7 +68,7 @@ jobs:
       - run:
           name: Prepare test environment
           command: |
-            docker-compose -f docker/docker-compose.ci.yml build app-test
+            docker-compose -f docker/docker-compose.ci.yml build --progress=plain app-test
       - run:
           name: Run tests
           command: |
