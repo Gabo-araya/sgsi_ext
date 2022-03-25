@@ -34,6 +34,7 @@ flake8 = "4.0.1"
 
 [tool.poetry.extras]
 ansible = ["ansible"]
+# TODO: add yq here
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
