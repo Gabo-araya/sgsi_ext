@@ -16,21 +16,10 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 20.10.11
-      - restore_cache:
-          keys:
-            - v1-prd-{{ .Branch }}
-            - v1-prd-
-          paths:
-            - ~/output/app.tar.gz
       - run:
           name: Create output directory
           command: |
             mkdir -p ~/output
-      - run:
-          name: Load Docker image layer cache
-          command: |
-            set +o pipefail
-            gunzip -c ~/output/app.tar.gz | docker load | true
       - run:
           name: Build production image
           command: |
@@ -43,10 +32,6 @@ jobs:
           name: Save Docker image layer cache
           command: |
             docker save app app-test | gzip > ~/output/app.tar.gz
-      - save_cache:
-          key: v1-prd-{{ .Branch }}-{{ epoch }}
-          paths:
-            - ~/output/app.tar.gz
       - persist_to_workspace:
           root: ~/output
           paths:
