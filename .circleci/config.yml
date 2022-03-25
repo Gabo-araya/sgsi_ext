@@ -52,9 +52,8 @@ jobs:
       - run:
           name: Start artifact collector
           command: |
-            COLLECTOR_CONTAINER_ID=\
-            $(docker-compose -f docker/docker-compose.ci.yml run -d --user root artifact-collector)
-          background: true
+            CONTAINER_ID=$(docker-compose -f docker/docker-compose.ci.yml run -d --user root artifact-collector)
+            echo "export COLLECTOR_CONTAINER_ID=$CONTAINER_ID" >> $BASH_ENV
       - run:
           name: Run tests
           command: |
@@ -63,7 +62,6 @@ jobs:
           name: Copy artifacts
           when: always
           command: |
-            mkdir -p ~/artifacts
             docker cp $COLLECTOR_CONTAINER_ID:/artifacts ~/artifacts
             ls ~/artifacts
       - store_test_results:
