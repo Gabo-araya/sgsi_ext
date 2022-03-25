@@ -48,11 +48,12 @@ jobs:
           name: Load Docker image layer cache
           command: |
             set +o pipefail
-            gunzip -c ~/output/app.tar.gz | docker load
+            gunzip -c ~/output/app.tar.gz | docker load | true
       - run:
           name: Start artifact collector
           command: |
-            docker-compose -f docker/docker-compose.ci.yml run --user root artifact-collector
+            COLLECTOR_CONTAINER_ID=\
+            $(docker-compose -f docker/docker-compose.ci.yml run -d --user root artifact-collector)
           background: true
       - run:
           name: Run tests
@@ -63,7 +64,7 @@ jobs:
           when: always
           command: |
             mkdir -p ~/artifacts
-            docker cp $(docker-compose -f docker/docker-compose.ci.yml ps -q artifact-collector):/artifacts ~/artifacts
+            docker cp $COLLECTOR_CONTAINER_ID:/artifacts ~/artifacts
             ls ~/artifacts
       - store_test_results:
           path: ~/artifacts/
