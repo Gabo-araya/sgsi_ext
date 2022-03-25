@@ -295,9 +295,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # This assumes the provided nginx is always before django. It contains:
 # "proxy_set_header X-Forwarded-Proto $scheme;"
 
-# Disable HSTS. Then if the certificate is expired by a couple of days,
-# the site can still be used.
-SECURE_HSTS_SECONDS = 0
+# HSTS added by Django. This is redundant because nginx adds it as well,
+# but it silences deploy check warnings.
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 SECURE_SSL_REDIRECT = True
 # Requests are redirected by nginx, but setting this here silences a warning.
