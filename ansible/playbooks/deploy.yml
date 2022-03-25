@@ -114,7 +114,7 @@
       tags: update
 
     - name: run deployment checks
-      command: docker-compose exec django poetry run ./manage.py check --deploy
+      command: docker-compose exec django ./manage.py check --deploy
       # Note: it's possible to fail on warning by appending: --fail-level WARNING
       args:
         chdir: "{{ project_name }}"

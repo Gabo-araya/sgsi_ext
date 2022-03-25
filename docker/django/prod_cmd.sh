@@ -11,10 +11,10 @@ title_print "wait for database"
 while ! pg_isready; do sleep 2; done
 
 title_print "migrate"
-poetry run ./manage.py migrate
+./manage.py migrate
 
 title_print "collectstatic"
-poetry run ./manage.py collectstatic --noinput
+./manage.py collectstatic --noinput
 
 title_print "gunicorn"
-poetry run gunicorn project.wsgi:application --config docker/django/gunicorn_conf.py
+gunicorn project.wsgi:application --config docker/django/gunicorn_conf.py

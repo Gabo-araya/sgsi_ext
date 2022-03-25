@@ -10,9 +10,9 @@ services:
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.django-cron.schedule: "@every 1m"
-      # ofelia.job-exec.django-cron.command: poetry run ./manage.py runcrons
+      # ofelia.job-exec.django-cron.command: ./manage.py runcrons
       ofelia.job-exec.django-cron.command: >
-        poetry run python -c "print('TODO: install either old django-cron or modern replacement')"
+        ./manage.py shell -c "print('TODO: install either old django-cron or modern replacement')"
 
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
