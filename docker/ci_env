@@ -1,0 +1,15 @@
+# PostgreSQL settings
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=circleci
+POSTGRES_PASSWORD=circlepassword
+POSTGRES_DB=circle_test
+
+PGUSER=$POSTGRES_USER
+PGDATABASE=$POSTGRES_DB
+PGDATA=/var/lib/postgresql/data/pgdata
+POSTGRES_HOST_AUTH_METHOD=trust
+
+# Django settings
+SECRET_KEY=74(q4c2k%ts_%!@(17s^jwwf4)*$i(=$147$_mv)pf!pg9igyf
+DEBUG=True

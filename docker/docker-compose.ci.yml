@@ -3,13 +3,11 @@ version: "3.4"
 services:
   db:
     image: "postgres:12-alpine"
-    environment:
-      POSTGRES_USER: circleci
-      POSTGRES_DB: circle_test
-      POSTGRES_HOST_AUTH_METHOD: trust
+    env_file: "ci_env"
 
   app-test:
     image: app-test
+    env_file: "ci_env"
     depends_on:
       - db
     volumes:
