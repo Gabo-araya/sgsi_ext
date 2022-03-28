@@ -20,9 +20,11 @@ mkdir -p ~/.local/share/magnet-django-devcontainer/zshcustom
 
 newgrp docker <<EOF
 docker-compose build && \
+docker-compose down && \
 docker-compose run django docker/django/venv_to_dotenv.sh .env && \
-docker-compose up --detach --force-recreate
+docker-compose up --detach
 EOF
+# "down" because https://github.com/docker/compose/issues/4548
 
 # Set vscode to use python in poetry env
 mkdir -p .vscode
