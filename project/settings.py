@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 # standard library
 from pathlib import Path
 import os
+import sys
 
 # django
 from django.urls import reverse_lazy
@@ -33,6 +34,11 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+SITE_ID = 1
+
+# TEST should be true if we are running python tests
+TEST = "test" in sys.argv or "pytest" in sys.argv[0]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,9 +47,16 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.sites",
     "django.contrib.staticfiles",
+    # required apps
+    "base.apps.BaseConfig",
+    "users",
     # external
     "loginas",
+    # internal
+    "parameters",
+    "regions",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +82,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.tz",
+                "django.template.context_processors.i18n",
             ],
         },
     },
@@ -112,6 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = "users.User"
 
 
 # Internationalization
@@ -174,49 +192,63 @@ LOGINAS_LOGOUT_REDIRECT_URL = reverse_lazy("admin:index")
 
 # logging
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse",
         },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
         },
     },
-    'formatters': {
-        'django.server': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[{server_time}] {message}',
-            'style': '{',
+    "formatters": {
+        "django.server": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] {message}",
+            "style": "{",
         }
     },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
+    "handlers": {
+        "console": {
+            "level": "INFO",
             # No 'filters', to log even when DEBUG=False
-            'class': 'logging.StreamHandler',
+            "class": "logging.StreamHandler",
         },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'django.server',
+        "django.server": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "django.server",
         },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+        "mail_admins": {
+            "level": "ERROR",
+            "filters": ["require_debug_false"],
+            "class": "django.utils.log.AdminEmailHandler",
+        },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'mail_admins'],
-            'level': 'INFO',
+    "loggers": {
+        "django": {
+            "handlers": ["console", "mail_admins"],
+            "level": "INFO",
         },
-        'django.server': {
-            'handlers': ['django.server'],
-            'level': 'INFO',
-            'propagate': False,
+        "django.server": {
+            "handlers": ["django.server"],
+            "level": "INFO",
+            "propagate": False,
         },
-    }
+    },
 }
+
+# The change's information of this fields will be ignored in the logs
+LOG_SENSITIVE_FIELDS = [
+    "password",
+]
+
+# These fields will be ignored in the logs
+LOG_IGNORE_FIELDS = [
+    "created_at",
+    "updated_at",
+    "original_dict",
+    "id",
+    "date_joined",
+]
