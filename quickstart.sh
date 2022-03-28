@@ -2,6 +2,11 @@
 set -euo pipefail
 source scripts/utils.sh
 
+if grep -q docker /proc/1/cgroup; then
+  color_print $red "quickstart doesn't work inside container"
+  exit 1
+fi
+
 # Create a local .env file if it does not exist
 ./scripts/env-init-dev.sh
 
