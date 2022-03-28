@@ -39,12 +39,12 @@ services:
       # Note: for this to work in OSX, the variable has to be overriden.
       # See comment at https://stackoverflow.com/questions/18136389/using-ssh-keys-inside-docker-container/36648428#36648428
 
-      # TODO: ipython history
-      # TODO: zsh history?
+      # Custom config shared between devcontainers:
+      - ~/.local/share/magnet-django-devcontainer/zshcustom:/root/.oh-my-zsh/custom/shared
+      - ~/.local/share/magnet-django-devcontainer/.ipython:/root/.ipython
 
     environment:
       SSH_AUTH_SOCK: /run/ssh-agent
-      ANSIBLE_CONFIG: /usr/src/app/ansible/ansible.cfg
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
     # cap_add:
@@ -54,9 +54,6 @@ services:
 
     # Easily connect to internal services without having to inspect the container for its IP or forward ports:
     network_mode: host
-
-    # Overrides default command so things don't shut down after the process ends.
-    command: ["sleep", "inf"]
 
   postgres:
     restart: "no"

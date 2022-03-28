@@ -16,6 +16,8 @@ if [[ ! -e docker-compose.override.yml ]]; then
   ln -s docker/docker-compose.dev.yml docker-compose.override.yml
 fi
 
+mkdir -p ~/.local/share/magnet-django-devcontainer/zshcustom
+
 echo "docker-compose up --detach --build" | newgrp docker
 
 # TODO: createsuperuser
