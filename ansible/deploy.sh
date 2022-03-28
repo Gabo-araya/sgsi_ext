@@ -7,6 +7,7 @@ if (( $# == 0 )); then
   exit 1
 fi
 limit=$1
+# TODO: implement update for two servers at same time
 
 if [[ $# -gt 1 && $2 == '--recreate' ]]; then
   export recreate=1
@@ -35,9 +36,10 @@ else
   elif (( stat_jq_res == 1 )); then
     # Prompt for new .env file
     cd ..
-    (umask 177; scripts/env-init-prod.sh)
+    (umask 177; scripts/env-init-prod.sh "$limit")
     cd ansible
-    trap "rm ../.deploy.env" EXIT
+    # shellcheck disable=SC2064  # Expand $limit now
+    trap "rm -f ../deploy.$limit.env" EXIT  # Avoid keeping plaintext secrets outside server
     export create_dotenv=1
   else
     export create_dotenv=0

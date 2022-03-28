@@ -45,7 +45,7 @@ RUN poetry run django-admin compilemessages
 
 # TODO: django-cron
 
-CMD ["docker/django/prod_entrypoint.sh"]
+CMD ["docker/django/production_cmd.sh"]
 
 #####################################
 # Development image
@@ -61,8 +61,7 @@ RUN \
   && apt-get update && apt-get install -y git htop jq zsh postgresql-client-14 \
   && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
   && rm -rf /var/lib/apt/lists/* \
-  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
-  && pip3 install yq
+  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
 # Install Poetry dev-dependencies:
 RUN poetry install

@@ -16,6 +16,8 @@ if [[ ! $dump_name ]]; then
   source scripts/create_dump.sh
 fi
 
+# Improvement: add support for https://github.com/Tesorio/django-anon
+
 color_print "$cyan" "Transfering $dump_name ..."
 
 dumps_path="$(yq -r .project_name group_vars/all.yml)/db_dumps"
