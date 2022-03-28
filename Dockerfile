@@ -3,6 +3,10 @@
 #####################################
 FROM python:3.9.12-slim-bullseye AS project-dependencies
 
+ENV PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    POETRY_NO_INTERACTION=1
+
 WORKDIR /usr/src/app
 
 # Base image already contains bash, so we can RUN with bash:
@@ -30,15 +34,19 @@ RUN \
   && apt-get update && apt-get install -y nodejs postgresql-client-14 \
 \
   # Reduce image size and prevent use of potentially obsolete lists:
-  && rm -rf /var/lib/apt/lists/* \
-\
-  && title_print "Installing Poetry" \
-  && pip install poetry
+  && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-dev
-# FIXME: delete poetry's cache
+RUN \
+    source scripts/utils.sh \
+    && title_print "Installing Poetry" \
+    && pip install poetry \
+    && poetry install --no-dev \
+\
+    # Remove caches to save some space
+    && poetry cache clear -n --all . \
+    && rm -rf ~/.cache/pypoetry/cache ~/.cache/pip/http
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
