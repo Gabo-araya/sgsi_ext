@@ -40,8 +40,12 @@ RUN \
 
 # Install python dependencies
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-dev
-# FIXME: delete poetry's cache
+RUN poetry install --no-dev \
+  # FIXME: delete poetry's cache
+\
+  # "dj" alias available from anywhere and also in production.
+  # No other aliases for production, as there may not be consensus for them.
+  && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
@@ -61,7 +65,7 @@ COPY . .
 
 RUN poetry run django-admin compilemessages
 
-# TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
+# TODO: zsh with scary production theme ($PGDATABASE as prompt)
 # TODO: ipython history in a volume
 
 CMD ["docker/django/prod_cmd.sh"]
