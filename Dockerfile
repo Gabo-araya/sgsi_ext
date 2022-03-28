@@ -58,11 +58,9 @@ COPY . .
 
 RUN poetry run django-admin compilemessages
 
+# TODO: source poetry env in entrypoint
 # TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
 # TODO: ipython history in a volume
-
-ENTRYPOINT ["docker/django/prod_entrypoint.sh"]
-RUN sed -i "s|venv_path_to_be_replaced_in_dockerfile|$(poetry env info --path)|" docker/django/prod_entrypoint.sh
 
 CMD ["docker/django/prod_cmd.sh"]
 
