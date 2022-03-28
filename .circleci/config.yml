@@ -66,6 +66,27 @@ jobs:
             ls ~/artifacts
       - store_test_results:
           path: ~/artifacts/
+  code-checks:
+    executor: base-executor
+    steps:
+      - attach_workspace:
+          at: ~/output
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.11
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            gunzip -c ~/output/app.tar.gz | docker load | true
+      - run:
+          name: Check for missing migrations
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run ./manage.py makemigrations --check --dry-run
+      - run:
+          name: Check code style
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run black --check --exclude "^.*\b(migrations)\b.*$" .
 
 workflows:
   version: 2
@@ -73,5 +94,8 @@ workflows:
     jobs:
       - build
       - test:
+          requires:
+            - build
+      - code-checks:
           requires:
             - build
