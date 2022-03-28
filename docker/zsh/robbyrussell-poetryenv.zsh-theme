@@ -1,5 +1,3 @@
-export VIRTUAL_ENV_DISABLE_PROMPT=x
-
 function virtualenv_info {
   [[ -n "$VIRTUAL_ENV" ]] && {
     # Originally: `basename $VIRTUAL_ENV`

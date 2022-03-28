@@ -18,7 +18,11 @@ fi
 
 mkdir -p ~/.local/share/magnet-django-devcontainer/zshcustom
 
-echo "docker-compose up --detach --build" | newgrp docker
+newgrp docker <<EOF
+docker-compose build && \
+docker-compose run django docker/django/venv_to_dotenv.sh .env && \
+docker-compose up --detach --force-recreate
+EOF
 
 # Set vscode to use python in poetry env
 mkdir -p .vscode

@@ -9,6 +9,9 @@ WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
 
+# Nicer prompt is managed by zsh themes, so disable default venv prompt:
+ENV VIRTUAL_ENV_DISABLE_PROMPT=x
+
 # "Prints" to locate which command is running:
 COPY scripts/utils.sh scripts/utils.sh
 RUN \
@@ -58,7 +61,6 @@ COPY . .
 
 RUN poetry run django-admin compilemessages
 
-# TODO: source poetry env in entrypoint
 # TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
 # TODO: ipython history in a volume
 
