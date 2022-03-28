@@ -5,7 +5,10 @@ if grep -q "^VIRTUAL_ENV=" "$1"; then
   exit
 fi
 
-source "$(cd /usr/src/app && poetry env info --path)/bin/activate"
+if [[ -z "$VIRTUAL_ENV" ]]; then
+  source "$(cd /usr/src/app && poetry env info --path)/bin/activate"
+  # Note: it only activates for the bash running this script.
+fi
 
 cat <<EOF >>"$1"
 
