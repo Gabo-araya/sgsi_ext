@@ -5,7 +5,8 @@ FROM python:3.9.12-slim-bullseye AS project-dependencies
 
 ENV PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
-    POETRY_NO_INTERACTION=1
+    POETRY_NO_INTERACTION=1 \
+    NPM_CACHE_DIR=/tmp/npm-cache
 
 WORKDIR /usr/src/app
 
@@ -50,7 +51,11 @@ RUN \
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
-# RUN npm ci && delete cache somehow
+# RUN \
+#     mkdir "$NPM_CACHE_DIR" \
+#     && npm ci --no-audit --cache "$NPM_CACHE_DIR" \
+#     && rm -rf "$NPM_CACHE_DIR"
+# TODO: delete cache
 
 #####################################
 # Production image
