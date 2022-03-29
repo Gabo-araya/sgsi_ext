@@ -13,3 +13,14 @@ To disable `Do you really want to exit ([y]/n)?` prompt of IPython, run:
 ipython profile create
 sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' /root/.ipython/profile_default/ipython_config.py
 ```
+
+### Solving `poetry.lock` merge conflicts
+
+If `pyproject.toml` is not conflicted, and the only conflict in `poetry.lock` is:
+```toml
+content-hash = "..."
+```
+you can solve it by running this inside the devcontainer:
+```sh
+git restore --staged --worktree poetry.lock && poetry lock --no-update && git add poetry.lock
+```
