@@ -1,16 +1,6 @@
 #!/bin/bash
 
-function print_green(){
-    echo -e "\033[32m$1\033[39m"
-}
-
-function print_red(){
-    echo -e "\033[31m$1\033[39m"
-}
-
-function print_blue(){
-    echo -e "\033[34m$1\033[39m"
-}
+source scripts/utils.sh
 
 function makemessages {
     if [ -d "$1" ]; then
@@ -22,12 +12,12 @@ function makemessages {
 
         cd ..
     else
-        print_red "folder \"$1\" does not exist"
+        color_print $red "folder \"$1\" does not exist"
     fi
 }
 
 function translate {
-    print_green "translating \"$1\""
+    color_print $green "translating \"$1\""
     if $COMPILE ; then
         cd "$1"
         django-admin compilemessages
@@ -43,7 +33,7 @@ while getopts "c" OPTION
 do
     case $OPTION in
         c)
-            print_blue "Compiling"
+            color_print $blue "Compiling"
             COMPILE=true
              ;;
         ?)
@@ -54,10 +44,10 @@ do
 done
 
 if [ $1 ] && [ $1 != '-c' ] ; then
-    print_blue "Only on app \"$1\""
+    color_print $blue "Only on app \"$1\""
     translate $1
 elif [ $2 ] && [ $2 != '-c' ] ; then
-    print_blue "Only on app \"$2\""
+    color_print $blue "Only on app \"$2\""
     translate $2
 else
     translate "base"
