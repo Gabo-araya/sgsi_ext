@@ -12,6 +12,7 @@ while ! pg_isready; do sleep 2; done
 
 title_print "migrate"
 dj migrate
+# TODO: env var to prevent automatic enormous migrations?
 
 title_print "collectstatic"
 dj collectstatic --noinput
