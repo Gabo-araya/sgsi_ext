@@ -7,6 +7,9 @@ if grep -q docker /proc/1/cgroup; then
   exit 1
 fi
 
+# TODO: check if port 5432 is free, and offer help to stop postgres
+# (container or host) according to `sudo lsof -t -i:5432`, /proc/PID/cgroup docker...
+
 # Create a local .env file if it does not exist
 ./scripts/env-init-dev.sh
 
