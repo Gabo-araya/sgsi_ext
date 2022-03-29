@@ -29,4 +29,8 @@ class S3StaticStorage(s3boto3.S3StaticStorage):
 class S3MediaStorage(s3boto3.S3Boto3Storage):
     location = "media"
     default_acl = "private"
+
+    # base.models.file_path method adds a random string.
+    # But if it's not used, and an upload tries to overwrite an existing file, for example a.jpg,
+    # this setting prevents it by uploading the new one with name a_K7dJ7Ys.jpg
     file_overwrite = False
