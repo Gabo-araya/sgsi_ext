@@ -3,10 +3,10 @@
 #####################################
 FROM python:3.9.12-slim-bullseye AS project-dependencies
 
-ENV PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    POETRY_NO_INTERACTION=1 \
-    NPM_CACHE_DIR=/tmp/npm-cache
+ENV PIP_DISABLE_PIP_VERSION_CHECK=on
+ARG NPM_CACHE_DIR=/tmp/npm-cache
+ARG PIP_NO_CACHE_DIR=off
+
 
 WORKDIR /usr/src/app
 
