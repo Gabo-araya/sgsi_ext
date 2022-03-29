@@ -2,17 +2,31 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+deploy_recreate=0
+
+while getopts rc opt; do
+  case $opt in
+    r)
+      deploy_recreate=1
+      ;;
+    c)
+      deploy_cache_ignore=1
+      ;;
+    ?)
+      exit 1
+  esac
+done
+
+export deploy_recreate
+export deploy_cache_ignore
+shift $((OPTIND - 1))
+
 if (( $# == 0 )); then
   echo "Please specify target server"
   exit 1
 fi
 limit=$1
-# TODO: implement update for two servers at same time
-
-if [[ $# -gt 1 && $2 == '--recreate' ]]; then
-  export recreate=1
-  echo "Will recreate containers."
-fi
+# improvement: implement update for two servers at same time
 
 if [[ "$(basename "$0")" == "update.sh" ]]; then
   tags="--tags update"

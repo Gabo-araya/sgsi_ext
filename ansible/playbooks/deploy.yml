@@ -107,10 +107,12 @@
           - docker-compose.yml
           - docker/docker-compose.prod.yml
         build: yes
+        nocache: "{{ true if env_cache_ignore == '1' else false }}"
         remove_orphans: yes
         recreate: "{{ 'always' if env_recreate == '1' else 'smart' }}"
       vars:
-        env_recreate: "{{ lookup('env', 'recreate')|default('0') }}"
+        env_recreate: "{{ lookup('env', 'deploy_recreate')|default('0') }}"
+        env_cache_ignore: "{{ lookup('env', 'deploy_cache_ignore')|default('0') }}"
       tags: update
 
     # TODO: poetry run ./manage.py check --deploy
