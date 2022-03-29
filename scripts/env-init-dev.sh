@@ -25,6 +25,10 @@ else
   postgres_db=$project_name
   secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
   django_debug=True
+  aws_access_key_id=
+  aws_secret_access_key=
+  bucket_name=
+  do_spaces_region=
 
   # Replace placeholders from template env file
   sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
@@ -34,6 +38,10 @@ else
   sed -i "s|{{postgres_db}}|$postgres_db|g" $env_file
   sed -i "s|{{secret_key}}|$secret_key|g" $env_file
   sed -i "s|{{django_debug}}|$django_debug|g" $env_file
+  sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
+  sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
+  sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
+  sed -i "s|{{do_spaces_region}}|$do_spaces_region|g" $env_file
 
   echo "Created $env_file file"
 fi

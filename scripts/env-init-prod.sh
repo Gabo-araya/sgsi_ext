@@ -49,6 +49,45 @@ secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
 
 django_debug=False
 
+color_print "$cyan" "Files storage location?"
+
+select files_loc in Local "Amazon S3" "DigitalOcean Spaces"; do
+  if [[ "$files_loc" == "Local" ]]; then
+    aws_access_key_id=
+    aws_secret_access_key=
+    bucket_name=
+    do_spaces_region=
+    break
+
+  elif [[ "$files_loc" == "Amazon S3" ]]; then
+    prompt "AWS_ACCESS_KEY_ID?" "AKIA..."
+    aws_access_key_id=$input
+
+    prompt "AWS_SECRET_ACCESS_KEY?" "s..."
+    aws_secret_access_key=$input
+
+    prompt "Bucket name?" "bucket-name"
+    bucket_name=$input
+
+    do_spaces_region=
+    break
+
+  elif [[ "$files_loc" == "DigitalOcean Spaces" ]]; then
+    prompt "AWS_ACCESS_KEY_ID?" "AKIA..."
+    aws_access_key_id=$input
+
+    prompt "AWS_SECRET_ACCESS_KEY?" "s..."
+    aws_secret_access_key=$input
+
+    prompt "Bucket name?" "bucket-name"
+    bucket_name=$input
+
+    prompt "Region?" "nyc3"
+    do_spaces_region=$input
+    break
+  fi
+done
+
 # Replace placeholders from template env file
 sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
 sed -i "s|{{postgres_port}}|$postgres_port|g" $env_file
@@ -57,3 +96,7 @@ sed -i "s|{{postgres_password}}|$postgres_password|g" $env_file
 sed -i "s|{{postgres_db}}|$postgres_db|g" $env_file
 sed -i "s|{{secret_key}}|$secret_key|g" $env_file
 sed -i "s|{{django_debug}}|$django_debug|g" $env_file
+sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
+sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
+sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
+sed -i "s|{{do_spaces_region}}|$do_spaces_region|g" $env_file

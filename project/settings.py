@@ -154,24 +154,45 @@ if DEBUG or not ENABLE_EMAILS:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("SMTP_HOST", None)
+EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 EMAIL_HOST_USER = os.environ.get("SMTP_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD", None)
-EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "webmaster@localhost")
 EMAIL_SENDER_NAME = os.environ.get("EMAIL_SENDER_NAME", "Sender Name")
 
+# Credentials for AWS services
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", None)
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = PROJECT_DIR / "static"
-STATIC_URL = "/static/"
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
+if AWS_STORAGE_BUCKET_NAME:
+    # Store static and media in S3 or DigitalOcean spaces.
+    AWS_DEFAULT_ACL = None
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-MEDIA_ROOT = PROJECT_DIR / "media"
-MEDIA_URL = "/media/"
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # Note: this applies to static files only
+    # (specifically to storages with `default_acl="public-read"` only)
 
-# TODO: STATICFILES_STORAGE and DEFAULT_FILE_STORAGE for S3 / DO spaces
-# see 'formy-plus.prod' for reference
+    DO_SPACES_REGION = os.environ.get("DO_SPACES_REGION", None)
+    DO_SPACES_CDN_ENABLED = False
+
+    if DO_SPACES_REGION:
+        AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
+        DO_SPACES_CDN_ENABLED = os.environ.get("DO_SPACES_CDN_ENABLED", True) == "True"
+
+    STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
+    DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
+
+else:
+    STATIC_ROOT = PROJECT_DIR / "static"
+    STATIC_URL = "/static/"
+
+    MEDIA_ROOT = PROJECT_DIR / "media"
+    MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

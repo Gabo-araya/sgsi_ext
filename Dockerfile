@@ -16,7 +16,7 @@ RUN \
   source scripts/utils.sh \
 \
   && title_print "Installing prerequisites" \
-  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext \
+  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext wait-for-it \
 \
   && title_print "Adding nodejs repo" \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
@@ -58,7 +58,9 @@ COPY . .
 RUN poetry run django-admin compilemessages
 
 # TODO: django-cron
-# TODO: zsh with poetry shell, dj aliases and scary production theme ($PGDATABASE as prompt)
+# TODO: source poetry env in entrypoint
+# TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
+# TODO: ipython history in a volume
 
 CMD ["docker/django/production_cmd.sh"]
 

@@ -61,3 +61,53 @@ So you can run queries on this remote DB running this command from server:
 ```sh
 docker-compose exec postgres psql
 ```
+
+## S3
+
+### Provided by Amazon
+
+Create the bucket with:
+- _Object Ownership: ACLs enabled_
+- all _Block public access_ settings off
+
+Add this CORS configuration (bucket --> _Permissions_ tab --> _CORS_ at the bottom), replacing with the correct Origin:
+```json
+[
+  {
+    "AllowedMethods": ["GET", "HEAD"],
+    "AllowedOrigins": ["https://django3-stg.do.magnet.cl"]
+  }
+]
+```
+
+And create an IAM user with this policy:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::bucket-name",
+        "arn:aws:s3:::bucket-name/*"
+      ]
+    }
+  ]
+}
+```
+It gives access to `bucket-name` only.
+
+### Provided by DigitalOcean
+
+Note that **credentials give access to all the spaces in the account**
+[¹](https://www.digitalocean.com/community/questions/spaces-different-keys-per-bucket)
+[²](https://www.digitalocean.com/community/questions/when-if-ever-will-spaces-support-individual-access-keys)
+[³](https://ideas.digitalocean.com/storage/p/access-key-per-space),
+so create a dedicated account for the project, so only staging and production share credentials.
+
+Create the space in the cloud console. Take note of the space name and region, to set them when `deploy.sh` is run.
+
+In the settings of the space in the cloud console, in _CORS Configurations_ click _Add_. Add the server's url and allow `GET` and `HEAD`.
+
+Then in _API_, in _Spaces access keys_ click _Generate New Key_. Take note of the key and its secret.
