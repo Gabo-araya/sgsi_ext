@@ -172,6 +172,7 @@ if AWS_STORAGE_BUCKET_NAME:
     # Store static and media in S3 or DigitalOcean spaces.
     AWS_DEFAULT_ACL = None
     AWS_S3_SIGNATURE_VERSION = "s3v4"
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 
     DO_SPACES_REGION = os.environ.get("DO_SPACES_REGION", None)
     DO_SPACES_CDN_ENABLED = False
@@ -179,8 +180,6 @@ if AWS_STORAGE_BUCKET_NAME:
     if DO_SPACES_REGION:
         AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
         DO_SPACES_CDN_ENABLED = os.environ.get("DO_SPACES_CDN_ENABLED", True) == "True"
-        # TODO: Cache-Control? Most guides recommend it:
-        # AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 
     STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
     DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
