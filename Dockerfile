@@ -1,7 +1,7 @@
 #####################################
 # Base image python + node + poetry
 #####################################
-FROM python:3.9.10-slim-bullseye AS project-dependencies
+FROM python:3.9.12-slim-bullseye AS project-dependencies
 
 WORKDIR /usr/src/app
 
