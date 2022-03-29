@@ -33,3 +33,18 @@ yq = "^2.14.0"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+required_plugins = "pytest-django"
+DJANGO_SETTINGS_MODULE = "project.test_settings"
+addopts = [
+  "-v",
+  "--tb=native",
+  "--junit-xml=test-results/pytest.xml"
+]
+python_files = [
+  "tests.py",
+  "test_*.py",
+  "*_tests.py"
+]
+junit_family = "xunit2"
