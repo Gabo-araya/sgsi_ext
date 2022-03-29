@@ -172,7 +172,10 @@ if AWS_STORAGE_BUCKET_NAME:
     # Store static and media in S3 or DigitalOcean spaces.
     AWS_DEFAULT_ACL = None
     AWS_S3_SIGNATURE_VERSION = "s3v4"
+
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # Note: this applies to static files only
+    # (specifically to storages with `default_acl="public-read"` only)
 
     DO_SPACES_REGION = os.environ.get("DO_SPACES_REGION", None)
     DO_SPACES_CDN_ENABLED = False
