@@ -8,6 +8,7 @@ if [[ $(which docker) && $(docker --version) ]]; then
   color_print $green "Skipped! $(docker --version) found."
 else
   # Download and install
+  sudo apt-get install -y curl
   curl -fsSL https://get.docker.com -o get-docker.sh
   chmod +x get-docker.sh
   sudo ./get-docker.sh

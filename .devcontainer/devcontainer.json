@@ -4,13 +4,11 @@
 {
 	"name": "Existing Docker Compose (Extend)",
 
-	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
-	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
-	"dockerComposeFile": [
-		"../docker-compose.yml",
-		"../docker/docker-compose.dev.yml"
-		// TODO: what about docker-compose.override.yml ?
-	],
+	// The symlink docker-compose.override.yml --> docker/docker-compose.dev.yml provides config
+	// for Remote-Containers and docker-compose CLI, so this should be blank.
+	// https://github.com/microsoft/vscode-remote-release/issues/1080#issuecomment-824087033
+	// https://docs.docker.com/compose/extends/#understanding-multiple-compose-files
+	"dockerComposeFile": [],
 
 	// The 'service' property is the name of the service for the container that VS Code should
 	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
@@ -21,7 +19,12 @@
 	"workspaceFolder": "/usr/src/app",
 
 	// Set *default* container specific settings.json values on container create.
-	"settings": {},
+	"settings": {
+		// Default to zsh:
+		"terminal.integrated.defaultProfile.linux": "zsh",
+		// Activate environment with 10-poetry-shell.zsh, which is less verbose and also works in external terminal:
+		"python.terminal.activateEnvironment": false
+	},
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
@@ -30,7 +33,8 @@
 		"ms-python.vscode-pylance",
 		"visualstudioexptteam.vscodeintellicode",
 		"shardulm94.trailing-spaces"
-	]
+	],
+	// improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -46,4 +50,7 @@
 
 	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
 	// "remoteUser": "vscode"
+
+	// See 90-vscode-env.zsh
+	"postStartCommand": "printenv > /dev/shm/env_from_vscode_terminal",
 }

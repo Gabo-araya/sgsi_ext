@@ -83,7 +83,6 @@
         name:
           - docker==5.0.3
           - docker-compose==1.29.2  # (yes, they use it as a library, instead of /usr/local/bin/docker-compose)
-          # TODO: fork compose to solve startup hang bug
         state: present
 
     - name: make free space by pruning dangling images
