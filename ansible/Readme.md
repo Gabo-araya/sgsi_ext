@@ -47,7 +47,7 @@ which won't create a new dump, and just download the existing one if it's not pr
 
 ## External database
 
-Create the database instance before running delpoy. The database (as in `database-name`) has to be manually created.
+Create the database instance before running deploy. The database (as in `database-name`) has to be manually created.
 
   - AWS RDS: At the _Create database_ wizard, under _Additional configuration_ specify _Initial database name_.
 
