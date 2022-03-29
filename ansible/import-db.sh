@@ -41,15 +41,11 @@ color_print "$cyan" "Restoring $dump_name ..."
 # Delete and create DB before pg_restore because --clean "(drops) database objects before recreating them",
 # so it leaves association tables that conflict with migrations. Also, --create has problems with the DB name.
 
-drop_status=0
-drop_output=$(dropdb "$PGDATABASE") || drop_status=$?
-# Fail if dropdb failed, except in case of "does not exist"
-if [[ $drop_status != 0 && "$drop_output" != *" does not exist" ]]; then
-  echo "$drop_output"
-  exit $drop_status
-fi
+psql \
+  -c "drop database if exists \"$PGDATABASE\";" \
+  -c "create database \"$PGDATABASE\";" \
+  postgres
 
-createdb "$PGDATABASE"
 pg_restore --dbname="$PGDATABASE" --no-owner --no-acl --jobs="$(nproc)" "$local_dump_path"
 
 color_print "$green" "Done"

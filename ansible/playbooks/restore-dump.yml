@@ -16,19 +16,13 @@
           - docker-compose.yml
           - docker/docker-compose.prod.yml
 
-    - name: delete database
-      command: docker-compose exec postgres sh -c 'dropdb "$PGDATABASE"'
+    - name: drop and create database
+      command: docker-compose exec postgres sh -c 'psql -c "{{ cmd1 }}" -c "{{ cmd2 }}" postgres'
       args:
         chdir: "{{ project_name }}"
-      register: dropdb
-      failed_when:
-        - dropdb is failed
-        - "' does not exist' not in (dropdb.stdout | default(''))"
-
-    - name: create database
-      command: docker-compose exec postgres sh -c 'createdb "$PGDATABASE"'
-      args:
-        chdir: "{{ project_name }}"
+      vars:
+        cmd1: drop database if exists \"$PGDATABASE\";
+        cmd2: create database \"$PGDATABASE\";
 
     - name: restore dump
       command: docker-compose exec postgres sh -c '{{ restore_cmd }}'
