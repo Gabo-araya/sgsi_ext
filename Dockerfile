@@ -14,7 +14,7 @@ WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
 
-# "Prints" to locate which command is running:
+# NOTE: use "Prints" to easily see which command is running:
 COPY scripts/utils.sh scripts/utils.sh
 RUN \
   # Source utils containing "title_print":
@@ -38,15 +38,17 @@ RUN \
   && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
-COPY pyproject.toml poetry.lock ./
 RUN \
     source scripts/utils.sh \
     && title_print "Installing Poetry" \
-    && pip install poetry \
-    && poetry install --no-dev \
+    && pip install poetry
+
+COPY pyproject.toml poetry.lock ./
+RUN \
+    poetry install --no-dev \
 \
     # Remove caches to save some space
-    && poetry cache clear -n --all . \
+    && poetry cache clear --no-interaction --all . \
     && rm -rf ~/.cache/pypoetry/cache ~/.cache/pip/http
 
 # Install javascript dependencies
