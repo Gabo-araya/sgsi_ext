@@ -1,7 +1,7 @@
 #####################################
 # Base image python + node + poetry
 #####################################
-FROM python:3.9.9-slim-bullseye AS python-node-base
+FROM python:3.9.9-slim-bullseye AS project-dependencies
 
 WORKDIR /usr/src/app
 
@@ -9,22 +9,32 @@ WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
 
-# Install prerequisites
-RUN apt-get update && apt-get install -y gcc curl libpq-dev gettext \
-  && rm -rf /var/lib/apt/lists/*
+# "Prints" to locate which command is running:
+COPY scripts/utils.sh scripts/utils.sh
+RUN \
+  # Source utils containing "title_print":
+  source scripts/utils.sh \
+\
+  && title_print "Installing prerequisites" \
+  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext \
+\
+  && title_print "Adding nodejs repo" \
+  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+\
+  && title_print "Adding Postgres repo" \
+  # The PostgreSQL client provides pg_isready for production, and pg_restore for development.
+  && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
+\
+  && title_print "Installing from new repos" \
+  && apt-get update && apt-get install -y nodejs postgresql-client-14 \
+\
+  # Reduce image size and prevent use of potentially obsolete lists:
+  && rm -rf /var/lib/apt/lists/* \
+\
+  && title_print "Installing Poetry" \
+  && pip install poetry
 
-# Install Node
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
-  && apt-get install -y nodejs \
-  && rm -rf /var/lib/apt/lists/*
-
-# Install Poetry
-RUN pip install poetry
-
-#####################################
-# Add python+node dependencies
-#####################################
-FROM python-node-base AS project-dependencies
 # Install python dependencies
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev
@@ -59,20 +69,12 @@ FROM project-dependencies AS development
 
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
-# "Prints" to locate which command is running:
-COPY scripts/utils.sh scripts/utils.sh
 # This was getting too long to keep in Dockerfile:
 COPY docker/zsh/setup.sh docker/zsh/setup.sh
 
 RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
-\
-  # PostgreSQL client is required to pg_restore from Django container into Postgres container.
-\
-  && title_print "Adding Postgres repo" \
-  && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
-  && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 \
   && title_print "apt update + install" \
   && apt-get update && apt-get install -y \
@@ -84,8 +86,6 @@ RUN \
     htop \
     # parse ansible outputs:
     jq \
-    # postgres-client programs:
-    postgresql-client-14 \
     # something to quickly edit a file:
     vim nano \
 \
@@ -98,7 +98,7 @@ RUN \
   # "install editable" ansible-ssh:
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
-# Install Poetry dev-dependencies (in separate layer because they should change less often):
+# Install Poetry dev-dependencies (in separate layer because they should change more often):
 RUN poetry install
 
 # Prevent development container shutdown:
