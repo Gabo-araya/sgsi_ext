@@ -8,7 +8,7 @@ function makemessages {
         mkdir -p locale/es
 
         django-admin makemessages --add-location file -l es -e pug,html,txt,py
-        django-admin makemessages --add-location file -d djangojs -l es -i "static/bower_components" -e js
+        django-admin makemessages --add-location file -d djangojs -l es -e js,jsx,ts,tsx
 
         cd ..
     else
