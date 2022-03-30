@@ -2,7 +2,7 @@
 set -e
 source scripts/utils.sh
 
-echo "Waiting for database..."
+title_print "wait for database"
 # https://docs.docker.com/compose/startup-order/
 # Unfortunately this requires installing all Postgres client tools
 # Alternatives:

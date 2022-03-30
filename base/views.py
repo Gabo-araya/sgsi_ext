@@ -32,7 +32,8 @@ from base.view_utils import clean_query_string
 from inflection import underscore
 
 
-@login_required
+# TODO: uncomment when adding pug
+# @login_required
 def index(request):
     """view that renders a default home"""
     return render(request, "index.pug")

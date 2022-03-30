@@ -5,6 +5,8 @@ services:
       interval: 10s
       timeout: 6s
       start_period: 30s
+    depends_on:
+      - memcached
 
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
@@ -24,9 +26,15 @@ services:
       - ./project/media:/usr/share/nginx/media
       - nginx_secrets:/etc/letsencrypt
 
-  # TODO
-  # memcached:
-  # https://docs.djangoproject.com/en/3.2/topics/cache/#memcached
+  memcached:
+    image: memcached:1.6-alpine
+    restart: unless-stopped
+    command:
+      - memcached
+      - --memory-limit=${MEMCACHED_MEMORY}
+      - --threads=${MEMCACHED_THREADS}
+      # Uncomment to check for activity:
+      # - -vv
 
 volumes:
   nginx_secrets:

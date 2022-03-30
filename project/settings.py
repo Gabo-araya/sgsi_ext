@@ -276,3 +276,12 @@ LOG_IGNORE_FIELDS = [
     "id",
     "date_joined",
 ]
+
+# Cache
+if not DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+            'LOCATION': os.environ.get("MEMCACHED_LOCATION"),
+        }
+    }
