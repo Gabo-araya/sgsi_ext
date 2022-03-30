@@ -8,7 +8,8 @@ function makemessages {
         mkdir -p locale/es
 
         django-admin makemessages --add-location file -l es -e pug,html,txt,py
-        django-admin makemessages --add-location file -d djangojs -l es -e js,jsx,ts,tsx
+        # if your project needs JS translated by Django, uncomment this
+        # django-admin makemessages --add-location file -d djangojs -l es -e js,jsx,ts,tsx
 
         cd ..
     else
