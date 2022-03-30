@@ -64,5 +64,5 @@ fi
 ansible-playbook --limit "$limit" $tags playbooks/deploy.yml
 
 if [[ "$(basename "$0")" != "update.sh" ]]; then
-  : # TODO: "./manage.py createsuperuser" if none exists
+  ansible-ssh "$limit" -t "$(yq -r .project_name group_vars/all.yml)/ansible/scripts/offer_superuser.sh"
 fi

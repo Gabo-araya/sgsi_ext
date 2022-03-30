@@ -38,10 +38,11 @@ RUN \
 # Install python dependencies
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev
+# FIXME: delete poetry's cache
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
-# RUN npm ci
+# RUN npm ci && delete cache somehow
 
 #####################################
 # Production image
@@ -102,6 +103,7 @@ RUN \
 
 # Install Poetry dev-dependencies (in separate layer because they should change more often):
 RUN poetry install
+# FIXME: this step is super slow.
 
 # Prevent development container shutdown:
 CMD ["sleep", "inf"]

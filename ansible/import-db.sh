@@ -50,5 +50,11 @@ pg_restore --dbname="$PGDATABASE" --no-owner --no-acl --jobs="$(nproc)" "$local_
 
 color_print "$green" "Done"
 
-# TODO: run "../manage.py migrate --check >/dev/null" and check for unapplied migrations,
-# and for extra migrations.
+migrations_check=0
+../manage.py migrate --check >/dev/null || migrations_check=$?
+# TODO: is it possible to check for extra migrations?
+# Those present in django_migrations table, but not in code.
+
+if (( migrations_check > 0 )); then
+  color_print "$yellow" "There are unapplied migrations."
+fi
