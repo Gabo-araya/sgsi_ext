@@ -84,9 +84,14 @@ jobs:
           command: |
             docker-compose -f docker/docker-compose.ci.yml run app-test poetry run black --check --exclude "^.*\b(migrations)\b.*$" .
       - run:
+          name: Check imports are sorted
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run isort --check .
+      - run:
           name: Check for missing migrations
           command: |
             docker-compose -f docker/docker-compose.ci.yml run app-test poetry run ./manage.py makemigrations --check --dry-run
+
 
 workflows:
   version: 2
