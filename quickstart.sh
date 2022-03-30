@@ -1,11 +1,8 @@
 #!/bin/bash
 set -euo pipefail
+cd "$(dirname "$0")"
 source scripts/utils.sh
-
-if grep -q docker /proc/1/cgroup; then
-  color_print $red "quickstart doesn't work inside container"
-  exit 1
-fi
+assert_outside_container
 
 # TODO: check if port 5432 is free, and offer help to stop postgres
 # (container or host) according to `sudo lsof -t -i:5432`, /proc/PID/cgroup docker...

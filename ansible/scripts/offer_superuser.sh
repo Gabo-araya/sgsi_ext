@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-
 source scripts/utils.sh
+assert_outside_container
 
 superuserexists_ret=0
 docker-compose exec -T django dj superuserexists \

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
+cd "$(dirname "$0")"/..
 source scripts/utils.sh
+assert_outside_container
 
 env_file='.env'
 
