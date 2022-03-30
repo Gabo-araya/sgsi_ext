@@ -79,6 +79,7 @@
 
 /project/media
 /project/static
+/docker/volumes/
 
 **/propagate.sh
 **/.idea/

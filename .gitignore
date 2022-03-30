@@ -101,6 +101,8 @@ test_app
 
 /project/media
 /project/static
+/docker/volumes/*
+!/docker/volumes/Readme.md
 
 propagate.sh
 .idea/
