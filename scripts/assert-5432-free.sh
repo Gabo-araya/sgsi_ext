@@ -55,7 +55,24 @@ To stop it and prevent starting automatically at boot:
     sudo systemctl disable --now postgresql
 EOF
 
-  # elif... brew? something else?
+  elif [ "$(uname -s)" == "Darwin" ]; then
+    cat <<EOF
+    On Mac OS X, and depending on which PostgreSQL distribution you are using,
+    you'll need to stop the Postgres daemon using one of the following commands:
+        (MacPorts)
+        sudo launchctl unload /Library/LaunchDaemons/org.macports.postgresql14-server.plist
+
+        (Homebrew)
+        brew services stop postgresql
+
+        (EDB's Postgres.app)
+        sudo launchctl unload /Library/LaunchDaemons/com.edb.launchd.postgresql-14.plist
+
+    Add the -w parameter to launchctl to disable the daemon.
+
+    To start PostgreSQL, use `launchctl load` or `brew services start postgresql`.
+    Add -w to enable it for subsequent reboots.
+EOF
   else
     ps "$pid"
   fi
