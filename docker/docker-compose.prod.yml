@@ -8,6 +8,8 @@ services:
     depends_on:
       - memcached
     volumes:
+      # Keep histories:
+      - ./docker/volumes/.zsh_history/:/root/.zsh_history/
       - ./docker/volumes/.ipython/:/root/.ipython/
     labels:
       ofelia.enabled: "true"

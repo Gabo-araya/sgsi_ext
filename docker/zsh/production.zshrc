@@ -62,6 +62,9 @@ zstyle ':omz:update' mode disabled  # disable automatic updates
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 
+# Explanation for this is in other file (search for "HISTFILE=")
+HISTFILE=/root/.zsh_history/h
+
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
