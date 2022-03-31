@@ -4,8 +4,10 @@ cd "$(dirname "$0")"
 source scripts/utils.sh
 assert_outside_container
 
-# TODO: check if port 5432 is free, and offer help to stop postgres
-# (container or host) according to `sudo lsof -t -i:5432`, /proc/PID/cgroup docker...
+# Stop this project's postgres so port is free:
+command -v docker-compose >/dev/null && \
+  echo "docker-compose stop postgres" | newgrp docker
+scripts/assert-5432-free.sh
 
 # Create a local .env file if it does not exist
 ./scripts/env-init-dev.sh
