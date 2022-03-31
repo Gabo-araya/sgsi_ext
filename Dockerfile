@@ -18,8 +18,18 @@ RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
 \
-  && title_print "Installing prerequisites" \
-  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext wait-for-it \
+  && title_print "Installing packages" \
+  && apt-get update && apt-get install -y \
+    # to install from extra repositories:
+    curl gnupg \
+    # to compile psycopg2:
+    gcc libpq-dev \
+    # for Django translations:
+    gettext \
+    # to wait for DB:
+    wait-for-it \
+    # better shell:
+    zsh \
 \
   && title_print "Adding nodejs repo" \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
@@ -87,8 +97,6 @@ RUN \
 \
   && title_print "apt update + install" \
   && apt-get update && apt-get install -y \
-    # better shell:
-    zsh \
     # commit inside container:
     git \
     # see container processes:
