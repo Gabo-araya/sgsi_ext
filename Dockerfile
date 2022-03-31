@@ -66,7 +66,6 @@ COPY . .
 RUN poetry run django-admin compilemessages
 
 # TODO: zsh with scary production theme ($PGDATABASE as prompt)
-# TODO: ipython history in a volume
 
 CMD ["docker/django/prod_cmd.sh"]
 
