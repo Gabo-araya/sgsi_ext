@@ -12,7 +12,7 @@ ln -s /usr/src/app/docker/zsh/custom/ /root/.oh-my-zsh/custom/project
 # /root/.oh-my-zsh/custom/shared will be bind-mounted by compose.
 
 # Theme:
-ln -s /usr/src/app/docker/zsh/robbyrussell-poetryenv.zsh-theme  /root/.oh-my-zsh/custom/themes/
+ln -s /usr/src/app/docker/zsh/robbyrussell-poetryenv.zsh-theme /root/.oh-my-zsh/custom/themes/
 sed -i 's/ZSH_THEME=".*"/ZSH_THEME="robbyrussell-poetryenv"/' /root/.zshrc
 
 # History:

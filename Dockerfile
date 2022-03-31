@@ -57,6 +57,14 @@ RUN poetry install --no-dev \
 # Place Production image above development, so docker-compose on servers stop building after this one.
 FROM project-dependencies AS production
 
+# Add oh-my-zsh for production
+RUN \
+  # Base installation
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+  # Theme:
+  && ln -s /usr/src/app/docker/zsh/production.zsh-theme /root/.oh-my-zsh/custom/themes/ \
+  && sed -i 's/ZSH_THEME=".*"/ZSH_THEME="production"/' /root/.zshrc
+
 # COPY assets webpack.*.js ./
 # RUN npm run build
 
@@ -64,8 +72,6 @@ FROM project-dependencies AS production
 COPY . .
 
 RUN poetry run django-admin compilemessages
-
-# TODO: zsh with scary production theme ($PGDATABASE as prompt)
 
 CMD ["docker/django/prod_cmd.sh"]
 
