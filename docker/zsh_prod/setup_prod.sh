@@ -9,5 +9,5 @@ cd ~
 curl -fsSL https://github.com/ohmyzsh/ohmyzsh/archive/$FULL_COMMIT.tar.gz | tar xz
 mv ohmyzsh-$FULL_COMMIT .oh-my-zsh
 
-ln -s /usr/src/app/docker/zsh/production.zshrc .zshrc
-ln -s /usr/src/app/docker/zsh/production.zsh-theme .oh-my-zsh/custom/themes/
+ln -s /usr/src/app/docker/zsh_prod/prod.zshrc .zshrc
+ln -s /usr/src/app/docker/zsh_prod/production.zsh-theme .oh-my-zsh/custom/themes/

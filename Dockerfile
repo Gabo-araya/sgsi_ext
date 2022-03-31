@@ -68,8 +68,8 @@ RUN poetry install --no-dev \
 FROM project-dependencies AS production
 
 # Add oh-my-zsh for production
-COPY docker/zsh/setup_prod.sh docker/zsh/setup_prod.sh
-RUN docker/zsh/setup_prod.sh
+COPY docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
+RUN docker/zsh_prod/setup_prod.sh
 
 # COPY assets webpack.*.js ./
 # RUN npm run build
@@ -89,7 +89,7 @@ FROM project-dependencies AS development
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
 # This was getting too long to keep in Dockerfile:
-COPY docker/zsh/setup_dev.sh docker/zsh/setup_dev.sh
+COPY docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
 
 RUN \
   # Source utils containing "title_print":
@@ -107,7 +107,7 @@ RUN \
     vim nano \
 \
   && title_print "Installing oh-my-zsh" \
-  && docker/zsh/setup_dev.sh \
+  && docker/zsh_dev/setup_dev.sh \
 \
   && title_print "Finishing" \
   # Reduce image size and prevent use of potentially obsolete lists:
