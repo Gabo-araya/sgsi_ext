@@ -278,6 +278,8 @@ LOG_IGNORE_FIELDS = [
 ]
 
 # Cache
+# https://docs.djangoproject.com/en/3.2/topics/cache/#setting-up-the-cache
+
 if not DEBUG:
     CACHES = {
         'default': {
@@ -285,3 +287,22 @@ if not DEBUG:
             'LOCATION': os.environ.get("MEMCACHED_LOCATION"),
         }
     }
+
+# HTTPS
+# https://docs.djangoproject.com/en/3.2/ref/settings/#secure-proxy-ssl-header
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# This assumes the provided nginx is always before django. It contains:
+# "proxy_set_header X-Forwarded-Proto $scheme;"
+
+# HSTS added by Django. This is redundant because nginx adds it as well,
+# but it silences deploy check warnings.
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SECURE_SSL_REDIRECT = True
+# Requests are redirected by nginx, but setting this here silences a warning.
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

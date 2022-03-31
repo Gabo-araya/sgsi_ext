@@ -45,7 +45,7 @@ select db_loc in Local Remote; do
   fi
 done
 
-secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
+secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
 
 django_debug=False
 

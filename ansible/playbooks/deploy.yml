@@ -115,7 +115,21 @@
         env_cache_ignore: "{{ lookup('env', 'deploy_cache_ignore')|default('0') }}"
       tags: update
 
-    # TODO: poetry run ./manage.py check --deploy
+    - name: run deployment checks
+      command: docker-compose exec django poetry run ./manage.py check --deploy
+      # Note: it's possible to fail on warning by appending: --fail-level WARNING
+      args:
+        chdir: "{{ project_name }}"
+      changed_when: false
+      failed_when: false
+      register: depl_checks
+      tags: update
+
+    - name: show deployment checks
+      debug:
+        msg: "{{ depl_checks.stdout }}"
+      failed_when: depl_checks.rc > 0
+      tags: update
 
     - name: make a test request to http://{{ server_domain }}
       uri:
