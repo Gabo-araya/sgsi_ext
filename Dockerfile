@@ -58,12 +58,8 @@ RUN poetry install --no-dev \
 FROM project-dependencies AS production
 
 # Add oh-my-zsh for production
-RUN \
-  # Base installation
-  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
-  # Theme:
-  && ln -s /usr/src/app/docker/zsh/production.zsh-theme /root/.oh-my-zsh/custom/themes/ \
-  && sed -i 's/ZSH_THEME=".*"/ZSH_THEME="production"/' /root/.zshrc
+COPY docker/zsh/setup_prod.sh docker/zsh/setup_prod.sh
+RUN docker/zsh/setup_prod.sh
 
 # COPY assets webpack.*.js ./
 # RUN npm run build
@@ -83,7 +79,7 @@ FROM project-dependencies AS development
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
 # This was getting too long to keep in Dockerfile:
-COPY docker/zsh/setup.sh docker/zsh/setup.sh
+COPY docker/zsh/setup_dev.sh docker/zsh/setup_dev.sh
 
 RUN \
   # Source utils containing "title_print":
@@ -103,7 +99,7 @@ RUN \
     vim nano \
 \
   && title_print "Installing oh-my-zsh" \
-  && docker/zsh/setup.sh \
+  && docker/zsh/setup_dev.sh \
 \
   && title_print "Finishing" \
   # Reduce image size and prevent use of potentially obsolete lists:
