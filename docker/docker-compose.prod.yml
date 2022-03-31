@@ -1,4 +1,13 @@
 services:
+  django:
+    healthcheck:
+      test: ["CMD-SHELL", "wait-for-it localhost:8000 --timeout=5"]
+      interval: 10s
+      timeout: 6s
+      start_period: 30s
+    depends_on:
+      - memcached
+
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
     env_file: docker/nginx.env
@@ -9,17 +18,17 @@ services:
       - django  # To prevent '[emerg] host not found in upstream "django"'
     restart: unless-stopped
     volumes:
-      - type: bind
-        source: ./docker/nginx_templates/
-        target: /etc/nginx/templates/
-        read_only: yes
-      - static:/usr/share/nginx/static
-      - ./project/media:/usr/share/nginx/media
-      - nginx_secrets:/etc/letsencrypt
+      - ./docker/nginx_templates/:/etc/nginx/templates/:ro
+      - ./project/static/:/usr/share/nginx/static/:ro
+      - ./project/media/:/usr/share/nginx/media/:ro
+      - ./docker/volumes/nginx_secrets/:/etc/letsencrypt/
 
-  # TODO
-  # memcached:
-  # https://docs.djangoproject.com/en/3.2/topics/cache/#memcached
-
-volumes:
-  nginx_secrets:
+  memcached:
+    image: memcached:1.6-alpine
+    restart: unless-stopped
+    command:
+      - memcached
+      - --memory-limit=${MEMCACHED_MEMORY}
+      - --threads=${MEMCACHED_THREADS}
+      # Uncomment to check for activity:
+      # - -vv

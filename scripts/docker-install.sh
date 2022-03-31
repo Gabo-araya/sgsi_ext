@@ -8,6 +8,7 @@ if [[ $(which docker) && $(docker --version) ]]; then
   color_print $green "Skipped! $(docker --version) found."
 else
   # Download and install
+  sudo apt-get install -y curl
   curl -fsSL https://get.docker.com -o get-docker.sh
   chmod +x get-docker.sh
   sudo ./get-docker.sh
@@ -17,7 +18,7 @@ else
 fi
 
 # Check if we are allowed to manage docker as a non-root
-if ! id -ng "$USER" | grep -qw docker; then
+if ! groups | grep -qw docker; then
   sudo groupadd docker &>/dev/null || true
   sudo usermod -aG docker "$USER"
   echo "Please reboot your computer to use Docker without sudo." >> quickstart-messages.log

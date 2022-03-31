@@ -2,17 +2,31 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-if (( $# == 0 )); then
-  echo "Please specify limit"
-  exit 1
-else
-  limit=$1
-fi
+deploy_recreate=0
 
-if [[ $# -gt 1 && $2 == '--recreate' ]]; then
-  export recreate=1
-  echo "Will recreate containers."
+while getopts rc opt; do
+  case $opt in
+    r)
+      deploy_recreate=1
+      ;;
+    c)
+      deploy_cache_ignore=1
+      ;;
+    ?)
+      exit 1
+  esac
+done
+
+export deploy_recreate
+export deploy_cache_ignore
+shift $((OPTIND - 1))
+
+if (( $# == 0 )); then
+  echo "Please specify target server"
+  exit 1
 fi
+limit=$1
+# improvement: implement update for two servers at same time
 
 if [[ "$(basename "$0")" == "update.sh" ]]; then
   tags="--tags update"
@@ -22,7 +36,7 @@ else
   echo "Checking for .env existance on $limit..."
 
   stat_ansible_res=0
-  stat_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$limit" utils/stat_dotenv.yml) || stat_ansible_res=$?
+  stat_json=$(ANSIBLE_STDOUT_CALLBACK=json ansible-playbook -l "$limit" playbooks/stat_dotenv.yml) || stat_ansible_res=$?
   if (( stat_ansible_res > 0 )); then
     echo "$stat_json" | jq
     exit $stat_ansible_res
@@ -36,9 +50,10 @@ else
   elif (( stat_jq_res == 1 )); then
     # Prompt for new .env file
     cd ..
-    (umask 177; scripts/env-init-prod.sh .deploy.env)
+    (umask 177; scripts/env-init-prod.sh "$limit")
     cd ansible
-    trap "rm ../.deploy.env" EXIT
+    # shellcheck disable=SC2064  # Expand $limit now
+    trap "rm -f ../deploy.$limit.env" EXIT  # Avoid keeping plaintext secrets outside server
     export create_dotenv=1
   else
     export create_dotenv=0
@@ -46,9 +61,8 @@ else
 fi
 
 # shellcheck disable=SC2086
-ansible-playbook --limit "$limit" $tags deploy.yml
+ansible-playbook --limit "$limit" $tags playbooks/deploy.yml
 
 if [[ "$(basename "$0")" != "update.sh" ]]; then
-  : # TODO: "./manage.py createsuperuser" if none exists
-  # https://raw.githubusercontent.com/selivan/ansible-ssh/892c48c828ee0f56d897706009096327076429f9/ansible-ssh
+  ansible-ssh "$limit" -t "$(yq -r .project_name group_vars/all.yml)/ansible/scripts/offer_superuser.sh"
 fi

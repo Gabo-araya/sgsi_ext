@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 # standard library
 from pathlib import Path
 import os
+import sys
 
 # django
 from django.urls import reverse_lazy
@@ -27,11 +28,19 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", False) == "True"
 
+# WARNING: do not make your code depend on this value
+TEST = False
+
 ALLOWED_HOSTS = [
     os.environ.get("ALLOWED_HOST", ""),
     "localhost",
     "127.0.0.1",
 ]
+
+SITE_ID = 1
+
+# TEST should be true if we are running python tests
+TEST = "test" in sys.argv or "pytest" in sys.argv[0]
 
 # Application definition
 
@@ -41,9 +50,16 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.sites",
     "django.contrib.staticfiles",
+    # required apps
+    "base.apps.BaseConfig",
+    "users",
     # external
     "loginas",
+    # internal
+    "parameters",
+    "regions",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +85,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.tz",
+                "django.template.context_processors.i18n",
             ],
         },
     },
@@ -83,11 +102,11 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB"),
-        "USER": os.environ.get("POSTGRES_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": os.environ.get("POSTGRES_HOST", "127.0.0.1"),
-        "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+        "NAME": os.environ.get("PGDATABASE"),
+        "USER": os.environ.get("PGUSER"),
+        "PASSWORD": os.environ.get("PGPASSWORD"),
+        "HOST": os.environ.get("PGHOST", "127.0.0.1"),
+        "PORT": os.environ.get("PGPORT", "5432"),
         "DISABLE_SERVER_SIDE_CURSORS": (
             os.environ.get("POSTGRES_DISABLE_SERVER_SIDE_CURSORS", False) == "True"
         ),
@@ -113,6 +132,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "users.User"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -136,24 +157,45 @@ if DEBUG or not ENABLE_EMAILS:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.environ.get("SMTP_HOST", None)
+EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 EMAIL_HOST_USER = os.environ.get("SMTP_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD", None)
-EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "webmaster@localhost")
 EMAIL_SENDER_NAME = os.environ.get("EMAIL_SENDER_NAME", "Sender Name")
 
+# Credentials for AWS services
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", None)
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = PROJECT_DIR / "static"
-STATIC_URL = "/static/"
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
+if AWS_STORAGE_BUCKET_NAME:
+    # Store static and media in S3 or DigitalOcean spaces.
+    AWS_DEFAULT_ACL = None
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-MEDIA_ROOT = PROJECT_DIR / "media"
-MEDIA_URL = "/media/"
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # Note: this applies to static files only
+    # (specifically to storages with `default_acl="public-read"` only)
 
-# TODO: STATICFILES_STORAGE and DEFAULT_FILE_STORAGE for S3 / DO spaces
-# see 'formy-plus.prod' for reference
+    DO_SPACES_REGION = os.environ.get("DO_SPACES_REGION", None)
+    DO_SPACES_CDN_ENABLED = False
+
+    if DO_SPACES_REGION:
+        AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
+        DO_SPACES_CDN_ENABLED = os.environ.get("DO_SPACES_CDN_ENABLED", True) == "True"
+
+    STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
+    DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
+
+else:
+    STATIC_ROOT = PROJECT_DIR / "static"
+    STATIC_URL = "/static/"
+
+    MEDIA_ROOT = PROJECT_DIR / "media"
+    MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -174,49 +216,93 @@ LOGINAS_LOGOUT_REDIRECT_URL = reverse_lazy("admin:index")
 
 # logging
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse",
         },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
         },
     },
-    'formatters': {
-        'django.server': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[{server_time}] {message}',
-            'style': '{',
+    "formatters": {
+        "django.server": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] {message}",
+            "style": "{",
         }
     },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
+    "handlers": {
+        "console": {
+            "level": "INFO",
             # No 'filters', to log even when DEBUG=False
-            'class': 'logging.StreamHandler',
+            "class": "logging.StreamHandler",
         },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'django.server',
+        "django.server": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "django.server",
         },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+        "mail_admins": {
+            "level": "ERROR",
+            "filters": ["require_debug_false"],
+            "class": "django.utils.log.AdminEmailHandler",
+        },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'mail_admins'],
-            'level': 'INFO',
+    "loggers": {
+        "django": {
+            "handlers": ["console", "mail_admins"],
+            "level": "INFO",
         },
-        'django.server': {
-            'handlers': ['django.server'],
-            'level': 'INFO',
-            'propagate': False,
+        "django.server": {
+            "handlers": ["django.server"],
+            "level": "INFO",
+            "propagate": False,
         },
-    }
+    },
 }
+
+# The change's information of this fields will be ignored in the logs
+LOG_SENSITIVE_FIELDS = [
+    "password",
+]
+
+# These fields will be ignored in the logs
+LOG_IGNORE_FIELDS = [
+    "created_at",
+    "updated_at",
+    "original_dict",
+    "id",
+    "date_joined",
+]
+
+# Cache
+# https://docs.djangoproject.com/en/3.2/topics/cache/#setting-up-the-cache
+
+if not DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+            'LOCATION': os.environ.get("MEMCACHED_LOCATION"),
+        }
+    }
+
+# HTTPS
+# https://docs.djangoproject.com/en/3.2/ref/settings/#secure-proxy-ssl-header
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# This assumes the provided nginx is always before django. It contains:
+# "proxy_set_header X-Forwarded-Proto $scheme;"
+
+# HSTS added by Django. This is redundant because nginx adds it as well,
+# but it silences deploy check warnings.
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SECURE_SSL_REDIRECT = True
+# Requests are redirected by nginx, but setting this here silences a warning.
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
