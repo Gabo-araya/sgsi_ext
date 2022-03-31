@@ -53,9 +53,11 @@ color_print "$green" "Done"
 
 migrations_check=0
 dj migrate --check >/dev/null || migrations_check=$?
-# TODO: is it possible to check for extra migrations?
-# Those present in django_migrations table, but not in code.
 
 if (( migrations_check > 0 )); then
   color_print "$yellow" "There are unapplied migrations."
 fi
+
+# Note: it's possible that the DB now contains extra migrations
+# (those present in django_migrations table, and schema, but not in code),
+# but this is not automatically detected.
