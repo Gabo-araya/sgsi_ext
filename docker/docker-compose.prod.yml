@@ -32,6 +32,3 @@ services:
       - --threads=${MEMCACHED_THREADS}
       # Uncomment to check for activity:
       # - -vv
-
-volumes:
-  nginx_secrets:
