@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.sites",
     "django.contrib.staticfiles",
+    # extensions
+    "django_extensions",
     # required apps
     "base.apps.BaseConfig",
     "users",
