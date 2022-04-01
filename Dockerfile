@@ -48,8 +48,7 @@ RUN \
     poetry install --no-dev \
 \
     # Remove caches to save some space
-    && poetry cache clear --no-interaction --all . \
-    && rm -rf ~/.cache/pypoetry/cache ~/.cache/pip/http
+    && yes | poetry cache clear --quiet --all .
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
