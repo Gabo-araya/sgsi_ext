@@ -18,7 +18,9 @@ services:
       - django  # To prevent '[emerg] host not found in upstream "django"'
     restart: unless-stopped
     volumes:
-      - ./docker/nginx_templates/:/etc/nginx/templates/:ro
+      - ./docker/nginx/user-entrypoint.d/50-comment-duplicates.sh:/docker-entrypoint.d/50-comment-duplicates.sh:ro
+      - ./docker/nginx/user_conf.d/:/etc/nginx/user_conf.d/:ro
+      - ./docker/nginx/templates/:/etc/nginx/templates/:ro
       - ./project/static/:/usr/share/nginx/static/:ro
       - ./project/media/:/usr/share/nginx/media/:ro
       - ./docker/volumes/nginx_secrets/:/etc/letsencrypt/
