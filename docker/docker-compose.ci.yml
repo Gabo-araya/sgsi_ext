@@ -1,5 +1,13 @@
 version: "3.4"
 
+# The following setup works around the limitation of bind mounts not allowed on
+# CircleCI jobs. This problem can be resolved on two ways:
+# - Using a machine executor
+# - Tell remote docker to run two containers, sharing a common volume between
+#   them.
+# This compose file is based on the one implemented by Peter Bengtsson for
+# Mozilla's Normandy. See:
+# https://github.com/mozilla/normandy/blob/5eb2a4447ef3b6cf1b92c894d168b60702867eb4/ci/docker-compose.yml
 services:
   db:
     image: "postgres:14-alpine"
@@ -13,9 +21,8 @@ services:
     volumes:
       - test-artifacts:/usr/src/app/test-results
 
-  # https://github.com/mozilla/normandy/blob/5eb2a4447ef3b6cf1b92c894d168b60702867eb4/ci/docker-compose.yml#L25-L32
   artifact-collector:
-    image: debian:stable-slim
+    image: busybox:stable
     volumes:
       - test-artifacts:/artifacts
     command: |
