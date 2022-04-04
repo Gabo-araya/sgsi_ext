@@ -19,7 +19,7 @@ class AuditMixin:
     the EntryLogs.
     """
 
-    def save_log(self, user, message, ACTION):
+    def _save_log(self, user, message, ACTION):
 
         if not user or not user.id:
             return
@@ -33,11 +33,11 @@ class AuditMixin:
             change_message=json.dumps(message, cls=ModelEncoder),
         )
 
-    def save_addition(self, user, message):
-        self.save_log(user, message, ADDITION)
+    def _save_addition(self, user, message):
+        self._save_log(user, message, ADDITION)
 
-    def save_edition(self, user, message):
-        self.save_log(user, message, CHANGE)
+    def _save_edition(self, user, message):
+        self._save_log(user, message, CHANGE)
 
-    def save_deletion(self, user):
-        self.save_log(user, {"Deleted": None}, DELETION)
+    def _save_deletion(self, user):
+        self._save_log(user, {"Deleted": None}, DELETION)
