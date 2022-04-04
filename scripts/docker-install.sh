@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
+cd "$(dirname "$0")"/..
 source scripts/utils.sh
+assert_outside_container
 
 title_print "Installing Docker..."
 # Check if docker is already installed

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
+cd "$(dirname "$0")"/..
 source scripts/utils.sh
+should_be_inside_container
 
 if (( $# == 0 )); then
   echo "No server name"
