@@ -1,0 +1,11 @@
+- name: check if the project is cloned and .env exists
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: stat {{ project_name }}
+      stat:
+        path: "{{ project_name }}"
+
+    - name: stat {{ project_name }}/.env
+      stat:
+        path: "{{ project_name }}/.env"

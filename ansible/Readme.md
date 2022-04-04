@@ -11,6 +11,8 @@ ansible/deploy.sh dev
 ```
 where `dev` is the name of the host in inventory.
 
+> Note: the scripts and playbooks were designed for a single host only. Using a pattern like `dev,stg` will probably fail. (It's possible to implement a check with `ansible_play_hosts|length`)
+
 For faster deployments after the first one, you may use:
 ```sh
 ansible/update.sh dev

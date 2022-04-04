@@ -3,17 +3,17 @@ set -e
 source scripts/utils.sh
 
 if (( $# == 0 )); then
-  echo "No limit"
+  echo "No server name"
   exit 1
 fi
 
-limit=$1
-env_file="deploy.$limit.env"
+sv_name=$1
+env_file="deploy.$sv_name.env"
 
 cp "docker/.env.example" "$env_file"
 
 project_name=$(yq -r .project_name ansible/group_vars/all.yml)
-postgres_db=$project_name-$limit
+postgres_db=$project_name-$sv_name
 
 color_print "$cyan" "Postgres database location?"
 
