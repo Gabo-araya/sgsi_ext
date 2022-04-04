@@ -14,6 +14,9 @@ from django.utils.translation import ugettext_lazy as _
 # models
 from base.models import BaseModel
 
+# definitions
+from parameters.definitions import ParameterDefinitionList
+
 # enums
 from parameters.enums import ParameterDefinitionList
 
