@@ -12,6 +12,7 @@ while ! pg_isready; do sleep 2; done
 
 title_print "migrate"
 dj migrate
+# TODO: add option to disable automatic migrations, and script to help in manual migrations
 
 title_print "collectstatic"
 dj collectstatic --noinput
