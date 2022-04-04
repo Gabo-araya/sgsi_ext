@@ -419,7 +419,7 @@ class BaseUpdateRedirectView(
         self.do_action()
         return super(BaseUpdateRedirectView, self).post(request, *args, **kwargs)
 
-    def do_action():
+    def do_action(self):
         """
         Implement this method with the action you want to do before redirect
         """
