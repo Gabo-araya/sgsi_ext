@@ -20,18 +20,18 @@ RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
 \
-  && title_print "Installing prerequisites" \
+  && title_print "Install prerequisites" \
   && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext wait-for-it \
 \
-  && title_print "Adding nodejs repo" \
+  && title_print "Set up Node.js repository" \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
 \
-  && title_print "Adding Postgres repo" \
+  && title_print "Set up Postgres repository" \
   # The PostgreSQL client provides pg_isready for production, and pg_restore for development.
   && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
   && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 \
-  && title_print "Installing from new repos" \
+  && title_print "Install Postgres and Node.js" \
   && apt-get update && apt-get install -y nodejs postgresql-client-14 \
 \
   # Install python dependencies
@@ -92,7 +92,7 @@ RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
 \
-  && title_print "apt update + install" \
+  && title_print "Install development utilities" \
   && apt-get update && apt-get install -y \
     # better shell:
     zsh \
@@ -105,7 +105,7 @@ RUN \
     # something to quickly edit a file:
     vim nano \
 \
-  && title_print "Installing oh-my-zsh" \
+  && title_print "Install oh-my-zsh" \
   && docker/zsh/setup.sh \
 \
   && title_print "Finishing" \
