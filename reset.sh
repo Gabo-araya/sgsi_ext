@@ -12,4 +12,4 @@ psql \
   -c "create database \"$PGDATABASE\";" \
   postgres
 
-./manage.py migrate
+dj migrate

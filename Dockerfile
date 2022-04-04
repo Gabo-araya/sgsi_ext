@@ -9,6 +9,9 @@ WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
 
+# Nicer prompt is managed by zsh themes, so disable default venv prompt:
+ENV VIRTUAL_ENV_DISABLE_PROMPT=x
+
 # "Prints" to locate which command is running:
 COPY scripts/utils.sh scripts/utils.sh
 RUN \
@@ -37,8 +40,12 @@ RUN \
 
 # Install python dependencies
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-dev
-# FIXME: delete poetry's cache
+RUN poetry install --no-dev \
+  # FIXME: delete poetry's cache
+\
+  # "dj" alias available from anywhere and also in production.
+  # No other aliases for production, as there may not be consensus for them.
+  && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
@@ -58,11 +65,10 @@ COPY . .
 
 RUN poetry run django-admin compilemessages
 
-# TODO: source poetry env in entrypoint
-# TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
+# TODO: zsh with scary production theme ($PGDATABASE as prompt)
 # TODO: ipython history in a volume
 
-CMD ["docker/django/production_cmd.sh"]
+CMD ["docker/django/prod_cmd.sh"]
 
 #####################################
 # Development image

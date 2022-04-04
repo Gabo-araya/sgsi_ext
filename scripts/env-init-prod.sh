@@ -100,3 +100,8 @@ sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
 sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
 sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
 sed -i "s|{{do_spaces_region}}|$do_spaces_region|g" $env_file
+
+# This script runs in devcontainer venv, so its VIRTUAL_ENV and PATH
+# are the same as in a production container.
+# Set production container to have venv always available:
+docker/django/venv_to_dotenv.sh $env_file
