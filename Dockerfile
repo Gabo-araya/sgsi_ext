@@ -34,14 +34,13 @@ RUN \
   && title_print "Installing from new repos" \
   && apt-get update && apt-get install -y nodejs postgresql-client-14 \
 \
+  # Install python dependencies
+  source scripts/utils.sh \
+  && title_print "Install Poetry" \
+  && pip install poetry \
+\
   # Reduce image size and prevent use of potentially obsolete lists:
   && rm -rf /var/lib/apt/lists/*
-
-# Install python dependencies
-RUN \
-    source scripts/utils.sh \
-    && title_print "Installing Poetry" \
-    && pip install poetry
 
 COPY pyproject.toml poetry.lock ./
 RUN \
