@@ -2,17 +2,18 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 source ../scripts/utils.sh
+should_be_inside_container
 
 if (( $# == 0 )); then
   echo "Please specify target server"
   exit 1
 fi
-limit=$1
+target=$1
 
 readonly LOCAL_DUMPS_PATH=../db_dumps
 
 if (( $# == 1 )); then
-  create_dump_limit=$limit
+  create_dump_limit=$target
   source scripts/create_dump.sh
 else
   dump_name=$2
@@ -30,7 +31,7 @@ if [ ! -f "$local_dump_path" ]; then
 
   remote_dump_path="$(yq -r .project_name group_vars/all.yml)/db_dumps/$dump_name"
 
-  ansible-ssh "$limit" "pv -f \"$remote_dump_path\"" > $LOCAL_DUMPS_PATH/__tmp__.dump
+  ansible-ssh "$target" "pv -f \"$remote_dump_path\"" > $LOCAL_DUMPS_PATH/__tmp__.dump
   # Download to temp file to avoid storing a partial file with the same name,
   # and not downloading again if previous download is interrupted
   mv $LOCAL_DUMPS_PATH/__tmp__.dump "$local_dump_path"
@@ -51,10 +52,12 @@ pg_restore --dbname="$PGDATABASE" --no-owner --no-acl --jobs="$(nproc)" "$local_
 color_print "$green" "Done"
 
 migrations_check=0
-../manage.py migrate --check >/dev/null || migrations_check=$?
-# TODO: is it possible to check for extra migrations?
-# Those present in django_migrations table, but not in code.
+dj migrate --check >/dev/null || migrations_check=$?
 
 if (( migrations_check > 0 )); then
   color_print "$yellow" "There are unapplied migrations."
 fi
+
+# Note: it's possible that the DB now contains extra migrations
+# (those present in django_migrations table, and schema, but not in code),
+# but this is not automatically detected.

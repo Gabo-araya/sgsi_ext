@@ -7,28 +7,6 @@
     created_env_path: ../../deploy.{{ ansible_limit }}.env
 
   tasks:
-    - name: clone/pull repository
-      git:
-        repo: "{{ git_repo }}"
-        version: "{{ branch }}"
-        dest: "{{ project_name }}"
-      # Remotes sometimes fail once, so:
-      register: git_result
-      retries: 1
-      delay: 3
-      until: git_result is succeeded
-      tags: update
-
-    - name: backup DB on code change
-      include_role:
-        name: backup-db
-        apply:
-          tags: update
-      when:                               # Skip backup on:
-        - git_result.changed              #   - no changes, or
-        - git_result.before is not none   #   - first clone.
-      tags: update
-
     - name: copy created .env from controller
       copy:
         src: "{{ created_env_path }}"
@@ -50,6 +28,21 @@
         path: "{{ created_env_path }}"
         state: absent
       when: create_dotenv
+
+    - import_role:
+        name: git-clonepull
+      tags: update
+
+    - name: backup DB on code changes
+      include_role:
+        name: backup-db
+        apply:
+          tags: update
+      # Skip backup if no changes:
+      # (or if this was the first clone, ran by deploy.sh,
+      # and then no changes with pull in this playbook)
+      when: git_result.changed
+      tags: update
 
     - name: set ALLOWED_HOST
       lineinfile:
@@ -98,6 +91,11 @@
         msg: Freed {{ prune.images_space_reclaimed | human_readable }}
       tags: update
 
+    - name: check if nginx will take a long time to start
+      stat:
+        path: "{{ project_name }}/docker/volumes/nginx_secrets/"
+      register: stat_nginx_secrets
+
     - name: build and start containers
       # "dcupbd"
       community.docker.docker_compose:
@@ -116,7 +114,7 @@
       tags: update
 
     - name: run deployment checks
-      command: docker-compose exec django poetry run ./manage.py check --deploy
+      command: docker-compose exec django dj check --deploy
       # Note: it's possible to fail on warning by appending: --fail-level WARNING
       args:
         chdir: "{{ project_name }}"
@@ -131,14 +129,19 @@
       failed_when: depl_checks.rc > 0
       tags: update
 
-    - name: make a test request to http://{{ server_domain }}
+    - name: make a test request to https://{{ server_domain }}
       uri:
-        url: http://{{ server_domain }}
+        url: https://{{ server_domain }}
         force: yes  # Ensure no cache
       tags: update
+      # Skip this check on first deploy, because dhparams generation takes a long time:
+      when: >
+        stat_nginx_secrets is not defined
+        or stat_nginx_secrets.stat.exists
+      # "is not defined" because task that registers it has no "update" tag
 
       # Some retries because nginx may not be ready yet:
       register: test_req
       until: test_req is succeeded
-      retries: 10
+      retries: 3
       delay: 1

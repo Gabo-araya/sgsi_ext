@@ -1,4 +1,4 @@
-#!/bin/bash
+# shellcheck shell=bash
 
 # Format helpers for color_print
 green="\033[0;32m"
@@ -35,3 +35,20 @@ function random_chars() {
 
   chars=$(tr -dc A-Za-z0-9 </dev/urandom | head -c $count)
 }
+
+function assert_outside_container() {
+  if grep -q docker /proc/1/cgroup; then
+    color_print $red "This script must be run out of the container"
+    exit 1
+  fi
+}
+
+function should_be_inside_container() {
+  if [[ -z "${DOCKERLESS-}" ]] && ! grep -q docker /proc/1/cgroup; then
+    color_print $red "This script is intended to be run inside the container"
+    # Add "DOCKERLESS=x" to your env vars to skip this check, if you are working without docker
+    exit 1
+  fi
+}
+
+# TODO: after merging all PRs, check that all `find . -not -path "./docker/*" -name "*.sh" -executable` handle inside/outside container

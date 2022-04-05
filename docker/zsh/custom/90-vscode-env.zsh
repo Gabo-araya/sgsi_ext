@@ -23,7 +23,7 @@ function () {   # Scope  (https://stackoverflow.com/questions/13667284/how-do-i-
       done < /dev/shm/env_from_vscode_terminal
 
     else
-      echo $fg[yellow]vscode env not loaded$reset_color
+      echo "$fg[yellow]vscode env not loaded$reset_color"
     fi
   fi
 }

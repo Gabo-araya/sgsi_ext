@@ -1,19 +1,21 @@
 #!/bin/bash
 set -e
+cd "$(dirname "$0")"/..
 source scripts/utils.sh
+should_be_inside_container
 
 if (( $# == 0 )); then
-  echo "No limit"
+  echo "No server name"
   exit 1
 fi
 
-limit=$1
-env_file="deploy.$limit.env"
+sv_name=$1
+env_file="deploy.$sv_name.env"
 
 cp "docker/.env.example" "$env_file"
 
 project_name=$(yq -r .project_name ansible/group_vars/all.yml)
-postgres_db=$project_name-$limit
+postgres_db=$project_name-$sv_name
 
 color_print "$cyan" "Postgres database location?"
 
@@ -100,3 +102,8 @@ sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
 sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
 sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
 sed -i "s|{{do_spaces_region}}|$do_spaces_region|g" $env_file
+
+# This script runs in devcontainer venv, so its VIRTUAL_ENV and PATH
+# are the same as in a production container.
+# Set production container to have venv always available:
+docker/django/venv_to_dotenv.sh $env_file

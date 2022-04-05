@@ -7,6 +7,12 @@ services:
       start_period: 30s
     depends_on:
       - memcached
+    labels:
+      ofelia.enabled: "true"
+      ofelia.job-exec.django-cron.schedule: "@every 1m"
+      # ofelia.job-exec.django-cron.command: dj runcrons
+      ofelia.job-exec.django-cron.command: >
+        dj shell -c "print('TODO: install either old django-cron or modern replacement')"
 
   nginx:
     image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
@@ -18,7 +24,9 @@ services:
       - django  # To prevent '[emerg] host not found in upstream "django"'
     restart: unless-stopped
     volumes:
-      - ./docker/nginx_templates/:/etc/nginx/templates/:ro
+      - ./docker/nginx/user-entrypoint.d/50-comment-duplicates.sh:/docker-entrypoint.d/50-comment-duplicates.sh:ro
+      - ./docker/nginx/user_conf.d/:/etc/nginx/user_conf.d/:ro
+      - ./docker/nginx/templates/:/etc/nginx/templates/:ro
       - ./project/static/:/usr/share/nginx/static/:ro
       - ./project/media/:/usr/share/nginx/media/:ro
       - ./docker/volumes/nginx_secrets/:/etc/letsencrypt/
@@ -32,3 +40,12 @@ services:
       - --threads=${MEMCACHED_THREADS}
       # Uncomment to check for activity:
       # - -vv
+
+  ofelia:  # cron
+    image: mcuadros/ofelia:v0.3.6
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:   # "real time labels reading is not supported yet"
+      - django
+    restart: unless-stopped

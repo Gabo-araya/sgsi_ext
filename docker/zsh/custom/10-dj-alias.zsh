@@ -1,4 +1,4 @@
-alias dj='./manage.py'
+# "dj" symlink in Dockerfile
 alias djs='dj runserver'
 alias djsh='dj shell'
 alias djt='dj test'   # TODO: --failfast? --keepdb?

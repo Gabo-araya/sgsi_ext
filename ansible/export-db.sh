@@ -2,6 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 source ../scripts/utils.sh
+should_be_inside_container
 
 if (( $# < 2 )); then
   echo "Usage: export-db.sh src dest [dump_name]"

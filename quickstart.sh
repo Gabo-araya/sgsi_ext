@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
+cd "$(dirname "$0")"
 source scripts/utils.sh
+assert_outside_container
+
+# TODO: check if port 5432 is free, and offer help to stop postgres
+# (container or host) according to `sudo lsof -t -i:5432`, /proc/PID/cgroup docker...
 
 # Create a local .env file if it does not exist
 ./scripts/env-init-dev.sh
@@ -18,7 +23,13 @@ fi
 
 mkdir -p ~/.local/share/magnet-django-devcontainer/zshcustom
 
-echo "docker-compose up --detach --build" | newgrp docker
+newgrp docker <<EOF
+docker-compose build && \
+docker-compose down && \
+docker-compose run django docker/django/venv_to_dotenv.sh .env && \
+docker-compose up --detach
+EOF
+# "down" because https://github.com/docker/compose/issues/4548
 
 # Set vscode to use python in poetry env
 mkdir -p .vscode
@@ -37,10 +48,10 @@ fi
 prompt "\n\nWould you like to run migrations? [Y/n]" "Y"
 input_lower=${input,,}
 if [[ $input_lower == y ]]; then
-  echo "docker-compose exec -T django poetry run ./manage.py migrate" | newgrp docker
+  echo "docker-compose exec -T django dj migrate" | newgrp docker
 
   superuserexists_ret=0
-  echo "docker-compose exec -T django poetry run ./manage.py superuserexists" | newgrp docker \
+  echo "docker-compose exec -T django dj superuserexists" | newgrp docker \
     || superuserexists_ret=$?
   if (( superuserexists_ret == 1 )); then
 
@@ -51,7 +62,7 @@ if [[ $input_lower == y ]]; then
       # so can't get keyboard answers to createsuperuser.  https://www.scosales.com/ta/kb/104260.html
       exec 3<&0
       echo "exec \
-        docker-compose exec django poetry run ./manage.py createsuperuser \
+        docker-compose exec django dj createsuperuser \
         0<&3 3<&-" | newgrp docker
       echo -e "\n"
     fi

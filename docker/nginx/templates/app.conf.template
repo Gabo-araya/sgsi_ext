@@ -6,8 +6,6 @@
 
 # Reference: https://docs.gunicorn.org/en/stable/deploy.html
 
-# TODO: improve security. Supports TLS 1.0/1.1, grade B on https://www.ssllabs.com/ssltest/
-
 server {
   listen 443 ssl deferred;
   server_name ${SERVER_DOMAIN};

@@ -7,6 +7,8 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 ARG NPM_CACHE_DIR=/tmp/npm-cache
 ARG PIP_NO_CACHE_DIR=off
 
+# Nicer prompt is managed by zsh themes, so disable default venv prompt:
+ENV VIRTUAL_ENV_DISABLE_PROMPT=x
 
 WORKDIR /usr/src/app
 
@@ -14,7 +16,7 @@ WORKDIR /usr/src/app
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
 
-# NOTE: use "Prints" to easily see which command is running:
+# "Prints" to locate which command is running:
 COPY scripts/utils.sh scripts/utils.sh
 RUN \
   # Source utils containing "title_print":
@@ -43,11 +45,14 @@ RUN \
   && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml poetry.lock ./
-RUN \
-    poetry install --no-dev \
+RUN poetry install --no-dev \
 \
-    # Remove caches to save some space
-    && yes | poetry cache clear --quiet --all .
+  # Remove caches to save some space
+  && yes | poetry cache clear --quiet --all . \
+\
+  # "dj" alias available from anywhere and also in production.
+  # No other aliases for production, as there may not be consensus for them.
+  && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
@@ -71,12 +76,10 @@ COPY . .
 
 RUN poetry run django-admin compilemessages
 
-# TODO: django-cron
-# TODO: source poetry env in entrypoint
-# TODO: zsh with dj aliases and scary production theme ($PGDATABASE as prompt)
+# TODO: zsh with scary production theme ($PGDATABASE as prompt)
 # TODO: ipython history in a volume
 
-CMD ["docker/django/production_cmd.sh"]
+CMD ["docker/django/prod_cmd.sh"]
 
 #####################################
 # Development image
