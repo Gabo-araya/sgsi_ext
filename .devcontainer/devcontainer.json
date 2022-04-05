@@ -22,7 +22,7 @@
 	"settings": {
 		// Default to zsh:
 		"terminal.integrated.defaultProfile.linux": "zsh",
-		// Activate environment with 10-poetry-shell.zsh, which is less verbose and also works in external terminal:
+		// The environment is handled with other methods. See 50-venv-hints.zsh
 		"python.terminal.activateEnvironment": false
 	},
 

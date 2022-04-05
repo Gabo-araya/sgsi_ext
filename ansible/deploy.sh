@@ -4,23 +4,19 @@ cd "$(dirname "$0")"
 source ../scripts/utils.sh
 should_be_inside_container
 
-deploy_recreate=0
-
 while getopts rc opt; do
   case $opt in
     r)
-      deploy_recreate=1
+      export deploy_recreate=1
       ;;
     c)
-      deploy_cache_ignore=1
+      export deploy_cache_ignore=1
       ;;
     ?)
       exit 1
   esac
 done
 
-export deploy_recreate
-export deploy_cache_ignore
 shift $((OPTIND - 1))
 
 if (( $# == 0 )); then
