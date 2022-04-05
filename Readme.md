@@ -24,3 +24,15 @@ you can solve it by running this inside the devcontainer:
 ```sh
 git restore --staged --worktree poetry.lock && poetry lock --no-update && git add poetry.lock
 ```
+
+
+### User Authentication
+#### Inactive users
+The built-in forms and views support displaying a message when their accounts
+exist but were deactivated. However, the respective code paths won't execute
+when using the default `ModelBackend` for authentication and they will be
+considered as they never existed. This is a deliberate design decision by part
+of Django developers.
+
+If you really need to display such a message, consider using a different backend
+for authentication such as `AllowAllUsersModelBackend`.
