@@ -16,6 +16,9 @@ from django.db import models
 from django.utils import timezone
 
 
+RUT_FILTER_RE = re.compile("[^0-9kK]")
+
+
 def today():
     """
     This method obtains today"s date in local time
@@ -27,7 +30,7 @@ def format_rut(rut):
     if not rut:
         return ""
 
-    rut = rut.replace(" ", "").replace(".", "").replace("-", "")
+    rut = re.sub(RUT_FILTER_RE, "", rut)
     rut = rut[:9]
 
     if not rut:
@@ -60,10 +63,8 @@ def rut_verifying_digit(rut):
 
 
 def validate_rut(rut):
-    rut = rut.lower()
-    rut = rut.replace("-", "")
-    rut = rut.replace(".", "")
-    rut = rut.replace(" ", "")
+    rut = rut.strip().lower()
+    rut = re.sub(RUT_FILTER_RE, "", rut)
     aux = rut[:-1]
     dv = rut[-1:]
 
