@@ -399,9 +399,9 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
         model_name = self.model.__name__.lower()
         return reverse("{}_list".format(model_name))
 
-    def post(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
         try:
-            return self.delete(request, *args, **kwargs)
+            return super().delete(request, *args, **kwargs)
         except ProtectedError as error:
             return self.handle_protected_error(request, error)
 
