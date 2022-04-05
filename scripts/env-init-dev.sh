@@ -21,7 +21,7 @@ else
 
   # Assume defaults
   postgres_host="localhost"
-  postgres_port="5432"
+  postgres_port="15432"
   postgres_user="postgres"
   postgres_password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
   postgres_db=$project_name

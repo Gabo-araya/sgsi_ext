@@ -23,7 +23,17 @@ RUN \
   source scripts/utils.sh \
 \
   && title_print "Install prerequisites" \
-  && apt-get update && apt-get install -y gcc curl gnupg libpq-dev gettext wait-for-it \
+  && apt-get update && apt-get install -y \
+    # to install from extra repositories:
+    curl gnupg \
+    # to compile psycopg2:
+    gcc libpq-dev \
+    # for Django translations:
+    gettext \
+    # to wait for DB:
+    wait-for-it \
+    # better shell:
+    zsh \
 \
   && title_print "Set up Node.js repository" \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
@@ -66,6 +76,10 @@ RUN poetry install --no-dev \
 # Place Production image above development, so docker-compose on servers stop building after this one.
 FROM project-dependencies AS production
 
+# Add oh-my-zsh for production
+COPY docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
+RUN docker/zsh_prod/setup_prod.sh
+
 # COPY assets webpack.*.js ./
 # RUN npm run build
 
@@ -73,9 +87,6 @@ FROM project-dependencies AS production
 COPY . .
 
 RUN poetry run django-admin compilemessages
-
-# TODO: zsh with scary production theme ($PGDATABASE as prompt)
-# TODO: ipython history in a volume
 
 CMD ["docker/django/prod_cmd.sh"]
 
@@ -87,7 +98,7 @@ FROM project-dependencies AS development
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
 # This was getting too long to keep in Dockerfile:
-COPY docker/zsh/setup.sh docker/zsh/setup.sh
+COPY docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
 
 RUN \
   # Source utils containing "title_print":
@@ -95,8 +106,6 @@ RUN \
 \
   && title_print "Install development utilities" \
   && apt-get update && apt-get install -y \
-    # better shell:
-    zsh \
     # commit inside container:
     git \
     # see container processes:
@@ -107,7 +116,7 @@ RUN \
     vim nano \
 \
   && title_print "Install oh-my-zsh" \
-  && docker/zsh/setup.sh \
+  && docker/zsh_dev/setup_dev.sh \
 \
   && title_print "Finishing" \
   # Reduce image size and prevent use of potentially obsolete lists:
