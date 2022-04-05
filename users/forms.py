@@ -71,16 +71,10 @@ class AuthenticationForm(forms.Form):
         if email and password:
             self.user_cache = authenticate(email=email, password=password)
             if self.user_cache is None:
-                raise ValidationError(
-                    self.error_messages["invalid_login"],
-                    code="invalid_login",
-                    params={"email": self.email_field.verbose_name},
-                )
-            elif not self.user_cache.is_active:
-                raise ValidationError(
-                    self.error_messages["inactive"],
-                    code="inactive",
-                )
+                raise self.get_invalid_login_error()
+            else:
+                self.confirm_login_allowed(self.user_cache)
+
         return self.cleaned_data
 
 
@@ -94,6 +88,12 @@ class AuthenticationForm(forms.Form):
         ``ValidationError``.
 
         If the given user may log in, this method should return None.
+
+        Notes:
+            If you use the default ``ModelBackend``, inactive users will be considered
+            as non-existing and the default implementation of this method won't be
+            reachable. If you really want to warn inactive users, you must use a
+            backend supporting inactive users such as ``AllowAllUsersModelBackend``.
         """
         if not user.is_active:
             raise ValidationError(
@@ -122,6 +122,13 @@ class AuthenticationForm(forms.Form):
 
     def get_user(self):
         return self.user_cache
+
+    def get_invalid_login_error(self):
+        return ValidationError(
+            self.error_messages['invalid_login'],
+            code='invalid_login',
+            params={"email": self.email_field.verbose_name},
+        )
 
 
 class AdminAuthenticationForm(AuthenticationForm):
