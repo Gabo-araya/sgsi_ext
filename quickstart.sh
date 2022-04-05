@@ -72,8 +72,17 @@ if [[ $input_lower == y ]]; then
 fi
 
 # Done
-color_print $green 'Completed! http://localhost:8000'
+color_print $green 'Completed!'
+
 if [ -f quickstart-messages.log ]; then
   color_print $yellow "$(cat quickstart-messages.log)"
   rm quickstart-messages.log
 fi
+
+color_print $green "After rebooting if required,
+open this folder in VSCode,
+install the recommended 'Remote - Containers' extension if prompted,
+and click 'Reopen in Container' when prompted. (Or press F1 and type 'Reopen in Container')
+
+Then in a VSCode terminal (if a black-and-white one appears (bash), press ctrl-D and open a new one),
+run 'dj runserver' and access the site at http://localhost:8000"
