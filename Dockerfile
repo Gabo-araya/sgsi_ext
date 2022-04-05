@@ -36,8 +36,6 @@ RUN \
   && title_print "Install Postgres and Node.js" \
   && apt-get update && apt-get install -y nodejs postgresql-client-14 \
 \
-  # Install python dependencies
-  source scripts/utils.sh \
   && title_print "Install Poetry" \
   && pip install poetry \
 \
