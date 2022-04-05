@@ -5,9 +5,9 @@ source scripts/utils.sh
 assert_outside_container
 
 # Stop this project's postgres so port is free:
-command -v docker-compose >/dev/null && \
+command -v docker-compose >/dev/null && [ -f .env ] && \
   echo "docker-compose stop postgres" | newgrp docker
-scripts/assert-5432-free.sh
+scripts/assert-15432-free.sh
 
 # Create a local .env file if it does not exist
 ./scripts/env-init-dev.sh
