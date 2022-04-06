@@ -1,17 +1,14 @@
 # PostgreSQL settings
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
 POSTGRES_USER=circleci
 POSTGRES_PASSWORD=circlepassword
 POSTGRES_DB=circle_test
 
 # see docker-compose.ci.yml for service definition
 PGHOST=db
-PGPORT=$POSTGRES_PORT
+PGPORT=5432
 PGUSER=$POSTGRES_USER
 PGPASSWORD=$POSTGRES_PASSWORD
 PGDATABASE=$POSTGRES_DB
-PGDATA=/var/lib/postgresql/data/pgdata
 POSTGRES_HOST_AUTH_METHOD=trust
 
 # Django settings
