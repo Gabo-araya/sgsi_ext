@@ -1,4 +1,5 @@
-version: '3'
+version: '3.8'
+
 services:
   # Note: don't change service names as they are hardcoded in other places.
 
