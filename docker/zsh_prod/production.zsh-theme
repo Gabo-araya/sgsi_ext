@@ -6,15 +6,17 @@ RPS1='${return_code}'
 
 reverse_color="\e[${color[reverse]}m"
 dbname() {
-  # Reverse if name contains "prod":
-  case "$PGDATABASE" in
-    *prod*)
-      local rev=$reverse_color
-    ;;
-  esac
-  # Reverse is required to get true black.  https://github.com/zsh-users/zsh/blob/41eb200d66e4bea7bc5798888a1755cdf5daa3b0/Functions/Misc/colors#L68
+  # Reverse and uppercase if critical env:
+  if [ -n "$IS_CRITICAL_ENV" ]; then
+    local rev=$reverse_color
+    # Reverse is required to get true black.  https://github.com/zsh-users/zsh/blob/41eb200d66e4bea7bc5798888a1755cdf5daa3b0/Functions/Misc/colors#L68
+    local cased_pgdb=${PGDATABASE:u}
+  else
+    local rev=
+    local cased_pgdb=$PGDATABASE
+  fi
 
-  echo -n "%{$bg[bg-black]%}%{$fg[magenta]%}%{$rev%}$PGDATABASE%{$reset_color%}"
+  echo -n "%{$bg[bg-black]%}%{$fg[magenta]%}%{$rev%}$cased_pgdb%{$reset_color%}"
 }
 
 # Compacted $PWD
