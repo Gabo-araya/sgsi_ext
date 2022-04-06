@@ -5,7 +5,8 @@ POSTGRES_USER=circleci
 POSTGRES_PASSWORD=circlepassword
 POSTGRES_DB=circle_test
 
-PGHOST=$POSTGRES_HOST
+# see docker-compose.ci.yml for service definition
+PGHOST=db
 PGPORT=$POSTGRES_PORT
 PGUSER=$POSTGRES_USER
 PGPASSWORD=$POSTGRES_PASSWORD
