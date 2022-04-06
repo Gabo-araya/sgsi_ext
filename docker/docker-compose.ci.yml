@@ -12,6 +12,11 @@ services:
   db:
     image: "postgres:14-alpine"
     env_file: "ci_env"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app-test:
     image: app-test
