@@ -5,7 +5,7 @@ from base.tests import BaseTestCase
 from parameters.models import Parameter
 
 # enums
-from parameters.enums import ParameterDefinitionList
+from parameters.definitions import ParameterDefinitionList
 
 
 class ParameterTestCase(BaseTestCase):
