@@ -17,7 +17,7 @@ cp "docker/.env.example" "$env_file"
 project_name=$(yq -r .project_name ansible/group_vars/all.yml)
 postgres_db=$project_name-$sv_name
 
-prompt "Is '$sv_name' a critical environment? (That should't show a dev indicator) [y/N]" "N"
+prompt "\nIs '$sv_name' a critical environment? (That should't show a dev indicator) [y/N]" "N"
 input_lower=${input,,}
 if [[ $input_lower == y ]]; then
   is_critical_env=x
@@ -25,7 +25,7 @@ else
   is_critical_env=
 fi
 
-color_print "$cyan" "Postgres database location?"
+color_print "$cyan" "\nPostgres database location?"
 
 select db_loc in Local Remote; do
   if [[ "$db_loc" == "Local" ]]; then
