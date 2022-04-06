@@ -5,10 +5,10 @@ from django.db.models import Q
 from django.contrib.auth.models import BaseUserManager
 
 # base
-from base.managers import QuerySet
+from base.managers import BaseQuerySet
 
 
-class UserQuerySet(QuerySet):
+class UserQuerySet(BaseQuerySet):
     def search(self, query):
 
         queryset = self
@@ -23,7 +23,7 @@ class UserQuerySet(QuerySet):
         return queryset
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
     def _create_user(self, email, first_name, last_name, password, **extra_fields):
         """
         Creates and saves a User with the given username, email and password.
@@ -57,15 +57,6 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, first_name, last_name, password, **extra_fields)
-
-    def get_queryset(self):
-        return UserQuerySet(self.model, using=self._db)
-
-    def to_json(self):
-        return self.get_queryset().to_json()
-
-    def find_duplicates(self, *fields):
-        return self.get_queryset().find_duplicates(*fields)
 
     def get_or_none(self, **fields):
         return self.get_queryset().get_or_none(**fields)
