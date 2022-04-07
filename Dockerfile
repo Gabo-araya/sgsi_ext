@@ -3,14 +3,18 @@
 #####################################
 FROM python:3.9.12-slim-bullseye AS project-dependencies
 
+ENV PIP_DISABLE_PIP_VERSION_CHECK=on
+ARG NPM_CACHE_DIR=/tmp/npm-cache
+ARG PIP_NO_CACHE_DIR=off
+
+# Nicer prompt is managed by zsh themes, so disable default venv prompt:
+ENV VIRTUAL_ENV_DISABLE_PROMPT=x
+
 WORKDIR /usr/src/app
 
 # Base image already contains bash, so we can RUN with bash:
 SHELL ["/bin/bash", "-c"]
 # and write "source" instead of "."
-
-# Nicer prompt is managed by zsh themes, so disable default venv prompt:
-ENV VIRTUAL_ENV_DISABLE_PROMPT=x
 
 # "Prints" to locate which command is running:
 COPY scripts/utils.sh scripts/utils.sh
@@ -18,7 +22,7 @@ RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
 \
-  && title_print "Installing packages" \
+  && title_print "Install prerequisites" \
   && apt-get update && apt-get install -y \
     # to install from extra repositories:
     curl gnupg \
@@ -31,27 +35,28 @@ RUN \
     # better shell:
     zsh \
 \
-  && title_print "Adding nodejs repo" \
+  && title_print "Set up Node.js repository" \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
 \
-  && title_print "Adding Postgres repo" \
+  && title_print "Set up Postgres repository" \
   # The PostgreSQL client provides pg_isready for production, and pg_restore for development.
   && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
   && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 \
-  && title_print "Installing from new repos" \
+  && title_print "Install Postgres and Node.js" \
   && apt-get update && apt-get install -y nodejs postgresql-client-14 \
 \
-  # Reduce image size and prevent use of potentially obsolete lists:
-  && rm -rf /var/lib/apt/lists/* \
+  && title_print "Install Poetry" \
+  && pip install poetry \
 \
-  && title_print "Installing Poetry" \
-  && pip install poetry
+  # Reduce image size and prevent use of potentially obsolete lists:
+  && rm -rf /var/lib/apt/lists/*
 
-# Install python dependencies
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev \
-  # FIXME: delete poetry's cache
+\
+  # Remove caches to save some space
+  && yes | poetry cache clear --quiet --all . \
 \
   # "dj" alias available from anywhere and also in production.
   # No other aliases for production, as there may not be consensus for them.
@@ -59,7 +64,11 @@ RUN poetry install --no-dev \
 
 # Install javascript dependencies
 # COPY package.json package-lock.json ./
-# RUN npm ci && delete cache somehow
+# RUN \
+#     mkdir "$NPM_CACHE_DIR" \
+#     && npm ci --no-audit --cache "$NPM_CACHE_DIR" \
+#     && rm -rf "$NPM_CACHE_DIR"
+# TODO: delete cache
 
 #####################################
 # Production image
@@ -102,7 +111,7 @@ RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
 \
-  && title_print "apt update + install" \
+  && title_print "Install development utilities" \
   && apt-get update && apt-get install -y \
     # commit inside container:
     git \
@@ -113,7 +122,7 @@ RUN \
     # something to quickly edit a file:
     vim nano \
 \
-  && title_print "Installing oh-my-zsh" \
+  && title_print "Install oh-my-zsh" \
   && docker/zsh_dev/setup_dev.sh \
 \
   && title_print "Finishing" \
