@@ -27,7 +27,7 @@ else
   postgres_db=$project_name
   secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
   django_debug=True
-  is_critical_env=
+  is_critical_env=False
   aws_access_key_id=
   aws_secret_access_key=
   bucket_name=

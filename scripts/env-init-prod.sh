@@ -20,9 +20,9 @@ postgres_db=$project_name-$sv_name
 prompt "\nIs '$sv_name' a critical environment? (That should't show a dev indicator) [y/N]" "N"
 input_lower=${input,,}
 if [[ $input_lower == y ]]; then
-  is_critical_env=x
+  is_critical_env=True
 else
-  is_critical_env=
+  is_critical_env=False
 fi
 
 color_print "$cyan" "\nPostgres database location?"
