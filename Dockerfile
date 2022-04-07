@@ -82,6 +82,13 @@ RUN poetry run django-admin compilemessages
 CMD ["docker/django/prod_cmd.sh"]
 
 #####################################
+# CI Test image
+#####################################
+FROM production AS test
+# Make sure linters, style checkers and test runners get installed.
+RUN poetry install
+
+#####################################
 # Development image
 #####################################
 FROM project-dependencies AS development
@@ -116,7 +123,7 @@ RUN \
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
 # Install Poetry dev-dependencies (in separate layer because they should change more often):
-RUN poetry install
+RUN poetry install -E "code-format" -E "ansible"
 # FIXME: this step is super slow.
 
 # Prevent development container shutdown:
