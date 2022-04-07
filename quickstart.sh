@@ -23,7 +23,10 @@ if [[ ! -e docker-compose.override.yml ]]; then
   ln -s docker/docker-compose.dev.yml docker-compose.override.yml
 fi
 
-mkdir -p ~/.local/share/magnet-django-devcontainer/zshcustom
+DEVCONTAINER_SHARED_PATH=~/.local/share/magnet-django-devcontainer
+mkdir -p $DEVCONTAINER_SHARED_PATH/zshcustom
+cp -n docker/zsh_dev/50-dj-aliases.zsh $DEVCONTAINER_SHARED_PATH/zshcustom/
+# "-n" is "--no-clobber" (the long option doesn't exist in OSX) so it doesn't overwrite
 
 newgrp docker <<EOF
 docker-compose build && \
