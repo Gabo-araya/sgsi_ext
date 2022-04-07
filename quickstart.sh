@@ -10,10 +10,10 @@ command -v docker-compose >/dev/null && [ -f .env ] && \
 scripts/assert-15432-free.sh
 
 # Create a local .env file if it does not exist
-./scripts/env-init-dev.sh
+scripts/env-init-dev.sh
 
 # Install docker and docker-compose
-./scripts/docker-install.sh
+scripts/docker-install.sh
 
 # Build and start the containers
 title_print 'Building containers...'
@@ -23,7 +23,7 @@ if [[ ! -e docker-compose.override.yml ]]; then
   ln -s docker/docker-compose.dev.yml docker-compose.override.yml
 fi
 
-mkdir -p ~/.local/share/magnet-django-devcontainer/zshcustom
+scripts/add-djaliases.sh
 
 newgrp docker <<EOF
 docker-compose build && \
