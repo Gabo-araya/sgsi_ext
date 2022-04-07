@@ -2,9 +2,11 @@
 
 #### Shared configuration
 
-Shared configuration is bind-mounted in the container, stored locally at ~/.local/share/magnet-django-devcontainer
+The configuration files in your computer stored in `~/.local/share/magnet-django-devcontainer` are shared to all django devcontainers. This stores zsh and ipython histories, and other customizations.
 
-TODO: how to add and override aliases
+In this folder, in `zshcustom/50-dj-aliases.zsh` you may customize your aliases. This file is only created once (by quickstart.sh if it doesn't exist), and never automatically modified later.
+
+You can add other `zshcustom/*.zsh` files, which are loaded when zsh starts. You can also add and commit `docker/zsh_dev/custom/*.zsh` files so they apply to all developers.
 
 #### Disable IPython exit prompt
 
@@ -24,3 +26,15 @@ you can solve it by running this inside the devcontainer:
 ```sh
 git restore --staged --worktree poetry.lock && poetry lock --no-update && git add poetry.lock
 ```
+
+
+### User Authentication
+#### Inactive users
+The built-in forms and views support displaying a message when their accounts
+exist but were deactivated. However, the respective code paths won't execute
+when using the default `ModelBackend` for authentication and they will be
+considered as they never existed. This is a deliberate design decision by part
+of Django developers.
+
+If you really need to display such a message, consider using a different backend
+for authentication such as `AllowAllUsersModelBackend`.

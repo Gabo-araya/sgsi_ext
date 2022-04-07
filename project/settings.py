@@ -202,7 +202,7 @@ if AWS_STORAGE_BUCKET_NAME:
 
     if DO_SPACES_REGION:
         AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
-        DO_SPACES_CDN_ENABLED = os.environ.get("DO_SPACES_CDN_ENABLED", True) == "True"
+        DO_SPACES_CDN_ENABLED = os.environ.get("DO_SPACES_CDN_ENABLED", "True") == "True"
 
     STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
     DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"

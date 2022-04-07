@@ -15,3 +15,11 @@ else
   color_print "$cyan" 'Note: this script is useful outside the container. Inside, you can use "dj"'
   exec dj "$@"
 fi
+
+
+# TODO: delete this script. Replace it by making deploy.yml set this:
+#   alias dj="dce django dj"
+
+# This made sense when its content would be:
+#   docker-compose -f docker-compose.yml -f docker/docker-compose.prod.yml exec django poetry run ./manage.py "$@"
+# but not anymore.

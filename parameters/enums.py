@@ -1,41 +1,16 @@
-# standard library
-import collections
-
 # django
+from django.db.models.enums import TextChoices
 from django.utils.translation import ugettext_lazy as _
 
-# validators
-from .validators import validate_protocol
 
+class ParameterKind(TextChoices):
+    """Represents the available choices of parameter kinds"""
 
-ParameterDefinition = collections.namedtuple(
-    "Parameter",
-    [
-        "name",
-        "default",
-        "kind",
-        "verbose_name",
-        "validators",
-    ],
-    defaults=(tuple(),),
-)
-
-
-class ParameterDefinitionList(object):
-    definitions = [
-        ParameterDefinition(
-            name="DEFAULT_URL_PROTOCOL",
-            default="https",
-            kind="str",
-            verbose_name=_("Default url protocol"),
-            validators=(validate_protocol,),
-        ),
-    ]
-
-    choices = tuple((x.name, x.verbose_name) for x in definitions)
-
-    @classmethod
-    def get_definition(cls, name):
-        for parameter_definition in cls.definitions:
-            if parameter_definition.name == name:
-                return parameter_definition
+    INT = ("int", _("integer"))
+    TIME = ("time", _("time"))
+    DATE = ("date", _("date"))
+    JSON = ("json", _("json"))
+    URL = ("url", _("url"))
+    HOSTNAME = ("host", _("host name"))
+    BOOL = ("bool", _("boolean"))  # 'true', '1', 'false' or '0'
+    STR = ("str", _("text"))

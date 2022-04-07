@@ -6,7 +6,7 @@ from django.contrib import admin
 
 # models
 from .models import Parameter
-from parameters.enums import ParameterDefinitionList
+from .definitions import ParameterDefinitionList
 
 
 @admin.register(Parameter)

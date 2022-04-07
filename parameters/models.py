@@ -14,8 +14,12 @@ from django.utils.translation import ugettext_lazy as _
 # models
 from base.models import BaseModel
 
+# definitions
+from parameters.definitions import ParameterDefinitionList
+
 # enums
-from parameters.enums import ParameterDefinitionList
+from parameters.enums import ParameterKind
+from parameters.utils import parsers
 
 
 class Parameter(BaseModel):
@@ -32,14 +36,7 @@ class Parameter(BaseModel):
         max_length=255,
         verbose_name=_("kind"),
         editable=False,
-        choices=(
-            ("int", _("integer")),
-            ("str", _("text")),
-            ("time", _("time")),
-            ("date", _("date")),
-            ("json", _("json")),
-            ("bool", _("boolean")),  # 'true', '1' or 'yes'
-        ),
+        choices=ParameterKind.choices,
     )
     cache_seconds = models.PositiveIntegerField(
         verbose_name=_("cache seconds"),
@@ -47,29 +44,20 @@ class Parameter(BaseModel):
     )
 
     def clean(self):
-        if self.kind == "int":
-            try:
-                int(self.raw_value)
-            except ValueError:
-                raise ValidationError(_("Invalid input"))
-
-        if self.kind == "time":
-            try:
-                time.strptime(self.raw_value, "%H:%M")
-            except ValueError:
-                raise ValidationError(_("Invalid time format"))
-
-        if self.kind == "date":
-            try:
-                datetime.datetime.strptime(self.raw_value, "%Y-%m-%d")
-            except ValueError:
-                raise ValidationError(_("Invalid time format"))
-
-        if self.kind == "json":
-            try:
-                json.loads(self.raw_value)
-            except json.JSONDecodeError:
-                raise ValidationError(_("Invalid json format"))
+        if self.kind == ParameterKind.INT:
+            parsers.parse_int_value(self.raw_value)
+        elif self.kind == ParameterKind.TIME:
+            parsers.parse_time_value(self.raw_value)
+        elif self.kind == ParameterKind.DATE:
+            parsers.parse_date_value(self.raw_value)
+        elif self.kind == ParameterKind.JSON:
+            parsers.parse_json_value(self.raw_value)
+        elif self.kind == ParameterKind.URL:
+            parsers.parse_url_value(self.raw_value)
+        elif self.kind == ParameterKind.HOSTNAME:
+            parsers.parse_hostname_value(self.raw_value)
+        elif self.kind == ParameterKind.BOOL:
+            parsers.parse_bool_value(self.raw_value)
 
         self.run_validators()
 
@@ -85,22 +73,22 @@ class Parameter(BaseModel):
 
     @classmethod
     def process_value(cls, kind, raw_value):
-        if kind == "int":
-            return int(raw_value)
-
-        if kind == "json":
-            return json.loads(raw_value)
-
-        if kind == "time":
-            return time.strptime(raw_value, "%H:%M")
-
-        if kind == "date":
-            return datetime.datetime.strptime(raw_value, "%Y-%m-%d")
-
-        if kind == "bool":
-            return raw_value.lower() in ("yes", "true", "1")
-
-        return raw_value
+        if kind == ParameterKind.INT:
+            return parsers.parse_int_value(raw_value)
+        elif kind == ParameterKind.TIME:
+            return parsers.parse_time_value(raw_value)
+        elif kind == ParameterKind.DATE:
+            return parsers.parse_date_value(raw_value)
+        elif kind == ParameterKind.JSON:
+            return parsers.parse_json_value(raw_value)
+        elif kind == ParameterKind.URL:
+            return parsers.parse_url_value(raw_value)
+        elif kind == ParameterKind.HOSTNAME:
+            return parsers.parse_hostname_value(raw_value)
+        elif kind == ParameterKind.BOOL:
+            return parsers.parse_bool_value(raw_value)
+        else:
+            return raw_value
 
     @value.setter
     def value(self, value):

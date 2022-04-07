@@ -1,0 +1,101 @@
+version: 2.1
+executors:
+  base-executor:
+    resource_class: medium
+    docker:
+      - image: cimg/base:stable
+        user: root
+    environment:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+    working_directory: ~/app
+jobs:
+  build:
+    executor: base-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.11
+      - run:
+          name: Create output directory
+          command: |
+            mkdir -p ~/output
+      - run:
+          name: Build production image
+          command: |
+            docker build --progress=plain --target production -t app .
+      - run:
+          name: Build test image
+          command: |
+            docker build --progress=plain --target test -t app-test .
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            docker save app app-test | gzip > ~/output/app.tar.gz
+      - persist_to_workspace:
+          root: ~/output
+          paths:
+            - app.tar.gz
+  test:
+    executor: base-executor
+    steps:
+      - attach_workspace:
+          at: ~/output
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.11
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            gunzip -c ~/output/app.tar.gz | docker load | true
+      - run:
+          name: Start artifact collector
+          command: |
+            CONTAINER_ID=$(docker-compose -f docker/docker-compose.ci.yml run -d --user root artifact-collector)
+            echo "export COLLECTOR_CONTAINER_ID=$CONTAINER_ID" >> $BASH_ENV
+      - run:
+          name: Run tests
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run pytest
+      - run:
+          name: Copy artifacts
+          when: always
+          command: |
+            docker cp $COLLECTOR_CONTAINER_ID:/artifacts ~/artifacts
+            ls ~/artifacts
+      - store_test_results:
+          path: ~/artifacts/
+  code-checks:
+    executor: base-executor
+    steps:
+      - attach_workspace:
+          at: ~/output
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.11
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            gunzip -c ~/output/app.tar.gz | docker load | true
+      - run:
+          name: Check code style
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run black --check --exclude "^.*\b(migrations)\b.*$" .
+      - run:
+          name: Check for missing migrations
+          command: |
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run ./manage.py makemigrations --check --dry-run
+
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - code-checks:
+          requires:
+            - build

@@ -1,0 +1,16 @@
+# PostgreSQL settings
+POSTGRES_USER=circleci
+POSTGRES_PASSWORD=circlepassword
+POSTGRES_DB=circle_test
+
+# see docker-compose.ci.yml for service definition
+PGHOST=db
+PGPORT=5432
+PGUSER=$POSTGRES_USER
+PGPASSWORD=$POSTGRES_PASSWORD
+PGDATABASE=$POSTGRES_DB
+POSTGRES_HOST_AUTH_METHOD=trust
+
+# Django settings
+SECRET_KEY=notsosecretbutenoughfortestingpleasedontcopy(c)magnet
+DEBUG=True
