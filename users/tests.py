@@ -1,6 +1,8 @@
 """
 Tests for the user app
 """
+# standard library
+from http import HTTPStatus
 
 # django
 from django.urls import reverse
@@ -26,11 +28,11 @@ class UserTests(BaseTestCase):
         response = self.client.get(url)
 
         # test that the user is logged in
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self.user.force_logout()
 
         response = self.client.get(url)
 
         # user is logged out, sow redirects to login
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)

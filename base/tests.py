@@ -4,6 +4,7 @@ when you run "manage.py test".
 """
 
 # standard library
+from http import HTTPStatus
 
 # django
 from django.contrib import admin
@@ -214,7 +215,16 @@ class UrlsTest(BaseTestCase):
                     msg = 'url "{}" ({})returned {}'.format(
                         url, pattern.name, response.status_code
                     )
-                    self.assertIn(response.status_code, (200, 302, 403, 405), msg)
+                    self.assertIn(
+                        response.status_code,
+                        (
+                            HTTPStatus.OK,  # 200
+                            HTTPStatus.FOUND,  # 302
+                            HTTPStatus.FORBIDDEN,  # 403
+                            HTTPStatus.METHOD_NOT_ALLOWED,  # 405
+                        ),
+                        msg,
+                    )
                 else:
                     test_url_patterns(pattern.url_patterns, pattern.namespace)
 
