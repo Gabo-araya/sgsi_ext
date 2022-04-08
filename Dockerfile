@@ -82,7 +82,8 @@ ENV NODE_ENV=production
 COPY docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
 RUN docker/zsh_prod/setup_prod.sh
 
-COPY assets webpack.*.js ./
+COPY webpack.*.js ./
+COPY assets/ assets/
 RUN npm run build
 
 # Copy rest of the project
