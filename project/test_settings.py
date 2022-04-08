@@ -14,3 +14,10 @@ PASSWORD_HASHERS = [
 # Code should not behave differently when running tests.
 # Access this setting only if strictly required.
 TEST = True
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'tmp/cache'
+    }
+}

@@ -116,4 +116,6 @@ webpack-stats.json
 *.tgz
 .tags
 test-results/
-.coverage
+
+# file-based cache
+tmp/
