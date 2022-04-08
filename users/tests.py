@@ -18,7 +18,7 @@ class UserTests(BaseTestCase):
         """
         self.user.email = "Hello@magnet.cl"
         self.user.save()
-        self.assertEqual(self.user.email, "hello@magnet.cl")
+        self.assertEqual("hello@magnet.cl", self.user.email)
 
     def test_force_logout(self):
         """
@@ -28,11 +28,11 @@ class UserTests(BaseTestCase):
         response = self.client.get(url)
 
         # test that the user is logged in
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
 
         self.user.force_logout()
 
         response = self.client.get(url)
 
         # user is logged out, sow redirects to login
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertEqual(HTTPStatus.FOUND, response.status_code)
