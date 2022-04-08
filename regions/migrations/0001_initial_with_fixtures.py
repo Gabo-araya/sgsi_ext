@@ -37,6 +37,9 @@ def load_fixtures(apps, schema_editor):
                 )
 
 
+UPDATE_SEQUENCE_SQL = r"SELECT setval(pg_get_serial_sequence('{}', 'id'), (SELECT id from {} ORDER BY id DESC LIMIT 1))"
+
+
 class Migration(migrations.Migration):
 
     initial = True
@@ -153,5 +156,14 @@ class Migration(migrations.Migration):
                 "ordering": ["name"],
             },
         ),
-        migrations.RunPython(load_fixtures),
+        migrations.RunPython(
+            code=load_fixtures, reverse_code=migrations.RunPython.noop
+        ),
+        migrations.RunSQL(
+            sql=(
+                UPDATE_SEQUENCE_SQL.format("regions_region", "regions_region"),
+                UPDATE_SEQUENCE_SQL.format("regions_commune", "regions_commune"),
+            ),
+            reverse_sql=migrations.RunSQL.noop,
+        ),
     ]
