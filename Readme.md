@@ -38,3 +38,15 @@ of Django developers.
 
 If you really need to display such a message, consider using a different backend
 for authentication such as `AllowAllUsersModelBackend`.
+
+### Javascript debugging
+
+In development, webpack is configured to produce simple sourcemaps, because nice sourcemaps took too long to generate in large projects.
+
+The downside is that for example when debugging in the browser the `render()` of a React component, it looks like this:
+
+![ugly code](.readme_images/js_cheap-eval-source-map.png)
+
+You can change, in `webpack.dev.js`, the `devtool` option so it looks like this:
+
+![original code](.readme_images/js_eval-source-map.png)

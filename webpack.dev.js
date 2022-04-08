@@ -29,6 +29,8 @@ module.exports = merge(common, {
   ],
 
   devtool: 'eval-cheap-source-map',
+  // To debug code that looks like original source, but makes compilations slower:
+  // devtool: 'eval-source-map',
 
   devServer: {
     port: 3000,
