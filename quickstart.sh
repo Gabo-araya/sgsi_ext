@@ -23,7 +23,7 @@ if [[ ! -e docker-compose.override.yml ]]; then
   ln -s docker/docker-compose.dev.yml docker-compose.override.yml
 fi
 
-scripts/add-djaliases.sh
+scripts/add-aliases.sh
 
 newgrp docker <<EOF
 docker-compose build && \
