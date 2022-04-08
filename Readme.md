@@ -41,7 +41,7 @@ for authentication such as `AllowAllUsersModelBackend`.
 
 ### Javascript debugging
 
-In development, webpack is configured to produce simple sourcemaps, because nice sourcemaps took too long to generate in large projects.
+In development, webpack is configured to produce simple sourcemaps, because nice sourcemaps take too long to generate in large projects.
 
 The downside is that for example when debugging in the browser the `render()` of a React component, it looks like this:
 
