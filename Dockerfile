@@ -51,6 +51,7 @@ RUN \
 \
   # Reduce image size and prevent use of potentially obsolete lists:
   && rm -rf /var/lib/apt/lists/*
+  # TODO: update npm
 
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev \
@@ -69,6 +70,7 @@ RUN \
   # Installs devDependencies, because the production image also builds the bundles:
   && npm ci --no-audit --cache "$NPM_CACHE_DIR" \
   && rm -rf "$NPM_CACHE_DIR"
+# TODO: this doesn't work for dev
 
 #####################################
 # Production image
