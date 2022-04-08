@@ -33,7 +33,11 @@ module.exports = {
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       openAnalyzer: false
-    })
+    }),
+    // Note: this causes the dev server to print some errors
+    // (Error parsing bundle asset "...": no such file)
+    // but the html report is generated anyway.
+    // https://github.com/webpack-contrib/webpack-bundle-analyzer/blob/c93fd2b/README.md#i-dont-see-gzip-or-parsed-sizes-it-only-shows-stat-size
   ],
 
   module: {

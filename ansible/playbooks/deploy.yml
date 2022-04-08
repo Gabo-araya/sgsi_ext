@@ -143,6 +143,7 @@
       # "is not defined" because task that registers it has no "update" tag
 
       # Some retries because nginx may not be ready yet:
+      # TODO: what if long migrations are running?
       register: test_req
       until: test_req is succeeded
       retries: 3
