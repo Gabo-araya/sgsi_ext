@@ -9,7 +9,7 @@ all:
     playg:
       ansible_host: 198.199.90.71
       server_domain: tomas-playg.do.magnet.cl
-      branch: chore/critical-env-indicator_DPT-55
+      branch: chore/dockerized_js
 
   vars:
     ansible_user: magnet

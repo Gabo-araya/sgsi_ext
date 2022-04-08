@@ -63,12 +63,12 @@ RUN poetry install --no-dev \
   && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
 
 # Install javascript dependencies
-# COPY package.json package-lock.json ./
-# RUN \
-#     mkdir "$NPM_CACHE_DIR" \
-#     && npm ci --no-audit --cache "$NPM_CACHE_DIR" \
-#     && rm -rf "$NPM_CACHE_DIR"
-# TODO: delete cache
+COPY package.json package-lock.json ./
+RUN \
+  mkdir "$NPM_CACHE_DIR" \
+  # Installs devDependencies, because the production image also builds the bundles:
+  && npm ci --no-audit --cache "$NPM_CACHE_DIR" \
+  && rm -rf "$NPM_CACHE_DIR"
 
 #####################################
 # Production image
@@ -76,12 +76,14 @@ RUN poetry install --no-dev \
 # Place Production image above development, so docker-compose on servers stop building after this one.
 FROM project-dependencies AS production
 
+ENV NODE_ENV=production
+
 # Add oh-my-zsh for production
 COPY docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
 RUN docker/zsh_prod/setup_prod.sh
 
-# COPY assets webpack.*.js ./
-# RUN npm run build
+COPY assets webpack.*.js ./
+RUN npm run build
 
 # Copy rest of the project
 COPY . .
