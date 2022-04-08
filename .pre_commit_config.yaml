@@ -1,0 +1,38 @@
+repos:
+  - repo: local
+
+    hooks:
+      - id: isort
+        name: sort imports
+        entry: poetry run isort
+        types:
+          - python
+        language: system
+        stages:
+          - commit
+
+      - id: black
+        name: reformat code with black
+        entry: poetry run black
+        types:
+          - python
+        language: system
+        stages:
+          - commit
+
+      - id: health-check
+        name: health check
+        entry: poetry run python manage.py check --fail-level WARNING
+        language: system
+        always_run: true
+        pass_filenames: false
+        stages:
+          - commit
+
+      - id: migrations
+        name: check migrations
+        entry: poetry run python3 manage.py makemigrations --check --dry-run
+        language: system
+        always_run: true
+        stages:
+          - push
