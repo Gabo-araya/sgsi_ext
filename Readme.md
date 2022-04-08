@@ -4,7 +4,7 @@
 
 The configuration files in your computer stored in `~/.local/share/magnet-django-devcontainer` are shared to all django devcontainers. This stores zsh and ipython histories, and other customizations.
 
-In this folder, in `zshcustom/50-dj-aliases.zsh` you may customize your aliases. This file is only created once (by quickstart.sh if it doesn't exist), and never automatically modified later.
+In this folder, in `zshcustom/50-aliases.zsh` you may customize your aliases. This file is only created once (by quickstart.sh if it doesn't exist), and never automatically modified later.
 
 You can add other `zshcustom/*.zsh` files, which are loaded when zsh starts. You can also add and commit `docker/zsh_dev/custom/*.zsh` files so they apply to all developers.
 
@@ -38,3 +38,15 @@ of Django developers.
 
 If you really need to display such a message, consider using a different backend
 for authentication such as `AllowAllUsersModelBackend`.
+
+### Javascript debugging
+
+In development, webpack is configured to produce simple sourcemaps, because nice sourcemaps take too long to generate in large projects.
+
+The downside is that for example when debugging in the browser the `render()` of a React component, it looks like this:
+
+![ugly code](.readme_images/js_cheap-eval-source-map.png)
+
+You can change, in `webpack.dev.js`, the `devtool` option so it looks like this:
+
+![original code](.readme_images/js_eval-source-map.png)

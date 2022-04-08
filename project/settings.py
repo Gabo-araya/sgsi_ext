@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "users",
     # external
     "loginas",
+    "webpack_loader",
     # internal
     "parameters",
     "regions",
@@ -80,7 +81,6 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],
-        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -90,6 +90,15 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.tz",
                 "django.template.context_processors.i18n",
+            ],
+            "loaders": [
+                ("pypugjs.ext.django.Loader", (
+                    "django.template.loaders.filesystem.Loader",
+                    "django.template.loaders.app_directories.Loader",
+                ))
+            ],
+            "builtins": [
+                "pypugjs.ext.django.templatetags",
             ],
         },
     },
@@ -171,6 +180,12 @@ AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+if not DEBUG:
+    STATICFILES_DIRS = [
+        # Webpack bundles
+        ("bundles", BASE_DIR / "assets/bundles"),
+    ]
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
 if AWS_STORAGE_BUCKET_NAME:
@@ -289,6 +304,20 @@ if not DEBUG:
             'LOCATION': os.environ.get("MEMCACHED_LOCATION"),
         }
     }
+
+# Django Webpack Loader
+# https://github.com/django-webpack/django-webpack-loader#configuring-the-settings-file
+
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "CACHE": False,
+        "BUNDLE_DIR_NAME": "bundles/",
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
+        "POLL_INTERVAL": 0.1,
+        "TIMEOUT": 1,  # 1 second timeout for webpack compilation
+        "IGNORE": [r'.+\.hot-update.js', r'.+\.map']
+    }
+}
 
 # HTTPS
 # https://docs.djangoproject.com/en/3.2/ref/settings/#secure-proxy-ssl-header

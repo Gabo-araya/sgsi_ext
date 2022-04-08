@@ -315,6 +315,14 @@ libcloud = ["apache-libcloud"]
 sftp = ["paramiko"]
 
 [[package]]
+name = "django-webpack-loader"
+version = "1.5.0"
+description = "Transparently use webpack with django"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "djangorestframework"
 version = "3.13.1"
 description = "Web APIs for Django, made easy."
@@ -995,7 +1003,7 @@ ansible = ["ansible", "yq"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9.9"
-content-hash = "2f779ea033d3f0efbaf1e007243cc8577a617b697e3014ce7e026b68180d0eec"
+content-hash = "9a127d724988d7db1506280e3342c5dcb8ae2c1b437df9825afc0164aef35db0"
 
 [metadata.files]
 ansible = [
@@ -1225,6 +1233,10 @@ django-loginas = [
 django-storages = [
     {file = "django-storages-1.12.3.tar.gz", hash = "sha256:a475edb2f0f04c4f7e548919a751ecd50117270833956ed5bd585c0575d2a5e7"},
     {file = "django_storages-1.12.3-py3-none-any.whl", hash = "sha256:204a99f218b747c46edbfeeb1310d357f83f90fa6a6024d8d0a3f422570cee84"},
+]
+django-webpack-loader = [
+    {file = "django-webpack-loader-1.5.0.tar.gz", hash = "sha256:f97f56200cfc206553dc8be850e100a7711a66bc568bce267bc67b4f56d22ca4"},
+    {file = "django_webpack_loader-1.5.0-py3-none-any.whl", hash = "sha256:5e199ab2e069cc747088e9d017409a2adb7b7bdea4aad37ebcfde3b29f66b2e4"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.13.1-py3-none-any.whl", hash = "sha256:24c4bf58ed7e85d1fe4ba250ab2da926d263cd57d64b03e8dcef0ac683f8b1aa"},

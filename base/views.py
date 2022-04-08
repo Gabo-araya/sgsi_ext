@@ -4,12 +4,15 @@
 
 # django
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import AccessMixin
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.db.models import ForeignKey
+from django.db.models import ProtectedError
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
@@ -395,6 +398,24 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
 
         model_name = self.model.__name__.lower()
         return reverse("{}_list".format(model_name))
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            return super().delete(request, *args, **kwargs)
+        except ProtectedError as error:
+            return self.handle_protected_error(request, error)
+
+    def handle_protected_error(self, request, error):
+        """
+        Overwrite this method if you want to change the error message or
+        redirect to a different view.
+        """
+        messages.add_message(
+            request,
+            messages.ERROR,
+            _("This object cannot be deleted."),
+        )
+        return HttpResponseRedirect(self.object.get_absolute_url())
 
 
 class BaseRedirectView(LoginPermissionRequiredMixin, RedirectView):

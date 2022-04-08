@@ -1,0 +1,156 @@
+# Translations for the parameters app.
+# Copyright (C) Magnet S.p.A.
+# This file is distributed under the same license as the PACKAGE package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-06 15:02-0400\n"
+"PO-Revision-Date: 2022-04-06 15:02-0400\n"
+"Last-Translator: Magnet D3PT Team <d3pt@magnet.cl>\n"
+"Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: fields/base.py
+#, python-format
+msgid "Chilean RUT (up to %(max_length)s)"
+msgstr "RUT chileno (hasta %(max_length)s)"
+
+#: fields/base.py
+#, python-format
+msgid ""
+"'%(value)s' value has an invalid format. It must be in XX.XXX.XXX-Y format "
+"or XXXXXXXXY format."
+msgstr "El valor '%(value)s' no tiene un formato válido. El formato aceptado "
+"es XX.XXX.XXX-Y o XXXXXXXXY."
+
+#: fields/base.py
+#, python-format
+msgid "'%(value)s' value has the correct format  but it is an invalid rut."
+msgstr "'%(value)s' cumple con el formato pero no es un RUT válido."
+
+#: fields/base.py
+#, python-format
+msgid "'%(value)s' must be str or None."
+msgstr "'%(value)s' debe ser una cadena de texto o None."
+
+#: models.py
+msgid "No"
+msgstr "No"
+
+#: models.py
+msgid "Yes"
+msgstr "Sí"
+
+#: models.py
+msgid "creation date"
+msgstr "fecha de creación"
+
+#: models.py
+msgid "created at"
+msgstr "creado el"
+
+#: models.py
+msgid "edition date"
+msgstr "fecha de edición"
+
+#: models.py
+msgid "updated at"
+msgstr "actualizado el"
+
+#: models.py
+msgid "display order"
+msgstr "orden de presentación"
+
+#: templates/base.pug
+msgid "Close"
+msgstr "Cerrar"
+
+#: templates/base.pug
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/exceptions/400.pug
+msgid "bad request"
+msgstr "petición inválida"
+
+#: templates/exceptions/403.pug
+msgid "permission denied"
+msgstr "permiso denegado"
+
+#: templates/exceptions/404.pug
+msgid "page not found"
+msgstr "página no encontrada"
+
+#: templates/exceptions/500.pug
+msgid "There has been an error"
+msgstr "Ha habido un problema"
+
+#: templates/form.pug
+msgid "Save"
+msgstr "Guardar"
+
+#: templates/form.pug
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/includes/field.pug
+msgid "optional"
+msgstr "opcional"
+
+#: templates/includes/navbar/navbar.pug
+msgid "Main navigation"
+msgstr "Navegación principal"
+
+#: templates/includes/navbar/navbar.pug
+msgid "Toggle main navigation"
+msgstr "Mostrar u ocultar navegación principal"
+
+#: templates/includes/navbar/navbar.pug
+msgid "Logged in as"
+msgstr "Conectado como"
+
+#: templates/includes/navbar/navbar_link.pug
+msgid "current"
+msgstr "actual"
+
+#: templates/includes/pagination.pug
+msgid "pagination"
+msgstr "paginación"
+
+#: templates/includes/pagination.pug
+#, python-format
+msgid "Showing results from %(start_index)s to %(end_index)s"
+msgstr "Mostrando resultados de %(start_index)s a %(end_index)s"
+
+#: templates/includes/pagination.pug
+msgid "total"
+msgstr "total"
+
+#: views.py
+#, python-format
+msgid "Create %s"
+msgstr "Crear %s"
+
+#: views.py
+#, python-format
+msgid "Update %s"
+msgstr "Actualizar %s"
+
+#: views.py
+#, python-format
+msgid "Delete %s"
+msgstr "Eliminar %s"
+
+#: views.py
+msgid "This object cannot be deleted."
+msgstr "El objeto no puede ser eliminado."
+
+#: views.py
+msgid "status"
+msgstr "estado"
