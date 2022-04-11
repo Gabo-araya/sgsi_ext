@@ -985,11 +985,11 @@ python-versions = "*"
 
 [[package]]
 name = "werkzeug"
-version = "2.1.1"
+version = "2.0.1"
 description = "The comprehensive WSGI web application library."
 category = "dev"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.6"
 
 [package.extras]
 watchdog = ["watchdog"]
@@ -1025,7 +1025,7 @@ ansible = ["ansible", "yq"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9.9"
-content-hash = "4b202b3633061e63e58a0c4b13d02be805adeffa15da84053a321296173824d6"
+content-hash = "8b9f347f388a4ddb4b4a36b746974ac974bec98fa744a576c428ea15e11b69d5"
 
 [metadata.files]
 ansible = [
@@ -1595,8 +1595,8 @@ wcwidth = [
     {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
 ]
 werkzeug = [
-    {file = "Werkzeug-2.1.1-py3-none-any.whl", hash = "sha256:3c5493ece8268fecdcdc9c0b112211acd006354723b280d643ec732b6d4063d6"},
-    {file = "Werkzeug-2.1.1.tar.gz", hash = "sha256:f8e89a20aeabbe8a893c24a461d3ee5dad2123b05cc6abd73ceed01d39c3ae74"},
+    {file = "Werkzeug-2.0.1-py3-none-any.whl", hash = "sha256:6c1ec500dcdba0baa27600f6a22f6333d8b662d22027ff9f6202e3367413caa8"},
+    {file = "Werkzeug-2.0.1.tar.gz", hash = "sha256:1de1db30d010ff1af14a009224ec49ab2329ad2cde454c8a708130642d579c42"},
 ]
 xmltodict = [
     {file = "xmltodict-0.12.0-py2.py3-none-any.whl", hash = "sha256:8bbcb45cc982f48b2ca8fe7e7827c5d792f217ecf1792626f808bf41c3b86051"},
