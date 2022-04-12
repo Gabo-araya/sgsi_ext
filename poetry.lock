@@ -1,15 +1,4 @@
 [[package]]
-name = "ansible"
-version = "5.6.0"
-description = "Radically simple IT automation"
-category = "main"
-optional = true
-python-versions = ">=3.8"
-
-[package.dependencies]
-ansible-core = ">=2.12.4,<2.13.0"
-
-[[package]]
 name = "ansible-core"
 version = "2.12.4"
 description = "Radically simple IT automation"
@@ -1020,17 +1009,14 @@ xmltodict = ">=0.11.0"
 tests = ["coverage", "flake8", "wheel"]
 
 [extras]
-ansible = ["ansible", "yq"]
+ansible = ["ansible-core", "yq"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9.9"
-content-hash = "8b9f347f388a4ddb4b4a36b746974ac974bec98fa744a576c428ea15e11b69d5"
+content-hash = "59ae46525ec9cc475068c8bfc3ea2e8f565e79fc3f8196ec2344cf824653c205"
 
 [metadata.files]
-ansible = [
-    {file = "ansible-5.6.0.tar.gz", hash = "sha256:acd30731434154da376ceeeb416ee1541cdfb8ea3c648023a55a34cb3ecaf9f3"},
-]
 ansible-core = [
     {file = "ansible-core-2.12.4.tar.gz", hash = "sha256:827af75985a6f04b980bd371027bf038cb187640628557298acb9983a8f2c2da"},
 ]

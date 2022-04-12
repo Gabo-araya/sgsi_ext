@@ -136,9 +136,18 @@ RUN \
   # "install editable" ansible-ssh:
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
-# Install Poetry dev-dependencies (in separate layer because they should change more often):
-RUN poetry install -E "ansible"
-# FIXME: this step is super slow.
+# Install Poetry dev-dependencies, then ansible + collections.
+RUN \
+  source scripts/utils.sh \
+  && title_print "Install dev dependencies" \
+  && poetry install \
+\
+  && title_print "Install ansible (core)" \
+  && poetry install -E "ansible" \
+\
+  # Install ansible collections
+  && title_print "Install ansible (collections)" \
+  && poetry run ansible-galaxy collection install -r requirements.yml
 
 # Prevent development container shutdown:
 CMD ["sleep", "inf"]
