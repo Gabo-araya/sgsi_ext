@@ -63,7 +63,9 @@ class Mockup(object):
 
     def random_email(self):
         return "{}@{}.{}".format(
-            random_string(length=6), random_string(length=6), random_string(length=2)
+            random_string(length=6, include_spaces=False),
+            random_string(length=6, include_spaces=False),
+            random_string(length=2, include_spaces=False),
         )
 
     def random_hex_int(self, *args, **kwargs):
