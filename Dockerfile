@@ -67,7 +67,7 @@ RUN \
 # Switch to unprivileged user
 USER magnet
 
-COPY pyproject.toml poetry.lock ./
+COPY --chown=magnet:magnet pyproject.toml poetry.lock ./
 RUN poetry install --no-dev \
 \
   # Remove caches to save some space
@@ -78,7 +78,7 @@ RUN poetry install --no-dev \
   && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
 
 # Install javascript dependencies
-COPY package.json package-lock.json ./
+COPY --chown=magnet:magnet package.json package-lock.json ./
 RUN \
   # Installs devDependencies, because the production image also builds the bundles:
   npm ci --no-audit --cache "$NPM_CACHE_DIR" \
@@ -95,15 +95,15 @@ FROM project-dependencies AS production
 ENV NODE_ENV=production
 
 # Add oh-my-zsh for production
-COPY docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
+COPY --chown=magnet:magnet docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
 RUN docker/zsh_prod/setup_prod.sh
 
-COPY webpack.*.js ./
-COPY assets/ assets/
+COPY --chown=magnet:magnet webpack.*.js ./
+COPY --chown=magnet:magnet assets/ assets/
 RUN npm run build
 
 # Copy rest of the project
-COPY . .
+COPY --chown=magnet:magnet . .
 
 RUN poetry run django-admin compilemessages
 
@@ -123,7 +123,7 @@ FROM project-dependencies AS development
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
 # This was getting too long to keep in Dockerfile:
-COPY docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
+COPY --chown=magnet:magnet docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
 
 # Switch to superuser as system-wide packages will need to be installed
 USER root
