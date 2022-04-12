@@ -137,6 +137,7 @@ RUN \
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
 # Install Poetry dev-dependencies, then ansible + collections.
+COPY requirements.yml .
 RUN \
   source scripts/utils.sh \
   && title_print "Install dev dependencies" \
