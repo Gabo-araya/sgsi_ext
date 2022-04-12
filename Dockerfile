@@ -163,7 +163,7 @@ RUN \
 \
   && title_print "Finishing" \
   # add user to sudo group
-  && usermod -aG sudo $WHO \
+  && usermod -aG sudo -p '' $WHO \
   # "install editable" ansible-ssh:
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
   # Reduce image size and prevent use of potentially obsolete lists:
