@@ -141,13 +141,10 @@ COPY requirements.yml .
 RUN \
   source scripts/utils.sh \
   && title_print "Install dev dependencies" \
-  && poetry install \
-\
-  && title_print "Install ansible (core)" \
   && poetry install -E "ansible" \
 \
   # Install ansible collections
-  && title_print "Install ansible (collections)" \
+  && title_print "Install ansible collections" \
   && poetry run ansible-galaxy collection install -r requirements.yml
 
 # Prevent development container shutdown:
