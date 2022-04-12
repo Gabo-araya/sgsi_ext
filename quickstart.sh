@@ -15,6 +15,11 @@ scripts/env-init-dev.sh
 # Install docker and docker-compose
 scripts/docker-install.sh
 
+# Determine usernames, UIDs and GIDs of current user
+export WHO=$(whoami)
+export HOST_UID=$(id -u)
+export HOST_GID=$(id -g)
+
 # Build and start the containers
 title_print 'Building containers...'
 

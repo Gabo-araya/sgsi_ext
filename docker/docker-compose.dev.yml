@@ -16,6 +16,10 @@ services:
     build:
       context: .
       target: development
+      args:
+        HOST_UID: "${HOST_UID}"
+        HOST_GID: "${HOST_GID}"
+        WHO: "${WHO}"
     # Uncomment if you want to override the service's Dockerfile with another one
     #   dockerfile: .devcontainer/Dockerfile
 

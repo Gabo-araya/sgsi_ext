@@ -3,12 +3,17 @@
 #####################################
 FROM python:3.9.12-slim-bullseye AS project-dependencies
 
+# Nicer prompt is managed by zsh themes, so disable default venv prompt:
+ENV VIRTUAL_ENV_DISABLE_PROMPT=x
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
+
 ARG NPM_CACHE_DIR=/tmp/npm-cache
 ARG PIP_NO_CACHE_DIR=off
 
-# Nicer prompt is managed by zsh themes, so disable default venv prompt:
-ENV VIRTUAL_ENV_DISABLE_PROMPT=x
+# Default users and groups
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
 
 WORKDIR /usr/src/app
 
@@ -23,8 +28,8 @@ RUN \
   source scripts/utils.sh \
 \
   && title_print "Create non-privileged user to run apps" \
-  && groupadd -g 1337 magnet \
-  && useradd -u 1337 -g magnet -m -s /bin/bash magnet \
+  && groupadd -g $HOST_UID $WHO \
+  && useradd -u $HOST_GID -g $WHO -m -s /bin/bash $WHO \
 \
   && title_print "Install prerequisites" \
   && apt-get update && apt-get install -y \
@@ -59,15 +64,15 @@ RUN \
   && chmod 777 "$NPM_CACHE_DIR" \
 \
   && title_print "Change owner of app directory" \
-  && chown -R magnet:magnet . \
+  && chown -R $HOST_UID:$HOST_GID . \
 \
   # Reduce image size and prevent use of potentially obsolete lists:
   && rm -rf /var/lib/apt/lists/*
 
 # Switch to unprivileged user
-USER magnet
+USER $WHO
 
-COPY --chown=magnet:magnet pyproject.toml poetry.lock ./
+COPY --chown=$HOST_UID:$HOST_GID pyproject.toml poetry.lock ./
 RUN poetry install --no-dev \
 \
   # Remove caches to save some space
@@ -78,7 +83,7 @@ RUN poetry install --no-dev \
   && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
 
 # Install javascript dependencies
-COPY --chown=magnet:magnet package.json package-lock.json ./
+COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
 RUN \
   # Installs devDependencies, because the production image also builds the bundles:
   npm ci --no-audit --cache "$NPM_CACHE_DIR" \
@@ -94,16 +99,20 @@ FROM project-dependencies AS production
 
 ENV NODE_ENV=production
 
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+
 # Add oh-my-zsh for production
-COPY --chown=magnet:magnet docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
+COPY --chown=$HOST_UID:$HOST_GID docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
 RUN docker/zsh_prod/setup_prod.sh
 
-COPY --chown=magnet:magnet webpack.*.js ./
-COPY --chown=magnet:magnet assets/ assets/
+COPY --chown=$HOST_UID:$HOST_GID webpack.*.js ./
+COPY --chown=$HOST_UID:$HOST_GID assets/ assets/
 RUN npm run build
 
 # Copy rest of the project
-COPY --chown=magnet:magnet . .
+COPY --chown=$HOST_UID:$HOST_GID . .
 
 RUN poetry run django-admin compilemessages
 
@@ -122,8 +131,12 @@ RUN poetry install
 FROM project-dependencies AS development
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+
 # This was getting too long to keep in Dockerfile:
-COPY --chown=magnet:magnet docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
+COPY --chown=$HOST_UID:$HOST_GID docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
 
 # Switch to superuser as system-wide packages will need to be installed
 USER root
@@ -153,7 +166,7 @@ RUN \
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
 
 # Switch back to unprivileged user
-USER magnet
+USER $WHO
 
 # Install Poetry dev-dependencies, then ansible + collections.
 COPY requirements.yml .
