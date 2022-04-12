@@ -1,6 +1,8 @@
 """
 Tests for the user app
 """
+# standard library
+from http import HTTPStatus
 
 # django
 from django.urls import reverse
@@ -16,21 +18,21 @@ class UserTests(BaseTestCase):
         """
         self.user.email = "Hello@magnet.cl"
         self.user.save()
-        self.assertEqual(self.user.email, "hello@magnet.cl")
+        self.assertEqual("hello@magnet.cl", self.user.email)
 
     def test_force_logout(self):
         """
         Tests that users are created with lower case emails
         """
         url = reverse("password_change")
-        response = self.client.get(url)
+        response = self.client.get(url, follow=True)
 
         # test that the user is logged in
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
 
         self.user.force_logout()
 
-        response = self.client.get(url)
+        response = self.client.get(url, follow=True)
 
         # user is logged out, sow redirects to login
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(HTTPStatus.FOUND, response.status_code)
