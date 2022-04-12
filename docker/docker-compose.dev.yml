@@ -17,9 +17,9 @@ services:
       context: .
       target: development
       args:
-        HOST_UID: "${HOST_UID}"
-        HOST_GID: "${HOST_GID}"
-        WHO: "${WHO}"
+        HOST_UID: "${HOST_UID:-2640}"
+        HOST_GID: "${HOST_GID:-2640}"
+        WHO: "${WHO:-magnet}"
     # Uncomment if you want to override the service's Dockerfile with another one
     #   dockerfile: .devcontainer/Dockerfile
 
