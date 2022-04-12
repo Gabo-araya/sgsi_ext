@@ -1,0 +1,5 @@
+# This file is used by Ansible to get a list of collections to install.
+# This helps to keep Docker images size and build times to a minimum.
+
+collections:
+- community.docker

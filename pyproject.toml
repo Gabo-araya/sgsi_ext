@@ -24,7 +24,7 @@ boto3 = "1.21.15"
 inflection = "0.5.1"
 pymemcache = "3.5.1"
 django-webpack-loader = "^1.4.1"
-ansible = { version = "^5.3.0", optional = true }
+ansible-core = { version = "~2.12", optional = true }
 yq = { version = "~2.14.0", optional = true }
 
 [tool.poetry.dev-dependencies]
@@ -40,7 +40,7 @@ Werkzeug = "2.0.1"
 watchdog = "^2.1.7"
 
 [tool.poetry.extras]
-ansible = ["ansible", "yq"]
+ansible = ["ansible-core", "yq"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
