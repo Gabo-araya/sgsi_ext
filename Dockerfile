@@ -173,7 +173,7 @@ RUN \
 USER $WHO
 
 # Install Poetry dev-dependencies, then ansible + collections.
-COPY requirements.yml .
+COPY --chown=$HOST_UID:$HOST_GID requirements.yml .
 RUN \
   source scripts/utils.sh \
   && title_print "Install dev dependencies" \
