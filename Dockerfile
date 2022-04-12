@@ -147,6 +147,8 @@ RUN \
 \
   && title_print "Install development utilities" \
   && apt-get update && apt-get install -y \
+    # sudo
+    sudo \
     # commit inside container:
     git \
     # see container processes:
@@ -160,10 +162,12 @@ RUN \
   && docker/zsh_dev/setup_dev.sh \
 \
   && title_print "Finishing" \
-  # Reduce image size and prevent use of potentially obsolete lists:
-  && rm -rf /var/lib/apt/lists/* \
+  # add user to sudo group
+  && usermod -aG sudo $WHO \
   # "install editable" ansible-ssh:
-  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
+  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
+  # Reduce image size and prevent use of potentially obsolete lists:
+  && rm -rf /var/lib/apt/lists/*
 
 # Switch back to unprivileged user
 USER $WHO
