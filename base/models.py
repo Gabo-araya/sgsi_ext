@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 # base
-from base.managers import BaseManager
+from base.managers import BaseQuerySet
 from base.serializers import ModelEncoder
 from base.mixins import AuditMixin
 
@@ -47,7 +47,7 @@ class BaseModel(AuditMixin, models.Model):
         )
 
     # using BaseManager
-    objects = BaseManager()
+    objects = BaseQuerySet.as_manager()
 
     class Meta:
         """set to abstract"""
