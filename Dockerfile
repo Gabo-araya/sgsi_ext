@@ -52,6 +52,13 @@ RUN \
 \
   && title_print "Install Postgres and Node.js" \
   && apt-get install -y nodejs postgresql-client-14 \
+  # Update npm:
+  && mkdir "$NPM_CACHE_DIR" \
+  && npm install --global --cache "$NPM_CACHE_DIR" npm \
+  # Delete but keeping the directory:
+  && rm -rf "$NPM_CACHE_DIR/*" \
+  # Ensure npm cache can be written by unprivileged users later:
+  && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
 \
   && title_print "Install Poetry" \
   && pip install poetry \
@@ -59,11 +66,6 @@ RUN \
   && title_print "Create non-privileged user to run apps" \
   && groupadd --gid $HOST_GID $WHO \
   && useradd --uid $HOST_UID --gid $HOST_GID --create-home --shell /bin/zsh $WHO \
-\
-  # TODO: update npm
-  && title_print "Set up npm cache" \
-  && mkdir -p "$NPM_CACHE_DIR" \
-  && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
 \
   && title_print "Change owner of app directory" \
   && chown -R $HOST_UID:$HOST_GID . \
@@ -84,15 +86,6 @@ RUN poetry install --no-dev \
   # No other aliases for production, as there may not be consensus for them.
   && ln -s /usr/src/app/manage.py ~/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/dj
 
-# Install javascript dependencies
-COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
-RUN \
-  # Installs devDependencies, because the production image also builds the bundles:
-  npm ci --no-audit --cache "$NPM_CACHE_DIR" \
-  # As /tmp is owned by root, remove only the directory contents, not the directory itself.
-  && rm -rf "$NPM_CACHE_DIR/*"
-# TODO: this doesn't work for dev
-
 #####################################
 # Production image
 #####################################
@@ -100,6 +93,7 @@ RUN \
 FROM project-dependencies AS production
 
 ENV NODE_ENV=production
+ARG NPM_CACHE_DIR=/tmp/npm-cache
 
 ARG WHO=magnet
 ARG HOST_UID=2640
@@ -109,6 +103,16 @@ ARG HOST_GID=2640
 COPY --chown=$HOST_UID:$HOST_GID docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
 RUN docker/zsh_prod/setup_prod.sh
 
+# Install javascript dependencies
+COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
+RUN \
+  # Installs devDependencies, because the production image also builds the bundles:
+  NODE_ENV=development npm ci --no-audit --cache "$NPM_CACHE_DIR" \
+  # As /tmp is owned by root, remove only the directory contents, not the directory itself.
+  && rm -rf "$NPM_CACHE_DIR/*"
+
+
+# Build javascript bundles:
 COPY --chown=$HOST_UID:$HOST_GID webpack.*.js ./
 COPY --chown=$HOST_UID:$HOST_GID assets/ assets/
 RUN npm run build
