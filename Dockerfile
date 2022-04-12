@@ -22,6 +22,10 @@ RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
 \
+  && title_print "Create non-privileged user to run apps" \
+  && groupadd -g 1337 magnet \
+  && useradd -u 1337 -g magnet -m -s /bin/bash magnet \
+\
   && title_print "Install prerequisites" \
   && apt-get update && apt-get install -y \
     # to install from extra repositories:
@@ -49,9 +53,16 @@ RUN \
   && title_print "Install Poetry" \
   && pip install poetry \
 \
-  # Reduce image size and prevent use of potentially obsolete lists:
-  && rm -rf /var/lib/apt/lists/*
   # TODO: update npm
+\
+  && title_print "Change owner of scripts" \
+  && chown -R magnet:magnet scripts/ \
+\
+  # Reduce image size and prevent use of potentially obsolete lists:
+  && rm -rf /var/lib/apt/lists/* \
+
+# Switch to unprivileged user
+USER magnet
 
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-dev \
@@ -106,11 +117,13 @@ RUN poetry install
 # Development image
 #####################################
 FROM project-dependencies AS development
-
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
 # This was getting too long to keep in Dockerfile:
 COPY docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
+
+# Switch to superuser as system-wide packages will need to be installed
+USER root
 
 RUN \
   # Source utils containing "title_print":
@@ -135,6 +148,9 @@ RUN \
   && rm -rf /var/lib/apt/lists/* \
   # "install editable" ansible-ssh:
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
+
+# Switch back to unprivileged user
+USER magnet
 
 # Install Poetry dev-dependencies, then ansible + collections.
 COPY requirements.yml .
