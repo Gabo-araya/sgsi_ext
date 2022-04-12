@@ -54,12 +54,15 @@ RUN \
   && pip install poetry \
 \
   # TODO: update npm
+  && title_print "Set up npm cache" \
+  && mkdir -p "$NPM_CACHE_DIR" \
+  && chmod 777 "$NPM_CACHE_DIR" \
 \
-  && title_print "Change owner of scripts" \
-  && chown -R magnet:magnet scripts/ \
+  && title_print "Change owner of app directory" \
+  && chown -R magnet:magnet . \
 \
   # Reduce image size and prevent use of potentially obsolete lists:
-  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /var/lib/apt/lists/*
 
 # Switch to unprivileged user
 USER magnet
@@ -77,10 +80,10 @@ RUN poetry install --no-dev \
 # Install javascript dependencies
 COPY package.json package-lock.json ./
 RUN \
-  mkdir "$NPM_CACHE_DIR" \
   # Installs devDependencies, because the production image also builds the bundles:
-  && npm ci --no-audit --cache "$NPM_CACHE_DIR" \
-  && rm -rf "$NPM_CACHE_DIR"
+  npm ci --no-audit --cache "$NPM_CACHE_DIR" \
+  # As /tmp is owned by root, remove only the directory contents, not the directory itself.
+  && rm -rf "$NPM_CACHE_DIR/*"
 # TODO: this doesn't work for dev
 
 #####################################
