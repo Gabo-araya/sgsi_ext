@@ -1,3 +1,5 @@
+# Django 3 Project Template™
+
 ### Devcontainer configuration
 
 #### Shared configuration
@@ -11,6 +13,7 @@ You can add other `zshcustom/*.zsh` files, which are loaded when zsh starts. You
 #### Disable IPython exit prompt
 
 To disable `Do you really want to exit ([y]/n)?` prompt of IPython, run:
+
 ```sh
 ipython profile create
 sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' /root/.ipython/profile_default/ipython_config.py
@@ -27,7 +30,6 @@ you can solve it by running this inside the devcontainer:
 git restore --staged --worktree poetry.lock && poetry lock --no-update && git add poetry.lock
 ```
 
-
 ### User Authentication
 #### Inactive users
 The built-in forms and views support displaying a message when their accounts
@@ -38,6 +40,31 @@ of Django developers.
 
 If you really need to display such a message, consider using a different backend
 for authentication such as `AllowAllUsersModelBackend`.
+
+### Unit tests
+Django 3 Project template introduces slight modifications to the already known
+TestCase classes to improve performance. This also implies some considerations
+when migrating code from existing Django projects.
+
+#### Create test data in `setUpTestData`
+Due to the way tests work, the `setUp` method is invoked before every test
+method. That means if your object creation calls are computationally expensive
+(such as secure password hashing) or require webservice or database access, the
+execution time increases significantly.
+
+In order to solve that problem and make tests faster, object creation is moved
+to the `setUpTestData` method. Django runs `setUpTestData` along with fixture
+creation inside a transaction. Your objects will be accessible from all test
+methods within your class.
+
+If you modify any object during a test, make sure you revert the changes by
+executing `self.my_object.refresh_from_db()` on the `setUp()` method. While this
+will imply a `SELECT` will be executed before each test, it will be faster than
+creating the objects.
+
+#### Mockup is now a class field
+Mockup is now a class field, meaning you need to replace your existing
+`self.create_*` calls to `self.mockup.create_*`.
 
 ### Javascript debugging
 

@@ -27,13 +27,14 @@ from inflection import underscore
 from base.middleware import RequestMiddleware
 
 
-class BaseTestCase(TestCase, Mockup):
+class BaseTestCase(TestCase):
+    def setUpTestData(cls):
+        cls.mockup = Mockup()
+        cls.password = random_string()
+        cls.user = cls.mockup.create_user(cls.password)
+
     def setUp(self):
         super(BaseTestCase, self).setUp()
-
-        self.password = random_string()
-        self.user = self.create_user(self.password)
-
         self.login()
 
     def tearDown(self, *args, **kwargs):
@@ -62,19 +63,18 @@ def reverse_pattern(pattern, namespace, args=None, kwargs=None):
 
 
 class UrlsTest(BaseTestCase):
+    def setUpTestData(cls):
+        # create a superuser account with id = 1
+        cls.mockup = Mockup()
+        cls.password = random_string()
+        cls.user = cls.mockup.create_user(
+            id=1,
+            password=cls.password,
+            is_superuser=True,
+        )
+
     def setUp(self):
         super(UrlsTest, self).setUp()
-
-        # we are going to send parameters, so one thing we'll do is to send
-        # tie id 1
-        self.user.delete()
-        self.user.id = 1
-
-        # give the user all the permissions, so we test every page
-        self.user.is_superuser = True
-
-        self.user.save()
-        self.login()
 
         # store default values for urls. E.g. user_id
         self.default_params = {}
