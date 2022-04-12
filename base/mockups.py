@@ -48,7 +48,7 @@ class Mockup(object):
             kwargs["last_name"] = random_string(length=6)
 
         if kwargs.get("email") is None:
-            kwargs["email"] = "%s@gmail.com" % random_string(length=6)
+            kwargs["email"] = self.random_email()
 
         if kwargs.get("is_active") is None:
             kwargs["is_active"] = True
