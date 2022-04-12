@@ -92,4 +92,5 @@
 **/*.dump
 **/.tags
 **/test-results/
+**/tmp/
 **/.coverage
