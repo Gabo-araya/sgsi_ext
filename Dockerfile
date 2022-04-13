@@ -61,7 +61,7 @@ RUN \
   # TODO: update npm
   && title_print "Set up npm cache" \
   && mkdir -p "$NPM_CACHE_DIR" \
-  && chmod 777 "$NPM_CACHE_DIR" \
+  && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
 \
   && title_print "Change owner of app directory" \
   && chown -R $HOST_UID:$HOST_GID . \
