@@ -28,8 +28,8 @@ RUN \
   source scripts/utils.sh \
 \
   && title_print "Create non-privileged user to run apps" \
-  && groupadd -g $HOST_UID $WHO \
-  && useradd -u $HOST_GID -g $WHO -m -s /bin/zsh $WHO \
+  && groupadd --gid $HOST_GID $WHO \
+  && useradd --uid $HOST_UID --gid $HOST_GID --create-home --shell /bin/zsh $WHO \
 \
   && title_print "Install prerequisites" \
   && apt-get update && apt-get install -y \
@@ -163,7 +163,7 @@ RUN \
 \
   && title_print "Finishing" \
   # add user to sudo group
-  && usermod -aG sudo -p '' $WHO \
+  && usermod -aG sudo --password '' $WHO \
   # "install editable" ansible-ssh:
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
   # Reduce image size and prevent use of potentially obsolete lists:
