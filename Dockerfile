@@ -43,17 +43,19 @@ RUN \
     wait-for-it \
     # better shell:
     zsh \
-\
-  && title_print "Set up Node.js repository" \
-  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    # to check for distro release and codename:
+    lsb-release \
 \
   && title_print "Set up Postgres repository" \
   # The PostgreSQL client provides pg_isready for production, and pg_restore for development.
   && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
   && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 \
+  && title_print "Set up Node.js repository" \
+  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+\
   && title_print "Install Postgres and Node.js" \
-  && apt-get update && apt-get install -y nodejs postgresql-client-14 \
+  && apt-get install -y nodejs postgresql-client-14 \
 \
   && title_print "Install Poetry" \
   && pip install poetry \
