@@ -73,10 +73,10 @@ if [ -f quickstart-messages.log ]; then
   rm quickstart-messages.log
 fi
 
-color_print $green "After rebooting if required,
-open this folder in VSCode,
-install the recommended 'Remote - Containers' extension if prompted,
-and click 'Reopen in Container' when prompted. (Or press F1 and type 'Reopen in Container')
+color_print $green 'After rebooting if required,
+- open this folder in VSCode
+- install the recommended "Remote - Containers" extension if prompted
+- click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
 
-Then in a VSCode terminal (if a black-and-white one appears (bash), press ctrl-D and open a new one),
-run 'dj runserver' and access the site at http://localhost:8000"
+Then in a VSCode terminal run "npm start",
+and in another terminal, run "djs" and access the site at http://localhost:8000'
