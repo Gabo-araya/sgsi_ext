@@ -29,7 +29,7 @@ RUN \
 \
   && title_print "Create non-privileged user to run apps" \
   && groupadd -g $HOST_UID $WHO \
-  && useradd -u $HOST_GID -g $WHO -m -s /bin/bash $WHO \
+  && useradd -u $HOST_GID -g $WHO -m -s /bin/zsh $WHO \
 \
   && title_print "Install prerequisites" \
   && apt-get update && apt-get install -y \
