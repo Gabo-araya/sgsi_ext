@@ -26,6 +26,7 @@ from django.views.generic.edit import BaseCreateView as GenericBaseCreateView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.edit import UpdateView
+from django.views.generic.edit import BaseUpdateView as GenericBaseUpdateView
 from django.views.generic.list import ListView
 
 from django.views.defaults import bad_request
@@ -356,9 +357,12 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
 
         context["opts"] = self.model._meta
         context["cancel_url"] = self.get_cancel_url()
-        context["title"] = _("Update %s") % str(self.object)
+        context["title"] = self.title
 
         return context
+
+    def get_title(self):
+        return _("Update %s") % str(self.object)
 
     def get_cancel_url(self):
         if self.next_url:
@@ -371,7 +375,18 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
         if next_url:
             return next_url
 
-        return super().get_success_url()
+        return super(GenericBaseUpdateView, self).get_success_url()
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.title = self.get_title()
+        return super(GenericBaseUpdateView, self).get(request, *args, **kwargs)
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.title = self.get_title()
+        return super(GenericBaseUpdateView, self).post(request, *args, **kwargs)
 
 
 class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
