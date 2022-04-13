@@ -1,7 +1,7 @@
-from base.managers import QuerySet
+from base.managers import BaseQuerySet
 
 
-class {{model_name}}QuerySet(QuerySet):
+class {{model_name}}QuerySet(BaseQuerySet):
 
     def search(self, query):
         """
