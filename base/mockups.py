@@ -48,7 +48,7 @@ class Mockup(object):
             kwargs["last_name"] = random_string(length=6)
 
         if kwargs.get("email") is None:
-            kwargs["email"] = "%s@gmail.com" % random_string(length=6)
+            kwargs["email"] = self.random_email()
 
         if kwargs.get("is_active") is None:
             kwargs["is_active"] = True
@@ -63,7 +63,9 @@ class Mockup(object):
 
     def random_email(self):
         return "{}@{}.{}".format(
-            random_string(length=6), random_string(length=6), random_string(length=2)
+            random_string(length=6, include_spaces=False),
+            random_string(length=6, include_spaces=False),
+            random_string(length=2, include_spaces=False),
         )
 
     def random_hex_int(self, *args, **kwargs):
