@@ -1,4 +1,5 @@
 from django import template
+from django.utils.http import urlencode
 
 register = template.Library()
 
@@ -12,31 +13,36 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
     The parameter current_order can be passed along to handle the specific
     order of a single column. So for example if you are ordering by 'email' and
     'first_name', you can pass on 'email' as the current order, so the system
-    can keep every other order, but inverse the order of the email field.
+    can preserve the existing ordering, inverting only the email field.
     """
 
+    params = {
+        "o": ordering
+    }
+
     if not current_order:
-        return "&".join(["o={}".format(o) for o in ordering])
+        return urlencode(params, doseq=True)
 
     reversed_current_order = "-{}".format(current_order)
 
-    query_string = []
+    ordering_params = []
 
     for order in ordering:
         if order == current_order:
             if remove:
                 continue
-            query_string.append(reversed_current_order)
+            ordering_params.append(reversed_current_order)
         elif order == reversed_current_order:
             if remove:
                 continue
-            query_string.append(current_order)
+            ordering_params.append(current_order)
         else:
-            query_string.append(order)
+            ordering_params.append(order)
 
-    # if the current order and it's reversed are not being currently used
+    # remove ordering parameters if not declared either as "current_order" or
+    # "reversed_current_order"
     if not (current_order in ordering or reversed_current_order in ordering):
         if not remove:
-            query_string.append(current_order)
+            ordering_params.append(current_order)
 
-    return "&".join(["o={}".format(o) for o in query_string])
+    return urlencode(params, doseq=True)
