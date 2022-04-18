@@ -11,11 +11,11 @@ title_print "wait for database"
 while ! pg_isready; do sleep 2; done
 
 title_print "migrate"
-poetry run dj migrate
+dj migrate
 # TODO: add option to disable automatic migrations, and script to help in manual migrations
 
 title_print "collectstatic"
-poetry run dj collectstatic --noinput
+dj collectstatic --noinput
 
 title_print "gunicorn"
-poetry run gunicorn project.wsgi:application --config docker/django/gunicorn_conf.py
+gunicorn project.wsgi:application --config docker/django/gunicorn_conf.py

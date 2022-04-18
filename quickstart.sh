@@ -28,7 +28,6 @@ scripts/add-aliases.sh
 newgrp docker <<EOF
 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build && \
 docker-compose down && \
-docker-compose run django docker/django/venv_to_dotenv.sh .env && \
 docker-compose up --detach
 EOF
 # "down" because https://github.com/docker/compose/issues/4548
@@ -36,15 +35,10 @@ EOF
 # Set vscode to use python in poetry env
 mkdir -p .vscode
 if [[ ! -f .vscode/settings.json ]]; then
-  poetryenv_path=$(echo \
-    "docker-compose exec -T django poetry env info --path" |
-    newgrp docker)
-
   echo \
-'{
-  "python.defaultInterpreterPath": "'"$poetryenv_path"'/bin/python",
-}' > .vscode/settings.json
-
+"{
+  \"python.defaultInterpreterPath\": \"/home/$(whoami)/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/python\",
+}" > .vscode/settings.json
 fi
 
 prompt "\n\nWould you like to run migrations? [Y/n]" "Y"

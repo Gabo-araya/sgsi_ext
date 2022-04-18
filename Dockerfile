@@ -82,7 +82,7 @@ RUN poetry install --no-dev \
 \
   # "dj" alias available from anywhere and also in production.
   # No other aliases for production, as there may not be consensus for them.
-  && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
+  && ln -s /usr/src/app/manage.py ~/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/dj
 
 # Install javascript dependencies
 COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
