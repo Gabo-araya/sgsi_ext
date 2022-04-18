@@ -27,10 +27,6 @@ RUN \
   # Source utils containing "title_print":
   source scripts/utils.sh \
 \
-  && title_print "Create non-privileged user to run apps" \
-  && groupadd --gid $HOST_GID $WHO \
-  && useradd --uid $HOST_UID --gid $HOST_GID --create-home --shell /bin/zsh $WHO \
-\
   && title_print "Install prerequisites" \
   && apt-get update && apt-get install -y \
     # to install from extra repositories:
@@ -59,6 +55,10 @@ RUN \
 \
   && title_print "Install Poetry" \
   && pip install poetry \
+\
+  && title_print "Create non-privileged user to run apps" \
+  && groupadd --gid $HOST_GID $WHO \
+  && useradd --uid $HOST_UID --gid $HOST_GID --create-home --shell /bin/zsh $WHO \
 \
   # TODO: update npm
   && title_print "Set up npm cache" \
@@ -161,11 +161,13 @@ RUN \
     vim nano \
 \
   && title_print "Install oh-my-zsh" \
-  && docker/zsh_dev/setup_dev.sh \
+  && sudo -u $WHO docker/zsh_dev/setup_dev.sh \
 \
   && title_print "Finishing" \
   # add user to sudo group
   && usermod -aG sudo --password '' $WHO \
+  # Disable "We trust you have received the usual lecture from...":
+  && (umask 337; echo "Defaults lecture=never" > /etc/sudoers.d/no_lecture) \
   # "install editable" ansible-ssh:
   && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
   # Reduce image size and prevent use of potentially obsolete lists:
