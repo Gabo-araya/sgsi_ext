@@ -29,6 +29,8 @@
         state: absent
       when: create_dotenv
 
+    # TODO: set who,host_uid,host_gid in .env
+
     - import_role:
         name: git-clonepull
       tags: update

@@ -20,6 +20,10 @@ services:
     build:
       context: .
       target: production
+      args:
+        HOST_UID: "${HOST_UID:-2640}"
+        HOST_GID: "${HOST_GID:-2640}"
+        WHO: "${WHO:-magnet}"
     env_file: .env
     depends_on:
       - postgres
