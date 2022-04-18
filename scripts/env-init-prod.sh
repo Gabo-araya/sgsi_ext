@@ -59,7 +59,7 @@ secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
 
 django_debug=False
 
-color_print "$cyan" "Files storage location?"
+color_print "$cyan" "\nFiles storage location?"
 
 select files_loc in Local "Amazon S3" "DigitalOcean Spaces"; do
   if [[ "$files_loc" == "Local" ]]; then
