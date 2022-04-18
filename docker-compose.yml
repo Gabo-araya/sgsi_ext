@@ -4,7 +4,11 @@ services:
   # Note: don't change service names as they are hardcoded in other places.
 
   postgres:
-    build: ./docker/postgres/
+    build:
+      context: ./docker/postgres/
+      args:
+        HOST_UID: "${HOST_UID:-2640}"
+        HOST_GID: "${HOST_GID:-2640}"
     env_file: .env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
