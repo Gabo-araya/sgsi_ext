@@ -26,7 +26,7 @@ fi
 scripts/add-aliases.sh
 
 newgrp docker <<EOF
-docker-compose build && \
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build && \
 docker-compose down && \
 docker-compose run django docker/django/venv_to_dotenv.sh .env && \
 docker-compose up --detach

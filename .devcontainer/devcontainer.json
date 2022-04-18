@@ -9,6 +9,8 @@
 	// https://docs.docker.com/compose/extends/#understanding-multiple-compose-files
 	"dockerComposeFile": [],
 
+	// Improvement: use buildkit here  https://github.com/microsoft/vscode-remote-release/issues/1409
+
 	// The 'service' property is the name of the service for the container that VS Code should
 	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
 	"service": "django",
