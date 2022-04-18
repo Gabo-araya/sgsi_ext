@@ -25,6 +25,8 @@ services:
         HOST_GID: "${HOST_GID:-2640}"
         WHO: "${WHO:-magnet}"
     env_file: .env
+    environment:
+      - PATH=${DJPATH}  # so it applies to this container only
     depends_on:
       - postgres
     init: yes
