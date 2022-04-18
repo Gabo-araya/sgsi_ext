@@ -24,11 +24,11 @@ You can add other `zshcustom/*.zsh` files, which are loaded when zsh starts. You
 
 #### Disable IPython exit prompt
 
-To disable `Do you really want to exit ([y]/n)?` prompt of IPython, run:
+To disable `Do you really want to exit ([y]/n)?` prompt of IPython, run in container:
 
 ```sh
 ipython profile create
-sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' /home/magnet/.ipython/profile_default/ipython_config.py
+sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
 ```
 
 ### Solving `poetry.lock` merge conflicts

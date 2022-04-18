@@ -9,8 +9,8 @@ services:
       - memcached
     volumes:
       # Keep histories:
-      - ./docker/volumes/.zsh_history/:/home/magnet/.zsh_history/
-      - ./docker/volumes/.ipython/:/home/magnet/.ipython/
+      - ./docker/volumes/.zsh_history/:/home/${WHO}/.zsh_history/
+      - ./docker/volumes/.ipython/:/home/${WHO}/.ipython/
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.django-cron.schedule: "@every 1m"
