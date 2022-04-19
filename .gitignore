@@ -99,10 +99,20 @@ node_modules
 
 test_app
 
-/project/media
-/project/static
-/docker/volumes/*
-!/docker/volumes/Readme.md
+# Create the folders with git so they have correct owner.
+# If they don't exist when docker bind-mounts them, docker creates them with root.
+/project/media/*
+!/project/media/.gitkeep
+/project/static/*
+!/project/static/.gitkeep
+/docker/volumes/.ipython/*
+!/docker/volumes/.ipython/.gitkeep
+/docker/volumes/.zsh_history/*
+!/docker/volumes/.zsh_history/.gitkeep
+# This one is chowned by container:
+/docker/volumes/postgres-data/
+# This one is currently owned by root, but present in production only:
+/docker/volumes/nginx_secrets/
 
 propagate.sh
 .idea/

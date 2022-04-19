@@ -35,6 +35,3 @@ services:
       - postgres
     init: yes
     restart: unless-stopped
-    volumes:
-      - ./project/static/:/usr/src/app/project/static/
-      - ./project/media/:/usr/src/app/project/media/
