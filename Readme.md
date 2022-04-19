@@ -5,14 +5,7 @@
 #### User and Group IDs
 Development containers created by `quickstart.sh` automatically use the host username, UID and GID to avoid permission and ownership issues when developing.
 
-At build time, quickstart defines the `WHO`, `HOST_UID` and `HOST_GID` variables that are fed to docker-compose.dev.yml and Dockerfile. If you want to build images manually, remember to set those variables.
-When not defined, the following values are used:
-
-* `WHO`: magnet
-* `HOST_UID`: 2640
-* `HOST_GID`: 2640
-
-Production images do not have those variables defined at docker-compose.prod.yml and will use the default values.
+Quickstart sets the `WHO`, `HOST_UID` and `HOST_GID` variables in .env, which docker-compose passes as build args to Dockerfile.
 
 #### Shared configuration
 
