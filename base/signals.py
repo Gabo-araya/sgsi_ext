@@ -22,16 +22,18 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
     ignored_fields = settings.LOG_IGNORE_FIELDS
     user = get_user()
 
+    if raw:
+        return
+
     if created:
         message = {
-            "Created": instance.to_dict(
+            "added": instance.to_dict(
                 exclude=ignored_fields + sensitive_fields,
                 include_m2m=False,
             )
         }
-        instance.save_addition(user, message)
-    elif not raw:
-        change_message = []
+        instance._save_addition(user, message)
+    else:
         changed_field_labels = {}
         original_dict = instance.original_dict
         actual_dict = instance.to_dict(
@@ -43,15 +45,15 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
             if original_dict[key] != actual_dict[key]:
                 change = True
                 if key in sensitive_fields:
-                    changed_field_labels[key] = {"change": "field updated"}
+                    changed_field_labels[key] = "field updated"
                 else:
                     changed_field_labels[key] = {
                         "from": original_dict[key],
                         "to": actual_dict[key],
                     }
         if change:
-            change_message = {"changed": {"fields": changed_field_labels}}
-            instance.save_edition(user, change_message)
+            message = {"changed": {"fields": changed_field_labels}}
+            instance._save_edition(user, message)
 
 
 @receiver(post_delete)
@@ -64,7 +66,7 @@ def audit_delete_log(sender, instance, **kwargs):
     if sender not in get_our_models():
         return
     user = get_user()
-    instance.save_deletion(user)
+    instance._save_deletion(user)
 
 
 def get_user():

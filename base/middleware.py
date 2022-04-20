@@ -4,9 +4,8 @@ import threading
 
 class RequestMiddleware:
     """
-    Middleware that stores the user that made a request. This
-    is used to obtain the user that made made an update, creation
-    or a deletion of an object that will be logged.
+    Middleware that stores the user that made a request. This is used when logging
+    object creations/updates/deletions to obtain the user performing such action.
     """
 
     thread_local = threading.local()
