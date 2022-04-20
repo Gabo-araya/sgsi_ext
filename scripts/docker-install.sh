@@ -37,3 +37,18 @@ else
 
   color_print $green "Docker-compose installation completed."
 fi
+
+# check if BuildKit is enabled
+if ! { [ -s /etc/docker/daemon.json ] && grep -q '"buildkit": true' /etc/docker/daemon.json; }; then
+    color_print $blue "BuildKit appears not to be enabled.
+Depending on whether BuildKit-only features were used when writing the
+Dockerfile, build process may fail.
+Please enable BuildKit by editing your Docker daemon.json file by adding the
+following content:
+
+{
+  \"features\": {
+      \"buildkit\": true
+  }
+}"
+fi
