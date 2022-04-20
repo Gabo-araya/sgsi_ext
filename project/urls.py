@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 
+import base.views.misc
 from base import views as base_views
 
 urlpatterns = [
@@ -26,7 +27,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("users.urls")),
     path("regions/", include("regions.urls")),
-    path("", base_views.index, name="home"),
+    path("", base.views.misc.index, name="home"),
 ]
 
 if settings.DEBUG and not settings.TEST:
