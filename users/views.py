@@ -23,7 +23,7 @@ from users.forms import UserForm
 from users.models import User
 
 # views
-from base.views import BaseListView
+from base.views.generic import BaseListView
 
 
 class LoginView(auth_views.LoginView):
@@ -46,7 +46,7 @@ class LoginView(auth_views.LoginView):
 
     def get_form_class(self):
         """
-        TODO Consider using captcha. 
+        TODO Consider using captcha.
         """
         return super(LoginView, self).get_form_class()
 

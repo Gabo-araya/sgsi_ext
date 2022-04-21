@@ -19,14 +19,20 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 
-from base import views as base_views
+from base.views import misc as misc_views
+from base.views import debug as debug_views
+
+debug_patterns = [
+    path("request/", debug_views.HttpRequestPrintView.as_view(), name="debug-request")
+]
 
 urlpatterns = [
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("users.urls")),
+    path("debug/", include(debug_patterns)),
     path("regions/", include("regions.urls")),
-    path("", base_views.index, name="home"),
+    path("", misc_views.index, name="home"),
 ]
 
 if settings.DEBUG and not settings.TEST:

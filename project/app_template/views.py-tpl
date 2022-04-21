@@ -7,11 +7,11 @@
 from .models import {{model_name}}
 
 # views
-from base.views import BaseCreateView
-from base.views import BaseDeleteView
-from base.views import BaseDetailView
-from base.views import BaseListView
-from base.views import BaseUpdateView
+from base.views.generic import BaseCreateView
+from base.views.generic import BaseDeleteView
+from base.views.generic import BaseDetailView
+from base.views.generic import BaseListView
+from base.views.generic import BaseUpdateView
 
 # forms
 from .forms import {{model_name}}Form
