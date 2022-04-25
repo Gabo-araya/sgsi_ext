@@ -66,11 +66,10 @@ def reverse_pattern(pattern, namespace, args=None, kwargs=None):
 class UrlsTest(BaseTestCase):
     @classmethod
     def setUpTestData(cls):
-        # create a superuser account with id = 1
         cls.mockup = Mockup()
+        # create a superuser account
         cls.password = random_string()
         cls.user = cls.mockup.create_user(
-            id=1,
             password=cls.password,
             is_superuser=True,
         )
@@ -89,7 +88,7 @@ class UrlsTest(BaseTestCase):
             method_name = "create_{}".format(model_name)
 
             # store the created object
-            obj = getattr(self, method_name)(**self.get_obj_kwargs(model))
+            obj = getattr(self.mockup, method_name)(**self.get_obj_kwargs(model))
             self.default_objects[model_name] = obj
 
             self.assertIsNotNone(obj, "{} returns None".format(method_name))
