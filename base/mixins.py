@@ -7,7 +7,7 @@ from django.contrib.admin.models import CHANGE
 from django.contrib.admin.models import DELETION
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.models import ContentType
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 # base
 from base.serializers import ModelEncoder
@@ -28,7 +28,7 @@ class AuditMixin:
             user_id=user.id,
             content_type_id=ContentType.objects.get_for_model(self).id,
             object_id=self.id,
-            object_repr=force_text(self)[:200],
+            object_repr=force_str(self)[:200],
             action_flag=ACTION,
             change_message=json.dumps(message, cls=ModelEncoder),
         )

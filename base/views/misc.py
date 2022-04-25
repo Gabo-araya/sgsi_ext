@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.defaults import bad_request
 from django.views.defaults import page_not_found
 from django.views.defaults import permission_denied
