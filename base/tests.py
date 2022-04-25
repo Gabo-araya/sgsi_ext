@@ -28,6 +28,7 @@ from base.middleware import RequestMiddleware
 
 
 class BaseTestCase(TestCase):
+    @classmethod
     def setUpTestData(cls):
         cls.mockup = Mockup()
         cls.password = random_string()
@@ -63,6 +64,7 @@ def reverse_pattern(pattern, namespace, args=None, kwargs=None):
 
 
 class UrlsTest(BaseTestCase):
+    @classmethod
     def setUpTestData(cls):
         # create a superuser account with id = 1
         cls.mockup = Mockup()
