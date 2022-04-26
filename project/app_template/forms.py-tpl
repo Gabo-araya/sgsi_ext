@@ -4,11 +4,11 @@
 # django
 from django import forms
 
-# models
-from .models import {{model_name}}
-
 # views
 from base.forms import BaseModelForm
+
+# models
+from .models import {{model_name}}
 
 
 class {{model_name}}Form(BaseModelForm):

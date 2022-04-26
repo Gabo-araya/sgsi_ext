@@ -1,9 +1,14 @@
+# django
 from django.contrib import admin
-from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
+from django.contrib.admin.models import ADDITION
+from django.contrib.admin.models import CHANGE
+from django.contrib.admin.models import DELETION
+from django.contrib.admin.models import LogEntry
+from django.urls import NoReverseMatch
+from django.urls import reverse
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
-from django.urls import reverse
-from django.urls import NoReverseMatch
+
 from users.models import User
 
 action_names = {

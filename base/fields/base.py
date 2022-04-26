@@ -6,16 +6,17 @@ Custom Fields
 import re
 
 # django
+from django.core.exceptions import ValidationError
 from django.db.models import CharField
 from django.db.models import FileField
-from django.core.exceptions import ValidationError
-
-# utils
-from base import utils
-from .functions import file_path
 
 # translations
 from django.utils.translation import gettext_lazy as _
+
+# utils
+from base import utils
+
+from .functions import file_path
 
 
 class ChileanRUTField(CharField):

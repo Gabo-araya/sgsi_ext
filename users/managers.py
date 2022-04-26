@@ -1,8 +1,8 @@
 """ This document defines the UserManager class"""
 
 # django
-from django.db.models import Q
 from django.contrib.auth.models import BaseUserManager
+from django.db.models import Q
 
 # base
 from base.managers import BaseQuerySet

@@ -1,11 +1,11 @@
 # base
 from base.tests import BaseTestCase
 
-# models
-from parameters.models import Parameter
-
 # enums
 from parameters.definitions import ParameterDefinitionList
+
+# models
+from parameters.models import Parameter
 
 
 class ParameterTestCase(BaseTestCase):

@@ -5,14 +5,17 @@ from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
-from django.urls import reverse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.http import base36_to_int
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.edit import CreateView
+
+# views
+from base.views.generic import BaseListView
 
 # forms
 from users.forms import AuthenticationForm
@@ -21,9 +24,6 @@ from users.forms import UserForm
 
 # models
 from users.models import User
-
-# views
-from base.views.generic import BaseListView
 
 
 class LoginView(auth_views.LoginView):

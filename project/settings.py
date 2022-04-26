@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 # standard library
-from pathlib import Path
 import os
 import sys
+
+from pathlib import Path
 
 # django
 from django.urls import reverse_lazy
