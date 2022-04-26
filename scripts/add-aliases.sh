@@ -4,7 +4,7 @@ cd "$(dirname "$0")"/..
 source scripts/utils.sh
 assert_outside_container
 
-DEVCONTAINER_SHARED_PATH=~/.local/share/magnet-django-devcontainer
+DEVCONTAINER_SHARED_PATH=~/.config/magnet-django-devcontainer
 ALIASES_PATH=$DEVCONTAINER_SHARED_PATH/zshcustom/50-aliases.zsh
 
 if [[ -f $ALIASES_PATH ]]; then

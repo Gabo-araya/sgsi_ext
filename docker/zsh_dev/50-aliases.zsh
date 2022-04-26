@@ -1,7 +1,7 @@
 ##~  NOTE: this is the file commited in repository.
 ##~  Changes here won't apply to your terminal.
 ##~  Instead you may want to edit this one: (outside of container)
-##~    ~/.local/share/magnet-django-devcontainer/zshcustom/50-aliases.zsh
+##~    ~/.config/magnet-django-devcontainer/zshcustom/50-aliases.zsh
 
 alias djs='dj runserver_plus'
 alias djs0='djs 0:8000'

@@ -18,8 +18,8 @@ services:
       # - /var/run/docker.sock:/var/run/docker.sock
 
       # Custom config shared between devcontainers:
-      - ~/.local/share/magnet-django-devcontainer/zshcustom/:/home/${WHO}/.oh-my-zsh/custom/shared/
-      - ~/.local/share/magnet-django-devcontainer/.ipython/:/home/${WHO}/.ipython/
+      - ~/.config/magnet-django-devcontainer/zshcustom/:/home/${WHO}/.oh-my-zsh/custom/shared/
+      - ~/.config/magnet-django-devcontainer/.ipython/:/home/${WHO}/.ipython/
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
     # cap_add:
