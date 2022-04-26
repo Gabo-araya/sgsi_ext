@@ -48,3 +48,9 @@ if settings.DEBUG and not settings.TEST:
             document_root=settings.MEDIA_ROOT,
         )
     )
+
+# custom error views
+handler400 = "base.views.misc.bad_request_view"
+handler403 = "base.views.misc.permission_denied_view"
+handler404 = "base.views.misc.page_not_found_view"
+handler500 = "base.views.misc.server_error_view"
