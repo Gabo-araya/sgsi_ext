@@ -12,7 +12,7 @@ from django.utils import formats
 
 EMPTY_VALUES = list(validators.EMPTY_VALUES)
 
-DECIMAL_RE = re.compile(r'\.0*\s*$')
+DECIMAL_RE = re.compile(r"\.0*\s*$")
 HOSTNAME_RE = re.compile(
     r"^("
     + URLValidator.ipv4_re
@@ -36,9 +36,9 @@ def parse_int_value(value):
     value = formats.sanitize_separators(value)
     # Strip trailing decimal and zeros.
     try:
-        value = int(DECIMAL_RE.sub('', str(value)))
+        value = int(DECIMAL_RE.sub("", str(value)))
     except (ValueError, TypeError):
-        raise ValidationError(_('Enter a whole number.'), code='invalid')
+        raise ValidationError(_("Enter a whole number."), code="invalid")
     return value
 
 
@@ -108,7 +108,7 @@ def parse_json_value(value, json_decoder=None):
         converted = json.loads(value, cls=json_decoder)
     except json.JSONDecodeError:
         raise ValidationError(
-            _('Enter a valid JSON.'),
+            _("Enter a valid JSON."),
             code="invalid",
             params={"value": value},
         )
@@ -153,13 +153,13 @@ def parse_bool_value(value):
         return None
 
     value = str(value).strip().lower()
-    if value in ('false', '0'):
+    if value in ("false", "0"):
         value = False
-    elif value in ('true', '1'):
+    elif value in ("true", "1"):
         value = True
     else:
         raise ValidationError(
             _('Enter a valid boolean value. Valid values are "True", "False", 0 or 1.'),
-            code="invalid"
+            code="invalid",
         )
     return value

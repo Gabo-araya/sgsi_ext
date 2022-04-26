@@ -17,6 +17,7 @@ class {{model_name}}(BaseModel):
     TODO: Fill this description
     The {{plural_model_verbose_name}} system is used to store {{model_verbose_name}}.
     """
+
     # foreign keys
     user = models.ForeignKey(
         User,
@@ -43,6 +44,6 @@ class {{model_name}}(BaseModel):
         return self.name
 
     def get_absolute_url(self):
-        """ Returns the canonical URL for the {{model_name}} object """
+        """Returns the canonical URL for the {{model_name}} object"""
         # TODO this is an example, change it
         return reverse("{{lower_case_model_name}}_detail", args=(self.pk,))

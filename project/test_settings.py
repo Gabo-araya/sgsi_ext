@@ -8,7 +8,7 @@ from .settings import *  # noqa:F401,F403
 # is intensively used, directly or indirectly.
 # (See https://docs.djangoproject.com/en/4.0/topics/testing/overview/#password-hashing)
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
+    "django.contrib.auth.hashers.UnsaltedMD5PasswordHasher",
 ]
 
 # Code should not behave differently when running tests.
@@ -16,8 +16,8 @@ PASSWORD_HASHERS = [
 TEST = True
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': 'tmp/cache'
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "tmp/cache",
     }
 }

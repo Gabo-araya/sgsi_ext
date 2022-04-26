@@ -23,7 +23,8 @@ class S3StaticStorage(s3boto3.S3StaticStorage):
 
             self.custom_domain = (
                 f"{settings.AWS_STORAGE_BUCKET_NAME}"
-                f".{settings.DO_SPACES_REGION}.cdn.digitaloceanspaces.com")
+                f".{settings.DO_SPACES_REGION}.cdn.digitaloceanspaces.com"
+            )
 
 
 class S3MediaStorage(s3boto3.S3Boto3Storage):

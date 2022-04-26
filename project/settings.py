@@ -94,10 +94,13 @@ TEMPLATES = [
                 "django.template.context_processors.i18n",
             ],
             "loaders": [
-                ("pypugjs.ext.django.Loader", (
-                    "django.template.loaders.filesystem.Loader",
-                    "django.template.loaders.app_directories.Loader",
-                ))
+                (
+                    "pypugjs.ext.django.Loader",
+                    (
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader",
+                    ),
+                )
             ],
             "builtins": [
                 "pypugjs.ext.django.templatetags",
@@ -195,7 +198,7 @@ if AWS_STORAGE_BUCKET_NAME:
     AWS_DEFAULT_ACL = None
     AWS_S3_SIGNATURE_VERSION = "s3v4"
 
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
     # Note: this applies to static files only
     # (specifically to storages with `default_acl="public-read"` only)
 
@@ -204,7 +207,9 @@ if AWS_STORAGE_BUCKET_NAME:
 
     if DO_SPACES_REGION:
         AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
-        DO_SPACES_CDN_ENABLED = os.environ.get("DO_SPACES_CDN_ENABLED", "True") == "True"
+        DO_SPACES_CDN_ENABLED = (
+            os.environ.get("DO_SPACES_CDN_ENABLED", "True") == "True"
+        )
 
     STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
     DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
@@ -301,9 +306,9 @@ LOG_IGNORE_FIELDS = [
 
 if not DEBUG:
     CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-            'LOCATION': os.environ.get("MEMCACHED_LOCATION"),
+        "default": {
+            "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+            "LOCATION": os.environ.get("MEMCACHED_LOCATION"),
         }
     }
 
@@ -317,14 +322,14 @@ WEBPACK_LOADER = {
         "STATS_FILE": BASE_DIR / "webpack-stats.json",
         "POLL_INTERVAL": 0.1,
         "TIMEOUT": 1,  # 1 second timeout for webpack compilation
-        "IGNORE": [r'.+\.hot-update.js', r'.+\.map']
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     }
 }
 
 # HTTPS
 # https://docs.djangoproject.com/en/3.2/ref/settings/#secure-proxy-ssl-header
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # This assumes the provided nginx is always before django. It contains:
 # "proxy_set_header X-Forwarded-Proto $scheme;"
 

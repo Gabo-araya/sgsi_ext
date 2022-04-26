@@ -30,7 +30,7 @@ def search_communes(request):
     for commune in communes:
         commune_dict = {
             "id": commune.id,
-            "text": u"{} - {}".format(commune.id, commune.name),
+            "text": "{} - {}".format(commune.id, commune.name),
         }
         results.append(commune_dict)
 

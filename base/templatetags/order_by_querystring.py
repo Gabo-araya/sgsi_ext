@@ -16,9 +16,7 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
     can preserve the existing ordering, inverting only the email field.
     """
 
-    params = {
-        "o": ordering
-    }
+    params = {"o": ordering}
 
     if not current_order:
         return urlencode(params, doseq=True)

@@ -2,13 +2,10 @@ from base.managers import BaseQuerySet
 
 
 class {{model_name}}QuerySet(BaseQuerySet):
-
     def search(self, query):
         """
         Search {{model_name}} objects by name
         """
         if query:
             # TODO implement this method, since this is an example
-            return self.filter(
-                name__unaccent__icontains=query
-            )
+            return self.filter(name__unaccent__icontains=query)

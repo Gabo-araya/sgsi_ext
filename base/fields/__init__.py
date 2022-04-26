@@ -3,6 +3,6 @@ from .base import ChileanRUTField
 
 
 __all__ = [
-    'BaseFileField',
-    'ChileanRUTField',
+    "BaseFileField",
+    "ChileanRUTField",
 ]

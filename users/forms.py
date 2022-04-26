@@ -77,7 +77,6 @@ class AuthenticationForm(forms.Form):
 
         return self.cleaned_data
 
-
     def confirm_login_allowed(self, user):
         """
         Controls whether the given User may log in. This is a policy setting,
@@ -97,10 +96,9 @@ class AuthenticationForm(forms.Form):
         """
         if not user.is_active:
             raise ValidationError(
-                self.error_messages['inactive'],
-                code='inactive',
+                self.error_messages["inactive"],
+                code="inactive",
             )
-
 
     def full_clean(self):
         super().full_clean()
@@ -125,8 +123,8 @@ class AuthenticationForm(forms.Form):
 
     def get_invalid_login_error(self):
         return ValidationError(
-            self.error_messages['invalid_login'],
-            code='invalid_login',
+            self.error_messages["invalid_login"],
+            code="invalid_login",
             params={"email": self.email_field.verbose_name},
         )
 
