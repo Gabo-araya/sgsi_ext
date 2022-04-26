@@ -19,6 +19,10 @@ else
   # that name, so use project folder name:
   project_name=$(basename "$(dirname "$(dirname "$(realpath "$0")")")")
 
+  who=$(whoami)
+  host_uid=$(id -u)
+  host_gid=$(id -g)
+
   # Assume defaults
   postgres_host="localhost"
   postgres_port="15432"
@@ -34,6 +38,9 @@ else
   do_spaces_region=
 
   # Replace placeholders from template env file
+  sed -i "s|{{who}}|$who|g" $env_file
+  sed -i "s|{{host_uid}}|$host_uid|g" $env_file
+  sed -i "s|{{host_gid}}|$host_gid|g" $env_file
   sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
   sed -i "s|{{postgres_port}}|$postgres_port|g" $env_file
   sed -i "s|{{postgres_user}}|$postgres_user|g" $env_file

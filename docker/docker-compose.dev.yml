@@ -1,23 +1,11 @@
 services:
-  # Update this to the name of the service you want to work with in your docker-compose.yml file
   django:
-    # If you want add a non-root user to your Dockerfile, you can use the "remoteUser"
-    # property in devcontainer.json to cause VS Code its sub-processes (terminals, tasks,
-    # debugging) to execute as the user. Uncomment the next line if you want the entire
-    # container to run as this user instead. Note that, on Linux, you may need to
-    # ensure the UID and GID of the container user you create matches your local user.
-    # See https://aka.ms/vscode-remote/containers/non-root for details.
-    #
-    # user: vscode
-
     # Note that the path of the Dockerfile and context is relative to the *primary*
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array).
     build:
       context: .
       target: development
-    # Uncomment if you want to override the service's Dockerfile with another one
-    #   dockerfile: .devcontainer/Dockerfile
 
     restart: "no"
 
@@ -30,8 +18,8 @@ services:
       # - /var/run/docker.sock:/var/run/docker.sock
 
       # Custom config shared between devcontainers:
-      - ~/.local/share/magnet-django-devcontainer/zshcustom/:/root/.oh-my-zsh/custom/shared/
-      - ~/.local/share/magnet-django-devcontainer/.ipython/:/root/.ipython/
+      - ~/.local/share/magnet-django-devcontainer/zshcustom/:/home/${WHO}/.oh-my-zsh/custom/shared/
+      - ~/.local/share/magnet-django-devcontainer/.ipython/:/home/${WHO}/.ipython/
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
     # cap_add:

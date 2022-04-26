@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/root/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -63,7 +63,7 @@ zstyle ':omz:update' mode disabled  # disable automatic updates
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Explanation for this is in other file (search for "HISTFILE=")
-HISTFILE=/root/.zsh_history/h
+HISTFILE=$HOME/.zsh_history/h
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder

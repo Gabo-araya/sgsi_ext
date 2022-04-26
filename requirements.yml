@@ -2,4 +2,5 @@
 # This helps to keep Docker images size and build times to a minimum.
 
 collections:
+- ansible.posix
 - community.docker

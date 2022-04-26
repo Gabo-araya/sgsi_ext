@@ -3,12 +3,17 @@
 #####################################
 FROM python:3.9.12-slim-bullseye AS project-dependencies
 
+# Nicer prompt is managed by zsh themes, so disable default venv prompt:
+ENV VIRTUAL_ENV_DISABLE_PROMPT=x
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
+
 ARG NPM_CACHE_DIR=/tmp/npm-cache
 ARG PIP_NO_CACHE_DIR=off
 
-# Nicer prompt is managed by zsh themes, so disable default venv prompt:
-ENV VIRTUAL_ENV_DISABLE_PROMPT=x
+# Default users and groups
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
 
 WORKDIR /usr/src/app
 
@@ -34,26 +39,42 @@ RUN \
     wait-for-it \
     # better shell:
     zsh \
-\
-  && title_print "Set up Node.js repository" \
-  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    # to check for distro release and codename:
+    lsb-release \
 \
   && title_print "Set up Postgres repository" \
   # The PostgreSQL client provides pg_isready for production, and pg_restore for development.
   && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
   && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 \
+  && title_print "Set up Node.js repository" \
+  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+\
   && title_print "Install Postgres and Node.js" \
-  && apt-get update && apt-get install -y nodejs postgresql-client-14 \
+  && apt-get install -y nodejs postgresql-client-14 \
 \
   && title_print "Install Poetry" \
   && pip install poetry \
 \
+  && title_print "Create non-privileged user to run apps" \
+  && groupadd --gid $HOST_GID $WHO \
+  && useradd --uid $HOST_UID --gid $HOST_GID --create-home --shell /bin/zsh $WHO \
+\
+  # TODO: update npm
+  && title_print "Set up npm cache" \
+  && mkdir -p "$NPM_CACHE_DIR" \
+  && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
+\
+  && title_print "Change owner of app directory" \
+  && chown -R $HOST_UID:$HOST_GID . \
+\
   # Reduce image size and prevent use of potentially obsolete lists:
   && rm -rf /var/lib/apt/lists/*
-  # TODO: update npm
 
-COPY pyproject.toml poetry.lock ./
+# Switch to unprivileged user
+USER $WHO
+
+COPY --chown=$HOST_UID:$HOST_GID pyproject.toml poetry.lock ./
 RUN poetry install --no-dev \
 \
   # Remove caches to save some space
@@ -61,15 +82,15 @@ RUN poetry install --no-dev \
 \
   # "dj" alias available from anywhere and also in production.
   # No other aliases for production, as there may not be consensus for them.
-  && ln -s /usr/src/app/manage.py "$(poetry env info --path)/bin/dj"
+  && ln -s /usr/src/app/manage.py ~/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/dj
 
 # Install javascript dependencies
-COPY package.json package-lock.json ./
+COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
 RUN \
-  mkdir "$NPM_CACHE_DIR" \
   # Installs devDependencies, because the production image also builds the bundles:
-  && npm ci --no-audit --cache "$NPM_CACHE_DIR" \
-  && rm -rf "$NPM_CACHE_DIR"
+  npm ci --no-audit --cache "$NPM_CACHE_DIR" \
+  # As /tmp is owned by root, remove only the directory contents, not the directory itself.
+  && rm -rf "$NPM_CACHE_DIR/*"
 # TODO: this doesn't work for dev
 
 #####################################
@@ -80,16 +101,20 @@ FROM project-dependencies AS production
 
 ENV NODE_ENV=production
 
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+
 # Add oh-my-zsh for production
-COPY docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
+COPY --chown=$HOST_UID:$HOST_GID docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
 RUN docker/zsh_prod/setup_prod.sh
 
-COPY webpack.*.js ./
-COPY assets/ assets/
+COPY --chown=$HOST_UID:$HOST_GID webpack.*.js ./
+COPY --chown=$HOST_UID:$HOST_GID assets/ assets/
 RUN npm run build
 
 # Copy rest of the project
-COPY . .
+COPY --chown=$HOST_UID:$HOST_GID . .
 
 RUN poetry run django-admin compilemessages
 
@@ -106,11 +131,17 @@ RUN poetry install
 # Development image
 #####################################
 FROM project-dependencies AS development
-
 # No need to copy the whole project, it's in a volume and prevents rebuilds.
 
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+
 # This was getting too long to keep in Dockerfile:
-COPY docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
+COPY --chown=$HOST_UID:$HOST_GID docker/zsh_dev/setup_dev.sh docker/zsh_dev/setup_dev.sh
+
+# Switch to superuser as system-wide packages will need to be installed
+USER root
 
 RUN \
   # Source utils containing "title_print":
@@ -118,6 +149,8 @@ RUN \
 \
   && title_print "Install development utilities" \
   && apt-get update && apt-get install -y \
+    # sudo
+    sudo \
     # commit inside container:
     git \
     # see container processes:
@@ -128,16 +161,23 @@ RUN \
     vim nano \
 \
   && title_print "Install oh-my-zsh" \
-  && docker/zsh_dev/setup_dev.sh \
+  && sudo -u $WHO docker/zsh_dev/setup_dev.sh \
 \
   && title_print "Finishing" \
-  # Reduce image size and prevent use of potentially obsolete lists:
-  && rm -rf /var/lib/apt/lists/* \
+  # add user to sudo group
+  && usermod -aG sudo --password '' $WHO \
+  # Disable "We trust you have received the usual lecture from...":
+  && (umask 337; echo "Defaults lecture=never" > /etc/sudoers.d/no_lecture) \
   # "install editable" ansible-ssh:
-  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
+  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
+  # Reduce image size and prevent use of potentially obsolete lists:
+  && rm -rf /var/lib/apt/lists/*
+
+# Switch back to unprivileged user
+USER $WHO
 
 # Install Poetry dev-dependencies, then ansible + collections.
-COPY requirements.yml .
+COPY --chown=$HOST_UID:$HOST_GID requirements.yml .
 RUN \
   source scripts/utils.sh \
   && title_print "Install dev dependencies" \

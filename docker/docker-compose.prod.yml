@@ -8,9 +8,11 @@ services:
     depends_on:
       - memcached
     volumes:
+      - ./project/static/:/usr/src/app/project/static/
+      - ./project/media/:/usr/src/app/project/media/
       # Keep histories:
-      - ./docker/volumes/.zsh_history/:/root/.zsh_history/
-      - ./docker/volumes/.ipython/:/root/.ipython/
+      - ./docker/volumes/.zsh_history/:/home/${WHO}/.zsh_history/
+      - ./docker/volumes/.ipython/:/home/${WHO}/.ipython/
     labels:
       ofelia.enabled: "true"
       ofelia.job-exec.django-cron.schedule: "@every 1m"

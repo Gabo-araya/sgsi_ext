@@ -26,9 +26,8 @@ fi
 scripts/add-aliases.sh
 
 newgrp docker <<EOF
-docker-compose build && \
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build && \
 docker-compose down && \
-docker-compose run django docker/django/venv_to_dotenv.sh .env && \
 docker-compose up --detach
 EOF
 # "down" because https://github.com/docker/compose/issues/4548
@@ -36,15 +35,10 @@ EOF
 # Set vscode to use python in poetry env
 mkdir -p .vscode
 if [[ ! -f .vscode/settings.json ]]; then
-  poetryenv_path=$(echo \
-    "docker-compose exec -T django poetry env info --path" |
-    newgrp docker)
-
   echo \
-'{
-  "python.defaultInterpreterPath": "'"$poetryenv_path"'/bin/python",
-}' > .vscode/settings.json
-
+"{
+  \"python.defaultInterpreterPath\": \"/home/$(whoami)/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/python\",
+}" > .vscode/settings.json
 fi
 
 prompt "\n\nWould you like to run migrations? [Y/n]" "Y"
@@ -79,10 +73,10 @@ if [ -f quickstart-messages.log ]; then
   rm quickstart-messages.log
 fi
 
-color_print $green "After rebooting if required,
-open this folder in VSCode,
-install the recommended 'Remote - Containers' extension if prompted,
-and click 'Reopen in Container' when prompted. (Or press F1 and type 'Reopen in Container')
+color_print $green 'After rebooting if required,
+- open this folder in VSCode
+- install the recommended "Remote - Containers" extension if prompted
+- click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
 
-Then in a VSCode terminal (if a black-and-white one appears (bash), press ctrl-D and open a new one),
-run 'dj runserver' and access the site at http://localhost:8000"
+Then in a VSCode terminal run "npm start",
+and in another terminal, run "djs" and access the site at http://localhost:8000'

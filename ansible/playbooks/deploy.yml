@@ -1,6 +1,6 @@
 - name: deploy
   hosts: all
-  gather_facts: no
+  gather_facts: "{{ false if 'update' in ansible_run_tags else true }}"
 
   vars:
     create_dotenv: "{{ lookup('env', 'create_dotenv')|default('0') == '1' }}"
@@ -44,11 +44,20 @@
       when: git_result.changed
       tags: update
 
-    - name: set ALLOWED_HOST
+    - name: set .env vars from server
       lineinfile:
         path: "{{ project_name }}/.env"
-        regexp: ^ALLOWED_HOST=
-        line: ALLOWED_HOST={{ server_domain }}
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - regexp: ^ALLOWED_HOST=
+          line: ALLOWED_HOST={{ server_domain }}
+        - regexp: ^WHO=
+          line: WHO={{ ansible_user_id }}
+        - regexp: ^HOST_UID=
+          line: HOST_UID={{ ansible_user_uid }}
+        - regexp: ^HOST_GID=
+          line: HOST_GID={{ ansible_user_gid }}
 
     - name: create nginx.env
       template:

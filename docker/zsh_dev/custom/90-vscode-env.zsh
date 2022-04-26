@@ -5,7 +5,7 @@
 # Then when a shell is started without vscode, this script loads those vars from file.
 # https://github.com/microsoft/vscode/issues/110050
 #
-# Also vscode copies host ~/.ssh/known_hosts to container /root/.ssh/known_hosts
+# Also vscode copies host ~/.ssh/known_hosts to container $HOME/.ssh/known_hosts
 # (I think it's copied only when vscode is first reopened)
 # Idea: commit unhashed known_hosts to repo, and bind-mount them to /etc/ssh/ssh_known_hosts
 

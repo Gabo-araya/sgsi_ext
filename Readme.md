@@ -2,6 +2,11 @@
 
 ### Devcontainer configuration
 
+#### User and Group IDs
+Development containers created by `quickstart.sh` automatically use the host username, UID and GID to avoid permission and ownership issues when developing.
+
+Quickstart sets the `WHO`, `HOST_UID` and `HOST_GID` variables in .env, which docker-compose passes as build args to Dockerfile.
+
 #### Shared configuration
 
 The configuration files in your computer stored in `~/.local/share/magnet-django-devcontainer` are shared to all django devcontainers. This stores zsh and ipython histories, and other customizations.
@@ -12,11 +17,11 @@ You can add other `zshcustom/*.zsh` files, which are loaded when zsh starts. You
 
 #### Disable IPython exit prompt
 
-To disable `Do you really want to exit ([y]/n)?` prompt of IPython, run:
+To disable `Do you really want to exit ([y]/n)?` prompt of IPython, run in container:
 
 ```sh
 ipython profile create
-sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' /root/.ipython/profile_default/ipython_config.py
+sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
 ```
 
 ### Solving `poetry.lock` merge conflicts

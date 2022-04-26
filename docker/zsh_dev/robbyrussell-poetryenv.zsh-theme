@@ -3,7 +3,7 @@ function virtualenv_info {
     # Originally: `basename $VIRTUAL_ENV`
 
     # echo $VIRTUAL_ENV
-    #  /root/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9
+    #  /home/magnet/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9
     venv_base="${VIRTUAL_ENV:t}"
     #  django3-project-template-VA82Wl8V-py3.9
     venv_split=(${(s[-])${venv_base}})

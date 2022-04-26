@@ -1,14 +1,15 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/docker-existing-docker-compose
-// If you want to run as a non-root user in the container, see .devcontainer/docker-compose.yml.
 {
-	"name": "Existing Docker Compose (Extend)",
+	"name": "Magnet's DPT3 container",
 
 	// The symlink docker-compose.override.yml --> docker/docker-compose.dev.yml provides config
 	// for Remote-Containers and docker-compose CLI, so this should be blank.
 	// https://github.com/microsoft/vscode-remote-release/issues/1080#issuecomment-824087033
 	// https://docs.docker.com/compose/extends/#understanding-multiple-compose-files
 	"dockerComposeFile": [],
+
+	// Improvement: use buildkit here  https://github.com/microsoft/vscode-remote-release/issues/1409
 
 	// The 'service' property is the name of the service for the container that VS Code should
 	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
@@ -48,10 +49,8 @@
 	// Uncomment the next line to run commands after the container is created - for example installing curl.
 	// "postCreateCommand": "apt-get update && apt-get install -y curl",
 
-	// Uncomment to connect as a non-root user if you've added one. See https://aka.ms/vscode-remote/containers/non-root.
-	// "remoteUser": "vscode"
-	// TODO: remove this, and use UID 1000 for all images that write files to bind-mounts
-	// TODO: then use $UID instead of 1000
+	// "remoteUser": This feature (https://aka.ms/vscode-remote/containers/non-root) is unused
+	// because it's handled at a lower level (in Dockerfile).
 
 	// See 90-vscode-env.zsh
 	"postStartCommand": "printenv > /dev/shm/env_from_vscode_terminal",

@@ -59,7 +59,7 @@ secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
 
 django_debug=False
 
-color_print "$cyan" "Files storage location?"
+color_print "$cyan" "\nFiles storage location?"
 
 select files_loc in Local "Amazon S3" "DigitalOcean Spaces"; do
   if [[ "$files_loc" == "Local" ]]; then
@@ -98,7 +98,15 @@ select files_loc in Local "Amazon S3" "DigitalOcean Spaces"; do
   fi
 done
 
+# To be set later by ansible:
+who=magnet
+host_uid=2640
+host_gid=2640
+
 # Replace placeholders from template env file
+sed -i "s|{{who}}|$who|g" $env_file
+sed -i "s|{{host_uid}}|$host_uid|g" $env_file
+sed -i "s|{{host_gid}}|$host_gid|g" $env_file
 sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
 sed -i "s|{{postgres_port}}|$postgres_port|g" $env_file
 sed -i "s|{{postgres_user}}|$postgres_user|g" $env_file
@@ -111,8 +119,3 @@ sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
 sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
 sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
 sed -i "s|{{do_spaces_region}}|$do_spaces_region|g" $env_file
-
-# This script runs in devcontainer venv, so its VIRTUAL_ENV and PATH
-# are the same as in a production container.
-# Set production container to have venv always available:
-docker/django/venv_to_dotenv.sh $env_file
