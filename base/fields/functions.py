@@ -13,6 +13,9 @@ def file_path(self, name):
     base_path = "{}/{}/{}/{}"
 
     return base_path.format(
-        self.__class__.__name__, str(utils.today()), utils.random_string(30), name
+        self.__class__.__name__,
+        str(utils.today()),
+        utils.random_string(30),
+        name
         # TODO: no spaces, lowercase
     )
