@@ -56,7 +56,7 @@ RUN \
   && mkdir "$NPM_CACHE_DIR" \
   && npm install --global --cache "$NPM_CACHE_DIR" npm \
   # Delete but keeping the directory:
-  && rm -rf "$NPM_CACHE_DIR/*" \
+  && rm -rf "$NPM_CACHE_DIR"/* \
   # Ensure npm cache can be written by unprivileged users later:
   && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
 \
@@ -109,7 +109,7 @@ RUN \
   # Installs devDependencies, because the production image also builds the bundles:
   NODE_ENV=development npm ci --no-audit --cache "$NPM_CACHE_DIR" \
   # As /tmp is owned by root, remove only the directory contents, not the directory itself.
-  && rm -rf "$NPM_CACHE_DIR/*"
+  && rm -rf "$NPM_CACHE_DIR"/*
 
 
 # Build javascript bundles:
