@@ -1,20 +1,22 @@
 """ Small methods for generic use """
 
 # standard library
-from itertools import cycle
 import datetime
 import os
-import pytz
 import random
 import re
 import string
 import unicodedata
+
+from itertools import cycle
 
 # django
 from django.apps import apps
 from django.db import models
 from django.utils import timezone
 
+# others libraries
+import pytz
 
 RUT_FILTER_RE = re.compile("[^0-9kK]")
 

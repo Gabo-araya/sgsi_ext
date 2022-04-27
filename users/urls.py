@@ -1,6 +1,7 @@
 """ this document defines the users app urls """
-from django.urls import path
+# django
 from django.contrib.auth import views as auth_views
+from django.urls import path
 
 from users import views as users_views
 

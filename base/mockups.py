@@ -4,11 +4,12 @@ project models
 """
 
 # standard library
-from shutil import copyfile
 import os
 import random
 import string
 import uuid
+
+from shutil import copyfile
 
 # django
 from django.apps import apps
@@ -16,15 +17,18 @@ from django.conf import settings
 from django.core.files import File
 from django.utils import timezone
 
+# others libraries
+# utils
+from inflection import underscore
+
+from base.utils import random_rut
+from base.utils import random_string
+
 # models
 from parameters.models import Parameter
 from regions.models import Commune
 from regions.models import Region
 from users.models import User
-
-# utils
-from inflection import underscore
-from base.utils import random_string, random_rut
 
 
 class Mockup(object):

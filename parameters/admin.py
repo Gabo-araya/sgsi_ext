@@ -4,9 +4,10 @@
 # django
 from django.contrib import admin
 
+from .definitions import ParameterDefinitionList
+
 # models
 from .models import Parameter
-from .definitions import ParameterDefinitionList
 
 
 @admin.register(Parameter)

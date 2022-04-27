@@ -7,12 +7,12 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+# forms
+from users.forms import UserChangeForm
+from users.forms import UserCreationForm
+
 # models
 from users.models import User
-
-# forms
-from users.forms import UserCreationForm
-from users.forms import UserChangeForm
 
 
 def force_logout(modeladmin, request, queryset):

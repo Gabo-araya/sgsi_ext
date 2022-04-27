@@ -7,16 +7,16 @@ All apps should use the BaseModel as parent for all models
 import json
 
 # django
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 
 # base
 from base.managers import BaseQuerySet
-from base.serializers import ModelEncoder
 from base.mixins import AuditMixin
+from base.serializers import ModelEncoder
 
 
 class BaseModel(AuditMixin, models.Model):

@@ -3,9 +3,6 @@
 
 # django
 
-# models
-from .models import {{model_name}}
-
 # views
 from base.views.generic import BaseCreateView
 from base.views.generic import BaseDeleteView
@@ -15,6 +12,9 @@ from base.views.generic import BaseUpdateView
 
 # forms
 from .forms import {{model_name}}Form
+
+# models
+from .models import {{model_name}}
 
 
 class {{model_name}}ListView(BaseListView):

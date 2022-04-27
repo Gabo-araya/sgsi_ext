@@ -13,18 +13,20 @@ from django.urls import NoReverseMatch
 from django.urls import reverse
 from django.urls.converters import SlugConverter
 
-# urls
-from project.urls import urlpatterns
+# others libraries
+from inflection import underscore
+
+# base
+from base.middleware import RequestMiddleware
 
 # utils
 from base.mockups import Mockup
 from base.utils import get_our_models
 from base.utils import get_slug_fields
 from base.utils import random_string
-from inflection import underscore
 
-# base
-from base.middleware import RequestMiddleware
+# urls
+from project.urls import urlpatterns
 
 
 class BaseTestCase(TestCase):

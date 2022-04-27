@@ -7,8 +7,8 @@ import re
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
-from django.utils.translation import gettext_lazy as _
 from django.utils import formats
+from django.utils.translation import gettext_lazy as _
 
 EMPTY_VALUES = list(validators.EMPTY_VALUES)
 

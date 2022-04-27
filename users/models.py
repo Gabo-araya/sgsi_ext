@@ -16,15 +16,15 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext_noop
 
-# managers
-from users.managers import UserManager
-
 # models
 from base.models import BaseModel
-from parameters.models import Parameter
 
 # messaging
 from messaging import email_manager
+from parameters.models import Parameter
+
+# managers
+from users.managers import UserManager
 
 # mark for translation the app name
 gettext_noop("Users")

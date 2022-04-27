@@ -1,8 +1,10 @@
+# standard library
 import collections
 
+# django
 from django.utils.translation import gettext_lazy as _
-from parameters.validators import validate_protocol
 
+from parameters.validators import validate_protocol
 
 ParameterDefinition = collections.namedtuple(
     "Parameter",

@@ -7,10 +7,10 @@ All apps should use the BaseModel as parent for all models
 import datetime
 import decimal
 import uuid
+
 from json import JSONEncoder
 
 # django
-
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.utils.duration import duration_iso_string
