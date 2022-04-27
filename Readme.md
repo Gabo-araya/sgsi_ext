@@ -9,7 +9,7 @@ Quickstart sets the `WHO`, `HOST_UID` and `HOST_GID` variables in .env, which do
 
 #### Shared configuration
 
-The configuration files in your computer stored in `~/.local/share/magnet-django-devcontainer` are shared to all django devcontainers. This stores zsh and ipython histories, and other customizations.
+The configuration files in your computer stored in `~/.config/magnet-django-devcontainer` are shared to all django devcontainers. This stores aliases, zsh and ipython histories, and other customizations.
 
 In this folder, in `zshcustom/50-aliases.zsh` you may customize your aliases. This file is only created once (by quickstart.sh if it doesn't exist), and never automatically modified later.
 
