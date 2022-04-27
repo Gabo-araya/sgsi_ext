@@ -1,4 +1,4 @@
-version: "3.4"
+version: '3.8'
 
 # The following setup works around the limitation of bind mounts not allowed on
 # CircleCI jobs. This problem can be resolved on two ways:
@@ -19,7 +19,7 @@ services:
       retries: 5
 
   app-test:
-    image: app-test
+    image: app-test:latest
     env_file: "ci_env"
     depends_on:
       - db
