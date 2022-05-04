@@ -26,6 +26,13 @@ HOSTNAME_RE = re.compile(
 )
 
 
+def parse_str_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    return value
+
+
 def parse_int_value(value):
     if value in EMPTY_VALUES:
         return None
