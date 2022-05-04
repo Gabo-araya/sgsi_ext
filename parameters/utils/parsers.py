@@ -1,5 +1,6 @@
 # standard library
 import datetime
+import ipaddress
 import json
 import re
 
@@ -150,6 +151,26 @@ def parse_hostname_value(value):
         else:
             raise ValidationError(_("Enter a valid hostname."), code="invalid")
     return value
+
+
+def parse_ip_prefix_value(value):
+    """Validator for ip prefix parameters. Parses as IPv6, then as IPv4."""
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if ":" in value:
+        try:
+            return ipaddress.IPv6Network(value)
+        except ValueError:
+            msg = _("Enter a valid IPv6 address or prefix")
+            raise ValidationError(msg, code='invalid')
+
+    try:
+        return ipaddress.IPv4Network(value)
+    except ValueError:
+        msg = _("Enter a valid IPv4 address or prefix")
+        raise ValidationError(msg, code='invalid')
 
 
 def parse_bool_value(value):

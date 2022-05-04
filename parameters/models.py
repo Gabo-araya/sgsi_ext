@@ -63,6 +63,8 @@ class Parameter(BaseModel):
             return parsers.parse_url_value(raw_value)
         elif kind == ParameterKind.HOSTNAME:
             return parsers.parse_hostname_value(raw_value)
+        elif kind == ParameterKind.IP_PREFIX:
+            return parsers.parse_ip_prefix_value(raw_value)
         elif kind == ParameterKind.BOOL:
             return parsers.parse_bool_value(raw_value)
         else:
