@@ -153,8 +153,26 @@ def parse_hostname_value(value):
     return value
 
 
-def parse_ip_prefix_value(value):
-    """Validator for ip prefix parameters. Parses as IPv6, then as IPv4."""
+def _parse_ip_address_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if ":" in value:
+        try:
+            return ipaddress.IPv6Address(value)
+        except ValueError:
+            msg = _("Enter a valid IPv6 address.")
+            raise ValidationError(msg, code="invalid")
+
+    try:
+        return ipaddress.IPv4Address(value)
+    except ValueError:
+        msg = _("Enter a valid IPv4 address.")
+        raise ValidationError(msg, code="invalid")
+
+
+def _parse_ip_prefix_value(value):
     if value in EMPTY_VALUES:
         return None
 
@@ -163,15 +181,50 @@ def parse_ip_prefix_value(value):
         try:
             return ipaddress.IPv6Network(value)
         except ValueError:
-            msg = _("Enter a valid IPv6 address or prefix")
-            raise ValidationError(msg, code='invalid')
+            msg = _("Enter a valid IPv6 prefix.")
+            raise ValidationError(msg, code="invalid")
 
     try:
         return ipaddress.IPv4Network(value)
     except ValueError:
-        msg = _("Enter a valid IPv4 address or prefix")
-        raise ValidationError(msg, code='invalid')
+        msg = _("Enter a valid IPv4 prefix.")
+        raise ValidationError(msg, code="invalid")
 
+
+def _parse_ip_range_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    range_values = value.split("-")
+    if len(range_values) != 2:
+        msg = _("Enter a valid address range.")
+        raise ValidationError(msg, code="invalid")
+
+    range_lower, range_higher = (
+        _parse_ip_address_value(range_values[0]),
+        _parse_ip_address_value(range_values[1]),
+    )
+    if type(range_lower) is not type(range_higher):
+        msg = _("Both values must belong to the same address family.")
+        raise ValidationError(msg, code="mixed_family")
+    if range_lower >= range_higher:
+        msg = _("Lower address should come first.")
+        raise ValidationError(msg, code="ordering")
+
+    return range_lower, range_higher
+
+
+def parse_ip_network_value(value):
+    """Validator for ip prefix or range parameters. Parses as IPv6, then as IPv4."""
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if "-" in value:
+        return _parse_ip_range_value(value)
+    else:
+        return _parse_ip_prefix_value(value)
 
 def parse_bool_value(value):
     """Validator for bool parameters.

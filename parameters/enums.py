@@ -12,6 +12,6 @@ class ParameterKind(TextChoices):
     JSON = ("json", _("json"))
     URL = ("url", _("url"))
     HOSTNAME = ("host", _("host name"))
-    IP_PREFIX = ("ip_prefix", _("IP prefix"))
+    IP_NETWORK = ("ip_prefix", _("IP prefix"))
     BOOL = ("bool", _("boolean"))  # 'true', '1', 'false' or '0'
     STR = ("str", _("text"))
