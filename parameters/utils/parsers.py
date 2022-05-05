@@ -11,6 +11,9 @@ from django.core.validators import URLValidator
 from django.utils import formats
 from django.utils.translation import gettext_lazy as _
 
+from parameters.utils.ip import IPv4Range
+from parameters.utils.ip import IPv6Range
+
 EMPTY_VALUES = list(validators.EMPTY_VALUES)
 
 DECIMAL_RE = re.compile(r"\.0*\s*$")
@@ -137,10 +140,8 @@ def parse_url_value(value):
     return value
 
 
-def parse_hostname_value(value):
-    """Validator for hostnames.
-
-    A hostname can be either an IPv4, IPv6 or a name."""
+def parse_hostname_value(value, multiple=False):
+    """Validator for hostnames. A hostname can be either an IPv4, IPv6 or a name."""
     if value in EMPTY_VALUES:
         return None
 
@@ -207,16 +208,22 @@ def _parse_ip_range_value(value):
     )
     if type(range_lower) is not type(range_higher):
         msg = _("Both values must belong to the same address family.")
-        raise ValidationError(msg, code="mixed_family")
+        raise ValidationError(msg, code="family_mismatch")
     if range_lower >= range_higher:
         msg = _("Lower address should come first.")
         raise ValidationError(msg, code="ordering")
 
-    return range_lower, range_higher
+    if isinstance(range_lower, ipaddress.IPv4Address):
+        return IPv4Range(range_lower, range_higher)
+    elif isinstance(range_lower, ipaddress.IPv6Address):
+        return IPv6Range(range_lower, range_higher)
+    else:
+        raise ValidationError(_("Unknown address class"), code="invalid")
 
 
 def parse_ip_network_value(value):
-    """Validator for ip prefix or range parameters. Parses as IPv6, then as IPv4."""
+    """Validator for ip prefix or range parameters. Both IPv6 and IPv4 addresses are
+    supported."""
     if value in EMPTY_VALUES:
         return None
 
