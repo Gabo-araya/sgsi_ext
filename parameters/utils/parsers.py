@@ -140,8 +140,8 @@ def parse_url_value(value):
     return value
 
 
-def parse_hostname_value(value, multiple=False):
-    """Validator for hostnames. A hostname can be either an IPv4, IPv6 or a name."""
+def _parse_single_hostname_value(value):
+    """Validates a single hostname"""
     if value in EMPTY_VALUES:
         return None
 
@@ -152,6 +152,23 @@ def parse_hostname_value(value, multiple=False):
         else:
             raise ValidationError(_("Enter a valid hostname."), code="invalid")
     return value
+
+
+def parse_hostname_value(value, multiple=False):
+    """Validator for hostnames. A hostname can be either an IPv4, IPv6 or a name.
+
+    Multiple values are supported by setting `multiple=True`. In this case, the
+    return value will always be a list."""
+    if value in EMPTY_VALUES:
+        return None
+
+    value = str(value).strip()
+    if multiple:
+        values = value.split(",")
+        hostnames = (_parse_single_hostname_value(_value) for _value in values)
+        return [hostname for hostname in hostnames if hostname]
+    else:
+        return _parse_single_hostname_value(value)
 
 
 def _parse_ip_address_value(value):
@@ -221,9 +238,8 @@ def _parse_ip_range_value(value):
         raise ValidationError(_("Unknown address class"), code="invalid")
 
 
-def parse_ip_network_value(value):
-    """Validator for ip prefix or range parameters. Both IPv6 and IPv4 addresses are
-    supported."""
+def _parse_single_ip_network_value(value):
+    """Validates a single IP range or prefix."""
     if value in EMPTY_VALUES:
         return None
 
@@ -232,6 +248,25 @@ def parse_ip_network_value(value):
         return _parse_ip_range_value(value)
     else:
         return _parse_ip_prefix_value(value)
+
+
+def parse_ip_network_value(value, multiple=False):
+    """Validator for ip prefix or range parameters. Both IPv6 and IPv4 addresses are
+    supported.
+
+    Multiple values are supported by setting `multiple=True`. In this case, the
+    return value will always be a list."""
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if multiple:
+        values = value.split(",")
+        networks = (_parse_single_ip_network_value(_value) for _value in values)
+        return [network for network in networks if network]
+    else:
+        return _parse_single_ip_network_value(value)
+
 
 def parse_bool_value(value):
     """Validator for bool parameters.

@@ -65,6 +65,10 @@ class Parameter(BaseModel):
             return parsers.parse_hostname_value(raw_value)
         elif kind == ParameterKind.IP_NETWORK:
             return parsers.parse_ip_network_value(raw_value)
+        elif kind == ParameterKind.HOSTNAME_LIST:
+            return parsers.parse_hostname_value(raw_value)
+        elif kind == ParameterKind.IP_NETWORK_LIST:
+            return parsers.parse_ip_network_value(raw_value)
         elif kind == ParameterKind.BOOL:
             return parsers.parse_bool_value(raw_value)
         else:
