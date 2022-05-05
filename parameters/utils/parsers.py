@@ -164,7 +164,7 @@ def parse_hostname_value(value, multiple=False):
 
     value = str(value).strip()
     if multiple:
-        values = value.split(",")
+        values = value.split("\n")
         hostnames = (_parse_single_hostname_value(_value) for _value in values)
         return [hostname for hostname in hostnames if hostname]
     else:
@@ -261,7 +261,7 @@ def parse_ip_network_value(value, multiple=False):
 
     value = value.strip()
     if multiple:
-        values = value.split(",")
+        values = value.split("\n")
         networks = (_parse_single_ip_network_value(_value) for _value in values)
         return [network for network in networks if network]
     else:
