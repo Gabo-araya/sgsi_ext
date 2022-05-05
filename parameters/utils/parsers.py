@@ -227,7 +227,7 @@ def _parse_ip_range_value(value):
         msg = _("Both values must belong to the same address family.")
         raise ValidationError(msg, code="family_mismatch")
     if range_lower >= range_higher:
-        msg = _("Lower address should come first.")
+        msg = _("Lower address must be put first.")
         raise ValidationError(msg, code="ordering")
 
     if isinstance(range_lower, ipaddress.IPv4Address):
@@ -235,7 +235,7 @@ def _parse_ip_range_value(value):
     elif isinstance(range_lower, ipaddress.IPv6Address):
         return IPv6Range(range_lower, range_higher)
     else:
-        raise ValidationError(_("Unknown address class"), code="invalid")
+        raise ValidationError(_("Unknown address family."), code="invalid")
 
 
 def _parse_single_ip_network_value(value):
