@@ -13,8 +13,8 @@ module.exports = {
   context: __dirname,
 
   entry: {
-    main: './assets/js/index',
-    status: './assets/js/status'
+    main: './assets/ts/index.ts',
+    status: './assets/ts/status.ts'
   },
 
   output: {
@@ -42,6 +42,12 @@ module.exports = {
 
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        include: path.resolve('./assets/ts'),
+        exclude: /node_modules/,
+        use: 'ts-loader'
+      },
       {
         test: /\.m?js$/,
         include: path.resolve('./assets/js'),
