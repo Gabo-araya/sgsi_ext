@@ -2,6 +2,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Bootstrap from 'bootstrap';
 
+// Styles
+import '../scss/main.scss';
+
 // Vendors
 import './vendors/choices';
 
