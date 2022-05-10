@@ -6,7 +6,9 @@
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "eslint '**/*.ts' && stylelint '**/*.{css,scss}'",
+    "lint:fix": "eslint '**/*.ts' --fix && stylelint '**/*.{css,scss}' --fix"
   },
   "repository": {
     "type": "git",
