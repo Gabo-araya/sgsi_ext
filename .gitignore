@@ -117,6 +117,7 @@ test_app
 propagate.sh
 .idea/
 
+# Webpack output:
 /assets/bundles/
 webpack-stats.json
 
