@@ -30,11 +30,13 @@
   "rules": {
     "arrow-body-style": ["error", "as-needed"],
     "comma-dangle": ["error", "never"],
+    "@typescript-eslint/comma-dangle": ["error", "never"],
     "function-paren-newline": "off",
     "lines-between-class-members": "off",
+    "@typescript-eslint/lines-between-class-members": "off",
     // Too restrictive, writing ugly code to defend against a very unlikely scenario: https://eslint.org/docs/rules/no-prototype-builtins
     "no-prototype-builtins": "off",
-    // https://github.com/basarat/typescript-book/blob/master/docs/tips/defaultIsBad.md
+    // Default import is bad https://github.com/basarat/typescript-book/blob/master/docs/tips/defaultIsBad.md
     "import/prefer-default-export": "off",
     "import/no-default-export": "error",
     // Too restrictive: https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/destructuring-assignment.md
