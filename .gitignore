@@ -129,3 +129,6 @@ test-results/
 
 # file-based cache
 tmp/
+
+# stylelint cache
+.stylelintcache
