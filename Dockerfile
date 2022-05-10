@@ -115,6 +115,7 @@ RUN \
 # Build javascript bundles:
 COPY --chown=$HOST_UID:$HOST_GID webpack.*.js ./
 COPY --chown=$HOST_UID:$HOST_GID assets/ assets/
+COPY --chown=$HOST_UID:$HOST_GID tsconfig.json ./
 RUN npm run build
 
 # Copy rest of the project
