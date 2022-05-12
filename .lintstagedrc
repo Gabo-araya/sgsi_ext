@@ -1,0 +1,11 @@
+{
+  "**/*.{css,scss}": [
+    "stylelint --fix --color"
+  ],
+  "**/*.ts": [
+    "eslint --fix"
+  ],
+  "**/*.js": [
+    "eslint --fix"
+  ]
+}

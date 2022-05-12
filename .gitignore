@@ -117,6 +117,7 @@ test_app
 propagate.sh
 .idea/
 
+# Webpack output:
 /assets/bundles/
 webpack-stats.json
 
@@ -129,3 +130,6 @@ test-results/
 
 # file-based cache
 tmp/
+
+# stylelint cache
+.stylelintcache
