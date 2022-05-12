@@ -1,0 +1,27 @@
+/*
+ * Content:
+ *
+ * Modules
+ * Bootstrap mixins
+ * Backgrounds
+ */
+
+
+// Modules
+// ============================================================================
+
+@use "sass:map";
+
+
+// Bootstrap mixins
+// ============================================================================
+
+@import "~bootstrap/scss/mixins";
+
+
+// Backgrounds
+// ============================================================================
+
+@mixin split-background($color-a, $color-b) {
+  background: linear-gradient(to right, $color-a 0%, $color-a 50%, $color-b 50%, $color-b 100%);
+}
