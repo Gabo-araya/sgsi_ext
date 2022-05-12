@@ -94,3 +94,5 @@
 **/test-results/
 **/tmp/
 **/.coverage
+
+.stylelintcache
