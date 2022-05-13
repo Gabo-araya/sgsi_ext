@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-06 17:33+0000\n"
-"PO-Revision-Date: 2022-04-06 17:33+0000\n"
+"POT-Creation-Date: 2022-05-05 12:25-0400\n"
+"PO-Revision-Date: 2022-05-05 12:25-0400\n"
 "Last-Translator: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language: es\n"
@@ -47,6 +47,18 @@ msgstr "URL"
 #: enums.py
 msgid "host name"
 msgstr "nombre de host"
+
+#: enums.py
+msgid "IP prefix/range"
+msgstr "prefijo o rango de IP"
+
+#: enums.py
+msgid "host name list"
+msgstr "listado de nombres de host"
+
+#: enums.py
+msgid "IP prefix/range list"
+msgstr "listado de prefijos o rangos de IP"
 
 #: enums.py
 msgid "boolean"
@@ -97,10 +109,43 @@ msgid "Enter a valid hostname."
 msgstr "Ingrese un nombre de host válido"
 
 #: utils/parsers.py
+msgid "Enter a valid IPv6 address."
+msgstr "Ingrese una dirección IPv6 válida."
+
+#: utils/parsers.py
+msgid "Enter a valid IPv4 address."
+msgstr "Ingrese una dirección IPv4 válida."
+
+#: utils/parsers.py
+msgid "Enter a valid IPv6 prefix."
+msgstr "Ingrese un prefijo IPv6 válido."
+
+#: utils/parsers.py
+msgid "Enter a valid IPv4 prefix."
+msgstr "Ingrese un prefijo IPv4 válido."
+
+#: utils/parsers.py
+msgid "Enter a valid address range."
+msgstr "Ingrese un rango de direcciones válido."
+
+#: utils/parsers.py
+msgid "Both values must belong to the same address family."
+msgstr "Ambos valores deben corresponder a la misma familia de direcciones."
+
+#: utils/parsers.py
+msgid "Lower address must be put first."
+msgstr "La dirección menor debe indicarse primero."
+
+#: utils/parsers.py
+msgid "Unknown address family."
+msgstr "Clase de direcciones desconocida."
+
+#: utils/parsers.py
 msgid ""
 "Enter a valid boolean value. Valid values are \"True\", \"False\", 0 or 1."
-msgstr "Ingrese un valor booleano válido. Los valores permitidos son \"True\""
-", \"False\", 0 o 1."
+msgstr ""
+"Ingrese un valor booleano válido. Los valores permitidos son \"True\", "
+"\"False\", 0 o 1."
 
 #: validators.py
 msgid "Invalid protocol"

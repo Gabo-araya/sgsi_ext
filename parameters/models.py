@@ -1,13 +1,9 @@
 """ Models for the parameters application. """
-#  standard library
 # standard library
-import datetime
 import json
-import time
 
 # django
 from django.core.cache import cache
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -45,32 +41,13 @@ class Parameter(BaseModel):
     )
 
     def clean(self):
-        if self.kind == ParameterKind.INT:
-            parsers.parse_int_value(self.raw_value)
-        elif self.kind == ParameterKind.TIME:
-            parsers.parse_time_value(self.raw_value)
-        elif self.kind == ParameterKind.DATE:
-            parsers.parse_date_value(self.raw_value)
-        elif self.kind == ParameterKind.JSON:
-            parsers.parse_json_value(self.raw_value)
-        elif self.kind == ParameterKind.URL:
-            parsers.parse_url_value(self.raw_value)
-        elif self.kind == ParameterKind.HOSTNAME:
-            parsers.parse_hostname_value(self.raw_value)
-        elif self.kind == ParameterKind.BOOL:
-            parsers.parse_bool_value(self.raw_value)
+        value = self.__class__.process_value(self.kind, self.raw_value)
+        self.run_validators(value)
 
-        self.run_validators()
-
-    def run_validators(self):
+    def run_validators(self, value):
         parameter_definition = ParameterDefinitionList.get_definition(self.name)
-        value = self.value
         for validator in parameter_definition.validators:
             validator(value)
-
-    @property
-    def value(self):
-        return self.__class__.process_value(self.kind, self.raw_value)
 
     @classmethod
     def process_value(cls, kind, raw_value):
@@ -86,14 +63,24 @@ class Parameter(BaseModel):
             return parsers.parse_url_value(raw_value)
         elif kind == ParameterKind.HOSTNAME:
             return parsers.parse_hostname_value(raw_value)
+        elif kind == ParameterKind.IP_NETWORK:
+            return parsers.parse_ip_network_value(raw_value)
+        elif kind == ParameterKind.HOSTNAME_LIST:
+            return parsers.parse_hostname_value(raw_value, multiple=True)
+        elif kind == ParameterKind.IP_NETWORK_LIST:
+            return parsers.parse_ip_network_value(raw_value, multiple=True)
         elif kind == ParameterKind.BOOL:
             return parsers.parse_bool_value(raw_value)
         else:
-            return raw_value
+            return parsers.parse_str_value(raw_value)
 
-    @value.setter
-    def value(self, value):
+    def _get_value(self):
+        return self.__class__.process_value(self.kind, self.raw_value)
+
+    def _set_value(self, value):
         self.raw_value = value
+
+    value = property(_get_value, _set_value)
 
     @classmethod
     def cache_key(cls, name):

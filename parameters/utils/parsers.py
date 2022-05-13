@@ -1,5 +1,6 @@
 # standard library
 import datetime
+import ipaddress
 import json
 import re
 
@@ -9,6 +10,9 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.utils import formats
 from django.utils.translation import gettext_lazy as _
+
+from parameters.utils.ip import IPv4Range
+from parameters.utils.ip import IPv6Range
 
 EMPTY_VALUES = list(validators.EMPTY_VALUES)
 
@@ -24,6 +28,13 @@ HOSTNAME_RE = re.compile(
     + URLValidator.hostname_re
     + r")$"
 )
+
+
+def parse_str_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    return value
 
 
 def parse_int_value(value):
@@ -129,10 +140,8 @@ def parse_url_value(value):
     return value
 
 
-def parse_hostname_value(value):
-    """Validator for hostnames.
-
-    A hostname can be either an IPv4, IPv6 or a name."""
+def parse_single_hostname_value(value):
+    """Validates a single hostname"""
     if value in EMPTY_VALUES:
         return None
 
@@ -143,6 +152,120 @@ def parse_hostname_value(value):
         else:
             raise ValidationError(_("Enter a valid hostname."), code="invalid")
     return value
+
+
+def parse_hostname_value(value, multiple=False):
+    """Validator for hostnames. A hostname can be either an IPv4, IPv6 or a name.
+
+    Multiple values are supported by setting `multiple=True`. In this case, the
+    return value will always be a list."""
+    if value in EMPTY_VALUES:
+        return None
+
+    value = str(value).strip()
+    if multiple:
+        values = value.split("\n")
+        hostnames = (parse_single_hostname_value(_value) for _value in values)
+        return [hostname for hostname in hostnames if hostname]
+    else:
+        return parse_single_hostname_value(value)
+
+
+def parse_ip_address_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if ":" in value:
+        try:
+            return ipaddress.IPv6Address(value)
+        except ValueError:
+            msg = _("Enter a valid IPv6 address.")
+            raise ValidationError(msg, code="invalid")
+
+    try:
+        return ipaddress.IPv4Address(value)
+    except ValueError:
+        msg = _("Enter a valid IPv4 address.")
+        raise ValidationError(msg, code="invalid")
+
+
+def parse_ip_prefix_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if ":" in value:
+        try:
+            return ipaddress.IPv6Network(value)
+        except ValueError:
+            msg = _("Enter a valid IPv6 prefix.")
+            raise ValidationError(msg, code="invalid")
+
+    try:
+        return ipaddress.IPv4Network(value)
+    except ValueError:
+        msg = _("Enter a valid IPv4 prefix.")
+        raise ValidationError(msg, code="invalid")
+
+
+def parse_ip_range_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    range_values = value.split("-")
+    if len(range_values) != 2:
+        msg = _("Enter a valid address range.")
+        raise ValidationError(msg, code="invalid")
+
+    range_lower, range_higher = (
+        parse_ip_address_value(range_values[0]),
+        parse_ip_address_value(range_values[1]),
+    )
+    if type(range_lower) is not type(range_higher):
+        msg = _("Both values must belong to the same address family.")
+        raise ValidationError(msg, code="family_mismatch")
+    if range_lower >= range_higher:
+        msg = _("Lower address must be put first.")
+        raise ValidationError(msg, code="ordering")
+
+    if isinstance(range_lower, ipaddress.IPv4Address):
+        return IPv4Range(range_lower, range_higher)
+    elif isinstance(range_lower, ipaddress.IPv6Address):
+        return IPv6Range(range_lower, range_higher)
+    else:
+        raise ValidationError(_("Unknown address family."), code="invalid")
+
+
+def parse_single_ip_network_value(value):
+    """Validates a single IP range or prefix."""
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if "-" in value:
+        return parse_ip_range_value(value)
+    else:
+        return parse_ip_prefix_value(value)
+
+
+def parse_ip_network_value(value, multiple=False):
+    """Validator for ip prefix or range parameters. Both IPv6 and IPv4 addresses are
+    supported.
+
+    Multiple values are supported by setting `multiple=True`. In this case, the
+    return value will always be a list."""
+    if value in EMPTY_VALUES:
+        return None
+
+    value = value.strip()
+    if multiple:
+        values = value.split("\n")
+        networks = (parse_single_ip_network_value(_value) for _value in values)
+        return [network for network in networks if network]
+    else:
+        return parse_single_ip_network_value(value)
 
 
 def parse_bool_value(value):
