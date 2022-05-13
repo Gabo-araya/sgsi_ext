@@ -28,7 +28,7 @@ inflection = "0.5.1"
 pymemcache = "3.5.2"
 pypugjs = "5.9.11"
 # calver packages that must be updated always
-pytz = ">=2021.3"
+pytz = ">=2022.1"
 
 [tool.poetry.dev-dependencies]
 # semver packages
