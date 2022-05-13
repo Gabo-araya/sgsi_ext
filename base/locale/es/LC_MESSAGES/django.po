@@ -1,13 +1,13 @@
 # Translations for the parameters app.
-# Copyright (C) Magnet S.p.A.
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) 2016-2022 Magnet S.p.A.
+# This file is distributed under the same license as the django-project-template package.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-06 15:02-0400\n"
-"PO-Revision-Date: 2022-04-06 15:02-0400\n"
+"POT-Creation-Date: 2022-05-06 08:35-0400\n"
+"PO-Revision-Date: 2022-05-06 08:35-0400\n"
 "Last-Translator: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language: es\n"
@@ -26,8 +26,9 @@ msgstr "RUT chileno (hasta %(max_length)s)"
 msgid ""
 "'%(value)s' value has an invalid format. It must be in XX.XXX.XXX-Y format "
 "or XXXXXXXXY format."
-msgstr "El valor '%(value)s' no tiene un formato válido. El formato aceptado "
-"es XX.XXX.XXX-Y o XXXXXXXXY."
+msgstr ""
+"El valor '%(value)s' no tiene un formato válido. El formato aceptado es XX."
+"XXX.XXX-Y o XXXXXXXXY."
 
 #: fields/base.py
 #, python-format
@@ -132,25 +133,25 @@ msgstr "Mostrando resultados de %(start_index)s a %(end_index)s"
 msgid "total"
 msgstr "total"
 
-#: views.py
+#: views/generic/edit.py
 #, python-format
 msgid "Create %s"
 msgstr "Crear %s"
 
-#: views.py
+#: views/generic/edit.py
 #, python-format
 msgid "Update %s"
 msgstr "Actualizar %s"
 
-#: views.py
+#: views/generic/edit.py
 #, python-format
 msgid "Delete %s"
 msgstr "Eliminar %s"
 
-#: views.py
+#: views/generic/edit.py
 msgid "This object cannot be deleted."
 msgstr "El objeto no puede ser eliminado."
 
-#: views.py
+#: views/misc.py
 msgid "status"
 msgstr "estado"
