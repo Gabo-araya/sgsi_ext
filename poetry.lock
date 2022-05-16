@@ -1,6 +1,6 @@
 [[package]]
 name = "ansible-core"
-version = "2.12.5"
+version = "2.13.0"
 description = "Radically simple IT automation"
 category = "main"
 optional = true
@@ -8,7 +8,7 @@ python-versions = ">=3.8"
 
 [package.dependencies]
 cryptography = "*"
-jinja2 = "*"
+jinja2 = ">=3.0.0"
 packaging = "*"
 PyYAML = "*"
 resolvelib = ">=0.5.3,<0.6.0"
@@ -1014,11 +1014,12 @@ ansible = ["ansible-core", "yq"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9.9"
-content-hash = "a1d862ed867ffe3103d2b326967e04c746f4c63cb07d8415a5126c8cfcd1833d"
+content-hash = "457319f7e7993947cd2bf3d743dbf1048b4a619e3c0149f6e5005ce8d6da3e45"
 
 [metadata.files]
 ansible-core = [
-    {file = "ansible-core-2.12.5.tar.gz", hash = "sha256:1ccc9944f101331adad1ed40d5ac66a8149133052ae34db0267a74aa73beebb3"},
+    {file = "ansible-core-2.13.0.tar.gz", hash = "sha256:08e0fb4a718d967a654e70cda57cf93201869329dd1cf5b8a4267c57c5c4c8d3"},
+    {file = "ansible_core-2.13.0-py3-none-any.whl", hash = "sha256:726196c529fe536f8ad83a30aa48b59dd3fcacc3e5d3b3c3392212f7a27e7262"},
 ]
 appnope = [
     {file = "appnope-0.1.3-py2.py3-none-any.whl", hash = "sha256:265a455292d0bd8a72453494fa24df5a11eb18373a60c7c0430889f22548605e"},
