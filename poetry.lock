@@ -127,7 +127,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.26.0"
+version = "1.26.1"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -1014,7 +1014,7 @@ ansible = ["ansible-core", "yq"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9.9"
-content-hash = "749f6a05ff3c6ffbe06bdf79ea51db1aefb2f6b18850dbe255afa0eac7719fe0"
+content-hash = "a1d862ed867ffe3103d2b326967e04c746f4c63cb07d8415a5126c8cfcd1833d"
 
 [metadata.files]
 ansible-core = [
@@ -1078,8 +1078,8 @@ boto3 = [
     {file = "boto3-1.23.0.tar.gz", hash = "sha256:07c4d128cb625f9459af8b6dff65ad9c3475e3b186f81c0e57af3d563d933cbd"},
 ]
 botocore = [
-    {file = "botocore-1.26.0-py3-none-any.whl", hash = "sha256:25c43b8a7950d785daf3840bb10277378f36d41b208be3e01614537bdb419fe7"},
-    {file = "botocore-1.26.0.tar.gz", hash = "sha256:4c7ae9198ffbe1a834fd3928d2e6a4c68250c0d9f82e70c32b652d3525bec9c3"},
+    {file = "botocore-1.26.1-py3-none-any.whl", hash = "sha256:598304f20df607944c6db3870e005f2775230ec4558c8280d870f861a8003632"},
+    {file = "botocore-1.26.1.tar.gz", hash = "sha256:a805cbd8e79b64da0f719869b6b4c698cf5db7991b1aa412b086b25fb2892795"},
 ]
 cffi = [
     {file = "cffi-1.15.0-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:c2502a1a03b6312837279c8c1bd3ebedf6c12c4228ddbad40912d671ccc8a962"},
