@@ -56,6 +56,10 @@ jobs:
           paths:
             - "*.tar.gz"
       - save_cache:
+          # Use the standard cache instead of the Docker layer caching service
+          # to store the layer cache. Docker layer caching is an additional
+          # value-added service that is not available with container-based
+          # plans.
           key: docker-layers-v1-{{ checksum "Dockerfile" }}
           paths:
             - /tmp/build-cache/
