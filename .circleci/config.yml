@@ -14,28 +14,55 @@ jobs:
     executor: base-executor
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - docker-layers-v1-{{ checksum "Dockerfile" }}
+            - docker-layers-v1-
       - setup_remote_docker:
           version: 20.10.11
       - run:
-          name: Create output directory
+          name: Setup BuildKit driver
           command: |
-            mkdir -p ~/output
+            docker context create dpt-build-context
+            docker buildx create --driver docker-container --name dpt-builder --use dpt-build-context
+      - run:
+          name: Create output directories
+          command: |
+            mkdir -p ~/output /tmp/build-cache
       - run:
           name: Build production image
           command: |
-            docker build --progress=plain --target production -t app .
+            docker buildx build \
+              --cache-from type=local,src=/tmp/build-cache \
+              --cache-to type=local,dest=/tmp/build-cache,mode=max \
+              --output type=docker,dest=- \
+              --progress=plain \
+              --target production \
+              -t "${CIRCLE_PROJECT_REPONAME}:latest" \
+              . | gzip > ~/output/${CIRCLE_PROJECT_REPONAME}.tar.gz
       - run:
           name: Build test image
           command: |
-            docker build --progress=plain --target test -t app-test .
-      - run:
-          name: Save Docker image layer cache
-          command: |
-            docker save app app-test | gzip > ~/output/app.tar.gz
+            docker buildx build \
+              --cache-from type=local,src=/tmp/build-cache \
+              --cache-to type=local,dest=/tmp/build-cache,mode=max \
+              --output type=docker,dest=- \
+              --progress=plain \
+              --target test \
+              -t "${CIRCLE_PROJECT_REPONAME}-test:latest" \
+              . | gzip > ~/output/${CIRCLE_PROJECT_REPONAME}-test.tar.gz
       - persist_to_workspace:
           root: ~/output
           paths:
-            - app.tar.gz
+            - "*.tar.gz"
+      - save_cache:
+          # Use the standard cache instead of the Docker layer caching service
+          # to store the layer cache. Docker layer caching is an additional
+          # value-added service that is not available with container-based
+          # plans.
+          key: docker-layers-v1-{{ checksum "Dockerfile" }}
+          paths:
+            - /tmp/build-cache/
   test:
     executor: base-executor
     steps:
@@ -45,10 +72,10 @@ jobs:
       - setup_remote_docker:
           version: 20.10.11
       - run:
-          name: Load Docker image layer cache
+          name: Load Docker images
           command: |
             set +o pipefail
-            gunzip -c ~/output/app.tar.gz | docker load | true
+            gunzip -c ~/output/${CIRCLE_PROJECT_REPONAME}-test.tar.gz | docker load | true
       - run:
           name: Start artifact collector
           command: |
@@ -75,10 +102,10 @@ jobs:
       - setup_remote_docker:
           version: 20.10.11
       - run:
-          name: Load Docker image layer cache
+          name: Load Docker images
           command: |
             set +o pipefail
-            gunzip -c ~/output/app.tar.gz | docker load | true
+            gunzip -c ~/output/${CIRCLE_PROJECT_REPONAME}-test.tar.gz | docker load | true
       - run:
           name: Check code style
           command: |
@@ -91,7 +118,6 @@ jobs:
           name: Check for missing migrations
           command: |
             docker-compose -f docker/docker-compose.ci.yml run app-test poetry run ./manage.py makemigrations --check --dry-run
-
 
 workflows:
   version: 2
