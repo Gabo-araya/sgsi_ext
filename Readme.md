@@ -14,10 +14,10 @@ Add the django3-project-template bitbucket repo as a remote repository:
 Pull the code from the project template:
 * `git pull template main`
 
-Configure `project_name` and `server_git_url`:
+Configure `project_name` and `git_repo`:
 * `vim ansible/group_vars/all.yaml`
 
-Push to your own repo
+Push to your own repo:
 * `git push origin master`
 
 Now you have your own django project in your repository.
@@ -189,7 +189,7 @@ App that overrides the Django User with the class `User` that is easily modifiab
 
 The template engine used is pypugjs, a python implementation of the
 [pugjs](https://pugjs.org/api/getting-started.html) template engine. This
-converts the pug files into the default templates used in DJango, so you can
+converts the pug files into the default templates used in Django, so you can
 use both systems on the same template.
 For example, [variable interpolation in pug](https://pugjs.org/language/interpolation.html)
 with `#{}`, or using django method with `{{ }}`..
@@ -207,7 +207,7 @@ All view templates should extend base.pug, this renders the layout with a navbar
     is empty. Be careful to use this block, it should only be used when the
     webpack-compiled styles are not enough for some reason.
  3. breadcrumbs: A place to put breadcrumb elements after the `home` element
-    and befor the element that contains the `title`.
+    and before the element that contains the `title`.
  4. content_title: The place to put the `h1` tag. By default contains a `h1`
     tag with the `title` and a place to put buttons
  5. options: A place to put buttons beside the `h1` tag.
