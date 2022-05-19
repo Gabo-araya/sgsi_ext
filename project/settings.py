@@ -28,6 +28,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", False) == "True"
+CRITICAL_ENVIRONMENT = (
+    True if not DEBUG and os.environ.get("IS_CRITICAL_ENV", False) == "True" else False
+)
 
 # WARNING: do not make your code depend on this value
 TEST = False
