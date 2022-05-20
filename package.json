@@ -1,5 +1,5 @@
 {
-  "name": "django-project-template",
+  "name": "django3-project-template",
   "version": "0.3.2",
   "description": "A base for a django project",
   "main": "index.js",
@@ -10,16 +10,8 @@
     "lint": "eslint '**/*.ts' && stylelint '**/*.{css,scss}'",
     "lint:fix": "eslint '**/*.ts' --fix && stylelint '**/*.{css,scss}' --fix"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@bitbucket.org/magnet-cl/django3-project-template.git"
-  },
   "author": "Magnet S.p.A. - magnet.cl",
   "license": "MIT",
-  "bugs": {
-    "url": "https://bitbucket.org/magnet-cl/django3-project-template/issues"
-  },
-  "homepage": "https://bitbucket.org/magnet-cl/django3-project-template#readme",
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
     "@types/bootstrap": "^5.1.11",

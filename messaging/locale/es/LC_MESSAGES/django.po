@@ -1,6 +1,6 @@
 # Translations for the messaging app
 # Copyright (C) 2016-2022 Magnet S.p.A.
-# This file is distributed under the same license as the django-project-template package.
+# This file is distributed under the same license as the django3-project-template package.
 # Ignacio Munizaga <muni@magnet.cl>, 2016.
 #
 msgid ""

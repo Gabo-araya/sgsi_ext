@@ -37,7 +37,7 @@ mkdir -p .vscode
 if [[ ! -f .vscode/settings.json ]]; then
   echo \
 "{
-  \"python.defaultInterpreterPath\": \"/home/$(whoami)/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/python\",
+  \"python.defaultInterpreterPath\": \"/home/$USER/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/python\",
 }" > .vscode/settings.json
 fi
 
