@@ -16,7 +16,8 @@ cp "docker/.env.example" "$env_file"
 
 project_name=$(yq -r .project_name ansible/group_vars/all.yml)
 postgres_db=$project_name-$sv_name
-virtual_env=$(poetry env info --path)
+# shellcheck disable=SC2016
+virtual_env=/home/'${WHO}'/$(realpath --relative-to="$HOME" "$(poetry env info --path)")
 
 prompt "\nIs '$sv_name' a critical environment? (That should't show a dev indicator) [y/N]" "N"
 input_lower=${input,,}
