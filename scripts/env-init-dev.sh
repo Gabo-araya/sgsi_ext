@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eu
 cd "$(dirname "$0")"/..
 source scripts/utils.sh
 assert_outside_container
@@ -14,7 +14,7 @@ else
 
   # As this script runs outside the container, yq may not be available to parse the file.
   # So just grep and cut. This is for development only so no servers are at risk.
-  project_name=$(grep -E "^project_name: " ansible/group_vars/all.yml | cut -d' ' -f2)
+  project_name=$(set -o pipefail; grep -E "^project_name: " ansible/group_vars/all.yml | cut -d' ' -f2)
 
   who=$(whoami)
   host_uid=$(id -u)

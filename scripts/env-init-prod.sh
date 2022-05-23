@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eu
 cd "$(dirname "$0")"/..
 source scripts/utils.sh
 should_be_inside_container
