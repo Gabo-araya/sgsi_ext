@@ -21,7 +21,7 @@ else
   host_gid=$(id -g)
 
   # Not yet known, leave as is to be set later:
-  virtual_env=virtual_env
+  virtual_env="{{virtual_env}}"
 
   # Assume defaults
   postgres_host="localhost"
