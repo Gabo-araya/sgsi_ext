@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 cd "$(dirname "$0")"/..
 source scripts/utils.sh
 assert_outside_container
@@ -12,16 +12,16 @@ if [ -f "$env_file" ]; then
 else
   cp "docker/.env.example" "$env_file"
 
-  # For servers, project_name has to be stable, so it's commited in group_vars/all.yml
-  # and parsed with ansible or yq inside contaier.
-  # But this script runs outside container, so no ansible or yq, and stability is not important,
-  # and if user cloned repo to a folder with different name it could be more recognizable with
-  # that name, so use project folder name:
-  project_name=$(basename "$(dirname "$(dirname "$(realpath "$0")")")")
+  # As this script runs outside the container, yq may not be available to parse the file.
+  # So just grep and cut. This is for development only so no servers are at risk.
+  project_name=$(grep -E "^project_name: " ansible/group_vars/all.yml | cut -d' ' -f2)
 
   who=$(whoami)
   host_uid=$(id -u)
   host_gid=$(id -g)
+
+  # Not yet known, leave as is to be set later:
+  virtual_env=virtual_env
 
   # Assume defaults
   postgres_host="localhost"
@@ -41,6 +41,7 @@ else
   sed -i "s|{{who}}|$who|g" $env_file
   sed -i "s|{{host_uid}}|$host_uid|g" $env_file
   sed -i "s|{{host_gid}}|$host_gid|g" $env_file
+  sed -i "s|{{virtual_env}}|$virtual_env|g" $env_file
   sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
   sed -i "s|{{postgres_port}}|$postgres_port|g" $env_file
   sed -i "s|{{postgres_user}}|$postgres_user|g" $env_file

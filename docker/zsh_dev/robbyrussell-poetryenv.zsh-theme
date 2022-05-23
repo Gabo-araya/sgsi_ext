@@ -3,11 +3,11 @@ function virtualenv_info {
     # Originally: `basename $VIRTUAL_ENV`
 
     # echo $VIRTUAL_ENV
-    #  /home/magnet/.cache/pypoetry/virtualenvs/pro-ject-name-VA82Wl8V-py3.9
+    #  /home/magnet/.cache/pypoetry/virtualenvs/pro-ject-name-ASDF1234-py3.9
     venv_base="${VIRTUAL_ENV:t}"
-    #  pro-ject-name-VA82Wl8V-py3.9
+    #  pro-ject-name-ASDF1234-py3.9
     venv_split=(${(s[-])${venv_base}})
-    #  pro ject name VA82Wl8V py3.9
+    #  pro ject name ASDF1234 py3.9
     venv_minus2=(${venv_split[0,-3]})
     #  pro ject name
     venv_joined="${(j[-])venv_minus2}"

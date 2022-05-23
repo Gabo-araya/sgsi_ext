@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 cd "$(dirname "$0")"/..
 source scripts/utils.sh
 should_be_inside_container
@@ -16,6 +16,7 @@ cp "docker/.env.example" "$env_file"
 
 project_name=$(yq -r .project_name ansible/group_vars/all.yml)
 postgres_db=$project_name-$sv_name
+virtual_env=$(poetry env info --path)
 
 prompt "\nIs '$sv_name' a critical environment? (That should't show a dev indicator) [y/N]" "N"
 input_lower=${input,,}
@@ -107,6 +108,7 @@ host_gid=2640
 sed -i "s|{{who}}|$who|g" $env_file
 sed -i "s|{{host_uid}}|$host_uid|g" $env_file
 sed -i "s|{{host_gid}}|$host_gid|g" $env_file
+sed -i "s|{{virtual_env}}|$virtual_env|g" $env_file
 sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
 sed -i "s|{{postgres_port}}|$postgres_port|g" $env_file
 sed -i "s|{{postgres_user}}|$postgres_user|g" $env_file
