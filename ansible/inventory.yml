@@ -5,11 +5,5 @@ all:
     #   server_domain: django3-dev.do.magnet.cl
     #   branch: dev
 
-    # TODO: remove
-    playg:
-      ansible_host: 198.199.90.71
-      server_domain: tomas-playg.do.magnet.cl
-      branch: chore/fix-uid_DPT-69
-
   vars:
     ansible_user: magnet

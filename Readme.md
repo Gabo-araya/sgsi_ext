@@ -14,8 +14,9 @@ Add the django3-project-template bitbucket repo as a remote repository:
 Pull the code from the project template:
 * `git pull template main`
 
-Configure `project_name` and `git_repo`:
-* `vim ansible/group_vars/all.yaml`
+Search and replace all occurrences of `project-name-placeholder` to your desired project name
+
+Configure `git_repo` in `ansible/group_vars/all.yaml`
 
 Push to your own repo:
 * `git push origin master`

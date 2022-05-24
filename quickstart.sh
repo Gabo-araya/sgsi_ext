@@ -27,19 +27,27 @@ scripts/add-aliases.sh
 
 newgrp docker <<EOF
 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build && \
-docker-compose down && \
-docker-compose up --detach
+docker-compose down
 EOF
 # "down" because https://github.com/docker/compose/issues/4548
+
+# Now that the image is built, set virtual_env in .env:
+env_file='.env'
+# VIRTUAL_ENV must be unset for poetry to generate the path itself
+virtual_env=$(echo "docker-compose run --rm -T django env --unset=VIRTUAL_ENV poetry env info --path" | newgrp docker)
+sed -i "s|{{virtual_env}}|$virtual_env|g" $env_file
 
 # Set vscode to use python in poetry env
 mkdir -p .vscode
 if [[ ! -f .vscode/settings.json ]]; then
   echo \
 "{
-  \"python.defaultInterpreterPath\": \"/home/$(whoami)/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/python\",
+  \"python.defaultInterpreterPath\": \"$virtual_env/bin/python\",
 }" > .vscode/settings.json
 fi
+
+# Finally create and start the containers:
+echo "docker-compose up --detach" | newgrp docker
 
 prompt "\n\nWould you like to run migrations? [Y/n]" "Y"
 input_lower=${input,,}

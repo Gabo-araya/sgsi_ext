@@ -3,15 +3,15 @@ function virtualenv_info {
     # Originally: `basename $VIRTUAL_ENV`
 
     # echo $VIRTUAL_ENV
-    #  /home/magnet/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9
+    #  /home/magnet/.cache/pypoetry/virtualenvs/project-name-ASDF1234-py3.9
     venv_base="${VIRTUAL_ENV:t}"
-    #  django3-project-template-VA82Wl8V-py3.9
+    #  project-name-ASDF1234-py3.9
     venv_split=(${(s[-])${venv_base}})
-    #  django3 project template VA82Wl8V py3.9
+    #  project name ASDF1234 py3.9
     venv_minus2=(${venv_split[0,-3]})
-    #  django3 project template
+    #  project name
     venv_joined="${(j[-])venv_minus2}"
-    #  django3-project-template
+    #  project-name
     echo %F{blue}"($venv_joined) "%f
   }
 }
