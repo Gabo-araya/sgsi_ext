@@ -156,6 +156,7 @@ AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = "es"
+FAKER_LOCALES = ["es_CL"]
 
 TIME_ZONE = "America/Santiago"
 

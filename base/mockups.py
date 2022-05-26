@@ -6,8 +6,6 @@ project models
 # standard library
 import os
 import random
-import string
-import uuid
 
 from shutil import copyfile
 
@@ -18,7 +16,8 @@ from django.core.files import File
 from django.utils import timezone
 
 # others libraries
-# utils
+# faker
+from faker import Faker
 from inflection import underscore
 
 from base.utils import random_rut
@@ -31,7 +30,11 @@ from regions.models import Region
 from users.models import User
 
 
-class Mockup(object):
+class Mockup:
+    def __init__(self):
+        language = settings.FAKER_LOCALES
+        self.faker = Faker(language)
+
     def create_commune(self, **kwargs):
         self.set_required_string(kwargs, "name")
         self.set_required_foreign_key(kwargs, "region")
@@ -46,13 +49,13 @@ class Mockup(object):
 
     def create_user(self, password=None, **kwargs):
         if kwargs.get("first_name") is None:
-            kwargs["first_name"] = random_string(length=6)
+            kwargs["first_name"] = self.faker.first_name()
 
         if kwargs.get("last_name") is None:
-            kwargs["last_name"] = random_string(length=6)
+            kwargs["last_name"] = self.faker.last_name()
 
         if kwargs.get("email") is None:
-            kwargs["email"] = self.random_email()
+            kwargs["email"] = self.faker.email()
 
         if kwargs.get("is_active") is None:
             kwargs["is_active"] = True
@@ -65,38 +68,24 @@ class Mockup(object):
 
         return user
 
-    def random_email(self):
-        return "{}@{}.{}".format(
-            random_string(length=6, include_spaces=False),
-            random_string(length=6, include_spaces=False),
-            random_string(length=2, include_spaces=False),
-        )
-
-    def random_hex_int(self, *args, **kwargs):
-        val = self.random_int(*args, **kwargs)
+    def random_hex_int(self, min, max, step):
+        val = self.faker.random_int(min, max, step)
         return hex(val)
-
-    def random_int(self, minimum=-100000, maximum=100000):
-        return random.randint(minimum, maximum)
 
     def random_float(self, minimum=-100000, maximum=100000):
         return random.uniform(minimum, maximum)
-
-    def random_uuid(self, *args, **kwargs):
-        chars = string.digits
-        return uuid.UUID("".join(random.choice(chars) for x in range(32)))
 
     def set_required_boolean(self, data, field, default=None, **kwargs):
         if field not in data:
 
             if default is None:
-                data[field] = not not random.randint(0, 1)
+                data[field] = self.faker.boolean()
             else:
                 data[field] = default
 
     def set_required_choice(self, data, field, choices, **kwargs):
         if field not in data:
-            data[field] = random.choice(choices)[0]
+            data[field] = self.faker.random_element(choices)[0]
 
     def set_required_date(self, data, field, **kwargs):
         if field not in data:
@@ -112,7 +101,7 @@ class Mockup(object):
 
     def set_required_email(self, data, field):
         if field not in data:
-            data[field] = self.random_email()
+            data[field] = self.faker.email()
 
     def set_required_file(self, data, field):
         if field in data:
@@ -151,17 +140,14 @@ class Mockup(object):
 
     def set_required_int(self, data, field, **kwargs):
         if field not in data:
-            data[field] = self.random_int(**kwargs)
+            data[field] = self.faker.random_int(**kwargs)
 
-    def set_required_ip_address(self, data, field, **kwargs):
+    def set_required_ip_address(self, data, field, allow_v6=False, **kwargs):
         if field not in data:
-            ip = "{}.{}.{}.{}".format(
-                self.random_int(minimum=1, maximum=255),
-                self.random_int(minimum=1, maximum=255),
-                self.random_int(minimum=1, maximum=255),
-                self.random_int(minimum=1, maximum=255),
-            )
-            data[field] = ip
+            if allow_v6 and self.faker.boolean():
+                data[field] = self.faker.ipv6()
+            else:
+                data[field] = self.faker.ipv4()
 
     def set_required_rut(self, data, field, minimum=1000000, maximum=99999999):
         if field not in data:
