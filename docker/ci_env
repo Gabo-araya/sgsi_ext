@@ -1,13 +1,13 @@
 # PostgreSQL settings
-POSTGRES_USER=circleci
-POSTGRES_PASSWORD=circlepassword
+POSTGRES_USER=jenkins
+POSTGRES_PASSWORD=jenkinspassword
 POSTGRES_DB=circle_test
 
 # see docker-compose.ci.yml for service definition
 PGHOST=db
 PGPORT=5432
-PGUSER=circleci
-PGPASSWORD=circlepassword
+PGUSER=jenkins
+PGPASSWORD=jenkinspassword
 PGDATABASE=$POSTGRES_DB
 POSTGRES_HOST_AUTH_METHOD=trust
 
