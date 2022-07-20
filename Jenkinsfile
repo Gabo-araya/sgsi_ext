@@ -12,30 +12,34 @@ pipeline {
         sh "docker tag \"${env.PROJECT_REPONAME}-test:${env.BUILD_NUMBER}\" \"${env.PROJECT_REPONAME}-test:latest\""
       }
     }
-    stage('Prepare test environment') {
-      steps {
-        sh 'docker-compose -f docker/docker-compose.jenkins.yml create'
-      }
-    }
-    stage('Run test suite') {
-      parallel {
-        stage('Run tests') {
+    stage('Run code checks') {
+      stages {
+        stage('Check code formatting') {
           steps {
-            sh """CONTAINER_ID=\$(docker-compose -f docker/docker-compose.jenkins.yml run -d --user root artifact-collector)
-            export COLLECTOR_CONTAINER_ID=\$CONTAINER_ID
-            """
-            sh 'docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run pytest --cov --cov-report=html --cov-report=xml --cov-report=term'
-            dir ('artifacts') {
-              sh 'docker cp $COLLECTOR_CONTAINER_ID:/artifacts .'
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh '''docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run black --check --exclude \\""^.*\\b(migrations)\\b.*$"\\" .'''
             }
           }
         }
-        stage('Run code checks') {
+        stage('Check import sorting') {
           steps {
-            sh '''docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run black --check --exclude \\""^.*\\b(migrations)\\b.*$"\\" .'''
-            sh 'docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run isort --check .'
-            sh 'docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run pytest'}
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+              sh 'docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run isort --check .'
+            }
           }
+        }
+      }
+    }
+    stage('Run tests') {
+      environment {
+        COLLECTOR_CONTAINER_ID = """${sh(returnStdout: true, script:'docker-compose -f docker/docker-compose.jenkins.yml run -d --user root artifact-collector').trim()}"""
+      }
+      steps {
+        sh 'docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run pytest --cov --cov-report=html --cov-report=xml --cov-report=term'
+        dir ('artifacts') {
+          sh "docker cp \"${env.COLLECTOR_CONTAINER_ID}\":/artifacts/. ."
+          sh "ls -l"
+        }
       }
     }
   }
