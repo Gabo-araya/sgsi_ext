@@ -68,8 +68,8 @@ class Mockup:
 
         return user
 
-    def random_hex_int(self, min, max, step):
-        val = self.faker.random_int(min, max, step)
+    def random_hex_int(self, *args, **kwargs):
+        val = self.faker.random_int(*args, **kwargs)
         return hex(val)
 
     def random_float(self, minimum=-100000, maximum=100000):
