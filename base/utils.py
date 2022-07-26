@@ -120,7 +120,11 @@ def get_our_models():
 
 def can_loginas(request, target_user):
     """This will only allow admins to log in as other users"""
-    return request.user.is_superuser and not target_user.is_superuser
+    return (
+        request.user.is_superuser
+        and not target_user.is_superuser
+        and target_user.is_active  # users not active cannot log in
+    )
 
 
 def date_to_datetime(date):
