@@ -134,9 +134,8 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+AUTH_PASSWORD_VALIDATORS = [{
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -165,7 +164,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = [PROJECT_DIR / "locale"]
+LOCALE_PATHS = [
+    PROJECT_DIR / "locale",
+    BASE_DIR / "assets" / "locale",
+]
 
 # Email
 ENABLE_EMAILS = os.environ.get("ENABLE_EMAILS", False) == "True"

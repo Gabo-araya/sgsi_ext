@@ -7,9 +7,11 @@ function makemessages {
         cd "$1"
         mkdir -p locale/es
 
-        django-admin makemessages --add-location file -l es -e pug,html,txt,py
-        # if your project needs JS translated by Django, uncomment this
-        # django-admin makemessages --add-location file -d djangojs -l es -e js,jsx,ts,tsx
+        if [ "$1" = "assets" ]; then
+          django-admin makemessages --add-location file -d djangojs -l es -e js,jsx,ts,tsx
+        else
+          django-admin makemessages --add-location file -l es -e pug,html,txt,py
+        fi
 
         cd ..
     else
@@ -51,6 +53,7 @@ elif [ $2 ] && [ $2 != '-c' ] ; then
     color_print $blue "Only on app \"$2\""
     translate $2
 else
+    translate "assets"
     translate "base"
     translate "users"
     translate "regions"
