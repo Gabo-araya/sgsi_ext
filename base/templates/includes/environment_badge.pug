@@ -5,9 +5,9 @@ if app_environment == "debug"
     span.sr-only {% trans "Current environment" %}:
 
     | Debug
-elif app_environment == "staging"
-  .environment-badge.staging
+else
+  .environment-badge.alternate
     span.sr-only {% trans "Current environment" %}:
 
-    | Staging
+    | {{ app_environment }}
 

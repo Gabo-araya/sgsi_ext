@@ -12,13 +12,10 @@ def return_empty_context():
 
 def env_badge():
     """Displays a tag depending on the environment the app is running on."""
-    if settings.DEBUG:
-        return {"app_environment": "debug"}
-    else:
-        return {"app_environment": "staging"}
+    return {"app_environment": "debug" if settings.DEBUG else settings.ENVIRONMENT_NAME}
 
 
-if not settings.CRITICAL_ENVIRONMENT:
-    register.inclusion_tag(get_template("includes/environment_badge.pug"))(env_badge)
-else:
+if not settings.DEBUG and not settings.ENVIRONMENT_NAME:
     register.simple_tag(return_empty_context, name="env_badge")
+else:
+    register.inclusion_tag(get_template("includes/environment_badge.pug"))(env_badge)
