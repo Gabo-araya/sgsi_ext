@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    PROJECT_REPONAME = 'django3-project-template'
+    PROJECT_REPONAME = 'project-name-placeholder'
     DOCKER_BUILDKIT = '1'
     COMPOSE_DOCKER_CLI_BUILD = '1'
   }
@@ -17,7 +17,7 @@ pipeline {
         stage('Check code formatting') {
           steps {
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh '''docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run black --check --exclude \\""^.*\\b(migrations)\\b.*$"\\" .'''
+              sh '''docker-compose -f docker/docker-compose.jenkins.yml run app-test poetry run black --check .'''
             }
           }
         }

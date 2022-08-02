@@ -109,7 +109,7 @@ jobs:
       - run:
           name: Check code style
           command: |
-            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run black --check --exclude "^.*\\b(migrations)\b.*$" .
+            docker-compose -f docker/docker-compose.ci.yml run app-test poetry run black --check .
       - run:
           name: Check imports are sorted
           command: |
