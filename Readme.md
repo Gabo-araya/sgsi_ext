@@ -311,3 +311,16 @@ The downside is that for example when debugging in the browser the `render()` of
 You can change, in `webpack.dev.js`, the `devtool` option so it looks like this:
 
 ![original code](.readme_images/js_eval-source-map.png)
+
+## translations
+
+Django comes with a [translation framework](https://docs.djangoproject.com/en/3.2/topics/i18n/translation/).
+The script `translate.sh` is a utility app that creates the .po objects of a
+list of apps. If you need to expand that list, edit the last part of
+`translate.sh`.
+
+Javascript translations are also handled in `translate.sh` but they are done
+only for the `assets` folder, since all custom JS / typescript should be
+contained in that folder.
+
+To create the compiled messages (.mo), simply run `./translate.sh -c`
