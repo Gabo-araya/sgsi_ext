@@ -25,6 +25,7 @@
   "plugins": [
     "import",
     "react",
+    "react-hooks",
     "@typescript-eslint"
   ],
   "rules": {
@@ -33,6 +34,8 @@
     "@typescript-eslint/comma-dangle": ["error", "never"],
     "function-paren-newline": "off",
     "lines-between-class-members": "off",
+    // Deprecated, but still used in airbnb config, covered by func-call-spacing
+    "no-spaced-func": "off",
     "@typescript-eslint/lines-between-class-members": "off",
     // Too restrictive, writing ugly code to defend against a very unlikely scenario: https://eslint.org/docs/rules/no-prototype-builtins
     "no-prototype-builtins": "off",
