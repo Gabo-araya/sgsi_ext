@@ -2,3 +2,13 @@ extends base.pug
 
 block content
   h1 Hello world!
+
+  //-
+    Serialize backend data as a json to be used in react
+    components when an API call is unnecessary:
+  {{ example_data|json_script:'json-example-data' }}
+
+  //-
+    Use the data-props-source-id attribute in the component's container
+    to load the json with the same id as the component's props: */
+  #react-example-component(data-props-source-id='json-example-data')
