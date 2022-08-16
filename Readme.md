@@ -53,6 +53,13 @@ is optional. The template contains the following:
  - An `admin.py` file with a single Admin for the model
  - A `templates` folder with templates in .pug format for all CRUD views.
 
+## Changes to .env file while developing
+If you change your .env file, you'll need to rebuild your container for the setting to take effect. 
+You can do this by running the `Remote-Containers: Rebuild Container` command in the Command Palette
+(`F1`) when you are connected to the container.
+
+This takes time, you can press the `(show log)` button to view the progress.
+
 ## Models
 
 ### BaseModel
