@@ -44,4 +44,6 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
         if not remove:
             ordering_params.append(current_order)
 
+    params = {"o": ordering_params}
+
     return urlencode(params, doseq=True)
