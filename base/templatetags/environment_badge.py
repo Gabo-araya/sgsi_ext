@@ -15,7 +15,7 @@ def env_badge():
     return {"app_environment": "debug" if settings.DEBUG else settings.ENVIRONMENT_NAME}
 
 
-if not settings.DEBUG and not settings.ENVIRONMENT_NAME:
+if not settings.DEBUG and settings.ENVIRONMENT_NAME == "production":
     register.simple_tag(return_empty_context, name="env_badge")
 else:
     register.inclusion_tag(get_template("includes/environment_badge.pug"))(env_badge)

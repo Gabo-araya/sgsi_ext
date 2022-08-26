@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", False) == "True"
-ENVIRONMENT_NAME = os.environ.get("ENVIRONMENT_NAME", None)
+ENVIRONMENT_NAME = os.environ.get("ENVIRONMENT_NAME", "QA")
 
 # WARNING: do not make your code depend on this value
 TEST = False
