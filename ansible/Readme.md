@@ -128,3 +128,14 @@ If you are not familiar with docker-compose:
 Running `docker-compose logs ofelia` gives you the output of the `runcrons` management command, which is usually nothing. The logs are in `www.example.com/admin/django_cron/cronjoblog/`
 
 TODO: replace previous paragraph if an alternative to django-cron is installed, or remove this note when django-cron is installed.
+
+## Troubleshooting
+
+### `psql` fails with local postgres
+
+If the database name is wrong or there are problems with PG* env vars, `docker-compose exec postgres psql` can fail with _database "something" does not exist_, _password authentication failed for user "postgres"_, etc.
+
+In this case, you can override the variables and access with local trust by running:
+```sh
+docker-compose exec postgres su - postgres -c psql
+```
