@@ -19,6 +19,18 @@ from pathlib import Path
 # django
 from django.urls import reverse_lazy
 
+
+# TODO: update settings that could benefit of this function
+def get_env_value(key, default, default_if_blank=False):
+    try:
+        value = os.environ[key].strip()
+        if value == "" and default_if_blank:
+            return default
+        return value
+    except KeyError:
+        return default
+
+
 # Build paths inside the project like this: BASE_DIR / "subdir".
 PROJECT_DIR = Path(__file__).resolve().parent
 BASE_DIR = PROJECT_DIR.parent
@@ -28,7 +40,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", False) == "True"
-ENVIRONMENT_NAME = os.environ.get("ENVIRONMENT_NAME", "QA")
+ENVIRONMENT_NAME = get_env_value("ENVIRONMENT_NAME", "QA", default_if_blank=True)
 
 # WARNING: do not make your code depend on this value
 TEST = False
