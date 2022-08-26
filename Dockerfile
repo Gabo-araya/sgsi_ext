@@ -7,6 +7,9 @@ FROM python:3.9.12-slim-bullseye AS project-dependencies
 ENV VIRTUAL_ENV_DISABLE_PROMPT=x
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 
+# Custom but reliable way to know if running inside container, and easily fakeable:
+ENV RUNNING_IN_CONTAINER=x
+
 ARG NPM_CACHE_DIR=/tmp/npm-cache
 ARG PIP_NO_CACHE_DIR=off
 
