@@ -268,6 +268,8 @@ Dependencies may not match with the ones provided by the development container.
 As development containers are configured with the environment variables, you
 will need to do the same when developing locally, either with direnv and/or with `python-dotenv`.
 
+Note: You must install `direnv` >= 2.30.2. Older versions do not support .env files
+
 #### Database configuration
 To connect a local Postgres instance using Unix sockets, leave the following
 variables empty (do not delete them):
