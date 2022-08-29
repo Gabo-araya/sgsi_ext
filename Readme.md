@@ -275,8 +275,8 @@ To connect a local Postgres instance using Unix sockets, leave the following
 variables empty (do not delete them):
 
 * `PGHOST`
-* `PGPORT=`
-* `PGUSER=`
+* `PGPORT`
+* `PGUSER`
 
 ## Solving `poetry.lock` merge conflicts
 
