@@ -264,11 +264,17 @@ sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractive
 While possible, it is not possible to guarantee this approach will always work.
 Dependencies may not match with the ones provided by the development container.
 
-If you are unable (or unwilling) to use VS Code, you may need to install the
-following packages using pip:
+### Environment variables
+As development containers are configured with the environment variables, you
+will need to do the same when developing locally, either with direnv and/or with `python-dotenv`.
 
-* `python-dotenv`
+#### Database configuration
+To connect a local Postgres instance using Unix sockets, leave the following
+variables empty (do not delete them):
 
+* `PGHOST`
+* `PGPORT=`
+* `PGUSER=`
 
 ## Solving `poetry.lock` merge conflicts
 
