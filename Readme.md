@@ -260,6 +260,16 @@ ipython profile create
 sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
 ```
 
+## Developing without Docker
+While possible, it is not possible to guarantee this approach will always work.
+Dependencies may not match with the ones provided by the development container.
+
+If you are unable (or unwilling) to use VS Code, you may need to install the
+following packages using pip:
+
+* `python-dotenv`
+
+
 ## Solving `poetry.lock` merge conflicts
 
 If `pyproject.toml` is not conflicted, and the only conflict in `poetry.lock` is:
