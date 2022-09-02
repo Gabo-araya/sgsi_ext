@@ -149,10 +149,6 @@ class Mockup:
             else:
                 data[field] = self.faker.ipv4()
 
-    def set_required_rut(self, data, field, minimum=1000000, maximum=99999999):
-        if field not in data:
-            data[field] = random_rut(minimum, maximum)
-
     def set_required_string(self, data, field, length=6, include_spaces=True):
         if field not in data:
             data[field] = random_string(
