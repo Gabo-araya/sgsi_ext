@@ -261,6 +261,9 @@ CAN_LOGIN_AS = "base.utils.can_loginas"
 LOGOUT_URL = reverse_lazy("loginas-logout")
 LOGINAS_LOGOUT_REDIRECT_URL = reverse_lazy("admin:index")
 
+LOGOUT_REDIRECT_URL = reverse_lazy("home")
+LOGIN_REDIRECT_URL = reverse_lazy("home")
+
 # logging
 LOGGING = {
     "version": 1,
