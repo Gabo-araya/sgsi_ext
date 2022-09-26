@@ -1,3 +1,6 @@
+# standard library
+import string
+
 from base import utils
 
 
@@ -15,7 +18,8 @@ def file_path(self, name):
     return base_path.format(
         self.__class__.__name__,
         str(utils.today()),
-        utils.random_string(30),
-        name
-        # TODO: no spaces, lowercase
+        utils.random_string(
+            30, chars=string.ascii_lowercase + string.digits, include_spaces=False
+        ),
+        name,
     )
