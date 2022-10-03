@@ -32,6 +32,8 @@ else
   secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
   django_debug=True
   environment_name=Development
+  enable_debug_toolbar=True
+  enable_django_extensions=True
   aws_access_key_id=
   aws_secret_access_key=
   bucket_name=
@@ -50,6 +52,8 @@ else
   sed -i "s|{{secret_key}}|$secret_key|g" $env_file
   sed -i "s|{{django_debug}}|$django_debug|g" $env_file
   sed -i "s|{{environment_name}}|$environment_name|g" $env_file
+  sed -i "s|{{enable_debug_toolbar}}|$enable_debug_toolbar|g" $env_file
+  sed -i "s|{{enable_django_extensions}}|$enable_django_extensions|g" $env_file
   sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
   sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
   sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file

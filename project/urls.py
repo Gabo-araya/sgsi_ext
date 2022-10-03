@@ -15,6 +15,7 @@ Including another URLconf
 """
 # django
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include
@@ -50,6 +51,14 @@ if settings.DEBUG and not settings.TEST:
             document_root=settings.MEDIA_ROOT,
         )
     )
+
+if settings.ENABLE_DEBUG_TOOLBAR:
+    # others libraries
+    import debug_toolbar
+
+    urlpatterns = [
+        url(r"^__debug__/", include(debug_toolbar.urls)),
+    ] + urlpatterns
 
 # custom error views
 handler400 = "base.views.misc.bad_request_view"
