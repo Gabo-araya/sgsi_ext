@@ -65,12 +65,11 @@ else
   fi
 
   if (( env_jq_rc == 1 )); then
-    # Prompt for new .env file
-    cd ..
-    (umask 177; scripts/env-init-prod.sh "$target")
-    cd ansible
     # shellcheck disable=SC2064  # Expand $target now
-    trap "rm -f ../deploy.$target.env" EXIT  # Avoid keeping plaintext secrets outside server
+    trap "rm -f $(realpath "../deploy.$target.env")" EXIT   # Avoid keeping plaintext secrets outside server
+    cd ..
+    (umask 177; scripts/env-init-prod.sh "$target")         # Prompt for new .env file
+    cd ansible
     export create_dotenv=1
   else
     export create_dotenv=0

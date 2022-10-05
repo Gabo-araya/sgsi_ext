@@ -14,7 +14,11 @@ from base.views.generic import BaseTemplateView
 
 def index(request):
     """view that renders a default home"""
-    return render(request, "index.pug")
+    example_data = {
+        "backend_parameter_1": "data from backend",
+        "backend_parameter_2": "Press me!",
+    }
+    return render(request, "index.pug", {"example_data": example_data})
 
 
 def bad_request_view(request, exception, template=None):

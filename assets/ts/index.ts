@@ -15,7 +15,21 @@ import './behaviors/regions';
 // Utils
 import { App } from './utils/app';
 
+// Load React components that can be auto-loaded on DOMContentLoaded
+import { ComponentLoader } from './component-loader';
+import { ExampleComponent } from './components/example-component';
+
+ComponentLoader.registerComponent('#react-example-component', ExampleComponent);
+
+/**
+ * This runs on 'DOMContentLoaded', that means it waits for every javascript to be parsed and
+ * executed and waits for stylesheets and defered external scripts. This may take a long time
+ * if an external resource loads too slow (should we change this to <script defer src="...">?)
+ */
 window.addEventListener('DOMContentLoaded', () => {
+  // Load the registered react components:
+  ComponentLoader.start();
+
   const alerts = document.querySelectorAll('.alert');
   alerts.forEach((alert) => {
     App.Utils.highlight(alert);

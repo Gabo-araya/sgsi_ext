@@ -115,6 +115,7 @@
           - docker/docker-compose.prod.yml
         build: yes
         nocache: "{{ true if env_cache_ignore == '1' else false }}"
+        # TODO: https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html#parameter-pull
         remove_orphans: yes
         recreate: "{{ 'always' if env_recreate == '1' else 'smart' }}"
       vars:

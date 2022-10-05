@@ -7,6 +7,9 @@ FROM python:3.9.12-slim-bullseye AS project-dependencies
 ENV VIRTUAL_ENV_DISABLE_PROMPT=x
 ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 
+# Custom but reliable way to know if running inside container, and easily fakeable:
+ENV RUNNING_IN_CONTAINER=x
+
 ARG NPM_CACHE_DIR=/tmp/npm-cache
 ARG PIP_NO_CACHE_DIR=off
 
@@ -84,7 +87,7 @@ RUN poetry install --no-dev \
 \
   # "dj" alias available from anywhere and also in production.
   # No other aliases for production, as there may not be consensus for them.
-  && ln -s /usr/src/app/manage.py ~/.cache/pypoetry/virtualenvs/django3-project-template-VA82Wl8V-py3.9/bin/dj
+  && ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
 
 #####################################
 # Production image

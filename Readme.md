@@ -32,8 +32,9 @@ Add the django3-project-template bitbucket repo as a remote repository:
 Pull the code from the project template:
 * `git pull template main`
 
-Configure `project_name` and `git_repo`:
-* `vim ansible/group_vars/all.yaml`
+Search and replace all occurrences of `project-name-placeholder` to your desired project name
+
+Configure `git_repo` in `ansible/group_vars/all.yaml`
 
 Push to your own repo:
 * `git push origin master`
@@ -70,6 +71,12 @@ is optional. The template contains the following:
  - An `admin.py` file with a single Admin for the model
  - A `templates` folder with templates in .pug format for all CRUD views.
 
+### Changes to .env file while developing
+If you change your .env file, you'll need to rebuild your container for the setting to take effect.
+You can do this by running the `Remote-Containers: Rebuild Container` command in the Command Palette
+(`F1`) when you are connected to the container.
+
+This takes time, you can press the `(show log)` button to view the progress.
 
 ## Reference
 ### Models
@@ -235,8 +242,27 @@ ipython profile create
 sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
 ```
 
+### Developing without Docker
+While possible, it is not possible to guarantee this approach will always work.
+Dependencies may not match with the ones provided by the development container.
+
+#### Environment variables
+As development containers are configured with the environment variables, you
+will need to do the same when developing locally, either with direnv and/or with `python-dotenv`.
+
+Note: You must install `direnv` >= 2.30.2. Older versions do not support .env files
+
+##### Database configuration
+To connect a local Postgres instance using Unix sockets, leave the following
+variables empty (do not delete them):
+
+* `PGHOST`
+* `PGPORT`
+* `PGUSER`
+
 ### Poetry
 #### Solving `poetry.lock` merge conflicts
+
 If `pyproject.toml` is not conflicted, and the only conflict in `poetry.lock` is:
 ```toml
 content-hash = "..."
@@ -293,3 +319,16 @@ The downside is that for example when debugging in the browser the `render()` of
 You can change, in `webpack.dev.js`, the `devtool` option so it looks like this:
 
 ![original code](.readme_images/js_eval-source-map.png)
+
+### Translations
+
+Django comes with a [translation framework](https://docs.djangoproject.com/en/3.2/topics/i18n/translation/).
+The script `translate.sh` is a utility app that creates the .po objects of a
+list of apps. If you need to expand that list, edit the last part of
+`translate.sh`.
+
+Javascript translations are also handled in `translate.sh` but they are done
+only for the `assets` folder, since all custom JS / typescript should be
+contained in that folder.
+
+To create the compiled messages (.mo), simply run `./translate.sh -c`

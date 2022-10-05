@@ -136,7 +136,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -156,6 +156,7 @@ AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = "es"
+FAKER_LOCALES = ["es_CL"]
 
 TIME_ZONE = "America/Santiago"
 
@@ -165,7 +166,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = [PROJECT_DIR / "locale"]
+LOCALE_PATHS = [
+    PROJECT_DIR / "locale",
+    BASE_DIR / "assets" / "locale",
+]
 
 # Email
 ENABLE_EMAILS = os.environ.get("ENABLE_EMAILS", False) == "True"
