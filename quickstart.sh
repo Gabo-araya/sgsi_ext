@@ -4,6 +4,10 @@ cd "$(dirname "$0")"
 source scripts/utils.sh
 assert_outside_container
 
+# TODO: check for vscode, and run:
+# code --install-extension ms-azuretools.vscode-docker
+# code --install-extension ms-vscode-remote.remote-containers
+
 # Stop this project's postgres so port is free:
 command -v docker-compose >/dev/null && [ -f .env ] && \
   echo "docker-compose stop postgres" | newgrp docker
@@ -82,9 +86,8 @@ if [ -f quickstart-messages.log ]; then
 fi
 
 color_print $green 'After rebooting if required,
-- open this folder in VSCode
-- install the recommended "Remote - Containers" extension if prompted
-- click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
+- Open this folder in VSCode
+- Click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
 
 Then in a VSCode terminal run "npm start",
 and in another terminal, run "djs" and access the site at http://localhost:8000'

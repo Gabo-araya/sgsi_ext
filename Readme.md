@@ -53,6 +53,52 @@ The `quickstart.sh` script includes the following actions:
 * Prompt to create a superuser.
 * Apply settings to use vscode devcontainers.
 
+### Running the project
+
+- Reboot your computer if quickstart propmted to do so (to run Docker without sudo)
+- Open this folder in VSCode
+- Click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
+
+<details>
+<summary>CLI alternative</summary>
+
+> Instead of running:
+> ```sh
+> code .
+> ```
+> and having click to reopen in container every time, install this:
+> ```sh
+> npm install -g @devcontainers/cli
+> ```
+> and then in place of `code .` , use this:
+> ```sh
+> devcontainer open
+> ```
+</details>
+
+Then in a VSCode terminal, run:
+```sh
+npm start
+```
+and in another terminal, run:
+```sh
+djs
+```
+and access the site at http://localhost:8000
+
+#### "Without" VSCode
+
+Note: commands written here with [oh-my-zsh aliases](https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/docker-compose/docker-compose.plugin.zsh).
+
+In a terminal in this folder,
+- Start the containers with `dcupd` (faster), or rebuilding with `dcupb -d` (slower but may be required)
+- Spawn a container shell with `dce django zsh`
+- If it printed _vscode env not loaded_, then you are missing [some features provided by VSCode](https://code.visualstudio.com/docs/remote/containers#_sharing-git-credentials-with-your-container) and may have problems using Git. To fix this:
+  - Outside the container, run `devcontainer open` (see "CLI alternative" above)
+  - Wait for VSCode and the container to load, and hide its window somewhere.
+  - Now you may use `dce django zsh` to run django and node and git. And an alternative IDE to edit files. Unfortunately you have to keep the VSCode window open.
+  - For how this works, see `90-vscode-env.zsh` in this repo.
+
 ### Start a new django application
 Use the custom app template to create your apps:
 
