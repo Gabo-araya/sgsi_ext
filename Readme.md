@@ -260,6 +260,24 @@ ipython profile create
 sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
 ```
 
+## Developing without Docker
+While possible, it is not possible to guarantee this approach will always work.
+Dependencies may not match with the ones provided by the development container.
+
+### Environment variables
+As development containers are configured with the environment variables, you
+will need to do the same when developing locally, either with direnv and/or with `python-dotenv`.
+
+Note: You must install `direnv` >= 2.30.2. Older versions do not support .env files
+
+#### Database configuration
+To connect a local Postgres instance using Unix sockets, leave the following
+variables empty (do not delete them):
+
+* `PGHOST`
+* `PGPORT`
+* `PGUSER`
+
 ## Solving `poetry.lock` merge conflicts
 
 If `pyproject.toml` is not conflicted, and the only conflict in `poetry.lock` is:
