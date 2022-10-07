@@ -1,5 +1,9 @@
 pipeline {
   agent any
+  options {
+    // Disable concurrent builds to avoid Docker from leaving dangling networks
+    disableConcurrentBuilds()
+  }
   environment {
     PROJECT_REPONAME = 'project-name-placeholder'
     DOCKER_BUILDKIT = '1'
