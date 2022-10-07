@@ -19,7 +19,7 @@ postgres_db=$project_name-$sv_name
 # shellcheck disable=SC2016
 virtual_env=/home/'${WHO}'/$(realpath --relative-to="$HOME" "$(poetry env info --path)")
 
-prompt "\nIs '$sv_name' a critical environment? (That should't show a dev indicator) [y/N]" "N"
+prompt "\nIs '$sv_name' a critical environment? [y/N]" "N"
 input_lower=${input,,}
 if [[ $input_lower == y ]]; then
   is_critical_env=True
@@ -27,8 +27,10 @@ else
   is_critical_env=False
 fi
 
-color_print "$cyan" "\nPostgres database location?"
+prompt "\nEnvironment name [Production]" "Production"
+environment_name=$input
 
+color_print "$cyan" "\nPostgres database location?"
 select db_loc in Local Remote; do
   if [[ "$db_loc" == "Local" ]]; then
     postgres_host="postgres"
@@ -118,6 +120,7 @@ sed -i "s|{{postgres_db}}|$postgres_db|g" $env_file
 sed -i "s|{{secret_key}}|$secret_key|g" $env_file
 sed -i "s|{{django_debug}}|$django_debug|g" $env_file
 sed -i "s|{{is_critical_env}}|$is_critical_env|g" $env_file
+sed -i "s|{{environment_name}}|$environment_name|g" $env_file
 sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
 sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
 sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file

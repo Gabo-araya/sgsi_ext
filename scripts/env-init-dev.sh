@@ -32,6 +32,7 @@ else
   secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
   django_debug=True
   is_critical_env=False
+  environment_name=Development
   aws_access_key_id=
   aws_secret_access_key=
   bucket_name=
@@ -50,6 +51,7 @@ else
   sed -i "s|{{secret_key}}|$secret_key|g" $env_file
   sed -i "s|{{django_debug}}|$django_debug|g" $env_file
   sed -i "s|{{is_critical_env}}|$is_critical_env|g" $env_file
+  sed -i "s|{{environment_name}}|$environment_name|g" $env_file
   sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
   sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
   sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
