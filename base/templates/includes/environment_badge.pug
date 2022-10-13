@@ -2,12 +2,11 @@
 
 if app_environment == "debug"
   .environment-badge.debug
-    span.sr-only {% trans "Current environment" %}:
+    span.visually-hidden {% trans "Current environment" %}:
 
     | Debug
 else
   .environment-badge.alternate
-    span.sr-only {% trans "Current environment" %}:
+    span.visually-hidden {% trans "Current environment" %}:
 
     | {{ app_environment }}
-
