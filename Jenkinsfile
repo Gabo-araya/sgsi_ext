@@ -56,6 +56,11 @@ pipeline {
       junit 'artifacts/pytest.xml'
       cobertura coberturaReportFile: 'artifacts/coverage.xml'
       archiveArtifacts allowEmptyArchive: true, artifacts: 'artifacts/*, artifacts/**', fingerprint: true
+      cleanWs(
+        deleteDirs: true,
+        disableDeferredWipeout: true,
+        notFailBuild: true,
+      )
     }
   }
 }
