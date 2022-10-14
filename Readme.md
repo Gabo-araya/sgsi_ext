@@ -55,7 +55,7 @@ The `quickstart.sh` script includes the following actions:
 
 ### Running the project
 
-- Reboot your computer if quickstart propmted to do so (to run Docker without sudo)
+- Reboot your computer if quickstart prompted to do so (to run Docker without sudo)
 - Open this folder in VSCode
 - Click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
 
