@@ -1,7 +1,7 @@
 doctype 5
 
 - load render_bundle from webpack_loader
-- load i18n static
+- load i18n static environment_badge
 
 html(lang="{{ request.LANGUAGE_CODE|default:'es' }}")
   head
@@ -90,6 +90,7 @@ html(lang="{{ request.LANGUAGE_CODE|default:'es' }}")
     block stylesheets
 
   body(class=body_class)
+    {% env_badge %}
     include includes/navbar/navbar.pug
 
     main

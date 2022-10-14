@@ -7,4 +7,4 @@ li.nav-item(class="{% if request.path == url %}active{% endif %}")
   a.nav-link(href="{{ url }}")
     {% trans text|capfirst %}
     if request.path == url
-      span.sr-only ({% trans 'current' %})
+      span.visually-hidden ({% trans 'current' %})

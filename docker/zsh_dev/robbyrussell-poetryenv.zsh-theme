@@ -1,22 +1,6 @@
-function virtualenv_info {
-  [[ -n "$VIRTUAL_ENV" ]] && {
-    # Originally: `basename $VIRTUAL_ENV`
+source /usr/src/app/docker/zsh_shared/virtualenv_name.zsh
 
-    # echo $VIRTUAL_ENV
-    #  /home/magnet/.cache/pypoetry/virtualenvs/project-name-ASDF1234-py3.9
-    venv_base="${VIRTUAL_ENV:t}"
-    #  project-name-ASDF1234-py3.9
-    venv_split=(${(s[-])${venv_base}})
-    #  project name ASDF1234 py3.9
-    venv_minus2=(${venv_split[0,-3]})
-    #  project name
-    venv_joined="${(j[-])venv_minus2}"
-    #  project-name
-    echo %F{blue}"($venv_joined) "%f
-  }
-}
-
-PROMPT='$(virtualenv_info)'
+PROMPT='%F{blue}($(virtualenv_name)) %f'
 PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
 PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 

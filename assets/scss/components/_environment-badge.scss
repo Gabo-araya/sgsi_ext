@@ -1,0 +1,34 @@
+/*
+ * Content:
+ *
+ * Environment badges
+ */
+
+
+// Root
+// ============================================================================
+
+.environment-badge {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 10000;
+  padding: 4px 72px;
+  font-size: 80%;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+  transform: rotate(45deg) translate(30%, 0);
+
+  &.debug {
+    color: $white;
+    background: $danger;
+  }
+
+  &.alternate {
+    color: $white;
+    background: $warning;
+  }
+}

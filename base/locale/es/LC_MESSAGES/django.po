@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-06 08:35-0400\n"
+"POT-Creation-Date: 2022-05-19 15:56-0400\n"
 "PO-Revision-Date: 2022-05-06 08:35-0400\n"
 "Last-Translator: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
@@ -99,6 +99,10 @@ msgstr "Guardar"
 #: templates/form.pug
 msgid "Cancel"
 msgstr "Cancelar"
+
+#: templates/includes/environment_badge.pug
+msgid "Current environment"
+msgstr "Entorno actual"
 
 #: templates/includes/field.pug
 msgid "optional"
