@@ -61,7 +61,7 @@ server {
 
 # Redirect https://www.example.com to https://example.com:
 server {
-  listen 443 ssl deferred;
+  listen 443 ssl;
   server_name www.${SERVER_DOMAIN};
   return 301 https://${SERVER_DOMAIN}$request_uri;
   # Certbot's typical "if ($host = ..." not required: https://serverfault.com/questions/1107062/explain-certbots-https-redirect-configuration
