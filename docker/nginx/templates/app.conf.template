@@ -4,7 +4,9 @@
 # SSL config built-in because https://github.com/JonasAlfredsson/docker-nginx-certbot
 # obtains certificate only.
 
-# Reference: https://docs.gunicorn.org/en/stable/deploy.html
+# HTTP to HTTPS redirection is handled by the image (see https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v3.2.1/src/nginx_conf.d/redirector.conf)
+
+# Reference for this config: https://docs.gunicorn.org/en/stable/deploy.html
 
 server {
   listen 443 ssl deferred;
@@ -55,6 +57,14 @@ server {
     ssl_certificate_key     /etc/letsencrypt/live/${SERVER_DOMAIN}/privkey.pem;
     ssl_trusted_certificate /etc/letsencrypt/live/${SERVER_DOMAIN}/chain.pem;
     ssl_dhparam             /etc/letsencrypt/dhparams/dhparam.pem;
+}
+
+# Redirect https://www.example.com to https://example.com:
+server {
+  listen 443 ssl deferred;
+  server_name www.${SERVER_DOMAIN};
+  return 301 https://${SERVER_DOMAIN}$request_uri;
+  # Certbot's typical "if ($host = ..." not required: https://serverfault.com/questions/1107062/explain-certbots-https-redirect-configuration
 }
 
 # Close connection to wrong domains
