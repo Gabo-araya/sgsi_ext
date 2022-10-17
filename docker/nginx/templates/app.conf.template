@@ -65,6 +65,11 @@ server {
   server_name www.${SERVER_DOMAIN};
   return 301 https://${SERVER_DOMAIN}$request_uri;
   # Certbot's typical "if ($host = ..." not required: https://serverfault.com/questions/1107062/explain-certbots-https-redirect-configuration
+
+  ssl_certificate         /etc/letsencrypt/live/${SERVER_DOMAIN}/fullchain.pem;
+  ssl_certificate_key     /etc/letsencrypt/live/${SERVER_DOMAIN}/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt/live/${SERVER_DOMAIN}/chain.pem;
+  ssl_dhparam             /etc/letsencrypt/dhparams/dhparam.pem;
 }
 
 # Close connection to wrong domains
