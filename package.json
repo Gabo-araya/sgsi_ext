@@ -8,7 +8,8 @@
     "build": "webpack --config webpack.prod.js",
     "prepare": "husky install",
     "lint": "eslint '**/*.ts' && stylelint '**/*.{css,scss}'",
-    "lint:fix": "eslint '**/*.ts' --fix && stylelint '**/*.{css,scss}' --fix"
+    "lint:fix": "eslint '**/*.ts' --fix && stylelint '**/*.{css,scss}' --fix",
+    "preinstall": "scripts/npm-preinstall.sh"
   },
   "author": "Magnet S.p.A. - magnet.cl",
   "license": "MIT",
