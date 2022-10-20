@@ -40,7 +40,7 @@ function random_chars() {
 function assert_outside_container() {
   if [[ -n "${RUNNING_IN_CONTAINER-}" ]]; then
     color_print $red "This script must be run out of the container"
-    exit 1
+    return 1
   fi
 }
 
@@ -48,7 +48,7 @@ function should_be_inside_container() {
   if [[ -z "${RUNNING_IN_CONTAINER-}" ]]; then
     color_print $red "This script is intended to be run inside the container"
     # Add "RUNNING_IN_CONTAINER=x" to your env vars to skip this check, if you are working without docker
-    exit 1
+    return 1
   fi
 }
 
