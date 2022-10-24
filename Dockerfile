@@ -107,6 +107,7 @@ COPY --chown=$HOST_UID:$HOST_GID docker/zsh_prod/setup_prod.sh docker/zsh_prod/s
 RUN docker/zsh_prod/setup_prod.sh
 
 # Install javascript dependencies
+COPY --chown=$HOST_UID:$HOST_GID scripts/npm-preinstall.sh scripts/npm-preinstall.sh
 COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
 RUN \
   # Installs devDependencies, because the production image also builds the bundles:
