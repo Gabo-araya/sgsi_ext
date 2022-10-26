@@ -111,13 +111,10 @@ try:
     # others libraries
     import debug_toolbar
 
-    HAVE_DEBUG_TOOLBAR = True
+    ENABLE_DEBUG_TOOLBAR = get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
 except ImportError:
-    HAVE_DEBUG_TOOLBAR = False
+    ENABLE_DEBUG_TOOLBAR = False
 
-ENABLE_DEBUG_TOOLBAR = HAVE_DEBUG_TOOLBAR and get_bool_from_env(
-    "ENABLE_DEBUG_TOOLBAR", False
-)
 
 if ENABLE_DEBUG_TOOLBAR:
     INSTALLED_APPS.append("debug_toolbar")
@@ -145,13 +142,10 @@ try:
     # others libraries
     import django_extensions
 
-    HAVE_DJANGO_EXTENSIONS = True
+    ENABLE_DJANGO_EXTENSIONS = get_bool_from_env("ENABLE_DJANGO_EXTENSIONS", False)
 except ImportError:
-    HAVE_DJANGO_EXTENSIONS = False
+    ENABLE_DJANGO_EXTENSIONS = False
 
-ENABLE_DJANGO_EXTENSIONS = HAVE_DJANGO_EXTENSIONS and get_bool_from_env(
-    "ENABLE_DJANGO_EXTENSIONS", False
-)
 
 if ENABLE_DJANGO_EXTENSIONS:
     INSTALLED_APPS.append("django_extensions")

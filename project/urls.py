@@ -38,27 +38,14 @@ urlpatterns = [
 ]
 
 if settings.DEBUG and not settings.TEST:
-    # others libraries
-    import debug_toolbar
-
-    urlpatterns = (
-        [
-            path("__debug__/", include(debug_toolbar.urls)),
-        ]
-        + urlpatterns
-        + static(
-            settings.MEDIA_URL,
-            document_root=settings.MEDIA_ROOT,
-        )
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.ENABLE_DEBUG_TOOLBAR:
     # others libraries
     import debug_toolbar
 
-    urlpatterns = [
-        url(r"^__debug__/", include(debug_toolbar.urls)),
-    ] + urlpatterns
+    urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
+
 
 # custom error views
 handler400 = "base.views.misc.bad_request_view"
