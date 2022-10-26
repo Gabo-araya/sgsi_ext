@@ -121,11 +121,12 @@ class Mockup:
         if not os.path.isfile(file_path):
             file_path = "{}/test_assets/{}".format(test_root, file_path)
 
-        final_path = "{}{}".format(settings.MEDIA_ROOT, os.path.basename(file_path))
+        file_name = os.path.basename(file_path)
+        final_path = "{}{}".format(settings.MEDIA_ROOT, file_name)
 
         copyfile(file_path, final_path)
 
-        data[field] = File(open(final_path, "rb"))
+        data[field] = File(open(final_path, "rb"), file_name)
 
     def set_required_float(self, data, field, **kwargs):
         if field not in data:
