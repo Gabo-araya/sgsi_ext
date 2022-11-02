@@ -153,6 +153,7 @@ sudo rm -rf project-name-placeholder
 # When the script asks for env vars, the git repository has already been cloned,
 # so before entering env vars, run:
 sudo mv nginx_secrets project-name-placeholder/docker/volumes/
+# and then continue with env vars and deploy.
 ```
 
 ## Troubleshooting
