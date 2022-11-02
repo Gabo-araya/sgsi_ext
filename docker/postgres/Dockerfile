@@ -7,7 +7,7 @@ ARG POSTGRES_LOCALE=es_CL
 
 # set locale for proper language support
 RUN localedef -i $POSTGRES_LOCALE -c -f UTF-8 -A /usr/share/locale/locale.alias $POSTGRES_LOCALE.UTF-8
-ENV LANG "$POSTGRES_LOCALE.UTF-8"
+ENV LANG="$POSTGRES_LOCALE.UTF-8"
 
 
 # Recreate postgres user with host UID/GID.
