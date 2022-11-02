@@ -87,6 +87,21 @@
           - docker-compose==1.29.2  # (yes, they use it as a library, instead of /usr/local/bin/docker-compose)
         state: present
 
+    - name: enable Docker BuildKit
+      copy:
+        src: files/docker_daemon.json
+        dest: /etc/docker/daemon.json
+        force: yes  # We assume the server is exclusive for this project, so manage this file with Ansible only.
+      become: yes
+      register: docker_daemon
+
+    - name: restart Docker service if config changed
+      service:
+        name: docker.service
+        state: restarted
+      become: yes
+      when: docker_daemon.changed
+
     - name: make free space by pruning dangling images
       community.docker.docker_prune:
         images: yes

@@ -89,52 +89,6 @@ RUN poetry install --no-dev \
   # No other aliases for production, as there may not be consensus for them.
   && ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
 
-#####################################
-# Production image
-#####################################
-# Place Production image above development, so docker-compose on servers stop building after this one.
-FROM project-dependencies AS production
-
-ENV NODE_ENV=production
-ARG NPM_CACHE_DIR=/tmp/npm-cache
-
-ARG WHO=magnet
-ARG HOST_UID=2640
-ARG HOST_GID=2640
-
-# Add oh-my-zsh for production
-COPY --chown=$HOST_UID:$HOST_GID docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
-RUN docker/zsh_prod/setup_prod.sh
-
-# Install javascript dependencies
-COPY --chown=$HOST_UID:$HOST_GID scripts/assert-npm-inside-container.sh scripts/assert-npm-inside-container.sh
-COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
-RUN \
-  # Installs devDependencies, because the production image also builds the bundles:
-  NODE_ENV=development npm ci --no-audit --cache "$NPM_CACHE_DIR" \
-  # As /tmp is owned by root, remove only the directory contents, not the directory itself.
-  && rm -rf "$NPM_CACHE_DIR"/*
-
-
-# Build javascript bundles:
-COPY --chown=$HOST_UID:$HOST_GID webpack.*.js ./
-COPY --chown=$HOST_UID:$HOST_GID assets/ assets/
-COPY --chown=$HOST_UID:$HOST_GID tsconfig.json ./
-RUN npm run build
-
-# Copy rest of the project
-COPY --chown=$HOST_UID:$HOST_GID . .
-
-RUN poetry run django-admin compilemessages
-
-CMD ["docker/django/prod_cmd.sh"]
-
-#####################################
-# CI Test image
-#####################################
-FROM production AS test
-# Make sure linters, style checkers and test runners get installed.
-RUN poetry install
 
 #####################################
 # Development image
@@ -203,3 +157,63 @@ CMD ["sleep", "inf"]
 
 # Use bind-mounted ansible config:
 ENV ANSIBLE_CONFIG=/usr/src/app/ansible/ansible.cfg
+
+
+# Development image goes first because:
+# - In developer's machine, it's harder to ensure that BuildKit is enabled.
+# - We can't enable BuildKit from vscode  https://github.com/microsoft/vscode-remote-release/issues/1409
+# - If developer has BuildKit turned off,
+#   and some temporary TypeScript error preventing the build of production image,
+#   and production image goes first, then development image can't be built.
+# - In CI and production we can guarantee that BuildKit is enabled.
+#   Otherwise lots of time and disk space would be wasted.
+
+#####################################
+# Production image
+#####################################
+FROM project-dependencies AS production
+
+# Fail if BuildKit is not enabled: (to prevent wasting time and disk space in future builds)
+COPY --chmod=444 docker/django/.empty .
+RUN rm .empty
+
+ENV NODE_ENV=production
+ARG NPM_CACHE_DIR=/tmp/npm-cache
+
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+
+# Add oh-my-zsh for production
+COPY --chown=$HOST_UID:$HOST_GID docker/zsh_prod/setup_prod.sh docker/zsh_prod/setup_prod.sh
+RUN docker/zsh_prod/setup_prod.sh
+
+# Install javascript dependencies
+COPY --chown=$HOST_UID:$HOST_GID scripts/assert-npm-inside-container.sh scripts/assert-npm-inside-container.sh
+COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
+RUN \
+  # Installs devDependencies, because the production image also builds the bundles:
+  NODE_ENV=development npm ci --no-audit --cache "$NPM_CACHE_DIR" \
+  # As /tmp is owned by root, remove only the directory contents, not the directory itself.
+  && rm -rf "$NPM_CACHE_DIR"/*
+
+
+# Build javascript bundles:
+COPY --chown=$HOST_UID:$HOST_GID webpack.*.js ./
+COPY --chown=$HOST_UID:$HOST_GID assets/ assets/
+COPY --chown=$HOST_UID:$HOST_GID tsconfig.json ./
+RUN npm run build
+
+# Copy rest of the project
+COPY --chown=$HOST_UID:$HOST_GID . .
+
+RUN poetry run django-admin compilemessages
+
+CMD ["docker/django/prod_cmd.sh"]
+
+#####################################
+# CI Test image
+#####################################
+FROM production AS test
+# Make sure linters, style checkers and test runners get installed.
+RUN poetry install

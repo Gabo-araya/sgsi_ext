@@ -51,8 +51,7 @@ fi
 scripts/add-aliases.sh
 
 newgrp docker <<EOF
-COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build && \
-docker-compose down
+docker-compose build && docker-compose down
 EOF
 # "down" because https://github.com/docker/compose/issues/4548
 

@@ -38,17 +38,33 @@ else
   color_print $green "Docker-compose installation completed."
 fi
 
-# check if BuildKit is enabled
-if ! { [ -s /etc/docker/daemon.json ] && grep -q '"buildkit": true' /etc/docker/daemon.json; }; then
-    color_print $blue "BuildKit appears not to be enabled.
-Depending on whether BuildKit-only features were used when writing the
-Dockerfile, build process may fail.
-Please enable BuildKit by editing your Docker daemon.json file by adding the
-following content:
-
-{
-  \"features\": {
-      \"buildkit\": true
+# Enable BuildKit
+if ! [ -s /etc/docker/daemon.json ]; then
+  # Default state (no file (or empty)), so create it:
+  echo '{
+  "features": {
+    "buildkit": true
   }
-}"
+}' | sudo tee /etc/docker/daemon.json >/dev/null
+
+  sudo systemctl restart docker.service
+
+  color_print $green "BuildKit has been enabled."
+
+elif grep -q '"buildkit":\s*true' /etc/docker/daemon.json; then
+  color_print $green "BuildKit already enabled."
+  # Note: it's possible that even though the file contains buildkit:true,
+  # a restart of the daemon is pending.
+
+else
+  color_print $yellow 'BuildKit appears not to be enabled.
+To enable it, set
+{
+  "features": {
+    "buildkit": true
+  }
+}
+in your /etc/docker/daemon.json file,
+and then restart the daemon with:
+  sudo systemctl restart docker.service'
 fi
