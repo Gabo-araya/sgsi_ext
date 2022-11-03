@@ -129,6 +129,33 @@ Running `docker-compose logs ofelia` gives you the output of the `runcrons` mana
 
 TODO: replace previous paragraph if an alternative to django-cron is installed, or remove this note when django-cron is installed.
 
+## How to erase the deployed project from server
+
+The simple way is to remove containers and delete files:
+```sh
+cd project-name-placeholder
+docker-compose down
+cd ..
+sudo rm -rf project-name-placeholder
+```
+
+However if you want to re-deploy (for example to try changes in a playground server), it will take long to generate new DH params for nginx, and even worse, you may run into letsencrypt's [rate limits](https://letsencrypt.org/docs/rate-limits/) which could affect all *.magnet.cl.
+
+So, to backup nginx's volume and use it for the newly deployed instance:
+```sh
+cd project-name-placeholder
+docker-compose down
+cd ..
+sudo mv project-name-placeholder/docker/volumes/nginx_secrets .
+sudo rm -rf project-name-placeholder
+
+# Now from your local computer, deploy with "ansible/deploy.sh target".
+# When the script asks for env vars, the git repository has already been cloned,
+# so before entering env vars, run:
+sudo mv nginx_secrets project-name-placeholder/docker/volumes/
+# and then continue with env vars and deploy.
+```
+
 ## Troubleshooting
 
 ### `psql` fails with local postgres
