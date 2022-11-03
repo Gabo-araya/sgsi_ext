@@ -14,4 +14,4 @@ psql \
   -c "create database \"$PGDATABASE\";" \
   postgres
 
-dj migrate
+dj migrate # --yes-input

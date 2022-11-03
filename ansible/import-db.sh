@@ -52,7 +52,7 @@ pg_restore --dbname="$PGDATABASE" --no-owner --no-acl --jobs="$(nproc)" "$local_
 color_print "$green" "Done"
 
 migrations_check=0
-dj migrate --check >/dev/null || migrations_check=$?
+dj migrate --check --no-input >/dev/null || migrations_check=$?
 
 if (( migrations_check > 0 )); then
   color_print "$yellow" "There are unapplied migrations."
