@@ -223,7 +223,7 @@ class UserCreationForm(BaseModelForm):
         verify_email_address=False,
         domain_override=None,
         subject_template_name="emails/user_new_subject.txt",
-        email_template_name="emails/user_new.html",
+        email_template_name="emails/user_new.txt",
         use_https=False,
         token_generator=default_token_generator,
         from_email=None,
