@@ -9,7 +9,8 @@
     "prepare": "husky install",
     "lint": "eslint '**/*.ts' && stylelint '**/*.{css,scss}'",
     "lint:fix": "eslint '**/*.ts' --fix && stylelint '**/*.{css,scss}' --fix",
-    "preinstall": "scripts/npm-preinstall.sh"
+    "preinstall": "scripts/assert-npm-inside-container.sh",
+    "prestart": "scripts/assert-npm-inside-container.sh"
   },
   "author": "Magnet S.p.A. - magnet.cl",
   "license": "MIT",
