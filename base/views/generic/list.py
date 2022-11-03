@@ -12,6 +12,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
     paginate_by = 25
     page_kwarg = "p"
     ignore_kwargs_on_filter = ("q", page_kwarg, "o")
+    title = None
 
     def get_context_data(self, **kwargs):
         context = super(BaseListView, self).get_context_data(**kwargs)
@@ -23,7 +24,10 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
         return context
 
     def get_title(self):
-        return self.model._meta.verbose_name_plural.title()
+        if self.title is not None:
+            return self.title
+        else:
+            self.model._meta.verbose_name_plural.title()
 
     def get_ordering(self):
         """

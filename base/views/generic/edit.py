@@ -23,8 +23,15 @@ from ..mixins import LoginPermissionRequiredMixin
 class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
     login_required = True
     permission_required = ()
-
     next_url = None
+    title = None
+
+    def get_title(self):
+        if self.title is not None:
+            return self.title
+        else:
+            verbose_name = self.model._meta.verbose_name
+            return _("Create %s") % verbose_name
 
     def get_context_data(self, **kwargs):
         context = super(BaseCreateView, self).get_context_data(**kwargs)
@@ -33,9 +40,8 @@ class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
 
         context["next"] = self.next_url
 
-        verbose_name = self.model._meta.verbose_name
         context["opts"] = self.model._meta
-        context["title"] = _("Create %s") % verbose_name
+        context["title"] = self.get_title()
         context["cancel_url"] = self.get_cancel_url()
 
         return context
@@ -68,6 +74,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
     permission_required = ()
     is_generic_relation = False
     next_url = None
+    title = None
 
     def get_parent_object(self):
         parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
@@ -122,6 +129,13 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
             return next_url
 
         return super().get_success_url()
+
+    def get_title(self):
+        if self.title is not None:
+            return self.title
+        else:
+            verbose_name = self.model._meta.verbose_name
+            return _("Create %s") % verbose_name
 
     def get_context_data(self, **kwargs):
         context = super(BaseSubModelCreateView, self).get_context_data(**kwargs)
@@ -182,6 +196,7 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
     login_required = True
     permission_required = ()
     next_url = None
+    title = None
 
     def get_context_data(self, **kwargs):
         context = super(BaseUpdateView, self).get_context_data(**kwargs)
@@ -192,12 +207,15 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
 
         context["opts"] = self.model._meta
         context["cancel_url"] = self.get_cancel_url()
-        context["title"] = self.title
+        context["title"] = self.get_title()
 
         return context
 
     def get_title(self):
-        return _("Update %s") % str(self.object)
+        if self.title is not None:
+            return self.title
+        else:
+            return _("Update %s") % str(self.object)
 
     def get_cancel_url(self):
         if self.next_url:
@@ -227,6 +245,7 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
     login_required = True
     permission_required = ()
     next_url = None
+    title = None
 
     def get_context_data(self, **kwargs):
         context = super(BaseDeleteView, self).get_context_data(**kwargs)
@@ -236,9 +255,15 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
         context["next"] = self.next_url
 
         context["opts"] = self.model._meta
-        context["title"] = _("Delete %s") % str(self.object)
+        context["title"] = self.get_title()
 
         return context
+
+    def get_title(self):
+        if self.title is not None:
+            return self.title
+        else:
+            return _("Delete %s") % str(self.object)
 
     def get_success_url(self):
         next_url = self.request.POST.get("next")
