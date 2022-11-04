@@ -1,7 +1,8 @@
 version: '3.4'
 services:
-  db:
-    image: "postgres:14-alpine"
+  postgres:
+    build:
+      context: postgres
     env_file: "ci_env"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
@@ -13,7 +14,7 @@ services:
     image: "${PROJECT_REPONAME}-test"
     env_file: "ci_env"
     depends_on:
-      - db
+      - postgres
     volumes:
       - test-artifacts:/usr/src/app/test-results
 
