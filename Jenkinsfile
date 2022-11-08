@@ -14,7 +14,8 @@ pipeline {
   stages {
     stage('Build image') {
       steps {
-        sh "docker-compose build"
+        sh(script: 'docker-compose build', label: 'Build images')
+        sh(script: 'docker-compose pull', label: 'Pull images')
       }
     }
     stage('Run code checks') {
