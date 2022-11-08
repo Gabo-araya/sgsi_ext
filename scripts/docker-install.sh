@@ -58,13 +58,13 @@ elif grep -q '"buildkit":\s*true' /etc/docker/daemon.json; then
 
 else
   color_print $yellow 'BuildKit appears not to be enabled.
-To enable it, set
+  To enable it, set:
 {
   "features": {
     "buildkit": true
   }
 }
-in your /etc/docker/daemon.json file,
-and then restart the daemon with:
-  sudo systemctl restart docker.service'
+  in your /etc/docker/daemon.json file,
+  and then restart the daemon with:
+sudo systemctl restart docker.service'
 fi
