@@ -121,21 +121,23 @@
       register: stat_nginx_secrets
 
     - name: build and start containers
-      # "dcupbd"
-      community.docker.docker_compose:
-        state: present
-        project_src: "{{ project_name }}"
-        files:
-          - docker-compose.yml
-          - docker/docker-compose.prod.yml
-        build: yes
-        nocache: "{{ true if env_cache_ignore == '1' else false }}"
-        # TODO: https://docs.ansible.com/ansible/latest/collections/community/docker/docker_compose_module.html#parameter-pull
-        remove_orphans: yes
-        recreate: "{{ 'always' if env_recreate == '1' else 'smart' }}"
+      # "community.docker.docker_compose" somehow manages to always disable BuildKit
+      shell:
+        chdir: "{{ project_name }}"
+        cmd: "{{ build_cmd }} && {{ up_cmd }}"  # Two commands because not all build flags are available in up
       vars:
+        build_cmd: docker-compose build {{ nocache_arg }}
+        up_cmd: docker-compose up -d --remove-orphans {{ recreate_arg }}
+
+        nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
+        # pull_arg: TODO
+        recreate_arg: "{{ '--force-recreate' if env_recreate == '1' else '' }}"
+
         env_recreate: "{{ lookup('env', 'deploy_recreate')|default('0') }}"
         env_cache_ignore: "{{ lookup('env', 'deploy_cache_ignore')|default('0') }}"
+      environment:
+        BUILDKIT_PROGRESS: plain
+      changed_when: true  # nvm
       tags: update
 
     - name: run deployment checks
