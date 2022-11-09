@@ -9,7 +9,8 @@ pipeline {
     DOCKER_BUILDKIT = '1'
     COMPOSE_DOCKER_CLI_BUILD = '1'
     COMPOSE_FILE = 'docker/docker-compose.jenkins.yml'
-    COMPOSE_PROJECT_NAME = "${PROJECT_REPONAME}"
+    BRANCH_COMMIT = "${sh(returnStdout: true, script: 'git rev-parse --short HEAD')}"
+    COMPOSE_PROJECT_NAME = "${PROJECT_REPONAME}-${BRANCH_COMMIT}"
   }
   stages {
     stage('Build image') {
