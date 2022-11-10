@@ -6,10 +6,11 @@ pipeline {
   }
   environment {
     PROJECT_REPONAME = 'project-name-placeholder'
+    SHORT_COMMIT = "${GIT_COMMIT[0..7]}"
     DOCKER_BUILDKIT = '1'
     COMPOSE_DOCKER_CLI_BUILD = '1'
     COMPOSE_FILE = 'docker/docker-compose.jenkins.yml'
-    COMPOSE_PROJECT_NAME = "${PROJECT_REPONAME}"
+    COMPOSE_PROJECT_NAME = "${PROJECT_REPONAME}-${env.SHORT_COMMIT}"
   }
   stages {
     stage('Build image') {
