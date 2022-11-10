@@ -70,9 +70,6 @@ ALLOWED_HOSTS = [
 
 SITE_ID = 1
 
-# TEST should be true if we are running python tests
-TEST = "test" in sys.argv or "pytest" in sys.argv[0]
-
 # Application definition
 
 INSTALLED_APPS = [
