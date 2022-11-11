@@ -4,7 +4,7 @@ POSTGRES_PASSWORD=jenkinspassword
 POSTGRES_DB=jenkins_test
 
 # see docker-compose.ci.yml for service definition
-PGHOST=db
+PGHOST=postgres
 PGPORT=5432
 PGUSER=jenkins
 PGPASSWORD=jenkinspassword
