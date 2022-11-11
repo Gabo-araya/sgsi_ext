@@ -4,12 +4,48 @@ cd "$(dirname "$0")"/..
 source scripts/utils.sh
 assert_outside_container
 
+
 title_print "Installing Docker..."
+
+docker_version_new_enough() (
+  # We currently use "COPY --chmod=" as a safeguard,
+  # which requires 20.10 (https://github.com/moby/buildkit/pull/1492#issuecomment-758105476)
+  # Also 20.10 is the only currently supported version  https://endoflife.date/docker-engine
+  LOWEST_VERSION=20.10
+
+  docker_version_majmin=$(docker --version |
+    grep -Po '.*?\K\d+\.\d+')  # Extracts 12.34 from "asdsad 12.34.56 asdsad"
+
+  # https://github.com/docker/docker-install/blob/0c9037543e67d311c57fe5ec9626052e0f37bb3f/install.sh#L96
+  calver_compare() (
+    set +x
+
+    yy_a="$(echo "$1" | cut -d'.' -f1)"
+    yy_b="$(echo "$2" | cut -d'.' -f1)"
+    if [ "$yy_a" -lt "$yy_b" ]; then
+      return 1
+    fi
+    if [ "$yy_a" -gt "$yy_b" ]; then
+      return 0
+    fi
+    mm_a="$(echo "$1" | cut -d'.' -f2)"
+    mm_b="$(echo "$2" | cut -d'.' -f2)"
+    if [ "${mm_a#0}" -lt "${mm_b#0}" ]; then
+      return 1
+    fi
+
+    return 0
+  )
+
+  eval calver_compare "$docker_version_majmin" $LOWEST_VERSION
+)
+
 # Check if docker is already installed
-if [[ $(which docker) && $(docker --version) ]]; then
+if command -v docker >/dev/null && docker_version_new_enough; then
   color_print $green "Skipped! $(docker --version) found."
 else
   # Download and install
+  # The script says it can be used to update  https://github.com/docker/docker-install/blob/0c9037543e67d311c57fe5ec9626052e0f37bb3f/install.sh#L276
   sudo apt-get install -y curl
   curl -fsSL https://get.docker.com -o get-docker.sh
   chmod +x get-docker.sh
@@ -26,17 +62,33 @@ if ! groups | grep -qw docker; then
   echo "Please reboot your computer to use Docker without sudo." >> quickstart-messages.log
 fi
 
+
 title_print "Installing Docker-compose..."
-# Check if docker-compose is already installed
-if [[ $(which docker-compose) && $(docker-compose --version) ]]; then
-  color_print $green "Skipped! $(docker-compose --version) found."
+
+have_compose() {
+  command -v docker-compose >/dev/null
+}
+
+compose_is_last_version() {
+  # docker-compose v1 is final. Eventually we will have to upgrade to v2.
+  [[ $(docker-compose --version) == "docker-compose version 1.29.2, build 5becea4c" ]]
+}
+
+if have_compose && compose_is_last_version; then
+  color_print $green "Skipped! Last docker-compose v1 found."
 else
+  if have_compose && [[ $(command -v docker-compose) != "/usr/local/bin/docker-compose" ]]; then
+    color_print $red "Error: old docker-compose is installed but not in typical location: $(command -v docker-compose)
+Please remove that version, or manually upgrade it to 1.29.2."
+    exit 1
+  fi
   # Download and allow execute
   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
 
   color_print $green "Docker-compose installation completed."
 fi
+
 
 # Enable BuildKit
 if ! [ -s /etc/docker/daemon.json ]; then
