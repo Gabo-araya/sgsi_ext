@@ -99,6 +99,41 @@ In a terminal in this folder,
   - Now you may use `dce django zsh` to run django and node and git. And an alternative IDE to edit files. Unfortunately you have to keep the VSCode window open.
   - For how this works, see `90-vscode-env.zsh` in this repo.
 
+#### Troubleshooting
+
+##### Very strange errors occur when running `git commit`
+
+Because there's a hook which uses pre-commit, lint-staged and other tools, if they are not properly installed then the commit will be prevented.
+
+Examples of these errors are:
+
+_Command not found: pre-commit_<br>
+_SyntaxError: The requested module 'supports-color' does not provide an export named 'default'_
+
+and they all end with:
+```
+husky - pre-commit hook exited with code 1 (error)
+```
+To fix this:
+
+1. Ensure that if you have local changes to:
+    - package.json
+    - package-lock.json
+    - pyproject.toml
+    - poetry.lock
+
+    then they are reasonable. (For example the version of lint-staged hasn't been changed by mistake)
+
+2. Reinstall npm packages with `npm ci` and Poetry packages with `poetry install`
+
+##### `zsh: command not found: dj`
+
+If for some reason the virtualenv is deleted, `poetry install` won't recreate the `dj` symlink, it has to be manually created again with:
+```sh
+ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
+```
+Or just recreate the container (as the symlink is included in the image).
+
 ### Start a new django application
 Use the custom app template to create your apps:
 
