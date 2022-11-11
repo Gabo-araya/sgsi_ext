@@ -113,6 +113,8 @@ sed -i "s|{{postgres_db}}|$postgres_db|g" $env_file
 sed -i "s|{{secret_key}}|$secret_key|g" $env_file
 sed -i "s|{{django_debug}}|$django_debug|g" $env_file
 sed -i "s|{{environment_name}}|$environment_name|g" $env_file
+sed -i "s|{{enable_debug_toolbar}}|False|g" $env_file
+sed -i "s|{{enable_django_extensions}}|False|g" $env_file
 sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
 sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
 sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file

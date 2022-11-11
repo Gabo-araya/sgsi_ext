@@ -11,10 +11,22 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 # standard library
+import ast
 import os
 import sys
 
 from pathlib import Path
+
+
+def get_bool_from_env(name, default_value):
+    if name in os.environ:
+        value = os.environ[name]
+        try:
+            return ast.literal_eval(value)
+        except ValueError as e:
+            raise ValueError("{} is an invalid value for {}".format(value, name)) from e
+    return default_value
+
 
 # django
 from django.urls import reverse_lazy
@@ -58,9 +70,6 @@ ALLOWED_HOSTS = [
 
 SITE_ID = 1
 
-# TEST should be true if we are running python tests
-TEST = "test" in sys.argv or "pytest" in sys.argv[0]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -72,8 +81,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    # extensions
-    "django_extensions",
     # required apps
     "base.apps.BaseConfig",
     "users",
@@ -95,6 +102,55 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+
+try:
+    # others libraries
+    import debug_toolbar
+
+    ENABLE_DEBUG_TOOLBAR = not TEST and get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
+except ImportError:
+    ENABLE_DEBUG_TOOLBAR = False
+
+
+if ENABLE_DEBUG_TOOLBAR:
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.append(
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    )
+
+    DEBUG_TOOLBAR_PANELS = [
+        "debug_toolbar.panels.versions.VersionsPanel",
+        "debug_toolbar.panels.timer.TimerPanel",
+        "debug_toolbar.panels.settings.SettingsPanel",
+        "debug_toolbar.panels.headers.HeadersPanel",
+        "debug_toolbar.panels.request.RequestPanel",
+        "debug_toolbar.panels.sql.SQLPanel",
+        "debug_toolbar.panels.templates.TemplatesPanel",
+        "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+        "debug_toolbar.panels.cache.CachePanel",
+        "debug_toolbar.panels.signals.SignalsPanel",
+        "debug_toolbar.panels.logging.LoggingPanel",
+        "debug_toolbar.panels.redirects.RedirectsPanel",
+        "debug_toolbar.panels.profiling.ProfilingPanel",
+    ]
+
+try:
+    # others libraries
+    import django_extensions
+
+    ENABLE_DJANGO_EXTENSIONS = get_bool_from_env("ENABLE_DJANGO_EXTENSIONS", False)
+except ImportError:
+    ENABLE_DJANGO_EXTENSIONS = False
+
+
+if ENABLE_DJANGO_EXTENSIONS:
+    INSTALLED_APPS.append("django_extensions")
+
 
 ROOT_URLCONF = "project.urls"
 
@@ -119,7 +175,9 @@ TEMPLATES = [
                         "django.template.loaders.filesystem.Loader",
                         "django.template.loaders.app_directories.Loader",
                     ),
-                )
+                ),
+                # set to avoid W006 warning from django-debug-toolbar
+                "django.template.loaders.app_directories.Loader",
             ],
             "builtins": [
                 "pypugjs.ext.django.templatetags",
