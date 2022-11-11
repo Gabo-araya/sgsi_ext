@@ -9,24 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
 # standard library
 import ast
 import os
-import sys
 
 from pathlib import Path
-
-
-def get_bool_from_env(name, default_value):
-    if name in os.environ:
-        value = os.environ[name]
-        try:
-            return ast.literal_eval(value)
-        except ValueError as e:
-            raise ValueError("{} is an invalid value for {}".format(value, name)) from e
-    return default_value
-
 
 # django
 from django.urls import reverse_lazy
@@ -43,6 +30,16 @@ def get_env_value(key, default, default_if_blank=False):
         return default
 
 
+def get_bool_from_env(name, default_value):
+    if name in os.environ:
+        value = os.environ[name]
+        try:
+            return ast.literal_eval(value)
+        except ValueError as e:
+            raise ValueError("{} is an invalid value for {}".format(value, name)) from e
+    return default_value
+
+
 # Build paths inside the project like this: BASE_DIR / "subdir".
 PROJECT_DIR = Path(__file__).resolve().parent
 BASE_DIR = PROJECT_DIR.parent
@@ -51,7 +48,7 @@ BASE_DIR = PROJECT_DIR.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", False) == "True"
+DEBUG = get_bool_from_env("DEBUG", False)
 
 ENVIRONMENT_NAME = get_env_value(
     "ENVIRONMENT_NAME",
@@ -201,7 +198,7 @@ DATABASES = {
         "HOST": os.environ.get("PGHOST", "127.0.0.1"),
         "PORT": os.environ.get("PGPORT", "5432"),
         "DISABLE_SERVER_SIDE_CURSORS": (
-            os.environ.get("POSTGRES_DISABLE_SERVER_SIDE_CURSORS", False) == "True"
+            get_bool_from_env("POSTGRES_DISABLE_SERVER_SIDE_CURSORS", False)
         ),
     }
 }
@@ -248,7 +245,7 @@ LOCALE_PATHS = [
 ]
 
 # Email
-ENABLE_EMAILS = os.environ.get("ENABLE_EMAILS", False) == "True"
+ENABLE_EMAILS = get_bool_from_env("ENABLE_EMAILS", False)
 if DEBUG or not ENABLE_EMAILS:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
@@ -288,9 +285,7 @@ if AWS_STORAGE_BUCKET_NAME:
 
     if DO_SPACES_REGION:
         AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
-        DO_SPACES_CDN_ENABLED = (
-            os.environ.get("DO_SPACES_CDN_ENABLED", "True") == "True"
-        )
+        DO_SPACES_CDN_ENABLED = get_bool_from_env("DO_SPACES_CDN_ENABLED", True)
 
     STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
     DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
