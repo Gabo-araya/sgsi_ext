@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
+import subprocess
 import sys
+import traceback
 
 try:
     import dotenv
@@ -24,7 +26,64 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    print_TODOs_on_runserver()
     execute_from_command_line(sys.argv)
+
+
+def print_TODOs_on_runserver():
+    try:
+        from project.settings import DEBUG
+
+        if DEBUG and is_first_runserver():
+            subprocess.run(
+                [
+                    "grep",
+                    "--word-regexp",
+                    "--color=always",
+                    # TODO: replace all this with https://github.com/BurntSushi/ripgrep/blob/13.0.0/GUIDE.md#automatic-filtering ?
+                    "--line-number",
+                    "--recursive",
+                    "--binary-files=without-match",
+                    "--exclude-dir=.git/",
+                    "--exclude-dir=.pytest_cache/",
+                    "--exclude-dir=./assets/bundles/",
+                    "--exclude-dir=__pycache__/",
+                    "--exclude-dir=./docker/volumes/postgres-data/",
+                    "--exclude-dir=node_modules/",
+                    "--exclude-dir=./project/static/",
+                    "--exclude-dir=./project/media/",
+                    "--exclude=*.py-tpl",
+                    "-E",
+                    "T" + "ODO|FIXM" + "E",  # Prevent searching itself
+                    ".",
+                ]
+            )
+    except Exception:
+        # Continue instead of breaking manage.py
+        print(traceback.format_exc())
+
+
+def is_first_runserver():
+    try:
+        subcommand = sys.argv[1]
+    except IndexError:
+        subcommand = None
+
+    # runserver calls this every time it reloads, so print on first invocation only:
+
+    def is_runserver_reloader():
+        from django.utils.autoreload import DJANGO_AUTORELOAD_ENV
+
+        return os.environ.get(DJANGO_AUTORELOAD_ENV) == "true"
+
+    def is_runserver_plus_reloader():
+        from werkzeug.serving import is_running_from_reloader
+
+        return is_running_from_reloader()
+
+    return (subcommand == "runserver" and not is_runserver_reloader()) or (
+        subcommand == "runserver_plus" and not is_runserver_plus_reloader()
+    )
 
 
 if __name__ == "__main__":
