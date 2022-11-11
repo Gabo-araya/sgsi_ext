@@ -4,6 +4,16 @@ cd "$(dirname "$0")"
 source scripts/utils.sh
 assert_outside_container
 
+# Assert not root
+if (( EUID == 0 )); then
+  color_print $red "Please run this script without sudo."
+  # Because sudo is used internally when required.
+  # Otherwise regular files would be created with owner as root
+  # and would require sudo later at various points.
+  # Also HOST_UID/GID would be set to 0 (although this could be handled with SUDO_UID/GID).
+  exit 1
+fi
+
 # TODO: check for vscode, and run:
 # code --install-extension ms-azuretools.vscode-docker
 # code --install-extension ms-vscode-remote.remote-containers
