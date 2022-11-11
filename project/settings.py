@@ -114,6 +114,10 @@ except ImportError:
 
 
 if ENABLE_DEBUG_TOOLBAR:
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+
     INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.append(
         "debug_toolbar.middleware.DebugToolbarMiddleware",
@@ -171,7 +175,9 @@ TEMPLATES = [
                         "django.template.loaders.filesystem.Loader",
                         "django.template.loaders.app_directories.Loader",
                     ),
-                )
+                ),
+                # set to avoid W006 warning from django-debug-toolbar
+                "django.template.loaders.app_directories.Loader",
             ],
             "builtins": [
                 "pypugjs.ext.django.templatetags",
