@@ -99,6 +99,15 @@ In a terminal in this folder,
   - Now you may use `dce django zsh` to run django and node and git. And an alternative IDE to edit files. Unfortunately you have to keep the VSCode window open.
   - For how this works, see `90-vscode-env.zsh` in this repo.
 
+#### Resetting to initial state
+
+If you are used to work with docker-compose, you may try to reset your project to an initial state with `docker-compose down -v`. However we are not using volumes, just bind mounts. So use instead:
+```sh
+docker-compose down
+rm -rf docker/volumes/
+git restore docker/volumes/
+```
+
 #### Troubleshooting
 
 ##### Very strange errors occur when running `git commit`
