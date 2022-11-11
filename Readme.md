@@ -323,6 +323,33 @@ ipython profile create
 sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
 ```
 
+#### Changing project name after starting development
+If you want to change the project name that is shown in blue in the zsh prompt (for example if development started without changing it from `project-name-placeholder`), when you change between branches/commits with different `name = "..."` in pyproject.toml, you may eventually get problems with the virtualenv (_command not found: dj_, _Couldn't import Django_) because the gitignored `VIRTUAL_ENV` env var has to be updated.
+
+So every time you arrive to a commit with different name, you have to update `VIRTUAL_ENV` in your .env with the path shown in the output of this command (inside container):
+```sh
+env --unset=VIRTUAL_ENV poetry env use /usr/local/bin/python3
+```
+and rebuild and recreate the container.
+
+Rebuilding is the slow but safe option. You may try to avoid it by:
+- re-exporting `VIRTUAL_ENV`
+  ```sh
+  export VIRTUAL_ENV=...  # with the new value
+  ```
+- re-exporting `DJPATH` as `PATH`
+  ```sh
+  export PATH=${VIRTUAL_ENV}/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  ```
+- regenerating `dj`
+  ```sh
+  ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
+  ```
+- installing packages in new env
+  ```sh
+  poetry install
+  ```
+
 ### Developing without Docker
 While possible, it is not possible to guarantee this approach will always work.
 Dependencies may not match with the ones provided by the development container.
