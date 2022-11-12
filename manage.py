@@ -35,29 +35,15 @@ def print_TODOs_on_runserver():
         from project.settings import DEBUG
 
         if DEBUG and is_first_runserver():
-            subprocess.run(
-                [
-                    "grep",
-                    "--word-regexp",
-                    "--color=always",
-                    # TODO: replace all this with https://github.com/BurntSushi/ripgrep/blob/13.0.0/GUIDE.md#automatic-filtering ?
-                    "--line-number",
-                    "--recursive",
-                    "--binary-files=without-match",
-                    "--exclude-dir=.git/",
-                    "--exclude-dir=.pytest_cache/",
-                    "--exclude-dir=./assets/bundles/",
-                    "--exclude-dir=__pycache__/",
-                    "--exclude-dir=./docker/volumes/postgres-data/",
-                    "--exclude-dir=node_modules/",
-                    "--exclude-dir=./project/static/",
-                    "--exclude-dir=./project/media/",
-                    "--exclude=*.py-tpl",
-                    "-E",
-                    "T" + "ODO|FIXM" + "E",  # Prevent searching itself
-                    ".",
-                ]
+            common_args = (
+                "rg",
+                "--word-regexp",
+                "--pretty",
             )
+            pattern = "T" + "ODO|FIXM" + "E"  # Prevent searching itself
+            subprocess.run((*common_args, "--ignore-file=project/.todoignore", pattern))
+            subprocess.run((*common_args, "--glob=*.env*", pattern))
+            # Run twice because of unoverridable precedences  https://github.com/BurntSushi/ripgrep/issues/1734#issuecomment-730769439
     except Exception:
         # Continue instead of breaking manage.py
         print(traceback.format_exc())

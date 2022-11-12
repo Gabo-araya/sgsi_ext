@@ -168,6 +168,8 @@ RUN \
     jq \
     # something to quickly edit a file:
     vim nano \
+    # to grep for TODOs:
+    ripgrep \
 \
   && title_print "Install oh-my-zsh" \
   && sudo -u $WHO docker/zsh_dev/setup_dev.sh \
