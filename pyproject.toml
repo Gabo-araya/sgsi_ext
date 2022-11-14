@@ -64,6 +64,8 @@ import_heading_thirdparty = "others libraries"
 known_django = "django"
 lines_between_types = 1
 sections = ["FUTURE", "STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+line_length = 88
+profile = "black"
 
 [tool.pytest.ini_options]
 required_plugins = "pytest-django"
