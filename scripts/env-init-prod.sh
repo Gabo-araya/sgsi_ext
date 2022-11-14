@@ -100,10 +100,14 @@ who=magnet
 host_uid=2640
 host_gid=2640
 
+# By default we use servers in UTC
+tz=Etc/UTC
+
 # Replace placeholders from template env file
 sed -i "s|{{who}}|$who|g" $env_file
 sed -i "s|{{host_uid}}|$host_uid|g" $env_file
 sed -i "s|{{host_gid}}|$host_gid|g" $env_file
+sed -i "s|{{tz}}|$tz|g" $env_file
 sed -i "s|{{virtual_env}}|$virtual_env|g" $env_file
 sed -i "s|{{postgres_host}}|$postgres_host|g" $env_file
 sed -i "s|{{postgres_port}}|$postgres_port|g" $env_file
