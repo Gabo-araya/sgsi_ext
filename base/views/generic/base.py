@@ -6,11 +6,6 @@ from django.views.generic import TemplateView
 from ..mixins import LoginPermissionRequiredMixin
 
 
-class BaseView(LoginPermissionRequiredMixin, View):
-    login_required = True
-    permission_required = ()
-
-
 class BaseTemplateView(LoginPermissionRequiredMixin, TemplateView):
     login_required = True
     permission_required = ()
