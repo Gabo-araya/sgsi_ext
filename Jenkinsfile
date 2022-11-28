@@ -20,20 +20,10 @@ pipeline {
       }
     }
     stage('Run code checks') {
-      stages {
-        stage('Check code formatting') {
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh 'docker-compose run app-test poetry run black --check .'
-            }
-          }
-        }
-        stage('Check import sorting') {
-          steps {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-              sh 'docker-compose run app-test poetry run isort --check .'
-            }
-          }
+      steps {
+        warnError('Some code checks have failed') {
+          sh(script: 'docker-compose run app-test poetry run black --check .', label: 'Check code formatting')
+          sh(script: 'docker-compose run app-test poetry run isort --check .', label: 'Check import sorting')
         }
       }
     }
