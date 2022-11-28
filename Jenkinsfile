@@ -42,36 +42,33 @@ pipeline {
         COLLECTOR_CONTAINER_ID = """${sh(returnStdout: true, script:'docker-compose run -d --user root artifact-collector').trim()}"""
       }
       steps {
-        script {
-          try {
+        sh(
+          script: 'docker-compose ' +
+            'run app-test poetry run pytest ' +
+            '--cov ' +
+            '--cov-report=html:test-results/coverage ' +
+            '--cov-report=xml:test-results/coverage.xml ' +
+            '--cov-report=term',
+          label: 'Run pytest'
+        )
+      }
+      post {
+        always {
+          dir ('artifacts') {
+            sh "docker cp \"${env.COLLECTOR_CONTAINER_ID}\":/artifacts/. ."
+            sh(script: 'ls -l', label: 'List copied files')
             sh(
-              script: 'docker-compose ' +
-                'run app-test poetry run pytest ' +
-                '--cov ' +
-                '--cov-report=html:test-results/coverage ' +
-                '--cov-report=xml:test-results/coverage.xml ' +
-                '--cov-report=term',
-              label: 'Run pytest'
-            )
-          } catch (err) {
-            unstable
-          } finally {
-            dir ('artifacts') {
-              sh "docker cp \"${env.COLLECTOR_CONTAINER_ID}\":/artifacts/. ."
-              sh(script: 'ls -l', label: 'List copied files')
-              sh(
-                script: 'tar czf coverage.tar.gz coverage/*',
-                label: 'Compress coverage results'
-              )
-            }
-            junit(testResults: 'artifacts/pytest.xml', allowEmptyResults: true)
-            cobertura coberturaReportFile: 'artifacts/coverage.xml'
-            archiveArtifacts(
-              allowEmptyArchive: true,
-              artifacts: 'artifacts/*, artifacts/**',
-              fingerprint: true
+              script: 'tar czf coverage.tar.gz coverage/*',
+              label: 'Compress coverage results'
             )
           }
+          junit(testResults: 'artifacts/pytest.xml', allowEmptyResults: true)
+          cobertura coberturaReportFile: 'artifacts/coverage.xml'
+          archiveArtifacts(
+            allowEmptyArchive: true,
+            artifacts: 'artifacts/*, artifacts/**',
+            fingerprint: true
+          )
         }
       }
     }
