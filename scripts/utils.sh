@@ -52,4 +52,23 @@ function should_be_inside_container() {
   fi
 }
 
+function assert_fs_supports_exec_permission() {
+  cat << EOF >> test.sh
+#!/bin/sh
+exit 0
+EOF
+  chmod 644 test.sh
+  if [[ -x "test.sh" ]]; then
+    rm test.sh
+    message="ERROR: Your file system does not properly support execute permissions.
+Make sure your file system is not mounted with the 'noexec' parameter.
+If you're using WSL, make sure you checked out the repository within the WSL
+filesystem and not into the /mnt/X hierarchy.
+This script will terminate now."
+    color_print $red "$message"
+    exit 1
+  fi
+  rm test.sh
+}
+
 # TODO: after merging all PRs, check that all `find . -not -path "./docker/*" -name "*.sh" -executable` handle inside/outside container

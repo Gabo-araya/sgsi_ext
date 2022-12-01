@@ -14,9 +14,9 @@ if (( EUID == 0 )); then
   exit 1
 fi
 
-# TODO: check for vscode, and run:
-# code --install-extension ms-azuretools.vscode-docker
-# code --install-extension ms-vscode-remote.remote-containers
+# Check if the host OS does support file execute permissions. If this is not
+# the case, abort this script.
+assert_fs_supports_exec_permission
 
 if [[ "$OSTYPE" == darwin* ]]; then
     message="WARNING: Django 3 Project Template has not been thoroughly tested on
@@ -24,6 +24,10 @@ macOS systems. Expect things to break while running on this configuration.
 You have been warned."
     color_print "$yellow" "$message"
 fi
+
+# TODO: check for vscode, and run:
+# code --install-extension ms-azuretools.vscode-docker
+# code --install-extension ms-vscode-remote.remote-containers
 
 # Stop this project's postgres so port is free:
 command -v docker-compose >/dev/null && [ -f .env ] && \
