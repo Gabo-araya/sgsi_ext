@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent { label 'linux-docker' }
   options {
     // Disable concurrent builds to avoid Docker from leaving dangling networks
     disableConcurrentBuilds()
