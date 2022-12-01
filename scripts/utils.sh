@@ -61,7 +61,6 @@ EOF
   if [[ -x "test.sh" ]]; then
     rm test.sh
     message="ERROR: Your file system does not properly support execute permissions.
-Make sure your file system is not mounted with the 'noexec' parameter.
 If you're using WSL, make sure you checked out the repository within the WSL
 filesystem and not into the /mnt/X hierarchy.
 This script will terminate now."
