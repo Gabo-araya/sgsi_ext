@@ -100,7 +100,7 @@ msgstr "Guardar"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: templates/includes/environment_badge.pug
+#: templates/includes/environment_badge.html
 msgid "Current environment"
 msgstr "Entorno actual"
 
