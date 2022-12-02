@@ -113,7 +113,7 @@ else
   color_print "$yellow" "BuildKit appears not to be enabled. Enabling it."
   new_file=$(mktemp)
   jq '.features.buildkit = true' /etc/docker/daemon.json > "$new_file"
-  mv "$new_file" /etc/docker/daemon.json
+  sudo sh -c 'mv "'"$new_file"'" /etc/docker/daemon.json; chown 0:0 /etc/docker/daemon.json; chmod 644 /etc/docker/daemon.json'
   color_print "$yellow" "Restarting docker daemon"
   sudo systemctl restart docker.service
 fi
