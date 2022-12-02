@@ -46,7 +46,7 @@ if command -v docker >/dev/null && docker_version_new_enough; then
 else
   # Download and install
   # The script says it can be used to update  https://github.com/docker/docker-install/blob/0c9037543e67d311c57fe5ec9626052e0f37bb3f/install.sh#L276
-  sudo apt-get install -y curl
+  sudo apt-get install -y curl jq
   curl -fsSL https://get.docker.com -o get-docker.sh
   chmod +x get-docker.sh
   sudo ./get-docker.sh
@@ -109,14 +109,9 @@ elif grep -q '"buildkit":\s*true' /etc/docker/daemon.json; then
   # a restart of the daemon is pending.
 
 else
-  color_print $yellow 'BuildKit appears not to be enabled.
-  To enable it, set:
-{
-  "features": {
-    "buildkit": true
-  }
-}
-  in your /etc/docker/daemon.json file,
-  and then restart the daemon with:
-sudo systemctl restart docker.service'
+  # force enable buildkit with jq
+  color_print "$yellow" "BuildKit appears not to be enabled. Enabling it."
+  jq '.features.buildkit = true' /etc/docker/daemon.json > /etc/docker/daemon.json
+  color_print "$yellow" "Restarting docker daemon"
+  sudo systemctl restart docker.service
 fi
