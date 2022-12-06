@@ -428,12 +428,17 @@ LOG_IGNORE_FIELDS = [
 
 # Cache
 # https://docs.djangoproject.com/en/3.2/topics/cache/#setting-up-the-cache
-
-if not DEBUG:
+if os.environ.get("CACHE_URL"):
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-            "LOCATION": os.environ.get("MEMCACHED_LOCATION"),
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": os.environ.get("CACHE_URL"),
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         }
     }
 

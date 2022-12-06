@@ -56,10 +56,13 @@ secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
 
 django_debug=False
 
-prompt "Celery broker URL?" "redis://redis:6379/0"
+prompt "Redis Cache URL?" "redis://redis:6379/0"
+redis_cache_url=$input
+
+prompt "Celery broker URL?" "redis://redis:6379/1"
 celery_broker_url=$input
 
-prompt "Celery result backend?" "redis://redis:6379/1"
+prompt "Celery result backend?" "redis://redis:6379/2"
 celery_result_backend=$input
 
 color_print "$cyan" "\nFiles storage location?"
@@ -122,6 +125,7 @@ sed -i "s|{{postgres_password}}|$postgres_password|g" $env_file
 sed -i "s|{{postgres_db}}|$postgres_db|g" $env_file
 sed -i "s|{{secret_key}}|$secret_key|g" $env_file
 sed -i "s|{{django_debug}}|$django_debug|g" $env_file
+sed -i "s|{{redis_cache_url}}|$redis_cache_url|g" $env_file
 sed -i "s|{{celery_broker_url}}|$celery_broker_url|g" $env_file
 sed -i "s|{{celery_result_backend}}|$celery_result_backend|g" $env_file
 sed -i "s|{{environment_name}}|$environment_name|g" $env_file

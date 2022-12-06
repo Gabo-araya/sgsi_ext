@@ -417,6 +417,21 @@ optional = false
 python-versions = ">3.3"
 
 [[package]]
+name = "django-redis"
+version = "5.2.0"
+description = "Full featured redis cache backend for Django."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Django = ">=2.2"
+redis = ">=3,<4.0.0 || >4.0.0,<4.0.1 || >4.0.1"
+
+[package.extras]
+hiredis = ["redis[hiredis] (>=3,!=4.0.0,!=4.0.1)"]
+
+[[package]]
 name = "django-storages"
 version = "1.12.3"
 description = "Support for many storage backends in Django"
@@ -1261,7 +1276,7 @@ ansible = ["ansible-core", "yq"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9.9"
-content-hash = "7f14fa397d78d2b3685273a11051fba6aa4266916c41b8b2eaacdf2b148151f7"
+content-hash = "bca73244879fb50a88d06cce68fddcc85246e39374055f272ab3370ba1425a11"
 
 [metadata.files]
 amqp = [
@@ -1528,6 +1543,10 @@ django-extensions = [
 django-loginas = [
     {file = "django-loginas-0.3.10.tar.gz", hash = "sha256:8d81f31d993b3c3c9f9018b385bfbdf74ead320e0a4b18493141d0e2dbc8ad6b"},
     {file = "django_loginas-0.3.10-py2.py3-none-any.whl", hash = "sha256:2d609ddcc68ff840b3e59baa58ac58b870cd1aef491aaab8cd796d022d961c40"},
+]
+django-redis = [
+    {file = "django-redis-5.2.0.tar.gz", hash = "sha256:8a99e5582c79f894168f5865c52bd921213253b7fd64d16733ae4591564465de"},
+    {file = "django_redis-5.2.0-py3-none-any.whl", hash = "sha256:1d037dc02b11ad7aa11f655d26dac3fb1af32630f61ef4428860a2e29ff92026"},
 ]
 django-storages = [
     {file = "django-storages-1.12.3.tar.gz", hash = "sha256:a475edb2f0f04c4f7e548919a751ecd50117270833956ed5bd585c0575d2a5e7"},
