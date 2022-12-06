@@ -13,12 +13,6 @@ services:
       # Keep histories:
       - ./docker/volumes/.zsh_history/:/home/${WHO}/.zsh_history/
       - ./docker/volumes/.ipython/:/home/${WHO}/.ipython/
-    labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.django-cron.schedule: "@every 1m"
-      # ofelia.job-exec.django-cron.command: dj runcrons
-      ofelia.job-exec.django-cron.command: >
-        dj shell -c "print('TODO: install either old django-cron or modern replacement')"
 
   nginx:
     build:
@@ -67,12 +61,3 @@ services:
       - worker
       - --loglevel=info
       - --beat
-
-  ofelia:  # cron
-    image: mcuadros/ofelia:v0.3.6
-    command: daemon --docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    depends_on:   # "real time labels reading is not supported yet"
-      - django
-    restart: unless-stopped
