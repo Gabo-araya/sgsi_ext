@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     # external
     "loginas",
     "webpack_loader",
+    "django_celery_beat",
     # internal
     "parameters",
     "regions",
@@ -334,11 +335,32 @@ LOGGING = {
         },
     },
     "formatters": {
+        "verbose": {
+            "format": (
+                "%(asctime)s %(levelname)s %(name)s %(message)s "
+                "[PID:%(process)d:%(threadName)s]"
+            )
+        },
         "django.server": {
             "()": "django.utils.log.ServerFormatter",
             "format": "[{server_time}] {message}",
             "style": "{",
-        }
+        },
+        "celery_json": {
+            "()": "project.logging.JsonCeleryFormatter",
+            "datefmt": "%Y-%m-%dT%H:%M:%SZ",
+            "format": (
+                "%(asctime)s %(levelname)s %(celeryTaskId)s %(celeryTaskName)s "
+            ),
+        },
+        "celery_task_json": {
+            "()": "project.logging.JsonCeleryTaskFormatter",
+            "datefmt": "%Y-%m-%dT%H:%M:%SZ",
+            "format": (
+                "%(asctime)s %(levelname)s %(celeryTaskId)s %(celeryTaskName)s "
+                "%(message)s "
+            ),
+        },
     },
     "handlers": {
         "console": {
@@ -356,6 +378,16 @@ LOGGING = {
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
         },
+        "celery_app": {
+            "level": "DEBUG" if DEBUG else "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose" if DEBUG else "celery_json",
+        },
+        "celery_task": {
+            "level": "DEBUG" if DEBUG else "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose" if DEBUG else "celery_task_json",
+        },
     },
     "loggers": {
         "django": {
@@ -365,6 +397,16 @@ LOGGING = {
         "django.server": {
             "handlers": ["django.server"],
             "level": "INFO",
+            "propagate": False,
+        },
+        "celery.app.trace": {
+            "handlers": ["celery_app"],
+            "level": "DEBUG" if DEBUG else "INFO",
+            "propagate": False,
+        },
+        "celery.task": {
+            "handlers": ["celery_task"],
+            "level": "DEBUG" if DEBUG else "INFO",
             "propagate": False,
         },
     },
@@ -427,3 +469,35 @@ SECURE_SSL_REDIRECT = not DEBUG
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+# Celery settings
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL") or ""
+CELERY_TASK_ALWAYS_EAGER = not CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", None)
+
+# Celery beat schedules
+"""
+CELERY_BEAT_SCHEDULE = {
+    "some-scheduled-task-1": {
+        "task": "app.tasks.some_task",
+        "schedule": timedelta(days=1),
+    },
+    "some-scheduled-task-2": {
+        "task": "app.tasks.some_task",
+        "schedule": crontab(hour=0, minute=0),
+    },
+    "some-scheduled-task-3": {
+        "task": "app.tasks.some_task",
+        "schedule": some_func_retuning_customschedule,  # use a CustomSchedule object
+    },
+}
+"""
+
+# The maximum wait time between each is_due() call on schedulers
+# It needs to be higher than the frequency of the schedulers to avoid unnecessary
+# is_due() calls
+CELERY_BEAT_MAX_LOOP_INTERVAL = 300  # 5 minutes

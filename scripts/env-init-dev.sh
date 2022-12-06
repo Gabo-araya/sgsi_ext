@@ -39,6 +39,8 @@ else
   aws_secret_access_key=
   bucket_name=
   do_spaces_region=
+  celery_broker_url=
+  celery_result_backend=
 
   # Replace placeholders from template env file
   sed -i "s|{{who}}|$who|g" $env_file
@@ -53,6 +55,8 @@ else
   sed -i "s|{{postgres_db}}|$postgres_db|g" $env_file
   sed -i "s|{{secret_key}}|$secret_key|g" $env_file
   sed -i "s|{{django_debug}}|$django_debug|g" $env_file
+  sed -i "s|{{celery_broker_url}}|$celery_broker_url|g" $env_file
+  sed -i "s|{{celery_result_backend}}|$celery_result_backend|g" $env_file
   sed -i "s|{{environment_name}}|$environment_name|g" $env_file
   sed -i "s|{{enable_debug_toolbar}}|$enable_debug_toolbar|g" $env_file
   sed -i "s|{{enable_django_extensions}}|$enable_django_extensions|g" $env_file

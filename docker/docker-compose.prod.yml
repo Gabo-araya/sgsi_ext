@@ -45,6 +45,29 @@ services:
       # Uncomment to check for activity:
       # - -vv
 
+  redis:
+    image: redis:5-alpine
+    restart: unless-stopped
+    volumes:
+      - ./docker/volumes/redis_data/:/data/
+
+  celery:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./project/media/:/usr/src/app/project/media/
+      - ./project/static/:/usr/src/app/project/static/:ro
+    depends_on:
+      - redis
+      - memcached
+    command:
+      - celery
+      - --app=project.celeryconf:app
+      - worker
+      - --loglevel=info
+      - --beat
+
   ofelia:  # cron
     image: mcuadros/ofelia:v0.3.6
     command: daemon --docker
