@@ -18,6 +18,13 @@ fi
 # code --install-extension ms-azuretools.vscode-docker
 # code --install-extension ms-vscode-remote.remote-containers
 
+if [[ "$OSTYPE" == darwin* ]]; then
+    message="WARNING: Django 3 Project Template has not been thoroughly tested on
+macOS systems. Expect things to break while running on this configuration.
+You have been warned."
+    color_print "$yellow" "$message"
+fi
+
 # Stop this project's postgres so port is free:
 command -v docker-compose >/dev/null && [ -f .env ] && \
   echo "docker-compose stop postgres" | newgrp docker
