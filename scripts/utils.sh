@@ -53,10 +53,7 @@ function should_be_inside_container() {
 }
 
 function assert_fs_supports_exec_permission() {
-  cat << EOF >> test.sh
-#!/bin/sh
-exit 0
-EOF
+  touch test.sh
   chmod 644 test.sh
   if [[ -x "test.sh" ]]; then
     rm test.sh
