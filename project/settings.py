@@ -70,6 +70,8 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    # This app first so it correctly overrides runserver command from staticfiles:
+    "base.apps.BaseConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -79,7 +81,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.postgres",
     # required apps
-    "base.apps.BaseConfig",
     "users",
     # external
     "loginas",
