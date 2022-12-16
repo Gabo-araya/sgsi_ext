@@ -4,7 +4,7 @@ set -euo pipefail
 # This script sets up oh-my-zsh and customizations, at build-time (Dockerfile).
 
 # Base installation:
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Customization:
 ln -s /usr/src/app/docker/zsh_dev/load-devcontainer-customs.zsh $HOME/.oh-my-zsh/custom/
