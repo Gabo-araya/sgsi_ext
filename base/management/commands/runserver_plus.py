@@ -6,7 +6,7 @@ from django_extensions.management.commands.runserver_plus import (
     Command as RunserverCommand,
 )
 
-from ..print_TODOs import print_TODOs
+from ..print_to_dos import print_to_dos
 
 
 def is_first_run():
@@ -23,5 +23,5 @@ def is_first_run():
 class Command(RunserverCommand):
     def handle(self, *args, **options):
         if settings.DEBUG and not is_first_run():
-            print_TODOs()
+            print_to_dos()
         return super().handle(*args, **options)

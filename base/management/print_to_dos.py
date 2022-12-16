@@ -3,7 +3,7 @@ import subprocess
 import traceback
 
 
-def print_TODOs():
+def print_to_dos():
     try:
         common_args = (
             "rg",

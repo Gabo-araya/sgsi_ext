@@ -8,7 +8,7 @@ from django.contrib.staticfiles.management.commands.runserver import (
 )
 from django.utils.autoreload import DJANGO_AUTORELOAD_ENV
 
-from ..print_TODOs import print_TODOs
+from ..print_to_dos import print_to_dos
 
 
 def is_first_run():
@@ -18,5 +18,5 @@ def is_first_run():
 class Command(RunserverCommand):
     def handle(self, *args, **options):
         if settings.DEBUG and is_first_run():
-            print_TODOs()
+            print_to_dos()
         return super().handle(*args, **options)
