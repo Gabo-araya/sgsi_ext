@@ -22,6 +22,6 @@ def is_first_run():
 
 class Command(RunserverCommand):
     def handle(self, *args, **options):
-        if settings.DEBUG and not is_first_run():
+        if settings.DEBUG and is_first_run():
             print_to_dos()
         return super().handle(*args, **options)
