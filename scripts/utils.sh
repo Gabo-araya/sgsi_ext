@@ -66,5 +66,3 @@ This script will terminate now."
   fi
   rm test.sh
 }
-
-# TODO: after merging all PRs, check that all `find . -not -path "./docker/*" -name "*.sh" -executable` handle inside/outside container
