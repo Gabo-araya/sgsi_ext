@@ -111,6 +111,7 @@ test_app
 !/docker/volumes/.zsh_history/.gitkeep
 # This one is chowned by container:
 /docker/volumes/postgres-data/
+/docker/volumes/redis-data/
 # This one is currently owned by root, but present in production only:
 /docker/volumes/nginx_secrets/
 

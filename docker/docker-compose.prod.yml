@@ -33,7 +33,7 @@ services:
     image: redis:5-alpine
     restart: unless-stopped
     volumes:
-      - ./docker/volumes/redis_data/:/data/
+      - ./docker/volumes/redis-data/:/data/
 
   celery:
     build: .
