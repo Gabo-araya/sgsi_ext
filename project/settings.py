@@ -19,7 +19,6 @@ from pathlib import Path
 from django.urls import reverse_lazy
 
 
-# TODO: update settings that could benefit of this function
 def get_env_value(key, default, default_if_blank=False):
     try:
         value = os.environ[key].strip()
@@ -255,8 +254,12 @@ EMAIL_HOST = os.environ.get("SMTP_HOST", None)
 EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 EMAIL_HOST_USER = os.environ.get("SMTP_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD", None)
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "webmaster@localhost")
-EMAIL_SENDER_NAME = os.environ.get("EMAIL_SENDER_NAME", "Sender Name")
+DEFAULT_FROM_EMAIL = get_env_value(
+    "DEFAULT_FROM_EMAIL", "webmaster@localhost", default_if_blank=True
+)
+EMAIL_SENDER_NAME = get_env_value(
+    "EMAIL_SENDER_NAME", "Sender Name", default_if_blank=True
+)
 
 # Credentials for AWS services
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", None)
