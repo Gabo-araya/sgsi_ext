@@ -21,7 +21,8 @@ services:
         dj shell -c "print('TODO: install either old django-cron or modern replacement')"
 
   nginx:
-    image: jonasal/nginx-certbot:3.0.0-nginx1.21.3-alpine
+    build:
+      context: ./docker/nginx/
     env_file: docker/nginx.env
     ports:
       - 80:80
@@ -30,11 +31,6 @@ services:
       - django  # To prevent '[emerg] host not found in upstream "django"'
     restart: unless-stopped
     volumes:
-      # TODO: COPY with Dockerfile, so it's not affected by external pull and restart without rebuild:
-      - ./docker/nginx/user-entrypoint.d/50-comment-duplicates.sh:/docker-entrypoint.d/50-comment-duplicates.sh:ro
-      - ./docker/nginx/user_conf.d/:/etc/nginx/user_conf.d/:ro
-      - ./docker/nginx/templates/:/etc/nginx/templates/:ro
-
       - ./project/static/:/usr/share/nginx/static/:ro
       - ./project/media/:/usr/share/nginx/media/:ro
       - ./docker/volumes/nginx_secrets/:/etc/letsencrypt/
