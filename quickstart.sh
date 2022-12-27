@@ -50,10 +50,7 @@ fi
 
 scripts/add-aliases.sh
 
-newgrp docker <<EOF
-COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build && \
-docker-compose down
-EOF
+echo "docker-compose build && docker-compose down" | newgrp docker
 # "down" because https://github.com/docker/compose/issues/4548
 
 # Now that the image is built, set virtual_env in .env:

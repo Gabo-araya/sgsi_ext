@@ -2,7 +2,7 @@ all:
   hosts:
     # dev:
     #   ansible_host: 12.34.56.78
-    #   server_domain: django3-dev.do.magnet.cl
+    #   server_domain: dj3-dev.do.magnet.cl
     #   branch: dev
 
   vars:
