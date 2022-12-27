@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import ast
 import os
 
+from datetime import timedelta
 from pathlib import Path
 
 # django
@@ -485,7 +486,15 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", None)
 
 # Celery beat schedules
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {
+    "sample-scheduled-task-minutely": {
+        "task": "base.tasks.sample_scheduled_task",
+        "schedule": timedelta(seconds=60),
+    }
+}
 """
+More examples:
 CELERY_BEAT_SCHEDULE = {
     "some-scheduled-task-1": {
         "task": "app.tasks.some_task",
@@ -498,7 +507,7 @@ CELERY_BEAT_SCHEDULE = {
     "some-scheduled-task-3": {
         "task": "app.tasks.some_task",
         "schedule": some_func_retuning_customschedule,  # use a CustomSchedule object
-    },
+    }
 }
 """
 
