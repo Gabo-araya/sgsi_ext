@@ -121,7 +121,8 @@ propagate.sh
 /assets/bundles/
 webpack-stats.json
 
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 /docker-compose.override.yml
 *.dump
 *.tgz
