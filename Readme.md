@@ -335,7 +335,7 @@ sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractive
 #### Changing project name after starting development
 If you want to change the project name that is shown in blue in the zsh prompt (for example if development started without changing it from `project-name-placeholder`), when you change between branches/commits with different `name = "..."` in pyproject.toml, you may eventually get problems with the virtualenv (_command not found: dj_, _Couldn't import Django_) because the gitignored `VIRTUAL_ENV` env var has to be updated.
 
-So every time you arrive to a commit with different name, you have to update `VIRTUAL_ENV` in your .env with the path shown in the output of this command (inside container):
+So every time you arrive to a commit with different name, you have to update `DEV_VIRTUAL_ENV` in your .env with the path shown in the output of this command (inside container):
 ```sh
 env --unset=VIRTUAL_ENV poetry env use /usr/local/bin/python3
 ```

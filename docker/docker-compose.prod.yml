@@ -39,6 +39,9 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env
+    environment:
+      - PATH=${DEV_PATH}
+      - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
     volumes:
       - ./project/media/:/usr/src/app/project/media/
       - ./project/static/:/usr/src/app/project/static/:ro
