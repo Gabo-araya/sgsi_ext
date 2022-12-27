@@ -101,8 +101,8 @@ fi
 
 color_print $green 'After rebooting if required,
 - Open this folder in VSCode
-- Click "Install All" to install the recommended extensions
-- Click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
+- Click "Install" when prompted to install the recommended extensions for this repository
+- Then click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
 
 Then in a VSCode terminal run "npm start",
 and in another terminal, run "djs" and access the site at http://localhost:8000'
