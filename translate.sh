@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source scripts/utils.sh
+should_be_inside_container
 
 function makemessages {
     if [ -d "$1" ]; then
