@@ -126,11 +126,11 @@
         chdir: "{{ project_name }}"
         cmd: "{{ build_cmd }} && {{ up_cmd }}"  # Two commands because not all build flags are available in up
       vars:
-        build_cmd: docker-compose build {{ nocache_arg }}
+        build_cmd: docker-compose build {{ nocache_arg }} {{ pull_arg }}
         up_cmd: docker-compose up -d --remove-orphans {{ recreate_arg }}
 
         nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
-        # pull_arg: TODO
+        pull_arg:    "{{ '--pull'     if env_cache_ignore == '1' else '' }}"
         recreate_arg: "{{ '--force-recreate' if env_recreate == '1' else '' }}"
 
         env_recreate: "{{ lookup('env', 'deploy_recreate')|default('0') }}"
