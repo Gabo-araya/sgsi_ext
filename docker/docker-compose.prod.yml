@@ -6,7 +6,7 @@ services:
       timeout: 6s
       start_period: 30s
     depends_on:
-      - memcached
+      - redis
     volumes:
       - ./project/static/:/usr/src/app/project/static/
       - ./project/media/:/usr/src/app/project/media/
