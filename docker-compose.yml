@@ -30,7 +30,8 @@ services:
         WHO: "${WHO:-magnet}"
     env_file: .env
     environment:
-      - PATH=${DJPATH}  # so it applies to this container only
+      - PATH=${DEV_PATH}
+      - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
     depends_on:
       - postgres
     init: yes

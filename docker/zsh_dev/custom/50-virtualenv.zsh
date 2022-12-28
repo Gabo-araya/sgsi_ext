@@ -1,8 +1,9 @@
-# Poetry's virtualenv should always be active because of VIRTUAL_ENV and PATH set in ".env".
+# Poetry's virtualenv should always be active because of DEV_VIRTUAL_ENV and DEV_PATH set in ".env".
+# (mapped to VIRTUAL_ENV and PATH, respectively)
 
 RECREATE_FIX_MSG="To fix it, run:
   env --unset=VIRTUAL_ENV poetry env use /usr/local/bin/python3
-and in your .env, change VIRTUAL_ENV to the path printed by that command.
+and in your .env, change DEV_VIRTUAL_ENV to the path printed by that command.
 Then recreate the container:
   - vscode devcontainer: F1 --> Rebuild Container
   - compose: docker-compose up -d --force-recreate"

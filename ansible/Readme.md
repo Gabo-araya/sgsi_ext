@@ -123,11 +123,9 @@ If you are not familiar with docker-compose:
 - Add `-f` after `logs` to wait for new messages
 - Add `-t` after `logs` if you want extra timestamps
 
-### Cron logs
+### Celery beat logs
 
-Running `docker-compose logs ofelia` gives you the output of the `runcrons` management command, which is usually nothing. The logs are in `www.example.com/admin/django_cron/cronjoblog/`
-
-TODO: replace previous paragraph if an alternative to django-cron is installed, or remove this note when django-cron is installed.
+Logs are stored in the `celery` container log when running on production. They are stored in JSON format for easy integration with external logging stacks.
 
 ## How to erase the deployed project from server
 
