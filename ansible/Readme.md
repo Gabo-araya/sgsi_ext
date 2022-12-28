@@ -125,7 +125,7 @@ If you are not familiar with docker-compose:
 
 ### Celery beat logs
 
-TODO: document about celery beat
+Logs are stored in the `celery` container log when running on production. They are stored in JSON format for easy integration with external logging stacks.
 
 ## How to erase the deployed project from server
 

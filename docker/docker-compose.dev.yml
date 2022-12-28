@@ -33,3 +33,32 @@ services:
   postgres:
     restart: "no"
     network_mode: host
+
+  # redis:
+  #   image: redis:5-alpine
+  #   restart: no
+  #   network_mode: host
+  #   volumes:
+  #     - ./docker/volumes/redis-data/:/data/
+
+  # celery:
+  #   build:
+  #     context: .
+  #     target: development
+  #   restart: no
+  #   env_file: .env
+  #   environment:
+  #     - PATH=${DEV_PATH}
+  #     - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
+  #   network_mode: host
+  #   volumes:
+  #     - ./project/media/:/usr/src/app/project/media/
+  #     - ./:/usr/src/app/
+  #   depends_on:
+  #     - redis
+  #   command:
+  #     - celery
+  #     - --app=project.celeryconf:app
+  #     - worker
+  #     - --loglevel=info
+  #     - --beat
