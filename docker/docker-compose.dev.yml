@@ -36,7 +36,7 @@ services:
 
   # redis:
   #   image: redis:5-alpine
-  #   restart: no
+  #   restart: "no"
   #   network_mode: host
   #   volumes:
   #     - ./docker/volumes/redis-data/:/data/
@@ -45,7 +45,7 @@ services:
   #   build:
   #     context: .
   #     target: development
-  #   restart: no
+  #   restart: "no"
   #   env_file: .env
   #   environment:
   #     - PATH=${DEV_PATH}
