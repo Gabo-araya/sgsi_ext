@@ -1,14 +1,10 @@
 from django.conf import settings
-from django.db.models.signals import post_delete
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 # base imports
 from base.middleware import RequestMiddleware
 from base.utils import get_our_models
 
 
-@receiver(post_save)
 def audit_log(sender, instance, created, raw, update_fields, **kwargs):
     """
     Post save signal that creates a log when an object from a models from
@@ -56,7 +52,6 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
             instance._save_edition(user, message)
 
 
-@receiver(post_delete)
 def audit_delete_log(sender, instance, **kwargs):
     """
     Post delete signal that creates a log when an object from a models from

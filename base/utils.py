@@ -171,3 +171,19 @@ def build_absolute_url_wo_req(path: str) -> str:
     scheme = "https" if settings.SECURE_SSL_REDIRECT else "http"
     site = Site.objects.get_current()
     return f"{scheme}://{site.domain}{path}"
+
+
+def get_subclasses(cls):
+    """Inspects a model and returns its subclass list.
+
+    (See: https://stackoverflow.com/a/29106313)
+    """
+    result = {cls}
+    to_inspect = [cls]
+    while to_inspect:
+        class_to_inspect = to_inspect.pop()
+        for subclass in class_to_inspect.__subclasses__():
+            if subclass not in result:
+                result.add(subclass)
+                to_inspect.append(subclass)
+    return result
