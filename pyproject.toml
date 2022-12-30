@@ -86,3 +86,11 @@ python_files = [
   "*_tests.py"
 ]
 junit_family = "xunit2"
+
+[tool.coverage.run]
+omit = [
+  "*/management/*",
+  "*/migrations/*",
+  "*/test/*",
+  "*/tests.py"
+]
