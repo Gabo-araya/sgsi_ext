@@ -28,6 +28,7 @@
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
     "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
     "ms-python.python",
     "ms-python.vscode-pylance",
     "visualstudioexptteam.vscodeintellicode",
