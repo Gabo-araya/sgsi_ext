@@ -107,7 +107,7 @@ try:
     # others libraries
     import debug_toolbar
 
-    ENABLE_DEBUG_TOOLBAR = not TEST and get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
+    ENABLE_DEBUG_TOOLBAR = DEBUG and get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
 except ImportError:
     ENABLE_DEBUG_TOOLBAR = False
 
