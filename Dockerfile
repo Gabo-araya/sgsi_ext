@@ -124,6 +124,8 @@ RUN \
     vim nano \
     # to grep for TODOs:
     ripgrep \
+    # prevents "spawn ps ENOENT" error in lint-staged:
+    procps \
 \
   && title_print "Install oh-my-zsh" \
   && sudo -u $WHO docker/zsh_dev/setup_dev.sh \
