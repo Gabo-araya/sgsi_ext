@@ -89,7 +89,7 @@ html(lang="{{ request.LANGUAGE_CODE|default:'es' }}")
     {% render_bundle "main" "css" %}
     block stylesheets
 
-  body(class=body_class)
+  body
     {% env_badge %}
     include includes/navbar/navbar.pug
 
