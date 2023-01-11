@@ -20,15 +20,15 @@ module.exports = merge(common, {
   mode: 'production',
 
   output: {
-    filename: '[name]-[contenthash].js'
+    filename: '[name]-[contenthash].js',
   },
 
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name]-[contenthash].css',
-      chunkFilename: '[id]-[contenthash].css'
+      chunkFilename: '[id]-[contenthash].css',
     }),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
   ],
 
   devtool: 'source-map',
@@ -37,8 +37,8 @@ module.exports = merge(common, {
     minimize: true,
     minimizer: [
       new TerserPlugin(),
-      new CSSMinimizerPlugin()
-    ]
+      new CSSMinimizerPlugin(),
+    ],
   },
 
   module: {
@@ -52,10 +52,10 @@ module.exports = merge(common, {
             loader: 'ts-loader',
             options: {
               // Prevent production compilation on type errors.
-              transpileOnly: false
-            }
-          }
-        ]
+              transpileOnly: false,
+            },
+          },
+        ],
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -64,29 +64,29 @@ module.exports = merge(common, {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true
-            }
+              sourceMap: true,
+            },
           },
           {
             loader: 'postcss-loader',
             options: {
               sourceMap: true,
               postcssOptions: {
-                plugins: () => [autoprefixer()]
-              }
-            }
+                plugins: () => [autoprefixer()],
+              },
+            },
           },
           {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
               sassOptions: {
-                includePaths: glob.sync('node_modules').map((d) => path.join(__dirname, d))
-              }
-            }
-          }
-        ]
-      }
-    ]
-  }
+                includePaths: glob.sync('node_modules').map((d) => path.join(__dirname, d)),
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
 });

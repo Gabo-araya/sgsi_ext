@@ -14,21 +14,21 @@ module.exports = {
 
   entry: {
     main: './assets/ts/index.ts',
-    status: './assets/ts/status.ts'
+    status: './assets/ts/status.ts',
   },
 
   output: {
-    path: path.resolve('./assets/bundles/')
+    path: path.resolve('./assets/bundles/'),
   },
 
   plugins: [
     new BundleTracker({
-      filename: './webpack-stats.json'
+      filename: './webpack-stats.json',
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
-      openAnalyzer: false
-    })
+      openAnalyzer: false,
+    }),
     // Note: this causes the dev server to print some errors
     // (Error parsing bundle asset "...": no such file)
     // but the html report is generated anyway.
@@ -44,22 +44,22 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
-          }
-        }
+            presets: ['@babel/preset-env'],
+          },
+        },
       },
       {
         test: /.(jpg|png|woff(2)?|eot|ttf|svg)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'file-loader'
-        }
-      }
-    ]
+          loader: 'file-loader',
+        },
+      },
+    ],
   },
 
   resolve: {
     modules: ['./node_modules'],
-    extensions: ['*', '.tsx', '.ts', '.js']
-  }
+    extensions: ['*', '.tsx', '.ts', '.js'],
+  },
 };

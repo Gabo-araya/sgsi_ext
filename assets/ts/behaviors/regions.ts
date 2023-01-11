@@ -39,7 +39,7 @@ async function setCommuneOptions(communeChoices: Choices, regionId: string) {
     communes.unshift({
       id: '',
       text: communeSelectPlaceholder,
-      selected: true
+      selected: true,
     });
   }
 

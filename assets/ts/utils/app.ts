@@ -29,5 +29,5 @@ export const App = {
 
       setTimeout(() => element.classList.remove('dim'), 1010);
     }
-  }
+  },
 };
