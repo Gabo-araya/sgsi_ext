@@ -104,7 +104,6 @@ MIDDLEWARE = [
 ]
 
 
-
 if find_spec("debug_toolbar"):
     ENABLE_DEBUG_TOOLBAR = DEBUG and get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
 else:
