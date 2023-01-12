@@ -15,6 +15,7 @@ import os
 
 from datetime import timedelta
 from pathlib import Path
+from importlib.util import find_spec
 
 # django
 from django.urls import reverse_lazy
@@ -103,12 +104,10 @@ MIDDLEWARE = [
 ]
 
 
-try:
-    # others libraries
-    import debug_toolbar  # noqa
 
+if find_spec("debug_toolbar"):
     ENABLE_DEBUG_TOOLBAR = DEBUG and get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
-except ImportError:
+else:
     ENABLE_DEBUG_TOOLBAR = False
 
 
@@ -138,12 +137,9 @@ if ENABLE_DEBUG_TOOLBAR:
         "debug_toolbar.panels.profiling.ProfilingPanel",
     ]
 
-try:
-    # others libraries
-    import django_extensions  # noqa
-
+if find_spec("django_extensions"):
     ENABLE_DJANGO_EXTENSIONS = get_bool_from_env("ENABLE_DJANGO_EXTENSIONS", False)
-except ImportError:
+else:
     ENABLE_DJANGO_EXTENSIONS = False
 
 
