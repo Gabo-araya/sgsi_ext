@@ -24,15 +24,23 @@ class AppTemplateCommand(TemplateCommand):
     )
 
     def add_arguments(self, parser):
-        parser.add_argument("name", help="Name of the application or project.")
         parser.add_argument(
-            "directory", nargs="?", help="Optional destination directory"
+            "name",
+            help="Name of the application or project.",
         )
         parser.add_argument(
-            "--model_name", help="The path or URL to load the template from."
+            "directory",
+            nargs="?",
+            help="Optional destination directory",
         )
         parser.add_argument(
-            "--template", help="The path or URL to load the template from."
+            "--model-name",
+            help="Name fo the defauld model of the app.",
+        )
+        parser.add_argument(
+            "--template",
+            help="The path or URL to load the template from.",
+            default="project/app_template",
         )
         parser.add_argument(
             "--extension",

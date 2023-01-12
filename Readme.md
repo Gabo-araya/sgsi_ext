@@ -146,7 +146,7 @@ Or just recreate the container (as the symlink is included in the image).
 ### Start a new django application
 Use the custom app template to create your apps:
 
-`python manage.py startapp --template=project/app_template {app_name} --model_name [model_name]`
+`python manage.py startapp {app_name} --model-name [model_name]`
 
 The app template assumes your app name is a plural, the `model_name` parameter
 is optional. The template contains the following:
