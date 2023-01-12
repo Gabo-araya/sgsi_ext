@@ -20,6 +20,16 @@ repos:
         stages:
           - commit
 
+      - id: flake8
+        name: flake8
+        entry: poetry run flake8
+        exclude: migrations
+        language: system
+        types:
+          - python
+        stages:
+          - commit
+
       - id: health-check
         name: health check
         entry: poetry run python manage.py check --fail-level WARNING
