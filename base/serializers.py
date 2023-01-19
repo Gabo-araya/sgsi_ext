@@ -11,8 +11,9 @@ import uuid
 from json import JSONEncoder
 
 # django
+from django.core.files.uploadedfile import UploadedFile
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db import models
+from django.db.models.fields.files import FieldFile
 from django.utils.duration import duration_iso_string
 from django.utils.encoding import force_str
 from django.utils.encoding import force_text
@@ -24,11 +25,14 @@ class ModelEncoder(DjangoJSONEncoder):
     def default(self, obj):
         from base.models import BaseModel
 
-        if isinstance(obj, models.fields.files.FieldFile):
+        if isinstance(obj, FieldFile):
             if obj:
                 return obj.url
             else:
                 return None
+
+        elif isinstance(obj, UploadedFile):
+            return f"<Unsaved file: {obj.name}>"
 
         elif isinstance(obj, BaseModel):
             return obj.to_dict()
