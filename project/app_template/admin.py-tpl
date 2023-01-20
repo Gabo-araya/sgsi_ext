@@ -1,10 +1,6 @@
-""" Administration classes for the {{app_name}} application. """
-# standard library
-
 # django
 from django.contrib import admin
 
-# models
 from .models import {{model_name}}
 
 
