@@ -15,11 +15,16 @@ alias djm='dj migrate'
 alias djmm='dj makemigrations'
 
 djt() {
-  # usage: djt [-cefn]
-  #   -c is --create-db
-  #   -e is --exitfirst
-  #   -f is --failed-first
-  #   -n is --new-first
+  if [[ "$1" == "--help" ]]; then
+    echo 'usage: djt [-cefn]
+  -c is --create-db
+  -e is --exitfirst
+  -f is --failed-first
+  -n is --new-first
+
+Runs "pytest --reuse-db" adding extra arguments with shortcuts.'
+    return 0
+  fi
 
   local c= e= f= n=
   while getopts cefn opt; do
