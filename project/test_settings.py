@@ -21,3 +21,7 @@ CACHES = {
         "LOCATION": "tmp/cache",
     }
 }
+
+# disable and remove debug toolbar, as normal settings are loaded before this module
+# and pytest overrides are applied after
+ENABLE_DEBUG_TOOLBAR = False

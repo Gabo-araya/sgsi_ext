@@ -20,7 +20,6 @@ from django.utils import timezone
 from faker import Faker
 from inflection import underscore
 
-from base.utils import random_rut
 from base.utils import random_string
 
 # models

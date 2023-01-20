@@ -1,1 +1,1 @@
-from base import signals
+from base import signals  # noqa

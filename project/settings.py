@@ -105,9 +105,9 @@ MIDDLEWARE = [
 
 try:
     # others libraries
-    import debug_toolbar
+    import debug_toolbar  # noqa
 
-    ENABLE_DEBUG_TOOLBAR = not TEST and get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
+    ENABLE_DEBUG_TOOLBAR = DEBUG and get_bool_from_env("ENABLE_DEBUG_TOOLBAR", False)
 except ImportError:
     ENABLE_DEBUG_TOOLBAR = False
 
@@ -140,7 +140,7 @@ if ENABLE_DEBUG_TOOLBAR:
 
 try:
     # others libraries
-    import django_extensions
+    import django_extensions  # noqa
 
     ENABLE_DJANGO_EXTENSIONS = get_bool_from_env("ENABLE_DJANGO_EXTENSIONS", False)
 except ImportError:
