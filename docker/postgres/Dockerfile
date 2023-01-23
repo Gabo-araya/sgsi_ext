@@ -5,9 +5,10 @@ ARG HOST_GID=2640
 ARG WHO=magnet
 ARG POSTGRES_LOCALE=es_CL
 
-# set locale for proper language support
+# set locale for proper language support, keep messages in english
 RUN localedef -i $POSTGRES_LOCALE -c -f UTF-8 -A /usr/share/locale/locale.alias $POSTGRES_LOCALE.UTF-8
 ENV LANG="$POSTGRES_LOCALE.UTF-8"
+ENV LC_MESSAGES="en_US.UTF-8"
 
 
 # Recreate postgres user with host UID/GID.
