@@ -22,7 +22,7 @@ class BaseTemplateView(LoginPermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BaseTemplateView, self).get_context_data(**kwargs)
 
-        context["title"] = self.title
+        context["title"] = self.get_title()
 
         return context
 

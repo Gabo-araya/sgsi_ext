@@ -146,7 +146,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         )
         if context_parent_object_name:
             context[context_parent_object_name] = self.parent_object
-        context["title"] = _("Create %s") % self.model._meta.verbose_name
+        context["title"] = self.get_title()
 
         self.next_url = self.request.GET.get("next")
         context["next"] = self.next_url
