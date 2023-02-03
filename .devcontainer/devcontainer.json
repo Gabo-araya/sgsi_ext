@@ -17,28 +17,30 @@
   // connected. This is typically a file mount in .devcontainer/docker-compose.yml
   "workspaceFolder": "/usr/src/app",
 
-  // Set *default* container specific settings.json values on container create.
-  "settings": {
-    // Default to zsh:
-    "terminal.integrated.defaultProfile.linux": "zsh",
-    // The environment is handled with other methods. See 50-venv-hints.zsh
-    "python.terminal.activateEnvironment": false
+  "customizations": {
+    "vscode": {
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+        // Default to zsh:
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        // The environment is handled with other methods. See 50-venv-hints.zsh
+        "python.terminal.activateEnvironment": false
+      },
+      // improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "stylelint.vscode-stylelint",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "visualstudioexptteam.vscodeintellicode",
+        "shardulm94.trailing-spaces",
+        "syler.sass-indented",
+        "mechatroner.rainbow-csv",
+        "eamodio.gitlens",
+        "donjayamanne.githistory"
+      ]
+    }
   },
-
-  // Add the IDs of extensions you want installed when the container is created.
-  "extensions": [
-    "dbaeumer.vscode-eslint",
-    "stylelint.vscode-stylelint",
-    "ms-python.python",
-    "ms-python.vscode-pylance",
-    "visualstudioexptteam.vscodeintellicode",
-    "shardulm94.trailing-spaces",
-    "syler.sass-indented",
-    "mechatroner.rainbow-csv",
-    "eamodio.gitlens",
-    "donjayamanne.githistory"
-  ],
-  // improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
