@@ -1,55 +1,59 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/docker-existing-docker-compose
 {
-	"name": "Magnet's DPT3 container",
+  "name": "Magnet's DPT3 container",
 
-	// The symlink docker-compose.override.yml --> docker/docker-compose.dev.yml provides config
-	// for Remote-Containers and docker-compose CLI, so this should be blank.
-	// https://github.com/microsoft/vscode-remote-release/issues/1080#issuecomment-824087033
-	// https://docs.docker.com/compose/extends/#understanding-multiple-compose-files
-	"dockerComposeFile": [],
+  // The symlink docker-compose.override.yml --> docker/docker-compose.dev.yml provides config
+  // for Remote-Containers and docker-compose CLI, so this should be blank.
+  // https://github.com/microsoft/vscode-remote-release/issues/1080#issuecomment-824087033
+  // https://docs.docker.com/compose/extends/#understanding-multiple-compose-files
+  "dockerComposeFile": [],
 
-	// The 'service' property is the name of the service for the container that VS Code should
-	// use. Update this value and .devcontainer/docker-compose.yml to the real service name.
-	"service": "django",
+  // The 'service' property is the name of the service for the container that VS Code should
+  // use. Update this value and .devcontainer/docker-compose.yml to the real service name.
+  "service": "django",
 
-	// The optional 'workspaceFolder' property is the path VS Code should open by default when
-	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
-	"workspaceFolder": "/usr/src/app",
+  // The optional 'workspaceFolder' property is the path VS Code should open by default when
+  // connected. This is typically a file mount in .devcontainer/docker-compose.yml
+  "workspaceFolder": "/usr/src/app",
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		// Default to zsh:
-		"terminal.integrated.defaultProfile.linux": "zsh",
-		// The environment is handled with other methods. See 50-venv-hints.zsh
-		"python.terminal.activateEnvironment": false
-	},
+  // Set *default* container specific settings.json values on container create.
+  "settings": {
+    // Default to zsh:
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    // The environment is handled with other methods. See 50-venv-hints.zsh
+    "python.terminal.activateEnvironment": false
+  },
 
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"ms-python.python",
-		"ms-python.vscode-pylance",
-		"visualstudioexptteam.vscodeintellicode",
-		"shardulm94.trailing-spaces"
-	],
-	// improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "visualstudioexptteam.vscodeintellicode",
+    "shardulm94.trailing-spaces",
+    "syler.sass-indented",
+    "mechatroner.rainbow-csv",
+    "eamodio.gitlens",
+    "donjayamanne.githistory"
+  ],
+  // improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
 
-	// Uncomment the next line if you want start specific services in your Docker Compose config.
-	// "runServices": [],
+  // Uncomment the next line if you want start specific services in your Docker Compose config.
+  // "runServices": [],
 
-	// Uncomment the next line if you want to keep your containers running after VS Code shuts down.
-	// "shutdownAction": "none",
+  // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
+  // "shutdownAction": "none",
 
-	// Uncomment the next line to run commands after the container is created - for example installing curl.
-	// "postCreateCommand": "apt-get update && apt-get install -y curl",
+  // Uncomment the next line to run commands after the container is created - for example installing curl.
+  // "postCreateCommand": "apt-get update && apt-get install -y curl",
 
-	// "remoteUser": This feature (https://aka.ms/vscode-remote/containers/non-root) is unused
-	// because it's handled at a lower level (in Dockerfile).
+  // "remoteUser": This feature (https://aka.ms/vscode-remote/containers/non-root) is unused
+  // because it's handled at a lower level (in Dockerfile).
 
-	// See 90-vscode-env.zsh
-	"postStartCommand": "printenv > /dev/shm/env_from_vscode_terminal",
+  // See 90-vscode-env.zsh
+  "postStartCommand": "printenv > /dev/shm/env_from_vscode_terminal"
 }
