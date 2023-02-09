@@ -17,6 +17,7 @@ from django.utils.translation import gettext_lazy as _
 from base.managers import BaseQuerySet
 from base.mixins import AuditMixin
 from base.serializers import ModelEncoder
+from base.utils import build_absolute_url_wo_req
 
 
 class BaseModel(AuditMixin, models.Model):
@@ -133,9 +134,7 @@ class BaseModel(AuditMixin, models.Model):
         return json.dumps(data, cls=ModelEncoder, **kargs)
 
     def get_full_url(self):
-        absolute_url = self.get_absolute_url()
-        site = Site.objects.get_current().domain
-        return "http://{site}{path}".format(site=site, path=absolute_url)
+        return build_absolute_url_wo_req(self.get_absolute_url())
 
 
 class OrderableModel(BaseModel):

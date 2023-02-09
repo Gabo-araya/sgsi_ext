@@ -470,8 +470,10 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
+# Use this to know if the site is hosted with https or not.
+# Has no real effect as requests are redirected by nginx (or another proxy)
+# before django.
 SECURE_SSL_REDIRECT = not DEBUG
-# Requests are redirected by nginx, but setting this here silences a warning.
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
