@@ -391,7 +391,9 @@ LOGGING = {
         },
     },
     "loggers": {
-        "django": {
+        "": {
+            # "": To print "logger.info" to console
+            # https://stackoverflow.com/questions/62782979/logger-info-not-working-in-django-logging/70343506#70343506
             "handlers": ["console", "mail_admins"],
             "level": "INFO",
         },
