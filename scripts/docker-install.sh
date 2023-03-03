@@ -5,6 +5,11 @@ source scripts/utils.sh
 assert_outside_container
 
 
+if [[ "$OSTYPE" == darwin* ]]; then
+  color_print $yellow "Warning: On macOS systems, install Docker Desktop manually. At least engine version 20.10 is required."
+  exit
+fi
+
 title_print "Installing Docker..."
 
 docker_version_new_enough() (

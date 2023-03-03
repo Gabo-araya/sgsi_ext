@@ -19,7 +19,13 @@ else
   who=$(whoami)
   host_uid=$(id -u)
   host_gid=$(id -g)
+
+if [[ "$OSTYPE" == darwin* ]]; then
+  echo "NOTE: on macOS system your password might be required to get current timezone."
+  tz=$(sudo systemsetup -gettimezone | awk -F: '{tz=$2; sub(/^ */, "", tz); print tz; exit}')
+else
   tz=$(cat /etc/timezone)
+fi
 
   # Not yet known, leave as is to be set later:
   virtual_env="{{virtual_env}}"
@@ -28,9 +34,9 @@ else
   postgres_host="localhost"
   postgres_port="15432"
   postgres_user="postgres"
-  postgres_password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
+  postgres_password=$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
   postgres_db=$project_name
-  secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
+  secret_key=$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
   django_debug=True
   environment_name=Development
   enable_debug_toolbar=True

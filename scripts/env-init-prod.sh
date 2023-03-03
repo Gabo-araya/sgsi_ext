@@ -29,7 +29,7 @@ select db_loc in Local Remote; do
     postgres_host="postgres"
     postgres_port="5432"
     postgres_user="postgres"
-    postgres_password=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
+    postgres_password=$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
     break
 
   elif [[ "$db_loc" == "Remote" ]]; then
@@ -52,7 +52,7 @@ select db_loc in Local Remote; do
   fi
 done
 
-secret_key=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
+secret_key=$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
 
 django_debug=False
 
