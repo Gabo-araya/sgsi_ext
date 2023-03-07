@@ -94,31 +94,44 @@ Please remove that version, or manually upgrade it to 1.29.2."
   color_print $green "Docker-compose installation completed."
 fi
 
+enable_buildkit() {
+  if ! [ -s /etc/docker/daemon.json ]; then
+    # Default state (no file (or empty)), so create it:
+    echo '{
+    "features": {
+      "buildkit": true
+    }
+  }' | sudo tee /etc/docker/daemon.json >/dev/null
+
+    sudo systemctl restart docker.service
+
+    color_print $green "BuildKit has been enabled."
+
+  elif grep -q '"buildkit":\s*true' /etc/docker/daemon.json; then
+    color_print $green "BuildKit already enabled."
+    # Note: it's possible that even though the file contains buildkit:true,
+    # a restart of the daemon is pending.
+
+  else
+    # force enable buildkit with jq
+    color_print "$yellow" "BuildKit appears not to be enabled. Enabling it."
+    new_file=$(mktemp)
+    jq '.features.buildkit = true' /etc/docker/daemon.json > "$new_file"
+    sudo sh -c 'mv "'"$new_file"'" /etc/docker/daemon.json; chown 0:0 /etc/docker/daemon.json; chmod 644 /etc/docker/daemon.json'
+    color_print "$yellow" "Restarting docker daemon"
+    sudo systemctl restart docker.service
+  fi
+}
 
 # Enable BuildKit
-if ! [ -s /etc/docker/daemon.json ]; then
-  # Default state (no file (or empty)), so create it:
-  echo '{
-  "features": {
-    "buildkit": true
-  }
-}' | sudo tee /etc/docker/daemon.json >/dev/null
-
-  sudo systemctl restart docker.service
-
-  color_print $green "BuildKit has been enabled."
-
-elif grep -q '"buildkit":\s*true' /etc/docker/daemon.json; then
-  color_print $green "BuildKit already enabled."
-  # Note: it's possible that even though the file contains buildkit:true,
-  # a restart of the daemon is pending.
-
+if [[ "$(< /proc/sys/kernel/osrelease)" == "*Microsoft" ]]; then
+  color_print $yellow 'Warning: On WSL, BuildKit must be configured manually using Docker Desktop GUI.
+Make sure your daemon configuration contains the
+following:
+"features": {
+  "buildkit": true
+}"'
+  exit
 else
-  # force enable buildkit with jq
-  color_print "$yellow" "BuildKit appears not to be enabled. Enabling it."
-  new_file=$(mktemp)
-  jq '.features.buildkit = true' /etc/docker/daemon.json > "$new_file"
-  sudo sh -c 'mv "'"$new_file"'" /etc/docker/daemon.json; chown 0:0 /etc/docker/daemon.json; chmod 644 /etc/docker/daemon.json'
-  color_print "$yellow" "Restarting docker daemon"
-  sudo systemctl restart docker.service
+  enable_buildkit
 fi
