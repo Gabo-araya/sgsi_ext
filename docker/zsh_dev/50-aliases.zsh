@@ -37,7 +37,7 @@ Runs "pytest --reuse-db" adding extra arguments with shortcuts.'
     esac
   done
 
-  pytest --reuse-db $c $e $f $n
+  pytest --reuse-db $c $e $f $n "$@"
 }
 
 
