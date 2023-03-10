@@ -12,6 +12,8 @@ from itertools import cycle
 
 # django
 from django.apps import apps
+from django.conf import settings
+from django.contrib.sites.models import Site
 from django.db import models
 from django.utils import timezone
 
@@ -157,3 +159,15 @@ def get_slug_fields(model):
         if isinstance(field, models.SlugField):
             slug_fields.append(field)
     return slug_fields
+
+
+def build_absolute_url_wo_req(path: str) -> str:
+    """
+    Returns an absolute URL to an absolute `path` (like `/admin/`).
+    If you have a `request`, use
+    [build_absolute_uri](http://docs.djangoproject.com/en/stable/ref/request-response/#django.http.HttpRequest.build_absolute_uri)
+    instead.
+    """
+    scheme = "https" if settings.SECURE_SSL_REDIRECT else "http"
+    site = Site.objects.get_current()
+    return f"{scheme}://{site.domain}{path}"
