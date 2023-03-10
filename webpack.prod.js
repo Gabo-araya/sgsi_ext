@@ -44,6 +44,20 @@ module.exports = merge(common, {
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
+        include: path.resolve('./assets/ts'),
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              // Prevent production compilation on type errors.
+              transpileOnly: false
+            }
+          }
+        ]
+      },
+      {
         test: /\.(sa|sc|c)ss$/,
         use: [
           MiniCssExtractPlugin.loader,

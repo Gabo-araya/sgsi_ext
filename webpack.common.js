@@ -33,7 +33,7 @@ module.exports = {
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       openAnalyzer: false
-    }),
+    })
     // Note: this causes the dev server to print some errors
     // (Error parsing bundle asset "...": no such file)
     // but the html report is generated anyway.
@@ -42,12 +42,6 @@ module.exports = {
 
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        include: path.resolve('./assets/ts'),
-        exclude: /node_modules/,
-        use: 'ts-loader'
-      },
       {
         test: /\.m?js$/,
         include: path.resolve('./assets/js'),

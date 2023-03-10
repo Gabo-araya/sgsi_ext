@@ -24,6 +24,9 @@ class BaseModelForm(ModelForm):
             if "class" not in attrs:
                 attrs["class"] = ""
 
+            # TODO: Install Tempus Dominus for date/time inputs
+            # https://getdatepicker.com/6/
+
             if isinstance(field.widget, forms.widgets.DateTimeInput):
                 attrs["class"] += " datetimepicker-input form-control"
                 attrs["data-format"] = "DD/MM/YYYY HH:mm:s"

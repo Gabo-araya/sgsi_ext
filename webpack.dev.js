@@ -43,6 +43,21 @@ module.exports = merge(common, {
   module: {
     rules: [
       {
+        test: /\.tsx?$/,
+        include: path.resolve('./assets/ts'),
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              // Allow development with temporary type errors.
+              // Check them with lint-staged instead.
+              transpileOnly: true
+            }
+          }
+        ]
+      },
+      {
         test: /\.(sa|sc|c)ss$/,
         use: [
           'css-hot-loader',

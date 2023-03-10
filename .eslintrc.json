@@ -26,7 +26,8 @@
     "import",
     "react",
     "react-hooks",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "deprecation"
   ],
   "rules": {
     "arrow-body-style": ["error", "as-needed"],
@@ -54,6 +55,7 @@
     "@typescript-eslint/no-use-before-define": [
       "error",
       { "functions": false, "classes": true, "variables": true , "typedefs": true }
-    ]
+    ],
+    "deprecation/deprecation": "warn"
   }
 }
