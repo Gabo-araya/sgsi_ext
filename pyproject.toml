@@ -8,7 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "~3.9.9"
 # semver packages
-django = "~3.2.13"
+django = "~3.2.18"
 psycopg2 = "2.9.4"
 celery = { version = "~5.2", extras = ["redis"] }
 gunicorn = "~20.1.0"
