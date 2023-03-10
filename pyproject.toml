@@ -44,6 +44,7 @@ flake8 = "6.0.0"
 isort = "5.11.4"
 pre-commit = "2.21.0"
 watchdog = "2.2.1"
+Werkzeug = "2.2.3"
 # calver packages
 black = "22.12.0"
 
