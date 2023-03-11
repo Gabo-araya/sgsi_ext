@@ -31,8 +31,16 @@
   ],
   "rules": {
     "arrow-body-style": ["error", "as-needed"],
-    "comma-dangle": ["error", "never"],
-    "@typescript-eslint/comma-dangle": ["error", "never"],
+    "@typescript-eslint/comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "only-multiline",
+      "enums": "always-multiline",
+      "generics": "always-multiline",
+      "tuples": "always-multiline"
+    }],
     "function-paren-newline": "off",
     "lines-between-class-members": "off",
     // Deprecated, but still used in airbnb config, covered by func-call-spacing

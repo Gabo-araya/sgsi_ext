@@ -13,7 +13,7 @@ const CHOICES_LANG_TEXTS = {
     itemSelectText: '',
     addItemText: (value: string) => `Press Enter to add <b>"${value}"</b>`,
     maxItemText: (maxItemCount: number) => `Only ${maxItemCount} values can be added`,
-    searchPlaceholderValue: 'Search'
+    searchPlaceholderValue: 'Search',
   },
   es: {
     loadingText: 'Cargando...',
@@ -22,8 +22,8 @@ const CHOICES_LANG_TEXTS = {
     itemSelectText: '',
     addItemText: (value: string) => `Pressione Enter para agregar <b>"${value}"</b>`,
     maxItemText: (maxItemCount: number) => `Sólo se pueden agregar ${maxItemCount} valores`,
-    searchPlaceholderValue: 'Buscar'
-  }
+    searchPlaceholderValue: 'Buscar',
+  },
 };
 
 const SELECT_VALID_CLASS = 'is-valid';
@@ -90,7 +90,7 @@ export function initChoices(select: HTMLSelectElement) {
         });
       }
     },
-    ...CHOICES_LANG_TEXTS[documentLang]
+    ...CHOICES_LANG_TEXTS[documentLang],
   };
   const choices = new Choices(select, options);
 

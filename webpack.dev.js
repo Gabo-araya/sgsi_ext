@@ -18,14 +18,14 @@ module.exports = merge(common, {
 
   output: {
     filename: '[name].js',
-    publicPath: 'http://localhost:3000/'
+    publicPath: 'http://localhost:3000/',
   },
 
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      chunkFilename: '[id].css'
-    })
+      chunkFilename: '[id].css',
+    }),
   ],
 
   devtool: 'eval-cheap-source-map',
@@ -35,9 +35,9 @@ module.exports = merge(common, {
   devServer: {
     port: 3000,
     headers: {
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
     },
-    watchFiles: ['**/*.pug']
+    watchFiles: ['**/*.pug'],
   },
 
   module: {
@@ -52,10 +52,10 @@ module.exports = merge(common, {
             options: {
               // Allow development with temporary type errors.
               // Check them with lint-staged instead.
-              transpileOnly: true
-            }
-          }
-        ]
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -65,29 +65,29 @@ module.exports = merge(common, {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true
-            }
+              sourceMap: true,
+            },
           },
           {
             loader: 'postcss-loader',
             options: {
               sourceMap: true,
               postcssOptions: {
-                plugins: () => [autoprefixer()]
-              }
-            }
+                plugins: () => [autoprefixer()],
+              },
+            },
           },
           {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
               sassOptions: {
-                includePaths: glob.sync('node_modules').map((d) => path.join(__dirname, d))
-              }
-            }
-          }
-        ]
-      }
-    ]
-  }
+                includePaths: glob.sync('node_modules').map((d) => path.join(__dirname, d)),
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
 });

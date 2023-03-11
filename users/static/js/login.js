@@ -34,7 +34,6 @@ window.onload = () => {
     }
   }, 1000);
 
-
   const loginForm = document.getElementById('login-form');
   const loginField = document.getElementById(loginForm.dataset.usernameFieldId);
   if (loginField) {
