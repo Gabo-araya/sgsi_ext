@@ -62,7 +62,18 @@ server {
 # Redirect http://www.example.com to https://example.com:
 server {
   listen 80;
-  server_name www.${SERVER_DOMAIN};
+
+  server_name www.${SERVER_DOMAIN}; # certbot_domain:${SERVER_DOMAIN}
+  # The comment on the line above prevents requesting a certificate for www.app.example.com.
+  #
+  # This docker image automatically requests certificates for all "server_name"s it finds,
+  # even for this one which listens only on port 80.
+  # If the site is hosted on app.example.com, www.app.example.com won't exist,
+  # and the certificate request for app.example.com + www.app.example.com will fail.
+  # The special "certbot_domain:" comment allows overriding the "server_name" expression.
+  # It can't be used to just ignore the server_name at all, but overriding
+  # from www.app.example.com to app.example.com has the same effect.
+
   return 301 https://${SERVER_DOMAIN}$request_uri;
 }
 
