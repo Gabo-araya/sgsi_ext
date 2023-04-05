@@ -18,6 +18,12 @@ For faster deployments after the first one, you may use:
 ansible/update.sh dev
 ```
 
+This command just skips some tasks so it finishes faster. There's no harm in running deploy.sh again.
+
+The only case which makes sense to run again with deploy.sh after a complete successful deploy, is when `server_domain` changes in inventory.yml.
+
+---
+
 Containers will be recreated if their image is updated, or "when their configuration differs from the service definition". So if there have been changes to .env files, or bind-mounted configuration files, run `deploy/update.sh -r ...` to load changes.
 
 To upgrade unversioned dependencies, for example apt packages, instead of running _update && upgrade_ inside the container, rebuild the images ignoring cache, by running `update.sh` with `-c`.
