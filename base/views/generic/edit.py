@@ -67,6 +67,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
     """
 
     parent_model = None
+    parent_object = None
     parent_pk_url_kwarg = "parent_pk"
     model_parent_fk_field = None
     context_parent_object_name = None
