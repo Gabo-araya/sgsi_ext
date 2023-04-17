@@ -1,21 +1,29 @@
 # django
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from django.http import HttpResponseForbidden
 
 
-class LoginPermissionRequiredMixin(LoginRequiredMixin, PermissionRequiredMixin):
+class LoginPermissionRequiredMixin(PermissionRequiredMixin):
     """
     Verify that the current user is authenticated (if required)
     and has the required permission (if authenticated)
     """
 
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
+    login_required = None
 
-        if not self.has_permission():
+    def is_login_required(self) -> bool:
+        if self.login_required is None or not isinstance(self.login_required, bool):
+            raise ImproperlyConfigured(
+                "{0} is missing or has misconfigured the login_required attribute. "
+                "Define {0}.login_required correctly, or override "
+                "{0}.is_login_required().".format(self.__class__.__name__)
+            )
+        return self.login_required
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.is_login_required() and not request.user.is_authenticated:
             return self.handle_no_permission()
 
         return super().dispatch(request, *args, **kwargs)
