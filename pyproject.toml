@@ -97,7 +97,7 @@ omit = [
 
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
-select = ["E", "F"]
+select = ["E", "F", "W", "C90"]
 ignore = []
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
