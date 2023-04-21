@@ -20,9 +20,9 @@ repos:
         stages:
           - commit
 
-      - id: flake8
-        name: flake8
-        entry: poetry run flake8
+      - id: ruff
+        name: ruff
+        entry: poetry run ruff
         exclude: migrations
         language: system
         types:
