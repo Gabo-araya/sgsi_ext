@@ -19,8 +19,7 @@ class AuditMixin:
     the EntryLogs.
     """
 
-    def _save_log(self, user, message, ACTION):
-
+    def _save_log(self, user, message, action):
         if not user or not user.id:
             return
 
@@ -29,7 +28,7 @@ class AuditMixin:
             content_type_id=ContentType.objects.get_for_model(self).id,
             object_id=self.id,
             object_repr=force_str(self)[:200],
-            action_flag=ACTION,
+            action_flag=action,
             change_message=json.dumps(message, cls=ModelEncoder),
         )
 

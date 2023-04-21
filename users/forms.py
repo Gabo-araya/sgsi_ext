@@ -58,8 +58,9 @@ class AuthenticationForm(forms.Form):
         """
         self.request = request
         self.user_cache = None
-        UserModel = get_user_model()
-        self.email_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+        self.email_field = get_user_model()._meta.get_field(
+            get_user_model().USERNAME_FIELD
+        )
         super(AuthenticationForm, self).__init__(*args, **kwargs)
 
     def clean(self):
