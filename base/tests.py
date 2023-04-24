@@ -213,7 +213,7 @@ class UrlsTest(BaseTestCase):
                     try:
                         response = self.client.get(url)
                     except Exception:
-                        print(f"Url {url} failed: ")
+                        print(f"Url {url} failed: ")  # noqa: T201
                         raise
 
                     msg = 'url "{}" ({})returned {}'.format(

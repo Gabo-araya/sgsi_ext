@@ -97,7 +97,7 @@ omit = [
 
 [tool.ruff]
 # Reconsider: S, FBT, DTZ, G, INP
-select = ["E", "F", "W", "C90", "N", "UP", "BLE", "B", "A", "COM", "C4", "T10", "DJ", "EM", "ISC", "ICN", "PIE"]
+select = ["E", "F", "W", "C90", "N", "UP", "BLE", "B", "A", "COM", "C4", "T10", "DJ", "EM", "ISC", "ICN", "PIE", "T20"]
 ignore = []
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

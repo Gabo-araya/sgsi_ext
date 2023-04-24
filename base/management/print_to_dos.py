@@ -19,4 +19,4 @@ def print_to_dos():
         # (See https://github.com/BurntSushi/ripgrep/issues/1734#issuecomment-730769439)
     except Exception:  # noqa: BLE
         # Continue instead of breaking runserver
-        print(traceback.format_exc())
+        print(traceback.format_exc())  # noqa: T201
