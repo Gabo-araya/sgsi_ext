@@ -15,7 +15,7 @@ ParameterDefinition = collections.namedtuple(
         "verbose_name",
         "validators",
     ],
-    defaults=(tuple(),),
+    defaults=((),),
 )
 
 

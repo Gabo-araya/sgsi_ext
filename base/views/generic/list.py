@@ -48,7 +48,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
 
         # obtain non ignored kwargs for the filter method
         items = self.request.GET.items()
-        params = dict((k, v) for k, v in items if k not in self.ignore_kwargs_on_filter)
+        params = {k: v for k, v in items if k not in self.ignore_kwargs_on_filter}
 
         # filter
         for key, value in params.items():

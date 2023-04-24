@@ -21,7 +21,9 @@ action_names = {
 class FilterBase(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value():
-            dictionary = dict(((self.parameter_name, self.value()),))
+            dictionary = {
+                self.parameter_name: self.value(),
+            }
             return queryset.filter(**dictionary)
 
 
