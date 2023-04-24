@@ -96,13 +96,11 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
                     if field.related_model == self.parent_model:
                         return field.name
 
-            raise ImproperlyConfigured(
-                "No model_parent_fk_field declared and no"
-                "field relating to {parent} was found in {model}".format(
-                    parent=self.parent_model.__name__,
-                    model=self.model.__name__,
-                ),
+            msg = (
+                "No model_parent_fk_field declared and no field relating to "
+                f"{self.parent_model.__name__} was found in {self.model.__name__,}"
             )
+            raise ImproperlyConfigured(msg)
 
     def get_initial_object(self):
         """Gets an object previously initialized with the parent object."""

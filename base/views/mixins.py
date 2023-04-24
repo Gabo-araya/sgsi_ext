@@ -15,11 +15,12 @@ class LoginPermissionRequiredMixin(PermissionRequiredMixin):
 
     def is_login_required(self) -> bool:
         if self.login_required is None or not isinstance(self.login_required, bool):
-            raise ImproperlyConfigured(
+            msg = (
                 "{0} is missing or has misconfigured the login_required attribute. "
                 "Define {0}.login_required correctly, or override "
-                "{0}.is_login_required().".format(self.__class__.__name__),
+                "{0}.is_login_required().".format(self.__class__.__name__)
             )
+            raise ImproperlyConfigured(msg)
         return self.login_required
 
     def dispatch(self, request, *args, **kwargs):

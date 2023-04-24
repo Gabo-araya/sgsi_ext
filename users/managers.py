@@ -29,7 +29,8 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
         Creates and saves a User with the given username, email and password.
         """
         if not email:
-            raise ValueError("The given email must be set")
+            msg = "The given email must be set"
+            raise ValueError(msg)
         email = self.normalize_email(email)
         user = self.model(
             first_name=first_name,
@@ -65,9 +66,11 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
         extra_fields.setdefault("is_superuser", True)
 
         if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
+            msg = "Superuser must have is_staff=True."
+            raise ValueError(msg)
         if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
+            msg = "Superuser must have is_superuser=True."
+            raise ValueError(msg)
 
         return self._create_user(email, first_name, last_name, password, **extra_fields)
 

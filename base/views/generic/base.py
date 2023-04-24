@@ -15,9 +15,8 @@ class BaseTemplateView(LoginPermissionRequiredMixin, TemplateView):
         if self.title is not None:
             return self.title
 
-        raise ImproperlyConfigured(
-            "self.title cannot be null. Define self.title or override get_title()",
-        )
+        msg = "self.title cannot be null. Define self.title or override get_title()"
+        raise ImproperlyConfigured(msg)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

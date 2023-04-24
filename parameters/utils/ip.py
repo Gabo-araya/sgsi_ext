@@ -16,7 +16,8 @@ class BaseRange:
 
     def __contains__(self, other):
         if not isinstance(other, self._address_class):
-            raise TypeError(f"Only {(self._address_class,):s} addresses can be checked")
+            msg = f"Only {(self._address_class,):s} addresses can be checked"
+            raise TypeError(msg)
         else:
             return self.start <= other <= self.end
 
@@ -29,9 +30,11 @@ class BaseRange:
             type(start) is not self._address_class
             or type(end) is not self._address_class
         ):
-            raise TypeError("Incompatible address classes")
+            msg = "Incompatible address classes"
+            raise TypeError(msg)
         if start > end:
-            raise ValueError("Start address must be lower than end")
+            msg = "Start address must be lower than end"
+            raise ValueError(msg)
 
         self.start = start
         self.end = end

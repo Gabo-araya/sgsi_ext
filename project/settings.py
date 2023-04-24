@@ -37,8 +37,9 @@ def get_bool_from_env(name, default_value):
         value = os.environ[name]
         try:
             return ast.literal_eval(value)
-        except ValueError as e:
-            raise ValueError(f"{value} is an invalid value for {name}") from e
+        except ValueError as error:
+            msg = f"{value} is an invalid value for {name}"
+            raise ValueError(msg) from error
     return default_value
 
 
