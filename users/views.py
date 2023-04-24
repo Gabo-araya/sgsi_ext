@@ -36,10 +36,10 @@ class LoginView(auth_views.LoginView):
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             return redirect("home")
-        return super(LoginView, self).get(*args, **kwargs)
+        return super().get(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(LoginView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = self.title
 
         return context
@@ -48,7 +48,7 @@ class LoginView(auth_views.LoginView):
         """
         TODO Consider using captcha.
         """
-        return super(LoginView, self).get_form_class()
+        return super().get_form_class()
 
 
 class PasswordChangeView(auth_views.PasswordChangeView):
@@ -92,7 +92,7 @@ class UserCreateView(CreateView):
     title = _("Registration")
 
     def get_context_data(self, **kwargs):
-        context = super(UserCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = self.title
 
         return context

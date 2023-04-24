@@ -85,7 +85,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         verbose_name_plural = _("users")
 
     def clean(self):
-        super(User, self).clean()
+        super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
     # public methods
@@ -93,7 +93,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         """
         Returns the first_name plus the last_name, with a space in between.
         """
-        full_name = "%s %s" % (self.first_name, self.last_name)
+        full_name = f"{self.first_name} {self.last_name}"
         return full_name.strip()
 
     def get_short_name(self):
@@ -105,7 +105,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         """store all emails in lowercase"""
         self.email = self.email.lower()
 
-        super(User, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def send_example_email(self):
         email_manager.send_example_email(self.email)

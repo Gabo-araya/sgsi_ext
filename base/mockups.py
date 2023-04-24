@@ -112,16 +112,16 @@ class Mockup:
 
         test_root = os.path.realpath(os.path.dirname(__file__))
 
-        file_path = data.pop("{}_file_path".format(field), None)
+        file_path = data.pop(f"{field}_file_path", None)
 
         if file_path is None:
             file_path = "gondola.jpg"
 
         if not os.path.isfile(file_path):
-            file_path = "{}/test_assets/{}".format(test_root, file_path)
+            file_path = f"{test_root}/test_assets/{file_path}"
 
         file_name = os.path.basename(file_path)
-        final_path = "{}{}".format(settings.MEDIA_ROOT, file_name)
+        final_path = f"{settings.MEDIA_ROOT}{file_name}"
 
         copyfile(file_path, final_path)
 
@@ -135,8 +135,8 @@ class Mockup:
         if model is None:
             model = field
 
-        if field not in data and "{}_id".format(field) not in data:
-            data[field] = getattr(self, "create_{}".format(model))(**kwargs)
+        if field not in data and f"{field}_id" not in data:
+            data[field] = getattr(self, f"create_{model}")(**kwargs)
 
     def set_required_int(self, data, field, **kwargs):
         if field not in data:
@@ -158,7 +158,7 @@ class Mockup:
 
     def set_required_url(self, data, field, length=6):
         if field not in data:
-            data[field] = "http://{}.com".format(random_string(length=length))
+            data[field] = f"http://{random_string(length=length)}.com"
 
 
 def add_get_or_create(cls, model):
@@ -170,11 +170,11 @@ def add_get_or_create(cls, model):
         except model.DoesNotExist:
             pass
 
-        method_name = "create_{}".format(model_name)
+        method_name = f"create_{model_name}"
         return getattr(cls, method_name)(self, **kwargs), True
 
-    get_or_create.__doc__ = "Get or create for {}".format(model_name)
-    get_or_create.__name__ = "get_or_create_{}".format(model_name)
+    get_or_create.__doc__ = f"Get or create for {model_name}"
+    get_or_create.__name__ = f"get_or_create_{model_name}"
     setattr(cls, get_or_create.__name__, get_or_create)
 
 

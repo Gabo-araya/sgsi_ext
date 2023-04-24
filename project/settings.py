@@ -38,7 +38,7 @@ def get_bool_from_env(name, default_value):
         try:
             return ast.literal_eval(value)
         except ValueError as e:
-            raise ValueError("{} is an invalid value for {}".format(value, name)) from e
+            raise ValueError(f"{value} is an invalid value for {name}") from e
     return default_value
 
 

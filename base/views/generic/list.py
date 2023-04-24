@@ -15,7 +15,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
     title = None
 
     def get_context_data(self, **kwargs):
-        context = super(BaseListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["opts"] = self.model._meta
         context["clean_query_string"] = clean_query_string(self.request)
         context["q"] = self.request.GET.get("q")
@@ -44,7 +44,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
         return the queryset to use on the list and filter by what comes on the
         query string
         """
-        queryset = super(BaseListView, self).get_queryset()
+        queryset = super().get_queryset()
 
         # obtain non ignored kwargs for the filter method
         items = self.request.GET.items()

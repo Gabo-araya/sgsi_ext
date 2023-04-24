@@ -43,7 +43,7 @@ class ModelEncoder(DjangoJSONEncoder):
         elif isinstance(obj, Promise):
             return force_text(obj)
 
-        return super(ModelEncoder, self).default(obj)
+        return super().default(obj)
 
 
 class StringFallbackJSONEncoder(JSONEncoder):

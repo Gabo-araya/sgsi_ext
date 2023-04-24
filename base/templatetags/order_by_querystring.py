@@ -22,7 +22,7 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
     if not current_order:
         return urlencode(params, doseq=True)
 
-    reversed_current_order = "-{}".format(current_order)
+    reversed_current_order = f"-{current_order}"
 
     ordering_params = []
 

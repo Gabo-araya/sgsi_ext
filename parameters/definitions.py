@@ -19,7 +19,7 @@ ParameterDefinition = collections.namedtuple(
 )
 
 
-class ParameterDefinitionList(object):
+class ParameterDefinitionList:
     definitions = [
         ParameterDefinition(
             name="DEFAULT_URL_PROTOCOL",

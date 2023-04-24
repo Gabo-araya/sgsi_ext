@@ -12,7 +12,7 @@ def load_fixtures(apps, schema_editor):
     Commune = apps.get_model("regions", "Commune")
 
     # iterate fixtures to create objects
-    with open("regions/fixtures/initial_data.json", "r") as f:
+    with open("regions/fixtures/initial_data.json") as f:
         fixtures = json.loads(f.read())
 
         for fixture in fixtures:

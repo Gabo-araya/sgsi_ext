@@ -80,7 +80,7 @@ class Parameter(BaseModel):
 
     @classmethod
     def cache_key(cls, name):
-        return "parameters-{}".format(slugify(name))
+        return f"parameters-{slugify(name)}"
 
     @classmethod
     def value_for(cls, name):
@@ -125,7 +125,7 @@ class Parameter(BaseModel):
     # django methods
     def save(self, *args, **kwargs):
         self.store_in_cache()
-        super(Parameter, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     # public methods
     def store_in_cache(self):

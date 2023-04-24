@@ -88,16 +88,12 @@ class LogEntryAdmin(admin.ModelAdmin):
         else:
             ct = obj.content_type
             try:
-                link = mark_safe(
-                    '<a href="%s">%s</a>'
-                    % (
-                        reverse(
-                            f"admin:{ct.app_label}_{ct.model}_history",
-                            args=[obj.object_id],
-                        ),
-                        escape(obj.object_repr),
-                    )
+                history_link = reverse(
+                    f"admin:{ct.app_label}_{ct.model}_history",
+                    args=[obj.object_id],
                 )
+                history_repr = escape(obj.object_repr)
+                link = mark_safe(f'<a href="{history_link}">{history_repr}</a>')
             except NoReverseMatch:
                 link = obj.object_repr
         return link
@@ -107,11 +103,7 @@ class LogEntryAdmin(admin.ModelAdmin):
     object_link.allow_tags = True
 
     def queryset(self, request):
-        return (
-            super(LogEntryAdmin, self)
-            .queryset(request)
-            .prefetch_related("content_type")
-        )
+        return super().queryset(request).prefetch_related("content_type")
 
     def action_description(self, obj):
         return action_names[obj.action_flag]

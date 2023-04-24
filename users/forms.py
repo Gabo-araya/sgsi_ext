@@ -61,7 +61,7 @@ class AuthenticationForm(forms.Form):
         self.email_field = get_user_model()._meta.get_field(
             get_user_model().USERNAME_FIELD
         )
-        super(AuthenticationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self):
         """
@@ -235,7 +235,7 @@ class UserCreationForm(BaseModelForm):
         Generates a one-use only link for resetting password and sends to the
         user.
         """
-        user = super(UserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
@@ -279,7 +279,7 @@ class UserChangeForm(forms.ModelForm):
         exclude = ("password",)
 
     def __init__(self, *args, **kwargs):
-        super(UserChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         f = self.fields.get("user_permissions", None)
         if f is not None:
             f.queryset = f.queryset.select_related("content_type")

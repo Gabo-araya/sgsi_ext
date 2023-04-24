@@ -10,13 +10,11 @@ class BaseRange:
         )
 
     def __str__(self):
-        return "{:s}-{:s}".format(self.start, self.end)
+        return f"{self.start:s}-{self.end:s}"
 
     def __contains__(self, other):
         if not isinstance(other, self._address_class):
-            raise TypeError(
-                "Only {:s} addresses can be checked".format((self._address_class,))
-            )
+            raise TypeError(f"Only {(self._address_class,):s} addresses can be checked")
         else:
             return self.start <= other <= self.end
 

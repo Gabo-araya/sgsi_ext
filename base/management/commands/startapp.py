@@ -102,13 +102,13 @@ class Command(AppTemplateCommand):
                 "cannot be used as an app name. Please try another name." % app_name
             )
 
-        super(Command, self).handle("app", app_name, target, **options)
+        super().handle("app", app_name, target, **options)
 
-        templates_dir = "{}/templates/{}/".format(app_name, app_name)
+        templates_dir = f"{app_name}/templates/{app_name}/"
 
         for root, dirs, files in os.walk(templates_dir):
             for pug_file in files:
                 shutil.move(
-                    "{}{}".format(root, pug_file),
-                    "{}{}_{}".format(root, snake_case_model_name, pug_file),
+                    f"{root}{pug_file}",
+                    f"{root}{snake_case_model_name}_{pug_file}",
                 )

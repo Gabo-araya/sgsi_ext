@@ -50,7 +50,7 @@ def format_rut(rut):
 
     code = code[::-1]
 
-    return "%s-%s" % (code, verifier)
+    return f"{code}-{verifier}"
 
 
 def rut_verifying_digit(rut):

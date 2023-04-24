@@ -33,6 +33,6 @@ def clean_query_string(request):
     mstring = []
     for key in clean_query_set.keys():
         valuelist = request.GET.getlist(key)
-        mstring.extend(["%s=%s" % (key, val) for val in valuelist])
+        mstring.extend([f"{key}={val}" for val in valuelist])
 
     return "&".join(mstring)

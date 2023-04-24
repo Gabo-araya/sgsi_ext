@@ -34,7 +34,7 @@ class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
             return _("Create %s") % verbose_name
 
     def get_context_data(self, **kwargs):
-        context = super(BaseCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         self.next_url = self.request.GET.get("next")
 
@@ -51,7 +51,7 @@ class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
             return self.next_url
 
         model_name = self.model.__name__.lower()
-        return reverse("{}_list".format(model_name))
+        return reverse(f"{model_name}_list")
 
     def get_success_url(self):
         next_url = self.request.POST.get("next")
@@ -139,7 +139,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
             return _("Create %s") % verbose_name
 
     def get_context_data(self, **kwargs):
-        context = super(BaseSubModelCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         context["parent_object"] = self.parent_object
         context_parent_object_name = self.get_context_parent_object_name(
@@ -200,7 +200,7 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
     title = None
 
     def get_context_data(self, **kwargs):
-        context = super(BaseUpdateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         self.next_url = self.request.GET.get("next")
 
@@ -249,7 +249,7 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
     title = None
 
     def get_context_data(self, **kwargs):
-        context = super(BaseDeleteView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         self.next_url = self.request.GET.get("next")
 
@@ -272,7 +272,7 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
             return next_url
 
         model_name = self.model.__name__.lower()
-        return reverse("{}_list".format(model_name))
+        return reverse(f"{model_name}_list")
 
     def delete(self, request, *args, **kwargs):
         try:
@@ -303,12 +303,12 @@ class BaseUpdateRedirectView(
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        return super(BaseUpdateRedirectView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.do_action()
-        return super(BaseUpdateRedirectView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def do_action(self):
         """

@@ -10,10 +10,10 @@ class BaseDetailView(LoginPermissionRequiredMixin, DetailView):
 
     def get_title(self):
         verbose_name = self.model._meta.verbose_name
-        return "{}: {}".format(verbose_name, self.object).title()
+        return f"{verbose_name}: {self.object}".title()
 
     def get_context_data(self, **kwargs):
-        context = super(BaseDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         context["opts"] = self.model._meta
         context["title"] = self.get_title()
