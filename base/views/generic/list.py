@@ -54,6 +54,6 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
         for key, value in params.items():
             try:
                 queryset = queryset.filter(**{key: value})
-            except Exception:
+            except Exception:  # noqa: BLE
                 pass
         return queryset

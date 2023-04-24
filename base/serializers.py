@@ -67,7 +67,7 @@ class StringFallbackJSONEncoder(JSONEncoder):
     def process_other(self, obj):
         try:
             return force_str(obj)
-        except Exception:
+        except Exception:  # noqa: BLE
             return super().default(obj)
 
     def process_decimal_uuid_or_promise(self, obj):
