@@ -2,7 +2,7 @@
 Settings overrides for unit testing.
 """
 
-from .settings import *  # noqa:F401,F403
+from .settings import *  # noqa: F403
 
 # Use a simpler password hash algorithm to speed up test execution when password hashing
 # is intensively used, directly or indirectly.

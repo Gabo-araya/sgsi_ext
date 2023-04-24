@@ -151,7 +151,7 @@ class UrlsTest(BaseTestCase):
             elif isinstance(converter, SlugConverter) and hasattr(
                 callback,
                 "view_class",
-            ):  # noqa
+            ):
                 model_name = underscore(url_pattern.callback.view_class.model.__name__)
                 params[param_name] = self.default_params[
                     f"{model_name}_{param_name}_slug"
