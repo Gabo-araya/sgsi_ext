@@ -212,7 +212,8 @@ def parse_ip_range_value(value):
 
     value = value.strip()
     range_values = value.split("-")
-    if len(range_values) != 2:
+    valid_range = 2
+    if len(range_values) != valid_range:
         msg = _("Enter a valid address range.")
         raise ValidationError(msg, code="invalid")
 

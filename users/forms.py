@@ -221,7 +221,7 @@ class UserCreationForm(BaseModelForm):
         )
         return password2
 
-    def save(
+    def save(  # noqa: PLR0913
         self,
         verify_email_address=False,
         domain_override=None,

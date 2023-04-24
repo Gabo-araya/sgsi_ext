@@ -144,7 +144,7 @@ def user_profile(request):
 # Doesn't need csrf_protect since no-one can guess the URL
 @sensitive_post_parameters()
 @never_cache
-def user_new_confirm(
+def user_new_confirm(  # noqa: PLR0913
     request,
     uidb36=None,
     token=None,

@@ -53,7 +53,7 @@ class ChileanRUTField(CharField):
                 params={"value": value},
             )
         value = self._format_rut(value)
-        if value == "" or value is None:
+        if not value or value is None:
             return value
         if not utils.validate_rut(value):
             raise ValidationError(
@@ -67,7 +67,7 @@ class ChileanRUTField(CharField):
         value = value.strip()
         full_format = re.compile(r"[1-9]\d{0,2}(\.\d{3})*-[\dkK]")
         incomplete_format = re.compile(r"[1-9](\d)*[\dkK]")
-        if value == "":
+        if not value:
             return value
         if re.fullmatch(full_format, value):
             value = value[:-1] + value[-1].upper()

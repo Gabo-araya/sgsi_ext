@@ -7,7 +7,7 @@ from django.template.loader import get_template
 from django.utils.translation import gettext_lazy as _
 
 
-def send_emails(
+def send_emails(  # noqa: PLR0913
     emails,
     template_name,
     subject,

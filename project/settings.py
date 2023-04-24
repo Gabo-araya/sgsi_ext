@@ -25,7 +25,7 @@ from django.urls import reverse_lazy
 def get_env_value(key, default, default_if_blank=False):
     try:
         value = os.environ[key].strip()
-        if value == "" and default_if_blank:
+        if not value and default_if_blank:
             return default
         return value
     except KeyError:
