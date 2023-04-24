@@ -26,7 +26,7 @@ HOSTNAME_RE = re.compile(
     + URLValidator.host_re
     + "|"
     + URLValidator.hostname_re
-    + r")$"
+    + r")$",
 )
 
 

@@ -104,7 +104,7 @@ class UserCreateView(CreateView):
             messages.INFO,
             _(
                 "An email has been sent to you. Please "
-                "check it to verify your email."
+                "check it to verify your email.",
             ),
         )
 
@@ -118,7 +118,9 @@ def user_edit(request):
         if form.is_valid():
             form.save()
             messages.add_message(
-                request, messages.SUCCESS, _("Your data has been successfully saved.")
+                request,
+                messages.SUCCESS,
+                _("Your data has been successfully saved."),
             )
             return redirect("home")
     else:
@@ -165,7 +167,9 @@ def user_new_confirm(
     if user is not None and token_generator.check_token(user, token):
         user.update(is_active=True)
         messages.add_message(
-            request, messages.INFO, _("Your email address has been verified.")
+            request,
+            messages.INFO,
+            _("Your email address has been verified."),
         )
     else:
         messages.add_message(request, messages.ERROR, _("Invalid verification link"))

@@ -33,7 +33,8 @@ def send_emails(
 
     if from_email is None:
         from_email = "{} <{}>".format(
-            settings.EMAIL_SENDER_NAME, settings.DEFAULT_FROM_EMAIL
+            settings.EMAIL_SENDER_NAME,
+            settings.DEFAULT_FROM_EMAIL,
         )
 
     msg = EmailMultiAlternatives(

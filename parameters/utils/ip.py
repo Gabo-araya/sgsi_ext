@@ -6,7 +6,9 @@ from ipaddress import IPv6Address
 class BaseRange:
     def __repr__(self):
         return "{!s}({!r}, {!r})".format(
-            self.__class__.__name__, str(self.start), str(self.end)
+            self.__class__.__name__,
+            str(self.start),
+            str(self.end),
         )
 
     def __str__(self):

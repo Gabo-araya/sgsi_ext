@@ -18,7 +18,7 @@ class LoginPermissionRequiredMixin(PermissionRequiredMixin):
             raise ImproperlyConfigured(
                 "{0} is missing or has misconfigured the login_required attribute. "
                 "Define {0}.login_required correctly, or override "
-                "{0}.is_login_required().".format(self.__class__.__name__)
+                "{0}.is_login_required().".format(self.__class__.__name__),
             )
         return self.login_required
 

@@ -15,7 +15,7 @@ class FormsetViewMixin:
         formset = self.get_formset()
         form = self.get_form()
         return self.render_to_response(
-            self.get_context_data(formset=formset, form=form)
+            self.get_context_data(formset=formset, form=form),
         )
 
     def post(self, request, *args, **kwargs):
@@ -52,7 +52,7 @@ class FormsetViewMixin:
                 {
                     "data": self.request.POST,
                     "files": self.request.FILES,
-                }
+                },
             )
         return kwargs
 
@@ -64,7 +64,7 @@ class FormsetViewMixin:
 
     def form_invalid(self, form, formset):
         return self.render_to_response(
-            self.get_context_data(form=form, formset=formset)
+            self.get_context_data(form=form, formset=formset),
         )
 
 

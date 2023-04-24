@@ -26,25 +26,25 @@ class AuthenticationForm(forms.Form):
         label=_("Email"),
         required=True,
         widget=forms.EmailInput(
-            attrs={"class": "form-control", "placeholder": _("Email")}
+            attrs={"class": "form-control", "placeholder": _("Email")},
         ),
     )
     password = forms.CharField(
         label=_("Password"),
         strip=False,
         widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": _("Password")}
+            attrs={"class": "form-control", "placeholder": _("Password")},
         ),
     )
 
     error_messages = {
         "invalid_login": _(
             "Please enter a correct email and password. "
-            "Note that both fields may be case-sensitive."
+            "Note that both fields may be case-sensitive.",
         ),
         "no_cookies": _(
             "Your Web browser doesn't appear to have cookies "
-            "enabled. Cookies are required for logging in."
+            "enabled. Cookies are required for logging in.",
         ),
         "inactive": _("This account is inactive."),
     }
@@ -59,7 +59,7 @@ class AuthenticationForm(forms.Form):
         self.request = request
         self.user_cache = None
         self.email_field = get_user_model()._meta.get_field(
-            get_user_model().USERNAME_FIELD
+            get_user_model().USERNAME_FIELD,
         )
         super().__init__(*args, **kwargs)
 
@@ -138,10 +138,12 @@ class AdminAuthenticationForm(AuthenticationForm):
     """
 
     error_messages = {
-        "required": _("Please log in again, because your session has expired.")
+        "required": _("Please log in again, because your session has expired."),
     }
     this_is_the_login_form = forms.BooleanField(
-        widget=forms.HiddenInput, initial=1, error_messages=error_messages
+        widget=forms.HiddenInput,
+        initial=1,
+        error_messages=error_messages,
     )
 
     def clean(self):
@@ -149,7 +151,7 @@ class AdminAuthenticationForm(AuthenticationForm):
         password = self.cleaned_data.get("password")
         message = _(
             "Please enter the correct email and password for a staff "
-            "account. Note that both fields may be case-sensitive."
+            "account. Note that both fields may be case-sensitive.",
         )
 
         if email and password:
@@ -215,7 +217,8 @@ class UserCreationForm(BaseModelForm):
             )
         self.instance.username = self.cleaned_data.get("username")
         password_validation.validate_password(
-            self.cleaned_data.get("password2"), self.instance
+            self.cleaned_data.get("password2"),
+            self.instance,
         )
         return password2
 

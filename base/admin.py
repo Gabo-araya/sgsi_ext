@@ -35,7 +35,7 @@ class UserFilter(FilterBase):
         return tuple(
             (u.id, u.__str__)
             for u in User.objects.filter(
-                pk__in=LogEntry.objects.values_list("user_id").distinct()
+                pk__in=LogEntry.objects.values_list("user_id").distinct(),
             )
         )
 

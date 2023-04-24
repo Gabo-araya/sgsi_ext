@@ -198,7 +198,7 @@ DATABASES = {
         "DISABLE_SERVER_SIDE_CURSORS": (
             get_bool_from_env("POSTGRES_DISABLE_SERVER_SIDE_CURSORS", False)
         ),
-    }
+    },
 }
 
 
@@ -253,10 +253,14 @@ EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 EMAIL_HOST_USER = os.environ.get("SMTP_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD", None)
 DEFAULT_FROM_EMAIL = get_env_value(
-    "DEFAULT_FROM_EMAIL", "webmaster@localhost", default_if_blank=True
+    "DEFAULT_FROM_EMAIL",
+    "webmaster@localhost",
+    default_if_blank=True,
 )
 EMAIL_SENDER_NAME = get_env_value(
-    "EMAIL_SENDER_NAME", "Sender Name", default_if_blank=True
+    "EMAIL_SENDER_NAME",
+    "Sender Name",
+    default_if_blank=True,
 )
 
 # Credentials for AWS services
@@ -336,7 +340,7 @@ LOGGING = {
             "format": (
                 "%(asctime)s %(levelname)s %(name)s %(message)s "
                 "[PID:%(process)d:%(threadName)s]"
-            )
+            ),
         },
         "django.server": {
             "()": "django.utils.log.ServerFormatter",
@@ -432,13 +436,13 @@ if os.environ.get("CACHE_URL"):
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": os.environ.get("CACHE_URL"),
-        }
+        },
     }
 else:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        }
+        },
     }
 
 # Django Webpack Loader
@@ -452,7 +456,7 @@ WEBPACK_LOADER = {
         "POLL_INTERVAL": 0.1,
         "TIMEOUT": 1,  # 1 second timeout for webpack compilation
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
-    }
+    },
 }
 
 # HTTPS
@@ -491,7 +495,7 @@ CELERY_BEAT_SCHEDULE = {
     "sample-scheduled-task-minutely": {
         "task": "base.tasks.sample_scheduled_task",
         "schedule": timedelta(seconds=60),
-    }
+    },
 }
 """
 More examples:

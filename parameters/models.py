@@ -60,10 +60,12 @@ class Parameter(BaseModel):
             Parameter.HOSTNAME: parsers.parse_hostname_value,
             Parameter.IP_NETWORK: parsers.parse_ip_network_value,
             Parameter.HOSTNAME_LIST: lambda raw_value: parsers.parse_hostname_value(
-                raw_value, multiple=True
+                raw_value,
+                multiple=True,
             ),
             Parameter.IP_NETWORK_LIST: lambda raw_value: parsers.parse_ip_network_value(
-                raw_value, multiple=True
+                raw_value,
+                multiple=True,
             ),
             Parameter.BOOL: parsers.parse_bool_value,
         }

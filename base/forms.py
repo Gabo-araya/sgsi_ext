@@ -4,7 +4,8 @@ from django.forms import HiddenInput
 from django.forms import ModelForm
 
 forms.fields.Field.is_checkbox = lambda self: isinstance(
-    self.widget, forms.CheckboxInput
+    self.widget,
+    forms.CheckboxInput,
 )
 
 forms.fields.Field.is_file_input = lambda self: isinstance(self.widget, forms.FileInput)

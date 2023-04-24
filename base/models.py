@@ -107,7 +107,7 @@ class BaseModel(AuditMixin, models.Model):
                     else:
                         # MultipleChoiceWidget needs a list of pks, not objects
                         data[f.name + "_ids"] = list(
-                            getattr(self, f.attname).values_list("pk", flat=True)
+                            getattr(self, f.attname).values_list("pk", flat=True),
                         )
             else:
                 data[f.name] = self.__dict__.get(f.name)

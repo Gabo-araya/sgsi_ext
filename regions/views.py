@@ -16,7 +16,7 @@ def search_communes(request):
 
     if commune:
         communes = Commune.objects.filter(
-            Q(id__startswith=commune) | Q(name__icontains=commune)
+            Q(id__startswith=commune) | Q(name__icontains=commune),
         )
     else:
         communes = Commune.objects.all()

@@ -19,7 +19,9 @@ def file_path(self, name):
         self.__class__.__name__,
         str(utils.today()),
         utils.random_string(
-            30, chars=string.ascii_lowercase + string.digits, include_spaces=False
+            30,
+            chars=string.ascii_lowercase + string.digits,
+            include_spaces=False,
         ),
         name,
     )

@@ -146,7 +146,8 @@ class Migration(migrations.Migration):
                 (
                     "region",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="regions.region"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="regions.region",
                     ),
                 ),
             ],
@@ -157,7 +158,8 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.RunPython(
-            code=load_fixtures, reverse_code=migrations.RunPython.noop
+            code=load_fixtures,
+            reverse_code=migrations.RunPython.noop,
         ),
         migrations.RunSQL(
             sql=(

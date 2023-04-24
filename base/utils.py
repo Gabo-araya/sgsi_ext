@@ -134,7 +134,8 @@ def date_to_datetime(date):
 
     try:
         r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time()), tz
+            datetime.datetime.combine(date, datetime.datetime.min.time()),
+            tz,
         )
     except pytz.NonExistentTimeError:
         r_datetime = timezone.make_aware(

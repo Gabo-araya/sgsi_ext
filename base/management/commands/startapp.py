@@ -86,7 +86,7 @@ class Command(AppTemplateCommand):
         options["model_verbose_name"] = snake_case_model_name.replace("_", " ")
         options["plural_model_verbose_name"] = pluralize(options["model_verbose_name"])
         options["plural_model_name"] = camelize(
-            pluralize(options["plural_model_verbose_name"])
+            pluralize(options["plural_model_verbose_name"]),
         )
 
         self.validate_name(app_name, "app")
@@ -99,7 +99,7 @@ class Command(AppTemplateCommand):
         else:
             raise CommandError(
                 "%r conflicts with the name of an existing Python module and "
-                "cannot be used as an app name. Please try another name." % app_name
+                "cannot be used as an app name. Please try another name." % app_name,
             )
 
         super().handle("app", app_name, target, **options)

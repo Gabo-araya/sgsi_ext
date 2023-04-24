@@ -99,8 +99,9 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
             raise ImproperlyConfigured(
                 "No model_parent_fk_field declared and no"
                 "field relating to {parent} was found in {model}".format(
-                    parent=self.parent_model.__name__, model=self.model.__name__
-                )
+                    parent=self.parent_model.__name__,
+                    model=self.model.__name__,
+                ),
             )
 
     def get_initial_object(self):
@@ -109,7 +110,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         if self.is_generic_relation:
             parent_content_type = ContentType.objects.get_for_model(self.parent_model)
             obj = self.model(
-                **{"object_id": parent_pk, "content_type": parent_content_type}
+                **{"object_id": parent_pk, "content_type": parent_content_type},
             )
         else:
             parent_obj = self.parent_object
@@ -143,7 +144,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
 
         context["parent_object"] = self.parent_object
         context_parent_object_name = self.get_context_parent_object_name(
-            self.parent_object
+            self.parent_object,
         )
         if context_parent_object_name:
             context[context_parent_object_name] = self.parent_object
@@ -294,7 +295,9 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
 
 
 class BaseUpdateRedirectView(
-    LoginPermissionRequiredMixin, SingleObjectMixin, RedirectView
+    LoginPermissionRequiredMixin,
+    SingleObjectMixin,
+    RedirectView,
 ):
     login_required = True
     permission_required = ()

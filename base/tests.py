@@ -150,7 +150,8 @@ class UrlsTest(BaseTestCase):
                 params["pk"] = self.default_params[f"{model_name}_id"]
                 obj = self.default_objects[model_name]
             elif isinstance(converter, SlugConverter) and hasattr(
-                callback, "view_class"
+                callback,
+                "view_class",
             ):  # noqa
                 model_name = underscore(url_pattern.callback.view_class.model.__name__)
                 params[param_name] = self.default_params[
@@ -216,7 +217,9 @@ class UrlsTest(BaseTestCase):
                         raise
 
                     msg = 'url "{}" ({})returned {}'.format(
-                        url, pattern.name, response.status_code
+                        url,
+                        pattern.name,
+                        response.status_code,
                     )
                     self.assertIn(
                         response.status_code,

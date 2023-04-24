@@ -24,7 +24,7 @@ class JsonCeleryFormatter(JsonFormatter):
                 "celeryTaskId": record.data.get("id"),
                 "celeryTaskName": record.data.get("name"),
                 "celeryTaskRuntime": record.data.get("runtime"),
-            }
+            },
         )
         super().add_fields(log_record, record, message_dict)
         log_record.pop("data")
@@ -37,6 +37,6 @@ class JsonCeleryTaskFormatter(JsonFormatter):
             {
                 "celeryTaskId": task.request.id,
                 "celeryTaskName": task.name,
-            }
+            },
         )
         super().add_fields(log_record, record, message_dict)

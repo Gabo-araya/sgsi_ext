@@ -19,7 +19,7 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
         "LOCATION": "tmp/cache",
-    }
+    },
 }
 
 # disable and remove debug toolbar, as normal settings are loaded before this module

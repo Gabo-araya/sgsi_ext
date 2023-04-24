@@ -31,7 +31,7 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
             "added": instance.to_dict(
                 exclude=ignored_fields + sensitive_fields,
                 include_m2m=False,
-            )
+            ),
         }
         instance._save_addition(user, message)
     else:

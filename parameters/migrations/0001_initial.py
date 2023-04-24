@@ -44,7 +44,10 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        editable=False, max_length=50, unique=True, verbose_name="name"
+                        editable=False,
+                        max_length=50,
+                        unique=True,
+                        verbose_name="name",
                     ),
                 ),
                 (
@@ -71,7 +74,8 @@ class Migration(migrations.Migration):
                 (
                     "cache_seconds",
                     models.PositiveIntegerField(
-                        default=3600, verbose_name="cache seconds"
+                        default=3600,
+                        verbose_name="cache seconds",
                     ),
                 ),
             ],

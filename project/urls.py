@@ -24,7 +24,7 @@ from base.views import debug as debug_views
 from base.views import misc as misc_views
 
 debug_patterns = [
-    path("request/", debug_views.HttpRequestPrintView.as_view(), name="debug-request")
+    path("request/", debug_views.HttpRequestPrintView.as_view(), name="debug-request"),
 ]
 
 urlpatterns = [

@@ -17,7 +17,7 @@ class UserQuerySet(BaseQuerySet):
             queryset = queryset.filter(
                 Q(first_name__unaccent__icontains=term)
                 | Q(last_name__unaccent__icontains=term)
-                | Q(email__icontains=term)
+                | Q(email__icontains=term),
             )
 
         return queryset
@@ -32,21 +32,34 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
             raise ValueError("The given email must be set")
         email = self.normalize_email(email)
         user = self.model(
-            first_name=first_name, last_name=last_name, email=email, **extra_fields
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            **extra_fields,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_user(
-        self, email=None, first_name=None, last_name=None, password=None, **extra_fields
+        self,
+        email=None,
+        first_name=None,
+        last_name=None,
+        password=None,
+        **extra_fields,
     ):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(
-        self, email, password, first_name=None, last_name=None, **extra_fields
+        self,
+        email,
+        password,
+        first_name=None,
+        last_name=None,
+        **extra_fields,
     ):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)

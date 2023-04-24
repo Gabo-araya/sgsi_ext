@@ -22,7 +22,9 @@ def force_logout(modeladmin, request, queryset):
     # TODO add log to register this action
 
     messages.add_message(
-        request, messages.SUCCESS, _("Selected users where logged out")
+        request,
+        messages.SUCCESS,
+        _("Selected users where logged out"),
     )
 
 
@@ -61,7 +63,7 @@ class UserAdmin(DjangoUserAdmin):
                     "is_superuser",
                     "groups",
                     "user_permissions",
-                )
+                ),
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
