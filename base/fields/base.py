@@ -33,7 +33,7 @@ class ChileanRUTField(CharField):
             "XXXXXXXXY format.",
         ),
         "invalid_rut": _(
-            "'%(value)s' value has the correct format " " but it is an invalid rut.",
+            "'%(value)s' value has the correct format but it is an invalid rut.",
         ),
         "invalid_type": _("'%(value)s' must be str or None."),
     }
