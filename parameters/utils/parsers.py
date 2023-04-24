@@ -56,9 +56,9 @@ def parse_int_value(value):
 def base_parse_temporal_value(value, input_formats, strptime):
     value = value.strip()
     # Try to strptime against each input format.
-    for format in input_formats:
+    for fmt in input_formats:
         try:
-            return strptime(value, format)
+            return strptime(value, fmt)
         except (ValueError, TypeError):
             continue
     raise ValidationError(_("Enter a valid value."), code="invalid")

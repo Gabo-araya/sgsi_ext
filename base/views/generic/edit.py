@@ -108,15 +108,15 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
         if self.is_generic_relation:
             parent_content_type = ContentType.objects.get_for_model(self.parent_model)
-            object = self.model(
+            obj = self.model(
                 **{"object_id": parent_pk, "content_type": parent_content_type}
             )
         else:
             parent_obj = self.parent_object
             related_field_name = self.get_model_related_field_name()
-            object = self.model(**{related_field_name: parent_obj})
+            obj = self.model(**{related_field_name: parent_obj})
 
-        return object
+        return obj
 
     def get_cancel_url(self):
         if self.next_url:

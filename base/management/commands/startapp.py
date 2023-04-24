@@ -64,7 +64,7 @@ class AppTemplateCommand(TemplateCommand):
 
 
 class Command(AppTemplateCommand):
-    help = (
+    help = (  # noqa: A003
         "Creates a Django app directory structure for the given app name in "
         "the current directory or optionally in the given directory."
     )
