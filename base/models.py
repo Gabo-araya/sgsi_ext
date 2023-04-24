@@ -39,20 +39,17 @@ class BaseModel(AuditMixin, models.Model):
     # field used to store a dictionary with the instance original fields
     original_dict = None
 
+    objects = BaseQuerySet.as_manager()
+
+    class Meta:
+        abstract = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_dict = self.to_dict(
             exclude=settings.LOG_IGNORE_FIELDS,
             include_m2m=False,
         )
-
-    # using BaseManager
-    objects = BaseQuerySet.as_manager()
-
-    class Meta:
-        """set to abstract"""
-
-        abstract = True
 
     # public methods
     def update(self, skip_save=False, **kwargs):

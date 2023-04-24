@@ -279,7 +279,7 @@ class UserCreationForm(BaseModelForm):
 class UserChangeForm(forms.ModelForm):
     class Meta:
         model = User
-        exclude = ("password",)
+        fields = ("first_name", "last_name", "email", "is_active", "is_staff")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
