@@ -27,9 +27,10 @@ def get_env_value(key, default, default_if_blank=False):
         value = os.environ[key].strip()
         if not value and default_if_blank:
             return default
-        return value
     except KeyError:
         return default
+    else:
+        return value
 
 
 def get_bool_from_env(name, default_value):
