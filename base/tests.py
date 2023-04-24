@@ -233,7 +233,7 @@ class UrlsTest(BaseTestCase):
 
         test_url_patterns(urlpatterns)
 
-        for model, model_admin in admin.site._registry.items():
+        for _, model_admin in admin.site._registry.items():
             patterns = model_admin.get_urls()
             test_url_patterns(patterns, namespace="admin")
 

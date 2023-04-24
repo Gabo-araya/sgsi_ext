@@ -106,7 +106,7 @@ class Command(AppTemplateCommand):
 
         templates_dir = f"{app_name}/templates/{app_name}/"
 
-        for root, dirs, files in os.walk(templates_dir):
+        for root, _dirs, files in os.walk(templates_dir):
             for pug_file in files:
                 shutil.move(
                     f"{root}{pug_file}",

@@ -96,8 +96,8 @@ omit = [
 ]
 
 [tool.ruff]
-# Reconsider: S
-select = ["E", "F", "W", "C90", "N", "UP", "BLE"]
+# Reconsider: S, FBT
+select = ["E", "F", "W", "C90", "N", "UP", "BLE", "B"]
 ignore = []
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

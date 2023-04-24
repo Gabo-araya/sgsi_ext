@@ -48,8 +48,8 @@ def parse_int_value(value):
     # Strip trailing decimal and zeros.
     try:
         value = int(DECIMAL_RE.sub("", str(value)))
-    except (ValueError, TypeError):
-        raise ValidationError(_("Enter a whole number."), code="invalid")
+    except (ValueError, TypeError) as error:
+        raise ValidationError(_("Enter a whole number."), code="invalid") from error
     return value
 
 
@@ -82,8 +82,8 @@ def parse_date_value(value):
             input_formats,
             lambda v, f: datetime.datetime.strptime(v, f).date(),
         )
-    except ValidationError:
-        raise ValidationError(_("Enter a valid date."), code="invalid")
+    except ValidationError as error:
+        raise ValidationError(_("Enter a valid date."), code="invalid") from error
 
 
 def parse_time_value(value):
@@ -102,8 +102,8 @@ def parse_time_value(value):
             input_formats,
             lambda v, f: datetime.datetime.strptime(v, f).time(),
         )
-    except ValidationError:
-        raise ValidationError(_("Enter a valid time."), code="invalid")
+    except ValidationError as error:
+        raise ValidationError(_("Enter a valid time."), code="invalid") from error
 
 
 def parse_json_value(value, json_decoder=None):
@@ -117,12 +117,12 @@ def parse_json_value(value, json_decoder=None):
     try:
         value = str(value).strip()
         converted = json.loads(value, cls=json_decoder)
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as error:
         raise ValidationError(
             _("Enter a valid JSON."),
             code="invalid",
             params={"value": value},
-        )
+        ) from error
     if isinstance(converted, str):
         return str(converted)
     else:
@@ -179,15 +179,15 @@ def parse_ip_address_value(value):
     if ":" in value:
         try:
             return ipaddress.IPv6Address(value)
-        except ValueError:
+        except ValueError as error:
             msg = _("Enter a valid IPv6 address.")
-            raise ValidationError(msg, code="invalid")
+            raise ValidationError(msg, code="invalid") from error
 
     try:
         return ipaddress.IPv4Address(value)
-    except ValueError:
+    except ValueError as error:
         msg = _("Enter a valid IPv4 address.")
-        raise ValidationError(msg, code="invalid")
+        raise ValidationError(msg, code="invalid") from error
 
 
 def parse_ip_prefix_value(value):
@@ -198,15 +198,15 @@ def parse_ip_prefix_value(value):
     if ":" in value:
         try:
             return ipaddress.IPv6Network(value)
-        except ValueError:
+        except ValueError as error:
             msg = _("Enter a valid IPv6 prefix.")
-            raise ValidationError(msg, code="invalid")
+            raise ValidationError(msg, code="invalid") from error
 
     try:
         return ipaddress.IPv4Network(value)
-    except ValueError:
+    except ValueError as error:
         msg = _("Enter a valid IPv4 prefix.")
-        raise ValidationError(msg, code="invalid")
+        raise ValidationError(msg, code="invalid") from error
 
 
 def parse_ip_range_value(value):
