@@ -108,7 +108,8 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         if self.is_generic_relation:
             parent_content_type = ContentType.objects.get_for_model(self.parent_model)
             obj = self.model(
-                **{"object_id": parent_pk, "content_type": parent_content_type},
+                object_id=parent_pk,
+                content_type=parent_content_type,
             )
         else:
             parent_obj = self.parent_object
@@ -182,14 +183,12 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         Allows to perform several operations before the superclass get()
         generates the response.
         """
-        pass
 
     def pre_post(self, request, *args, **kwargs):
         """
         Allows to perform several operations before the superclass post()
         generates the response.
         """
-        pass
 
 
 class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
@@ -315,7 +314,6 @@ class BaseUpdateRedirectView(
         """
         Implement this method with the action you want to do before redirect
         """
-        pass
 
     def get_redirect_url(self, *args, **kwargs):
         next_url = self.request.GET.get("next")
