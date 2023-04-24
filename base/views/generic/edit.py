@@ -91,9 +91,11 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
             return self.model_parent_fk_field
 
         for field in self.model._meta.get_fields():
-            if isinstance(field, ForeignKey):
-                if field.related_model == self.parent_model:
-                    return field.name
+            if (
+                isinstance(field, ForeignKey)
+                and field.related_model == self.parent_model
+            ):
+                return field.name
 
         msg = (
             "No model_parent_fk_field declared and no field relating to "

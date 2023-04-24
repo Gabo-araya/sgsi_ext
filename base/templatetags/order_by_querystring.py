@@ -40,9 +40,11 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
 
     # remove ordering parameters if not declared either as "current_order" or
     # "reversed_current_order"
-    if not (current_order in ordering or reversed_current_order in ordering):
-        if not remove:
-            ordering_params.append(current_order)
+    if (
+        not (current_order in ordering or reversed_current_order in ordering)
+        and not remove
+    ):
+        ordering_params.append(current_order)
 
     params = {"o": ordering_params}
 

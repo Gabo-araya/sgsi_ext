@@ -1,3 +1,6 @@
+# standard library
+import contextlib
+
 # django
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
@@ -25,13 +28,11 @@ def clean_query_string(request):
 
     clean_query_set = {k: v for k, v in request.GET.items() if k != "o"}
 
-    try:
+    with contextlib.suppress(KeyError):
         del clean_query_set["p"]
-    except KeyError:
-        pass
 
     mstring = []
-    for key in clean_query_set.keys():
+    for key in clean_query_set:
         valuelist = request.GET.getlist(key)
         mstring.extend([f"{key}={val}" for val in valuelist])
 

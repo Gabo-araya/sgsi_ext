@@ -103,7 +103,7 @@ class AuthenticationForm(forms.Form):
 
     def full_clean(self):
         super().full_clean()
-        for field_name in self._errors.keys():
+        for field_name in self._errors:
             try:
                 attrs = self.fields[field_name].widget.attrs
             except KeyError:

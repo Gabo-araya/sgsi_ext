@@ -1,3 +1,6 @@
+# standard library
+import contextlib
+
 # django
 from django.views.generic import ListView
 
@@ -51,8 +54,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
 
         # filter
         for key, value in params.items():
-            try:
+            with contextlib.suppress(Exception):
                 queryset = queryset.filter(**{key: value})
-            except Exception:  # noqa: BLE
-                pass
+
         return queryset

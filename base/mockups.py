@@ -125,7 +125,8 @@ class Mockup:
 
         copyfile(file_path, final_path)
 
-        data[field] = File(open(final_path, "rb"), file_name)
+        with open(final_path, "rb") as file:
+            data[field] = File(file, file_name)
 
     def set_required_float(self, data, field, **kwargs):
         if field not in data:

@@ -42,7 +42,7 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
             include_m2m=False,
         )
         change = False
-        for key in original_dict.keys():
+        for key in original_dict:
             if original_dict[key] != actual_dict[key]:
                 change = True
                 if key in sensitive_fields:
@@ -72,9 +72,4 @@ def audit_delete_log(sender, instance, **kwargs):
 
 def get_user():
     thread_local = RequestMiddleware.thread_local
-    if hasattr(thread_local, "user"):
-        user = thread_local.user
-    else:
-        user = None
-
-    return user
+    return thread_local.user if hasattr(thread_local, "user") else None
