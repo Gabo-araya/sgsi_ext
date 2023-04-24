@@ -46,7 +46,7 @@ class ChileanRUTField(CharField):
     def to_python(self, value):
         if value is None:
             return value
-        elif not isinstance(value, str):
+        if not isinstance(value, str):
             raise ValidationError(
                 self.error_messages["invalid_type"],
                 code="invalid",
@@ -69,7 +69,7 @@ class ChileanRUTField(CharField):
         incomplete_format = re.compile(r"[1-9](\d)*[\dkK]")
         if value == "":
             return value
-        elif re.fullmatch(full_format, value):
+        if re.fullmatch(full_format, value):
             value = value[:-1] + value[-1].upper()
         elif re.fullmatch(incomplete_format, value):
             value = utils.format_rut(value)

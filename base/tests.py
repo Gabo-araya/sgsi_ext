@@ -60,8 +60,7 @@ def reverse_pattern(pattern, namespace, args=None, kwargs=None):
     try:
         if namespace:
             return reverse(f"{namespace}:{pattern.name}")
-        else:
-            return reverse(pattern.name, args=args, kwargs=kwargs)
+        return reverse(pattern.name, args=args, kwargs=kwargs)
     except NoReverseMatch:
         return None
 
@@ -138,7 +137,7 @@ class UrlsTest(BaseTestCase):
 
         params = {}
         if not param_converter_name:
-            return
+            return None
 
         callback = url_pattern.callback
 

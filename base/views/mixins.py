@@ -40,6 +40,5 @@ class SuperuserRestrictedMixin:
         if not (user.is_authenticated and user.is_superuser):
             if self.hide_with_404:
                 raise Http404
-            else:
-                raise HttpResponseForbidden
+            raise HttpResponseForbidden
         return super().dispatch(request, *args, **kwargs)

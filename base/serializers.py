@@ -26,21 +26,18 @@ class ModelEncoder(DjangoJSONEncoder):
         from base.models import BaseModel
 
         if isinstance(obj, FieldFile):
-            if obj:
-                return obj.url
-            else:
-                return None
+            return obj.url if obj else None
 
-        elif isinstance(obj, UploadedFile):
+        if isinstance(obj, UploadedFile):
             return f"<Unsaved file: {obj.name}>"
 
-        elif isinstance(obj, BaseModel):
+        if isinstance(obj, BaseModel):
             return obj.to_dict()
 
-        elif isinstance(obj, decimal.Decimal):
+        if isinstance(obj, decimal.Decimal):
             return str(obj)
 
-        elif isinstance(obj, Promise):
+        if isinstance(obj, Promise):
             return force_text(obj)
 
         return super().default(obj)
@@ -53,16 +50,15 @@ class StringFallbackJSONEncoder(JSONEncoder):
         # See "Date Time String Format" in the ECMA-262 specification.
         if isinstance(obj, datetime.datetime):
             return self.process_datetime(obj)
-        elif isinstance(obj, datetime.date):
+        if isinstance(obj, datetime.date):
             return self.process_date(obj)
-        elif isinstance(obj, datetime.time):
+        if isinstance(obj, datetime.time):
             return self.process_time(obj)
-        elif isinstance(obj, datetime.timedelta):
+        if isinstance(obj, datetime.timedelta):
             return self.process_timedelta(obj)
-        elif isinstance(obj, (decimal.Decimal, uuid.UUID, Promise)):
+        if isinstance(obj, (decimal.Decimal, uuid.UUID, Promise)):
             return self.process_decimal_uuid_or_promise(obj)
-        else:
-            return self.process_other(obj)
+        return self.process_other(obj)
 
     def process_other(self, obj):
         try:

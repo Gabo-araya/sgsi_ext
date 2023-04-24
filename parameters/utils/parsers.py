@@ -112,7 +112,7 @@ def parse_json_value(value, json_decoder=None):
     """
     if value in EMPTY_VALUES:
         return None
-    elif isinstance(value, (list, dict, int, float)):
+    if isinstance(value, (list, dict, int, float)):
         return value
     try:
         value = str(value).strip()
@@ -125,8 +125,7 @@ def parse_json_value(value, json_decoder=None):
         ) from error
     if isinstance(converted, str):
         return str(converted)
-    else:
-        return converted
+    return converted
 
 
 def parse_url_value(value):
@@ -149,8 +148,7 @@ def parse_single_hostname_value(value):
     if value:
         if HOSTNAME_RE.fullmatch(value):
             return value
-        else:
-            raise ValidationError(_("Enter a valid hostname."), code="invalid")
+        raise ValidationError(_("Enter a valid hostname."), code="invalid")
     return value
 
 
@@ -167,8 +165,7 @@ def parse_hostname_value(value, multiple=False):
         values = value.split("\n")
         hostnames = (parse_single_hostname_value(_value) for _value in values)
         return [hostname for hostname in hostnames if hostname]
-    else:
-        return parse_single_hostname_value(value)
+    return parse_single_hostname_value(value)
 
 
 def parse_ip_address_value(value):
@@ -232,10 +229,9 @@ def parse_ip_range_value(value):
 
     if isinstance(range_lower, ipaddress.IPv4Address):
         return IPv4Range(range_lower, range_higher)
-    elif isinstance(range_lower, ipaddress.IPv6Address):
+    if isinstance(range_lower, ipaddress.IPv6Address):
         return IPv6Range(range_lower, range_higher)
-    else:
-        raise ValidationError(_("Unknown address family."), code="invalid")
+    raise ValidationError(_("Unknown address family."), code="invalid")
 
 
 def parse_single_ip_network_value(value):
@@ -246,8 +242,7 @@ def parse_single_ip_network_value(value):
     value = value.strip()
     if "-" in value:
         return parse_ip_range_value(value)
-    else:
-        return parse_ip_prefix_value(value)
+    return parse_ip_prefix_value(value)
 
 
 def parse_ip_network_value(value, multiple=False):
@@ -264,8 +259,7 @@ def parse_ip_network_value(value, multiple=False):
         values = value.split("\n")
         networks = (parse_single_ip_network_value(_value) for _value in values)
         return [network for network in networks if network]
-    else:
-        return parse_single_ip_network_value(value)
+    return parse_single_ip_network_value(value)
 
 
 def parse_bool_value(value):

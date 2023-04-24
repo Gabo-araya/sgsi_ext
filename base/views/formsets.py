@@ -24,8 +24,7 @@ class FormsetViewMixin:
         formset = self.get_formset()
         if form.is_valid() and formset.is_valid():
             return self.form_valid(form, formset)
-        else:
-            return self.form_invalid(form, formset)
+        return self.form_invalid(form, formset)
 
     def form_valid(self, form, formset):
         form_valid = super().form_valid(form)

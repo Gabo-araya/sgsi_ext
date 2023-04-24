@@ -18,8 +18,7 @@ class BaseRange:
         if not isinstance(other, self._address_class):
             msg = f"Only {(self._address_class,):s} addresses can be checked"
             raise TypeError(msg)
-        else:
-            return self.start <= other <= self.end
+        return self.start <= other <= self.end
 
     def __init__(self, start, end):
         if isinstance(start, str):

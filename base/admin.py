@@ -25,6 +25,7 @@ class FilterBase(admin.SimpleListFilter):
                 self.parameter_name: self.value(),
             }
             return queryset.filter(**dictionary)
+        return None
 
 
 class UserFilter(FilterBase):

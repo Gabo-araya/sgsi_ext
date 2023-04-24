@@ -37,3 +37,4 @@ class ParameterDefinitionList:
         for parameter_definition in cls.definitions:
             if parameter_definition.name == name:
                 return parameter_definition
+        return None

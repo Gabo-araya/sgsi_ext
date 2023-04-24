@@ -26,8 +26,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        else:
-            return self.model._meta.verbose_name_plural.title()
+        return self.model._meta.verbose_name_plural.title()
 
     def get_ordering(self):
         """
