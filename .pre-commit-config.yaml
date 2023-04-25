@@ -11,15 +11,6 @@ repos:
         stages:
           - commit
 
-      - id: isort
-        name: sort imports
-        entry: poetry run isort
-        types:
-          - python
-        language: system
-        stages:
-          - commit
-
       - id: black
         name: reformat code with black
         entry: poetry run black

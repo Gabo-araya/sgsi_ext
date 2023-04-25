@@ -1,4 +1,3 @@
-# django
 from django.views.generic import DetailView
 
 from ..mixins import LoginPermissionRequiredMixin

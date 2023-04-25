@@ -1,4 +1,3 @@
-# standard library
 from ipaddress import IPv4Address
 from ipaddress import IPv6Address
 

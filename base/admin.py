@@ -1,4 +1,3 @@
-# django
 from django.contrib import admin
 from django.contrib.admin.models import ADDITION
 from django.contrib.admin.models import CHANGE

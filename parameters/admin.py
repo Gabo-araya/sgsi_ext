@@ -1,12 +1,9 @@
 """ Administration classes for the parameters application. """
-# standard library
 
-# django
+
 from django.contrib import admin
 
 from .definitions import ParameterDefinitionList
-
-# models
 from .models import Parameter
 
 

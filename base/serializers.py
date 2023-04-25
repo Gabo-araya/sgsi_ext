@@ -3,14 +3,13 @@
 All apps should use the BaseModel as parent for all models
 """
 
-# standard library
+
 import datetime
 import decimal
 import uuid
 
 from json import JSONEncoder
 
-# django
 from django.core.files.uploadedfile import UploadedFile
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.files import FieldFile

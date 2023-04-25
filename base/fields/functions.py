@@ -1,4 +1,3 @@
-# standard library
 import string
 
 from base import utils

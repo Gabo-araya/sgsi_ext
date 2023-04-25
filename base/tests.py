@@ -3,10 +3,9 @@ This file demonstrates writing tests using the unittest module. These will pass
 when you run "manage.py test".
 """
 
-# standard library
+
 from http import HTTPStatus
 
-# django
 from django.contrib import admin
 from django.test import TestCase
 from django.urls import NoReverseMatch

@@ -1,6 +1,6 @@
 """ This document defines the UserManager class"""
 
-# django
+
 from django.contrib.auth.models import BaseUserManager
 from django.db.models import Q
 

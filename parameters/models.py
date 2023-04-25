@@ -1,5 +1,5 @@
 """ Models for the parameters application. """
-# standard library
+
 import json
 
 # django
@@ -124,12 +124,10 @@ class Parameter(BaseModel):
             raw_value=parameter_definition.default,
         )
 
-    # django methods
     def save(self, *args, **kwargs):
         self.store_in_cache()
         super().save(*args, **kwargs)
 
-    # public methods
     def store_in_cache(self):
         cache_key = Parameter.cache_key(self.name)
 

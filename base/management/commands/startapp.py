@@ -1,10 +1,8 @@
-# standard library
 import os
 import shutil
 
 from importlib import import_module
 
-# django
 from django.core.management.base import CommandError
 from django.core.management.templates import TemplateCommand
 

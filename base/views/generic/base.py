@@ -1,4 +1,3 @@
-# django
 from django.core.exceptions import ImproperlyConfigured
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView

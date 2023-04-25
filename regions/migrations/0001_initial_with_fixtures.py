@@ -2,8 +2,10 @@
 
 import json
 
-from django.db import migrations, models
 import django.db.models.deletion
+
+from django.db import migrations
+from django.db import models
 
 
 def load_fixtures(apps, schema_editor):

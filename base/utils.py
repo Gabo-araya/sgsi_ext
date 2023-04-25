@@ -1,6 +1,6 @@
 """ Small methods for generic use """
 
-# standard library
+
 import datetime
 import os
 import random
@@ -10,7 +10,6 @@ import unicodedata
 
 from itertools import cycle
 
-# django
 from django.apps import apps
 from django.conf import settings
 from django.contrib.sites.models import Site

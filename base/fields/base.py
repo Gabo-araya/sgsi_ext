@@ -2,10 +2,9 @@
 Custom Fields
 """
 
-# standard library
+
 import re
 
-# django
 from django.core.exceptions import ValidationError
 from django.db.models import CharField
 from django.db.models import FileField

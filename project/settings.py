@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-# standard library
+
 import ast
 import os
 
@@ -17,7 +17,6 @@ from datetime import timedelta
 from importlib.util import find_spec
 from pathlib import Path
 
-# django
 from django.contrib.messages import constants as messages
 from django.urls import reverse_lazy
 
@@ -447,7 +446,6 @@ else:
         },
     }
 
-# Django Webpack Loader
 # https://github.com/django-webpack/django-webpack-loader#configuring-the-settings-file
 
 WEBPACK_LOADER = {

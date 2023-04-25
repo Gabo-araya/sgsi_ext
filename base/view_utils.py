@@ -1,7 +1,5 @@
-# standard library
 import contextlib
 
-# django
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.core.paginator import Paginator

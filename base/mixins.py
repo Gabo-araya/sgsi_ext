@@ -1,7 +1,5 @@
-# standard library
 import json
 
-# django
 from django.contrib.admin.models import ADDITION
 from django.contrib.admin.models import CHANGE
 from django.contrib.admin.models import DELETION

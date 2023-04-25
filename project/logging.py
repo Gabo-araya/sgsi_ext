@@ -1,6 +1,6 @@
 """JSON logging formaters, based on Saleor's implementation."""
 
-# standard library
+
 import platform
 import time
 

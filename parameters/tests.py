@@ -3,8 +3,6 @@ from base.tests import BaseTestCase
 
 # enums
 from parameters.definitions import ParameterDefinitionList
-
-# models
 from parameters.models import Parameter
 
 

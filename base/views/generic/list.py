@@ -1,7 +1,5 @@
-# standard library
 import contextlib
 
-# django
 from django.views.generic import ListView
 
 from base.view_utils import clean_query_string

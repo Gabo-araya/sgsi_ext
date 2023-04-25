@@ -1,4 +1,5 @@
-# django
+from __future__ import annotations
+
 from django import forms
 from django.forms import HiddenInput
 from django.forms import ModelForm

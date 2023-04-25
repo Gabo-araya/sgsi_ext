@@ -1,10 +1,8 @@
-# standard library
 import datetime
 import ipaddress
 import json
 import re
 
-# django
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator

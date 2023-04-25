@@ -1,4 +1,4 @@
-# Django 3 Project Template™
+ 3 Project Template™
 
 Django 3 Project Template™ provides a common starting point for Django projects, it provides known and tested approaches for the most common features found on Magnet projects.
 This is the recommended way for starting a new project.
@@ -10,7 +10,7 @@ No matter you're using a Mac, Windows or Linux host, the development environment
 
 This change takes advantage of the VS Code development environments feature, and it has been tested on such.
 
-### Django 3.2 LTS
+## 3.2 LTS
 This template is based on Django 3.2.x, which is supported up to 2024. Some introduced features are:
 * Automatic AppConfig discovery
 * Indexes now support expressions and DB functions
@@ -169,7 +169,7 @@ You can do this by running the `Remote-Containers: Rebuild Container` command in
 This takes time, you can press the `(show log)` button to view the progress.
 
 ## Reference
-### Models
+##
 #### BaseModel
 Every model has to inherit from the class BaseModel. This allows that every
 model has the fields `created_at` and `updated_at` and methods like `to_json`

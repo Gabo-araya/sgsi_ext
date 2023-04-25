@@ -3,26 +3,20 @@ This file has the Mockup class, that creates randomn instances of the
 project models
 """
 
-# standard library
 import os
 import random
 
 from shutil import copyfile
 
-# django
 from django.apps import apps
 from django.conf import settings
 from django.core.files import File
 from django.utils import timezone
 
-# others libraries
-# faker
 from faker import Faker
 from inflection import underscore
 
 from base.utils import random_string
-
-# models
 from parameters.models import Parameter
 from regions.models import Commune
 from regions.models import Region

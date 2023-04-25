@@ -1,6 +1,5 @@
 from base.forms import BaseModelForm
 
-# models
 from .models import Parameter
 
 

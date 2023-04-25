@@ -1,11 +1,10 @@
 """
 Tests for the user app
 """
-# standard library
+
 from http import HTTPStatus
 from urllib.parse import urlparse
 
-# django
 from django.urls import reverse
 
 # tests

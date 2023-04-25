@@ -1,9 +1,8 @@
 """ This document defines the Base Manager and BaseQuerySet classes"""
 
-# standard library
+
 import json
 
-# django
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import Count
