@@ -10,7 +10,10 @@ def print_to_dos():
             "--word-regexp",
             "--pretty",
         )
-        pattern = "TODO|FIXME"  # Prevent searching itself
+
+        # We write this string in this way because if we write it plainly, it will
+        # detect itself.
+        pattern = f"{'T'}ODO|{'F'}IXME"
         subprocess.run(
             (*common_args, "--ignore-file=project/.todoignore", pattern, "."),
         )
