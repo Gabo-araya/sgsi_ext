@@ -80,14 +80,14 @@ omit = [
 ]
 
 [tool.ruff]
-# Reconsider: S, FBT, DTZ, G, INP, I, PYI, PT, RSE, SLF, TID, TCH, INT, ARG, PTH, PD, PGH
-# TODO: S, 
-select = ["DTZ", "E", "F", "W", "C90", "N", "UP", "BLE", "B", "A", "COM", "C4", "T10", "DJ", "EM", "ISC", "ICN", "PIE", "T20", "Q", "RET", "SIM", "ERA", "PL", "PLC", "PLE", "PLR", "PLW", "TRY", "RUF", "I"]
+# Reconsider: FBT, G, INP, I, PYI, PT, RSE, SLF, TID, TCH, INT, ARG, PTH, PD, NPY
+# TODO: S, DTZ (use only django timezone), PGH
+select = ["E", "F", "W", "C90", "N", "UP", "BLE", "B", "A", "COM", "C4", "T10", "DJ", "EM", "ISC", "ICN", "PIE", "T20", "Q", "RET", "SIM", "ERA", "PL", "PLC", "PLE", "PLR", "PLW", "TRY", "RUF", "I"]
 ignore = []
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = ["A", "B", "C", "D", "E", "F", "G", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT", "I"]
-unfixable = []
+unfixable = ["ERA"]
 
 # Exclude a variety of commonly ignored directories.
 exclude = [

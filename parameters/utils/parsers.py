@@ -62,10 +62,8 @@ def base_parse_temporal_value(value, input_formats, strptime):
     raise ValidationError(_("Enter a valid value."), code="invalid")
 
 
+"""
 def parse_date_value(value):
-    """Validator for date parameters.
-    Taken from Django's forms.DateField `to_python`.
-    """
     input_formats = formats.get_format_lazy("DATE_INPUT_FORMATS")
 
     if value in EMPTY_VALUES:
@@ -82,6 +80,7 @@ def parse_date_value(value):
         )
     except ValidationError as error:
         raise ValidationError(_("Enter a valid date."), code="invalid") from error
+"""
 
 
 def parse_time_value(value):
