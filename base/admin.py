@@ -95,7 +95,9 @@ class LogEntryAdmin(admin.ModelAdmin):
                     args=[obj.object_id],
                 )
                 history_repr = escape(obj.object_repr)
-                link = mark_safe(f'<a href="{history_link}">{history_repr}</a>')
+                link = mark_safe(  # noqa: S308
+                    f'<a href="{history_link}">{history_repr}</a>',
+                )
             except NoReverseMatch:
                 link = obj.object_repr
         return link

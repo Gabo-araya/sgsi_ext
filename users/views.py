@@ -154,8 +154,9 @@ def user_new_confirm(  # noqa: PLR0913
     View that checks the hash in a email confirmation link and activates
     the user.
     """
-
-    assert uidb36 is not None and token is not None  # checked by URLconf
+    if uidb36 is None or token is None:
+        msg = "uidb36 and token are required"
+        raise ValueError(msg)
     try:
         uid_int = base36_to_int(uidb36)
         user = User.objects.get(id=uid_int)

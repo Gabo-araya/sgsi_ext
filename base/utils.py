@@ -96,7 +96,7 @@ def random_rut(minimum=1000000, maximum=99999999):
     Generates a random but valid RUT number
     """
 
-    digits = str(random.randint(minimum, maximum))
+    digits = str(random.randint(minimum, maximum))  # noqa: S311
     return format_rut(digits + rut_verifying_digit(digits))
 
 
@@ -107,7 +107,7 @@ def random_string(length=6, chars=None, include_spaces=True):
     if include_spaces:
         chars += " "
 
-    return "".join(random.choice(chars) for x in range(length))
+    return "".join(random.choice(chars) for x in range(length))  # noqa: S311
 
 
 def get_our_models():

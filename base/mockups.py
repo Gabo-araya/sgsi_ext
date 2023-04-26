@@ -66,7 +66,7 @@ class Mockup:
         return hex(val)
 
     def random_float(self, minimum=-100000, maximum=100000):
-        return random.uniform(minimum, maximum)
+        return random.uniform(minimum, maximum)  # noqa: S311
 
     def set_required_boolean(self, data, field, default=None, **kwargs):
         if field not in data:

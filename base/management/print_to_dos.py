@@ -15,9 +15,14 @@ def print_to_dos():
         # detect itself.
         pattern = f"{'T'}ODO|{'F'}IXME"
         subprocess.run(
-            (*common_args, "--ignore-file=project/.todoignore", pattern, "."),
+            (  # noqa: S603
+                *common_args,
+                "--ignore-file=project/.todoignore",
+                pattern,
+                ".",
+            ),
         )
-        subprocess.run((*common_args, "--glob=*.env*", pattern, "."))
+        subprocess.run((*common_args, "--glob=*.env*", pattern, "."))  # noqa: S603
         # Run twice because of unoverridable precedences
         # (See https://github.com/BurntSushi/ripgrep/issues/1734#issuecomment-730769439)
     except Exception:  # noqa: BLE
