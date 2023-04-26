@@ -3,11 +3,14 @@ import ipaddress
 import json
 import re
 
+from django.conf import settings
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.utils import formats
 from django.utils.translation import gettext_lazy as _
+
+from pytz import timezone
 
 from parameters.utils.ip import IPv4Range
 from parameters.utils.ip import IPv6Range
@@ -62,7 +65,6 @@ def base_parse_temporal_value(value, input_formats, strptime):
     raise ValidationError(_("Enter a valid value."), code="invalid")
 
 
-"""
 def parse_date_value(value):
     input_formats = formats.get_format_lazy("DATE_INPUT_FORMATS")
 
@@ -76,11 +78,14 @@ def parse_date_value(value):
         return base_parse_temporal_value(
             value,
             input_formats,
-            lambda v, f: datetime.datetime.strptime(v, f).date(),
+            lambda v, f: (
+                datetime.datetime.strptime(v, f)
+                .astimezone(timezone(settings.TIME_ZONE))
+                .date()
+            ),
         )
     except ValidationError as error:
         raise ValidationError(_("Enter a valid date."), code="invalid") from error
-"""
 
 
 def parse_time_value(value):
@@ -97,7 +102,11 @@ def parse_time_value(value):
         return base_parse_temporal_value(
             value,
             input_formats,
-            lambda v, f: datetime.datetime.strptime(v, f).time(),
+            lambda v, f: (
+                datetime.datetime.strptime(v, f)
+                .astimezone(timezone(settings.TIME_ZONE))
+                .time()
+            ),
         )
     except ValidationError as error:
         raise ValidationError(_("Enter a valid time."), code="invalid") from error
