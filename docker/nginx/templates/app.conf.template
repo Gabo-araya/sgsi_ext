@@ -31,8 +31,7 @@ server {
     proxy_pass http://django:8000;
   }
 
-  # Only allow small files by default
-  client_max_body_size 1m;
+  # NOTE: to set maximum upload sizes or header buffers see user.conf.d/z.hardening.conf
 
   charset utf-8;
 
