@@ -17,14 +17,16 @@ else
   project_name=$(set -o pipefail; grep -E "^project_name: " ansible/group_vars/all.yml | cut -d' ' -f2)
 
   who=$(whoami)
-  host_uid=$(id -u)
-  host_gid=$(id -g)
 
 if [[ "$OSTYPE" == darwin* ]]; then
   echo "NOTE: on macOS system your password might be required to get current timezone."
   tz=$(sudo systemsetup -gettimezone | awk -F: '{tz=$2; sub(/^ */, "", tz); print tz; exit}')
+  host_uid=2640
+  host_gid=2640
 else
   tz=$(cat /etc/timezone)
+  host_uid=$(id -u)
+  host_gid=$(id -g)
 fi
 
   # Not yet known, leave as is to be set later:
