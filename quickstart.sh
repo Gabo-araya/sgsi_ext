@@ -53,7 +53,7 @@ echo "docker-compose build && docker-compose down" | newgrp docker
 env_file='.env'
 # VIRTUAL_ENV must be unset for poetry to generate the path itself
 virtual_env=$(echo "docker-compose run --rm -T django env --unset=VIRTUAL_ENV poetry env info --path" | newgrp docker)
-sed -i "s|{{virtual_env}}|$virtual_env|g" $env_file
+perl -pi -e "s|{{virtual_env}}|$virtual_env|g" $env_file
 
 # Set vscode to use python in poetry env
 mkdir -p .vscode
