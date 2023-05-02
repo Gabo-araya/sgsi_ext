@@ -2,6 +2,14 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 source scripts/utils.sh
+
+# Assert we're running on a recent bash
+if [[ "$BASH_VERSINFO" -lt 4 ]]; then
+  color_print $red "This script requires GNU bash version 4 or later.
+Please upgrade your system utilities and try again."
+  exit 1
+fi
+
 assert_outside_container
 
 # Assert not root
