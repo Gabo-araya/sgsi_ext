@@ -23,8 +23,7 @@ pipeline {
       steps {
         warnError('Some code checks have failed') {
           sh(script: 'docker-compose run app-test poetry run black --check .', label: 'Check code formatting')
-          sh(script: 'docker-compose run app-test poetry run isort --check .', label: 'Check import sorting')
-          sh(script: 'docker-compose run app-test poetry run flake8', label: 'Check linting errors')
+          sh(script: 'docker-compose run app-test poetry run ruff .', label: 'Check linting')
         }
       }
     }

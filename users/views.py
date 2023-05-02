@@ -1,6 +1,6 @@
 """ The users app views"""
 
-# django
+
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -21,8 +21,6 @@ from base.views.generic import BaseListView
 from users.forms import AuthenticationForm
 from users.forms import UserCreationForm
 from users.forms import UserForm
-
-# models
 from users.models import User
 
 
@@ -36,10 +34,10 @@ class LoginView(auth_views.LoginView):
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             return redirect("home")
-        return super(LoginView, self).get(*args, **kwargs)
+        return super().get(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(LoginView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = self.title
 
         return context
@@ -48,7 +46,7 @@ class LoginView(auth_views.LoginView):
         """
         TODO Consider using captcha.
         """
-        return super(LoginView, self).get_form_class()
+        return super().get_form_class()
 
 
 class PasswordChangeView(auth_views.PasswordChangeView):
@@ -92,7 +90,7 @@ class UserCreateView(CreateView):
     title = _("Registration")
 
     def get_context_data(self, **kwargs):
-        context = super(UserCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["title"] = self.title
 
         return context
@@ -104,7 +102,7 @@ class UserCreateView(CreateView):
             messages.INFO,
             _(
                 "An email has been sent to you. Please "
-                "check it to verify your email."
+                "check it to verify your email.",
             ),
         )
 
@@ -118,7 +116,9 @@ def user_edit(request):
         if form.is_valid():
             form.save()
             messages.add_message(
-                request, messages.SUCCESS, _("Your data has been successfully saved.")
+                request,
+                messages.SUCCESS,
+                _("Your data has been successfully saved."),
             )
             return redirect("home")
     else:
@@ -142,7 +142,7 @@ def user_profile(request):
 # Doesn't need csrf_protect since no-one can guess the URL
 @sensitive_post_parameters()
 @never_cache
-def user_new_confirm(
+def user_new_confirm(  # noqa: PLR0913
     request,
     uidb36=None,
     token=None,
@@ -154,8 +154,9 @@ def user_new_confirm(
     View that checks the hash in a email confirmation link and activates
     the user.
     """
-
-    assert uidb36 is not None and token is not None  # checked by URLconf
+    if uidb36 is None or token is None:
+        msg = "uidb36 and token are required"
+        raise ValueError(msg)
     try:
         uid_int = base36_to_int(uidb36)
         user = User.objects.get(id=uid_int)
@@ -165,7 +166,9 @@ def user_new_confirm(
     if user is not None and token_generator.check_token(user, token):
         user.update(is_active=True)
         messages.add_message(
-            request, messages.INFO, _("Your email address has been verified.")
+            request,
+            messages.INFO,
+            _("Your email address has been verified."),
         )
     else:
         messages.add_message(request, messages.ERROR, _("Invalid verification link"))

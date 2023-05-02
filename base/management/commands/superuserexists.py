@@ -1,14 +1,12 @@
-# standard library
 import sys
 
-# django
 from django.core.management.base import BaseCommand
 
 from users.models import User
 
 
 class Command(BaseCommand):
-    help = "Returns 0 only if there's an active superuser account"
+    help = "Returns 0 only if there's an active superuser account"  # noqa: A003
 
     def handle(self, *args, **options):
         superusers = User.objects.filter(is_superuser=True, is_active=True)

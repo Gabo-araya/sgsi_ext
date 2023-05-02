@@ -1,4 +1,3 @@
-# django
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
@@ -43,7 +42,7 @@ class StatusView(BaseTemplateView):
     title = _("status").title()
 
     def get_context_data(self, **kwargs):
-        context = super(StatusView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         context["settings"] = settings
 

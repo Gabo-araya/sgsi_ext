@@ -37,7 +37,8 @@
         "syler.sass-indented",
         "mechatroner.rainbow-csv",
         "eamodio.gitlens",
-        "donjayamanne.githistory"
+        "donjayamanne.githistory",
+        "charliermarsh.ruff"
       ]
     }
   },

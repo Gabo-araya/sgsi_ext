@@ -1,7 +1,5 @@
-# standard library
 import collections
 
-# django
 from django.utils.translation import gettext_lazy as _
 
 from parameters.validators import validate_protocol
@@ -15,11 +13,11 @@ ParameterDefinition = collections.namedtuple(
         "verbose_name",
         "validators",
     ],
-    defaults=(tuple(),),
+    defaults=((),),
 )
 
 
-class ParameterDefinitionList(object):
+class ParameterDefinitionList:
     definitions = [
         ParameterDefinition(
             name="DEFAULT_URL_PROTOCOL",
@@ -37,3 +35,4 @@ class ParameterDefinitionList(object):
         for parameter_definition in cls.definitions:
             if parameter_definition.name == name:
                 return parameter_definition
+        return None

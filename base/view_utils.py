@@ -1,4 +1,5 @@
-# django
+import contextlib
+
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.core.paginator import Paginator
@@ -23,16 +24,14 @@ def paginate(request, objects, page_size=25):
 def clean_query_string(request):
     clean_query_set = request.GET.copy()
 
-    clean_query_set = dict((k, v) for k, v in request.GET.items() if k != "o")
+    clean_query_set = {k: v for k, v in request.GET.items() if k != "o"}
 
-    try:
+    with contextlib.suppress(KeyError):
         del clean_query_set["p"]
-    except KeyError:
-        pass
 
     mstring = []
-    for key in clean_query_set.keys():
+    for key in clean_query_set:
         valuelist = request.GET.getlist(key)
-        mstring.extend(["%s=%s" % (key, val) for val in valuelist])
+        mstring.extend([f"{key}={val}" for val in valuelist])
 
     return "&".join(mstring)

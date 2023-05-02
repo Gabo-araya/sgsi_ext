@@ -3,10 +3,9 @@
 All apps should use the BaseModel as parent for all models
 """
 
-# standard library
+
 import json
 
-# django
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -39,20 +38,17 @@ class BaseModel(AuditMixin, models.Model):
     # field used to store a dictionary with the instance original fields
     original_dict = None
 
+    objects = BaseQuerySet.as_manager()
+
+    class Meta:
+        abstract = True
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_dict = self.to_dict(
             exclude=settings.LOG_IGNORE_FIELDS,
             include_m2m=False,
         )
-
-    # using BaseManager
-    objects = BaseQuerySet.as_manager()
-
-    class Meta:
-        """set to abstract"""
-
-        abstract = True
 
     # public methods
     def update(self, skip_save=False, **kwargs):
@@ -76,7 +72,7 @@ class BaseModel(AuditMixin, models.Model):
         else:
             self.save(update_fields=kwargs.keys())
 
-    def to_dict(instance, fields=None, exclude=None, include_m2m=True):
+    def to_dict(self, fields=None, exclude=None, include_m2m=True):
         """
         Returns a dict containing the data in ``instance``
 
@@ -88,7 +84,7 @@ class BaseModel(AuditMixin, models.Model):
         in the ``fields`` argument.
         """
 
-        opts = instance._meta
+        opts = self._meta
         data = {}
         for f in opts.fields + opts.many_to_many:
             if fields and f.name not in fields:
@@ -96,21 +92,21 @@ class BaseModel(AuditMixin, models.Model):
             if exclude and f.name in exclude:
                 continue
             if isinstance(f, models.fields.related.ForeignKey):
-                data[f.attname] = instance.__dict__.get(f.attname)
+                data[f.attname] = self.__dict__.get(f.attname)
             elif isinstance(f, models.fields.related.ManyToManyField):
                 if include_m2m:
                     # If the object doesn't have a primary key yet, just use an
                     # emptylist for its m2m fields. Calling f.value_from_object
                     # will raise an exception.
-                    if instance.pk is None:
+                    if self.pk is None:
                         data[f.name] = []
                     else:
                         # MultipleChoiceWidget needs a list of pks, not objects
                         data[f.name + "_ids"] = list(
-                            getattr(instance, f.attname).values_list("pk", flat=True)
+                            getattr(self, f.attname).values_list("pk", flat=True),
                         )
             else:
-                data[f.name] = instance.__dict__.get(f.name)
+                data[f.name] = self.__dict__.get(f.name)
         return data
 
     def to_json(self, fields=None, exclude=None, **kargs):

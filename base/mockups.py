@@ -3,26 +3,20 @@ This file has the Mockup class, that creates randomn instances of the
 project models
 """
 
-# standard library
 import os
 import random
 
 from shutil import copyfile
 
-# django
 from django.apps import apps
 from django.conf import settings
 from django.core.files import File
 from django.utils import timezone
 
-# others libraries
-# faker
 from faker import Faker
 from inflection import underscore
 
 from base.utils import random_string
-
-# models
 from parameters.models import Parameter
 from regions.models import Commune
 from regions.models import Region
@@ -72,7 +66,7 @@ class Mockup:
         return hex(val)
 
     def random_float(self, minimum=-100000, maximum=100000):
-        return random.uniform(minimum, maximum)
+        return random.uniform(minimum, maximum)  # noqa: S311
 
     def set_required_boolean(self, data, field, default=None, **kwargs):
         if field not in data:
@@ -112,20 +106,21 @@ class Mockup:
 
         test_root = os.path.realpath(os.path.dirname(__file__))
 
-        file_path = data.pop("{}_file_path".format(field), None)
+        file_path = data.pop(f"{field}_file_path", None)
 
         if file_path is None:
             file_path = "gondola.jpg"
 
         if not os.path.isfile(file_path):
-            file_path = "{}/test_assets/{}".format(test_root, file_path)
+            file_path = f"{test_root}/test_assets/{file_path}"
 
         file_name = os.path.basename(file_path)
-        final_path = "{}{}".format(settings.MEDIA_ROOT, file_name)
+        final_path = f"{settings.MEDIA_ROOT}{file_name}"
 
         copyfile(file_path, final_path)
 
-        data[field] = File(open(final_path, "rb"), file_name)
+        with open(final_path, "rb") as file:
+            data[field] = File(file, file_name)
 
     def set_required_float(self, data, field, **kwargs):
         if field not in data:
@@ -135,8 +130,8 @@ class Mockup:
         if model is None:
             model = field
 
-        if field not in data and "{}_id".format(field) not in data:
-            data[field] = getattr(self, "create_{}".format(model))(**kwargs)
+        if field not in data and f"{field}_id" not in data:
+            data[field] = getattr(self, f"create_{model}")(**kwargs)
 
     def set_required_int(self, data, field, **kwargs):
         if field not in data:
@@ -158,7 +153,7 @@ class Mockup:
 
     def set_required_url(self, data, field, length=6):
         if field not in data:
-            data[field] = "http://{}.com".format(random_string(length=length))
+            data[field] = f"http://{random_string(length=length)}.com"
 
 
 def add_get_or_create(cls, model):
@@ -170,11 +165,11 @@ def add_get_or_create(cls, model):
         except model.DoesNotExist:
             pass
 
-        method_name = "create_{}".format(model_name)
+        method_name = f"create_{model_name}"
         return getattr(cls, method_name)(self, **kwargs), True
 
-    get_or_create.__doc__ = "Get or create for {}".format(model_name)
-    get_or_create.__name__ = "get_or_create_{}".format(model_name)
+    get_or_create.__doc__ = f"Get or create for {model_name}"
+    get_or_create.__name__ = f"get_or_create_{model_name}"
     setattr(cls, get_or_create.__name__, get_or_create)
 
 

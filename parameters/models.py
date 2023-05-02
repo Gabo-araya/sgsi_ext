@@ -1,5 +1,5 @@
 """ Models for the parameters application. """
-# standard library
+
 import json
 
 # django
@@ -51,28 +51,26 @@ class Parameter(BaseModel):
 
     @classmethod
     def process_value(cls, kind, raw_value):
-        if kind == ParameterKind.INT:
-            return parsers.parse_int_value(raw_value)
-        elif kind == ParameterKind.TIME:
-            return parsers.parse_time_value(raw_value)
-        elif kind == ParameterKind.DATE:
-            return parsers.parse_date_value(raw_value)
-        elif kind == ParameterKind.JSON:
-            return parsers.parse_json_value(raw_value)
-        elif kind == ParameterKind.URL:
-            return parsers.parse_url_value(raw_value)
-        elif kind == ParameterKind.HOSTNAME:
-            return parsers.parse_hostname_value(raw_value)
-        elif kind == ParameterKind.IP_NETWORK:
-            return parsers.parse_ip_network_value(raw_value)
-        elif kind == ParameterKind.HOSTNAME_LIST:
-            return parsers.parse_hostname_value(raw_value, multiple=True)
-        elif kind == ParameterKind.IP_NETWORK_LIST:
-            return parsers.parse_ip_network_value(raw_value, multiple=True)
-        elif kind == ParameterKind.BOOL:
-            return parsers.parse_bool_value(raw_value)
-        else:
-            return parsers.parse_str_value(raw_value)
+        mapping = {
+            Parameter.INT: parsers.parse_int_value,
+            Parameter.TIME: parsers.parse_time_value,
+            Parameter.DATE: parsers.parse_date_value,
+            Parameter.JSON: parsers.parse_json_value,
+            Parameter.URL: parsers.parse_url_value,
+            Parameter.HOSTNAME: parsers.parse_hostname_value,
+            Parameter.IP_NETWORK: parsers.parse_ip_network_value,
+            Parameter.HOSTNAME_LIST: lambda raw_value: parsers.parse_hostname_value(
+                raw_value,
+                multiple=True,
+            ),
+            Parameter.IP_NETWORK_LIST: lambda raw_value: parsers.parse_ip_network_value(
+                raw_value,
+                multiple=True,
+            ),
+            Parameter.BOOL: parsers.parse_bool_value,
+        }
+        function = mapping.get(kind, parsers.parse_str_value)
+        return function(raw_value)
 
     def _get_value(self):
         return self.__class__.process_value(self.kind, self.raw_value)
@@ -84,7 +82,7 @@ class Parameter(BaseModel):
 
     @classmethod
     def cache_key(cls, name):
-        return "parameters-{}".format(slugify(name))
+        return f"parameters-{slugify(name)}"
 
     @classmethod
     def value_for(cls, name):
@@ -126,12 +124,10 @@ class Parameter(BaseModel):
             raw_value=parameter_definition.default,
         )
 
-    # django methods
     def save(self, *args, **kwargs):
         self.store_in_cache()
-        super(Parameter, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
-    # public methods
     def store_in_cache(self):
         cache_key = Parameter.cache_key(self.name)
 

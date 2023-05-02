@@ -1,4 +1,3 @@
-# django
-from django.shortcuts import render  # noqa
+from django.shortcuts import render  # noqa: F401
 
 # Create your views here.

@@ -3,10 +3,9 @@ This file demonstrates writing tests using the unittest module. These will pass
 when you run "manage.py test".
 """
 
-# standard library
+
 from http import HTTPStatus
 
-# django
 from django.contrib import admin
 from django.test import TestCase
 from django.urls import NoReverseMatch
@@ -38,7 +37,7 @@ class BaseTestCase(TestCase):
         cls.user = cls.mockup.create_user(cls.password)
 
     def setUp(self):
-        super(BaseTestCase, self).setUp()
+        super().setUp()
         self.login()
 
     def tearDown(self, *args, **kwargs):
@@ -59,9 +58,8 @@ class BaseTestCase(TestCase):
 def reverse_pattern(pattern, namespace, args=None, kwargs=None):
     try:
         if namespace:
-            return reverse("{}:{}".format(namespace, pattern.name))
-        else:
-            return reverse(pattern.name, args=args, kwargs=kwargs)
+            return reverse(f"{namespace}:{pattern.name}")
+        return reverse(pattern.name, args=args, kwargs=kwargs)
     except NoReverseMatch:
         return None
 
@@ -77,7 +75,7 @@ class UrlsTest(BaseTestCase):
         )
 
     def setUp(self):
-        super(UrlsTest, self).setUp()
+        super().setUp()
 
         # store default values for urls. E.g. user_id
         self.default_params = {}
@@ -87,21 +85,21 @@ class UrlsTest(BaseTestCase):
 
         for model in get_our_models():
             model_name = underscore(model.__name__)
-            method_name = "create_{}".format(model_name)
+            method_name = f"create_{model_name}"
 
             # store the created object
             obj = getattr(self.mockup, method_name)(**self.get_obj_kwargs(model))
             self.default_objects[model_name] = obj
 
-            self.assertIsNotNone(obj, "{} returns None".format(method_name))
+            self.assertIsNotNone(obj, f"{method_name} returns None")
 
             # store the object id with the expected name a url should use
             # when using object ids:
-            param_name = "{}_id".format(model_name)
+            param_name = f"{model_name}_id"
             self.default_params[param_name] = obj.id
             for slug_field in get_slug_fields(model):
                 value = getattr(obj, slug_field.name)
-                param_name = "{}_{}_slug".format(model_name, slug_field.name)
+                param_name = f"{model_name}_{slug_field.name}_slug"
                 self.default_params[param_name] = value
 
     def get_obj_kwargs(self, model):
@@ -138,7 +136,7 @@ class UrlsTest(BaseTestCase):
 
         params = {}
         if not param_converter_name:
-            return
+            return None
 
         callback = url_pattern.callback
 
@@ -147,14 +145,15 @@ class UrlsTest(BaseTestCase):
         for param_name, converter in param_converter_name:
             if param_name == "pk" and hasattr(callback, "view_class"):
                 model_name = underscore(url_pattern.callback.view_class.model.__name__)
-                params["pk"] = self.default_params["{}_id".format(model_name)]
+                params["pk"] = self.default_params[f"{model_name}_id"]
                 obj = self.default_objects[model_name]
             elif isinstance(converter, SlugConverter) and hasattr(
-                callback, "view_class"
-            ):  # noqa
+                callback,
+                "view_class",
+            ):
                 model_name = underscore(url_pattern.callback.view_class.model.__name__)
                 params[param_name] = self.default_params[
-                    "{}_{}_slug".format(model_name, param_name)
+                    f"{model_name}_{param_name}_slug"
                 ]
                 obj = self.default_objects[model_name]
             else:
@@ -212,11 +211,13 @@ class UrlsTest(BaseTestCase):
                     try:
                         response = self.client.get(url)
                     except Exception:
-                        print("Url {} failed: ".format(url))
+                        print(f"Url {url} failed: ")  # noqa: T201
                         raise
 
                     msg = 'url "{}" ({})returned {}'.format(
-                        url, pattern.name, response.status_code
+                        url,
+                        pattern.name,
+                        response.status_code,
                     )
                     self.assertIn(
                         response.status_code,
@@ -233,7 +234,7 @@ class UrlsTest(BaseTestCase):
 
         test_url_patterns(urlpatterns)
 
-        for model, model_admin in admin.site._registry.items():
+        for _, model_admin in admin.site._registry.items():
             patterns = model_admin.get_urls()
             test_url_patterns(patterns, namespace="admin")
 

@@ -1,10 +1,7 @@
-# django
-
 # rest Framework
 # others libraries
 from rest_framework import viewsets
 
-# models
 from regions.models import Commune
 
 # serializers
@@ -23,7 +20,7 @@ class CommuneViewSet(viewsets.ReadOnlyModelViewSet):
         """
         Allow optional filtering by `region_id` query parameter in the URL.
         """
-        queryset = super(CommuneViewSet, self).get_queryset()
+        queryset = super().get_queryset()
 
         region_id = self.request.query_params.get("regionId", None)
         if region_id is not None:

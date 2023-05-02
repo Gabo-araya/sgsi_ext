@@ -1,9 +1,7 @@
-# django
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
 
-# models
 from regions.models import Commune
 
 
@@ -16,7 +14,7 @@ def search_communes(request):
 
     if commune:
         communes = Commune.objects.filter(
-            Q(id__startswith=commune) | Q(name__icontains=commune)
+            Q(id__startswith=commune) | Q(name__icontains=commune),
         )
     else:
         communes = Commune.objects.all()
@@ -30,7 +28,7 @@ def search_communes(request):
     for commune in communes:
         commune_dict = {
             "id": commune.id,
-            "text": "{} - {}".format(commune.id, commune.name),
+            "text": f"{commune.id} - {commune.name}",
         }
         results.append(commune_dict)
 

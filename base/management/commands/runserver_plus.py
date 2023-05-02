@@ -1,7 +1,6 @@
-# django
+# others libraries
 from django.conf import settings
 
-# others libraries
 from django_extensions.management.commands.runserver_plus import (
     Command as RunserverCommand,
 )

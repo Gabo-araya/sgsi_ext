@@ -1,6 +1,6 @@
 """ Admin page configuration for the users app """
 
-# django
+
 from django.contrib import admin
 from django.contrib import messages
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
@@ -10,8 +10,6 @@ from django.utils.translation import gettext_lazy as _
 # forms
 from users.forms import UserChangeForm
 from users.forms import UserCreationForm
-
-# models
 from users.models import User
 
 
@@ -22,7 +20,9 @@ def force_logout(modeladmin, request, queryset):
     # TODO add log to register this action
 
     messages.add_message(
-        request, messages.SUCCESS, _("Selected users where logged out")
+        request,
+        messages.SUCCESS,
+        _("Selected users where logged out"),
     )
 
 
@@ -61,7 +61,7 @@ class UserAdmin(DjangoUserAdmin):
                     "is_superuser",
                     "groups",
                     "user_permissions",
-                )
+                ),
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),

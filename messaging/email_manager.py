@@ -1,13 +1,10 @@
-# standard library
-
-# django
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.utils.translation import gettext_lazy as _
 
 
-def send_emails(
+def send_emails(  # noqa: PLR0913
     emails,
     template_name,
     subject,
@@ -33,7 +30,8 @@ def send_emails(
 
     if from_email is None:
         from_email = "{} <{}>".format(
-            settings.EMAIL_SENDER_NAME, settings.DEFAULT_FROM_EMAIL
+            settings.EMAIL_SENDER_NAME,
+            settings.DEFAULT_FROM_EMAIL,
         )
 
     msg = EmailMultiAlternatives(

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-# standard library
+
 import ast
 import os
 
@@ -17,7 +17,6 @@ from datetime import timedelta
 from importlib.util import find_spec
 from pathlib import Path
 
-# django
 from django.contrib.messages import constants as messages
 from django.urls import reverse_lazy
 
@@ -25,11 +24,12 @@ from django.urls import reverse_lazy
 def get_env_value(key, default, default_if_blank=False):
     try:
         value = os.environ[key].strip()
-        if value == "" and default_if_blank:
+        if not value and default_if_blank:
             return default
-        return value
     except KeyError:
         return default
+    else:
+        return value
 
 
 def get_bool_from_env(name, default_value):
@@ -37,8 +37,9 @@ def get_bool_from_env(name, default_value):
         value = os.environ[name]
         try:
             return ast.literal_eval(value)
-        except ValueError as e:
-            raise ValueError("{} is an invalid value for {}".format(value, name)) from e
+        except ValueError as error:
+            msg = f"{value} is an invalid value for {name}"
+            raise ValueError(msg) from error
     return default_value
 
 
@@ -198,7 +199,7 @@ DATABASES = {
         "DISABLE_SERVER_SIDE_CURSORS": (
             get_bool_from_env("POSTGRES_DISABLE_SERVER_SIDE_CURSORS", False)
         ),
-    }
+    },
 }
 
 
@@ -207,7 +208,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa: E501
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -253,10 +254,14 @@ EMAIL_PORT = int(os.environ.get("SMTP_PORT", 587))
 EMAIL_HOST_USER = os.environ.get("SMTP_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("SMTP_PASSWORD", None)
 DEFAULT_FROM_EMAIL = get_env_value(
-    "DEFAULT_FROM_EMAIL", "webmaster@localhost", default_if_blank=True
+    "DEFAULT_FROM_EMAIL",
+    "webmaster@localhost",
+    default_if_blank=True,
 )
 EMAIL_SENDER_NAME = get_env_value(
-    "EMAIL_SENDER_NAME", "Sender Name", default_if_blank=True
+    "EMAIL_SENDER_NAME",
+    "Sender Name",
+    default_if_blank=True,
 )
 
 # Credentials for AWS services
@@ -336,7 +341,7 @@ LOGGING = {
             "format": (
                 "%(asctime)s %(levelname)s %(name)s %(message)s "
                 "[PID:%(process)d:%(threadName)s]"
-            )
+            ),
         },
         "django.server": {
             "()": "django.utils.log.ServerFormatter",
@@ -432,16 +437,15 @@ if os.environ.get("CACHE_URL"):
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": os.environ.get("CACHE_URL"),
-        }
+        },
     }
 else:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        }
+        },
     }
 
-# Django Webpack Loader
 # https://github.com/django-webpack/django-webpack-loader#configuring-the-settings-file
 
 WEBPACK_LOADER = {
@@ -452,7 +456,7 @@ WEBPACK_LOADER = {
         "POLL_INTERVAL": 0.1,
         "TIMEOUT": 1,  # 1 second timeout for webpack compilation
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
-    }
+    },
 }
 
 # HTTPS
@@ -491,7 +495,7 @@ CELERY_BEAT_SCHEDULE = {
     "sample-scheduled-task-minutely": {
         "task": "base.tasks.sample_scheduled_task",
         "schedule": timedelta(seconds=60),
-    }
+    },
 }
 """
 More examples:

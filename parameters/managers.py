@@ -8,3 +8,4 @@ class ParameterQuerySet(QuerySet):
         """
         if query:
             return self.filter(name__unaccent__icontains=query)
+        return None

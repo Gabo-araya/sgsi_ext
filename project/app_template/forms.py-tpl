@@ -1,4 +1,4 @@
-# django
+
 from django import forms  # noqa
 
 from base.forms import BaseModelForm

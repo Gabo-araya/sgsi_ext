@@ -2,10 +2,9 @@
 Custom Fields
 """
 
-# standard library
+
 import re
 
-# django
 from django.core.exceptions import ValidationError
 from django.db.models import CharField
 from django.db.models import FileField
@@ -30,10 +29,10 @@ class ChileanRUTField(CharField):
         "invalid_format": _(
             "'%(value)s' value has an invalid format. "
             "It must be in XX.XXX.XXX-Y format or "
-            "XXXXXXXXY format."
+            "XXXXXXXXY format.",
         ),
         "invalid_rut": _(
-            "'%(value)s' value has the correct format " " but it is an invalid rut."
+            "'%(value)s' value has the correct format but it is an invalid rut.",
         ),
         "invalid_type": _("'%(value)s' must be str or None."),
     }
@@ -46,14 +45,14 @@ class ChileanRUTField(CharField):
     def to_python(self, value):
         if value is None:
             return value
-        elif not isinstance(value, str):
+        if not isinstance(value, str):
             raise ValidationError(
                 self.error_messages["invalid_type"],
                 code="invalid",
                 params={"value": value},
             )
         value = self._format_rut(value)
-        if value == "" or value is None:
+        if not value or value is None:
             return value
         if not utils.validate_rut(value):
             raise ValidationError(
@@ -67,9 +66,9 @@ class ChileanRUTField(CharField):
         value = value.strip()
         full_format = re.compile(r"[1-9]\d{0,2}(\.\d{3})*-[\dkK]")
         incomplete_format = re.compile(r"[1-9](\d)*[\dkK]")
-        if value == "":
+        if not value:
             return value
-        elif re.fullmatch(full_format, value):
+        if re.fullmatch(full_format, value):
             value = value[:-1] + value[-1].upper()
         elif re.fullmatch(incomplete_format, value):
             value = utils.format_rut(value)

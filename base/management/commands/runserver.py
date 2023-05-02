@@ -1,7 +1,5 @@
-# standard library
 import os
 
-# django
 from django.conf import settings
 from django.contrib.staticfiles.management.commands.runserver import (
     Command as RunserverCommand,

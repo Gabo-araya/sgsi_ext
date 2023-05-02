@@ -1,10 +1,7 @@
-# django
-
 # rest framework
 # others libraries
 from rest_framework import serializers
 
-# models
 from regions.models import Commune
 
 

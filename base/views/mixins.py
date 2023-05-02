@@ -1,4 +1,3 @@
-# django
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
@@ -15,11 +14,12 @@ class LoginPermissionRequiredMixin(PermissionRequiredMixin):
 
     def is_login_required(self) -> bool:
         if self.login_required is None or not isinstance(self.login_required, bool):
-            raise ImproperlyConfigured(
+            msg = (
                 "{0} is missing or has misconfigured the login_required attribute. "
                 "Define {0}.login_required correctly, or override "
                 "{0}.is_login_required().".format(self.__class__.__name__)
             )
+            raise ImproperlyConfigured(msg)
         return self.login_required
 
     def dispatch(self, request, *args, **kwargs):
@@ -39,6 +39,5 @@ class SuperuserRestrictedMixin:
         if not (user.is_authenticated and user.is_superuser):
             if self.hide_with_404:
                 raise Http404
-            else:
-                raise HttpResponseForbidden
+            raise HttpResponseForbidden
         return super().dispatch(request, *args, **kwargs)

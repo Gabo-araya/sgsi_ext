@@ -1,4 +1,3 @@
-# django
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
@@ -29,12 +28,11 @@ class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        else:
-            verbose_name = self.model._meta.verbose_name
-            return _("Create %s") % verbose_name
+        verbose_name = self.model._meta.verbose_name
+        return _("Create %s") % verbose_name
 
     def get_context_data(self, **kwargs):
-        context = super(BaseCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         self.next_url = self.request.GET.get("next")
 
@@ -51,7 +49,7 @@ class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
             return self.next_url
 
         model_name = self.model.__name__.lower()
-        return reverse("{}_list".format(model_name))
+        return reverse(f"{model_name}_list")
 
     def get_success_url(self):
         next_url = self.request.POST.get("next")
@@ -90,33 +88,35 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         """
         if self.model_parent_fk_field is not None:
             return self.model_parent_fk_field
-        else:
-            for field in self.model._meta.get_fields():
-                if isinstance(field, ForeignKey):
-                    if field.related_model == self.parent_model:
-                        return field.name
 
-            raise ImproperlyConfigured(
-                "No model_parent_fk_field declared and no"
-                "field relating to {parent} was found in {model}".format(
-                    parent=self.parent_model.__name__, model=self.model.__name__
-                )
-            )
+        for field in self.model._meta.get_fields():
+            if (
+                isinstance(field, ForeignKey)
+                and field.related_model == self.parent_model
+            ):
+                return field.name
+
+        msg = (
+            "No model_parent_fk_field declared and no field relating to "
+            f"{self.parent_model.__name__} was found in {self.model.__name__,}"
+        )
+        raise ImproperlyConfigured(msg)
 
     def get_initial_object(self):
         """Gets an object previously initialized with the parent object."""
         parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
         if self.is_generic_relation:
             parent_content_type = ContentType.objects.get_for_model(self.parent_model)
-            object = self.model(
-                **{"object_id": parent_pk, "content_type": parent_content_type}
+            obj = self.model(
+                object_id=parent_pk,
+                content_type=parent_content_type,
             )
         else:
             parent_obj = self.parent_object
             related_field_name = self.get_model_related_field_name()
-            object = self.model(**{related_field_name: parent_obj})
+            obj = self.model(**{related_field_name: parent_obj})
 
-        return object
+        return obj
 
     def get_cancel_url(self):
         if self.next_url:
@@ -134,16 +134,15 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        else:
-            verbose_name = self.model._meta.verbose_name
-            return _("Create %s") % verbose_name
+        verbose_name = self.model._meta.verbose_name
+        return _("Create %s") % verbose_name
 
     def get_context_data(self, **kwargs):
-        context = super(BaseSubModelCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         context["parent_object"] = self.parent_object
         context_parent_object_name = self.get_context_parent_object_name(
-            self.parent_object
+            self.parent_object,
         )
         if context_parent_object_name:
             context[context_parent_object_name] = self.parent_object
@@ -159,10 +158,9 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         """Get the name to use for the parent object."""
         if self.context_parent_object_name:
             return self.context_parent_object_name
-        elif isinstance(parent_obj, models.Model):
+        if isinstance(parent_obj, models.Model):
             return parent_obj._meta.model_name
-        else:
-            return None
+        return None
 
     def get(self, request, *args, **kwargs):
         self.parent_object = self.get_parent_object()
@@ -183,14 +181,12 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         Allows to perform several operations before the superclass get()
         generates the response.
         """
-        pass
 
     def pre_post(self, request, *args, **kwargs):
         """
         Allows to perform several operations before the superclass post()
         generates the response.
         """
-        pass
 
 
 class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
@@ -200,7 +196,7 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
     title = None
 
     def get_context_data(self, **kwargs):
-        context = super(BaseUpdateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         self.next_url = self.request.GET.get("next")
 
@@ -215,8 +211,7 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        else:
-            return _("Update %s") % str(self.object)
+        return _("Update %s") % str(self.object)
 
     def get_cancel_url(self):
         if self.next_url:
@@ -249,7 +244,7 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
     title = None
 
     def get_context_data(self, **kwargs):
-        context = super(BaseDeleteView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         self.next_url = self.request.GET.get("next")
 
@@ -263,8 +258,7 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        else:
-            return _("Delete %s") % str(self.object)
+        return _("Delete %s") % str(self.object)
 
     def get_success_url(self):
         next_url = self.request.POST.get("next")
@@ -272,7 +266,7 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
             return next_url
 
         model_name = self.model.__name__.lower()
-        return reverse("{}_list".format(model_name))
+        return reverse(f"{model_name}_list")
 
     def delete(self, request, *args, **kwargs):
         try:
@@ -294,7 +288,9 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
 
 
 class BaseUpdateRedirectView(
-    LoginPermissionRequiredMixin, SingleObjectMixin, RedirectView
+    LoginPermissionRequiredMixin,
+    SingleObjectMixin,
+    RedirectView,
 ):
     login_required = True
     permission_required = ()
@@ -303,18 +299,17 @@ class BaseUpdateRedirectView(
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        return super(BaseUpdateRedirectView, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.do_action()
-        return super(BaseUpdateRedirectView, self).post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 
     def do_action(self):
         """
         Implement this method with the action you want to do before redirect
         """
-        pass
 
     def get_redirect_url(self, *args, **kwargs):
         next_url = self.request.GET.get("next")

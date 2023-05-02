@@ -1,4 +1,3 @@
-# django
 from django.conf import settings
 from django.db.models.signals import post_delete
 from django.db.models.signals import post_save
@@ -31,7 +30,7 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
             "added": instance.to_dict(
                 exclude=ignored_fields + sensitive_fields,
                 include_m2m=False,
-            )
+            ),
         }
         instance._save_addition(user, message)
     else:
@@ -42,7 +41,7 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
             include_m2m=False,
         )
         change = False
-        for key in original_dict.keys():
+        for key in original_dict:
             if original_dict[key] != actual_dict[key]:
                 change = True
                 if key in sensitive_fields:
@@ -72,9 +71,4 @@ def audit_delete_log(sender, instance, **kwargs):
 
 def get_user():
     thread_local = RequestMiddleware.thread_local
-    if hasattr(thread_local, "user"):
-        user = thread_local.user
-    else:
-        user = None
-
-    return user
+    return thread_local.user if hasattr(thread_local, "user") else None

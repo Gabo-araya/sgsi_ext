@@ -1,6 +1,6 @@
 """ Small methods for generic use """
 
-# standard library
+
 import datetime
 import os
 import random
@@ -10,7 +10,6 @@ import unicodedata
 
 from itertools import cycle
 
-# django
 from django.apps import apps
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -50,7 +49,7 @@ def format_rut(rut):
 
     code = code[::-1]
 
-    return "%s-%s" % (code, verifier)
+    return f"{code}-{verifier}"
 
 
 def rut_verifying_digit(rut):
@@ -97,7 +96,7 @@ def random_rut(minimum=1000000, maximum=99999999):
     Generates a random but valid RUT number
     """
 
-    digits = str(random.randint(minimum, maximum))
+    digits = str(random.randint(minimum, maximum))  # noqa: S311
     return format_rut(digits + rut_verifying_digit(digits))
 
 
@@ -108,7 +107,7 @@ def random_string(length=6, chars=None, include_spaces=True):
     if include_spaces:
         chars += " "
 
-    return "".join(random.choice(chars) for x in range(length))
+    return "".join(random.choice(chars) for x in range(length))  # noqa: S311
 
 
 def get_our_models():
@@ -134,7 +133,8 @@ def date_to_datetime(date):
 
     try:
         r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time()), tz
+            datetime.datetime.combine(date, datetime.datetime.min.time()),
+            tz,
         )
     except pytz.NonExistentTimeError:
         r_datetime = timezone.make_aware(

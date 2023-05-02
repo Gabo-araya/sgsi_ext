@@ -1,4 +1,3 @@
-# standard library
 from ipaddress import IPv4Address
 from ipaddress import IPv6Address
 
@@ -6,19 +5,19 @@ from ipaddress import IPv6Address
 class BaseRange:
     def __repr__(self):
         return "{!s}({!r}, {!r})".format(
-            self.__class__.__name__, str(self.start), str(self.end)
+            self.__class__.__name__,
+            str(self.start),
+            str(self.end),
         )
 
     def __str__(self):
-        return "{:s}-{:s}".format(self.start, self.end)
+        return f"{self.start:s}-{self.end:s}"
 
     def __contains__(self, other):
         if not isinstance(other, self._address_class):
-            raise TypeError(
-                "Only {:s} addresses can be checked".format((self._address_class,))
-            )
-        else:
-            return self.start <= other <= self.end
+            msg = f"Only {(self._address_class,):s} addresses can be checked"
+            raise TypeError(msg)
+        return self.start <= other <= self.end
 
     def __init__(self, start, end):
         if isinstance(start, str):
@@ -29,9 +28,11 @@ class BaseRange:
             type(start) is not self._address_class
             or type(end) is not self._address_class
         ):
-            raise TypeError("Incompatible address classes")
+            msg = "Incompatible address classes"
+            raise TypeError(msg)
         if start > end:
-            raise ValueError("Start address must be lower than end")
+            msg = "Start address must be lower than end"
+            raise ValueError(msg)
 
         self.start = start
         self.end = end

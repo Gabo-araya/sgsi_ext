@@ -2,8 +2,10 @@
 
 import json
 
-from django.db import migrations, models
 import django.db.models.deletion
+
+from django.db import migrations
+from django.db import models
 
 
 def load_fixtures(apps, schema_editor):
@@ -12,7 +14,7 @@ def load_fixtures(apps, schema_editor):
     Commune = apps.get_model("regions", "Commune")
 
     # iterate fixtures to create objects
-    with open("regions/fixtures/initial_data.json", "r") as f:
+    with open("regions/fixtures/initial_data.json") as f:
         fixtures = json.loads(f.read())
 
         for fixture in fixtures:
@@ -146,7 +148,8 @@ class Migration(migrations.Migration):
                 (
                     "region",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="regions.region"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="regions.region",
                     ),
                 ),
             ],
@@ -157,7 +160,8 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.RunPython(
-            code=load_fixtures, reverse_code=migrations.RunPython.noop
+            code=load_fixtures,
+            reverse_code=migrations.RunPython.noop,
         ),
         migrations.RunSQL(
             sql=(

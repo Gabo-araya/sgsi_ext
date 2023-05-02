@@ -1,4 +1,3 @@
-# django
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -33,5 +32,4 @@ class HttpRequestPrintView(SuperuserRestrictedMixin, View):
 def get_sorted_request_variable(variable):
     if isinstance(variable, dict):
         return {k: variable.get(k) for k in sorted(variable)}
-    else:
-        return {k: variable.getlist(k) for k in sorted(variable)}
+    return {k: variable.getlist(k) for k in sorted(variable)}

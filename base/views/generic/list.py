@@ -1,4 +1,5 @@
-# django
+import contextlib
+
 from django.views.generic import ListView
 
 from base.view_utils import clean_query_string
@@ -15,7 +16,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
     title = None
 
     def get_context_data(self, **kwargs):
-        context = super(BaseListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["opts"] = self.model._meta
         context["clean_query_string"] = clean_query_string(self.request)
         context["q"] = self.request.GET.get("q")
@@ -26,8 +27,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        else:
-            return self.model._meta.verbose_name_plural.title()
+        return self.model._meta.verbose_name_plural.title()
 
     def get_ordering(self):
         """
@@ -44,16 +44,15 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
         return the queryset to use on the list and filter by what comes on the
         query string
         """
-        queryset = super(BaseListView, self).get_queryset()
+        queryset = super().get_queryset()
 
         # obtain non ignored kwargs for the filter method
         items = self.request.GET.items()
-        params = dict((k, v) for k, v in items if k not in self.ignore_kwargs_on_filter)
+        params = {k: v for k, v in items if k not in self.ignore_kwargs_on_filter}
 
         # filter
         for key, value in params.items():
-            try:
+            with contextlib.suppress(Exception):
                 queryset = queryset.filter(**{key: value})
-            except Exception:
-                pass
+
         return queryset

@@ -2,7 +2,7 @@
 
 All apps should use the users.User model for all users
 """
-# django
+
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.tokens import default_token_generator
@@ -16,7 +16,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext_noop
 
-# models
 from base.models import BaseModel
 
 # messaging
@@ -57,14 +56,14 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
-        help_text=_("Designates whether the user can log into this admin " "site."),
+        help_text=_("Designates whether the user can log into this admin site."),
     )
     is_active = models.BooleanField(
         _("active"),
         default=True,
         help_text=_(
             "Designates whether this user should be treated as "
-            "active. Unselect this instead of deleting accounts."
+            "active. Unselect this instead of deleting accounts.",
         ),
     )
     # auto fields
@@ -85,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         verbose_name_plural = _("users")
 
     def clean(self):
-        super(User, self).clean()
+        super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
     # public methods
@@ -93,7 +92,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         """
         Returns the first_name plus the last_name, with a space in between.
         """
-        full_name = "%s %s" % (self.first_name, self.last_name)
+        full_name = f"{self.first_name} {self.last_name}"
         return full_name.strip()
 
     def get_short_name(self):
@@ -105,7 +104,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         """store all emails in lowercase"""
         self.email = self.email.lower()
 
-        super(User, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def send_example_email(self):
         email_manager.send_example_email(self.email)

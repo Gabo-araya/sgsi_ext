@@ -1,5 +1,5 @@
 # standard imports
-# standard library
+
 import threading
 
 
@@ -17,5 +17,4 @@ class RequestMiddleware:
     def __call__(self, request):
         # Save the user that makes the request
         self.thread_local.user = request.user
-        response = self.get_response(request)
-        return response
+        return self.get_response(request)

@@ -3,6 +3,4 @@ from base.managers import BaseQuerySet
 
 class {{model_name}}QuerySet(BaseQuerySet):
     def search(self, query):
-        if query:
-            # TODO implement this method, since this is an example
-            return self.filter(name__unaccent__icontains=query)
+        ...

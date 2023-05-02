@@ -1,4 +1,3 @@
-# django
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
@@ -10,10 +9,7 @@ from django.template import loader
 from django.utils.http import int_to_base36
 from django.utils.translation import gettext_lazy as _
 
-# forms
 from base.forms import BaseModelForm
-
-# models
 from users.models import User
 
 
@@ -26,25 +22,25 @@ class AuthenticationForm(forms.Form):
         label=_("Email"),
         required=True,
         widget=forms.EmailInput(
-            attrs={"class": "form-control", "placeholder": _("Email")}
+            attrs={"class": "form-control", "placeholder": _("Email")},
         ),
     )
     password = forms.CharField(
         label=_("Password"),
         strip=False,
         widget=forms.PasswordInput(
-            attrs={"class": "form-control", "placeholder": _("Password")}
+            attrs={"class": "form-control", "placeholder": _("Password")},
         ),
     )
 
     error_messages = {
         "invalid_login": _(
             "Please enter a correct email and password. "
-            "Note that both fields may be case-sensitive."
+            "Note that both fields may be case-sensitive.",
         ),
         "no_cookies": _(
             "Your Web browser doesn't appear to have cookies "
-            "enabled. Cookies are required for logging in."
+            "enabled. Cookies are required for logging in.",
         ),
         "inactive": _("This account is inactive."),
     }
@@ -58,9 +54,10 @@ class AuthenticationForm(forms.Form):
         """
         self.request = request
         self.user_cache = None
-        UserModel = get_user_model()
-        self.email_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
-        super(AuthenticationForm, self).__init__(*args, **kwargs)
+        self.email_field = get_user_model()._meta.get_field(
+            get_user_model().USERNAME_FIELD,
+        )
+        super().__init__(*args, **kwargs)
 
     def clean(self):
         """
@@ -73,8 +70,7 @@ class AuthenticationForm(forms.Form):
             self.user_cache = authenticate(email=email, password=password)
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
-            else:
-                self.confirm_login_allowed(self.user_cache)
+            self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
 
@@ -103,7 +99,7 @@ class AuthenticationForm(forms.Form):
 
     def full_clean(self):
         super().full_clean()
-        for field_name in self._errors.keys():
+        for field_name in self._errors:
             try:
                 attrs = self.fields[field_name].widget.attrs
             except KeyError:
@@ -137,10 +133,12 @@ class AdminAuthenticationForm(AuthenticationForm):
     """
 
     error_messages = {
-        "required": _("Please log in again, because your session has expired.")
+        "required": _("Please log in again, because your session has expired."),
     }
     this_is_the_login_form = forms.BooleanField(
-        widget=forms.HiddenInput, initial=1, error_messages=error_messages
+        widget=forms.HiddenInput,
+        initial=1,
+        error_messages=error_messages,
     )
 
     def clean(self):
@@ -148,14 +146,14 @@ class AdminAuthenticationForm(AuthenticationForm):
         password = self.cleaned_data.get("password")
         message = _(
             "Please enter the correct email and password for a staff "
-            "account. Note that both fields may be case-sensitive."
+            "account. Note that both fields may be case-sensitive.",
         )
 
         if email and password:
             self.user_cache = authenticate(email=email, password=password)
             if self.user_cache is None:
                 raise ValidationError(message)
-            elif not self.user_cache.is_active or not self.user_cache.is_staff:
+            if not self.user_cache.is_active or not self.user_cache.is_staff:
                 raise ValidationError(message)
 
         return self.cleaned_data
@@ -214,11 +212,12 @@ class UserCreationForm(BaseModelForm):
             )
         self.instance.username = self.cleaned_data.get("username")
         password_validation.validate_password(
-            self.cleaned_data.get("password2"), self.instance
+            self.cleaned_data.get("password2"),
+            self.instance,
         )
         return password2
 
-    def save(
+    def save(  # noqa: PLR0913
         self,
         verify_email_address=False,
         domain_override=None,
@@ -234,7 +233,7 @@ class UserCreationForm(BaseModelForm):
         Generates a one-use only link for resetting password and sends to the
         user.
         """
-        user = super(UserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
@@ -244,7 +243,7 @@ class UserCreationForm(BaseModelForm):
             user.save()
 
         if verify_email_address:
-            # django
+
             from django.core.mail import send_mail
 
             if not domain_override:
@@ -275,10 +274,10 @@ class UserCreationForm(BaseModelForm):
 class UserChangeForm(forms.ModelForm):
     class Meta:
         model = User
-        exclude = ("password",)
+        fields = ("first_name", "last_name", "email", "is_active", "is_staff")
 
     def __init__(self, *args, **kwargs):
-        super(UserChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         f = self.fields.get("user_permissions", None)
         if f is not None:
             f.queryset = f.queryset.select_related("content_type")

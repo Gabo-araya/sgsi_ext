@@ -3,14 +3,13 @@
 All apps should use the BaseModel as parent for all models
 """
 
-# standard library
+
 import datetime
 import decimal
 import uuid
 
 from json import JSONEncoder
 
-# django
 from django.core.files.uploadedfile import UploadedFile
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.files import FieldFile
@@ -26,53 +25,68 @@ class ModelEncoder(DjangoJSONEncoder):
         from base.models import BaseModel
 
         if isinstance(obj, FieldFile):
-            if obj:
-                return obj.url
-            else:
-                return None
+            return obj.url if obj else None
 
-        elif isinstance(obj, UploadedFile):
+        if isinstance(obj, UploadedFile):
             return f"<Unsaved file: {obj.name}>"
 
-        elif isinstance(obj, BaseModel):
+        if isinstance(obj, BaseModel):
             return obj.to_dict()
 
-        elif isinstance(obj, decimal.Decimal):
+        if isinstance(obj, decimal.Decimal):
             return str(obj)
 
-        elif isinstance(obj, Promise):
+        if isinstance(obj, Promise):
             return force_text(obj)
 
-        return super(ModelEncoder, self).default(obj)
+        return super().default(obj)
 
 
 class StringFallbackJSONEncoder(JSONEncoder):
     """JSON Serializer that falls back to force_str."""
 
-    def default(self, o):
+    def default(self, obj):
         # See "Date Time String Format" in the ECMA-262 specification.
-        if isinstance(o, datetime.datetime):
-            r = o.isoformat()
-            if o.microsecond:
-                r = r[:23] + r[26:]
-            if r.endswith("+00:00"):
-                r = r[:-6] + "Z"
-            return r
-        elif isinstance(o, datetime.date):
-            return o.isoformat()
-        elif isinstance(o, datetime.time):
-            if is_aware(o):
-                raise ValueError("JSON can't represent timezone-aware times.")
-            r = o.isoformat()
-            if o.microsecond:
-                r = r[:12]
-            return r
-        elif isinstance(o, datetime.timedelta):
-            return duration_iso_string(o)
-        elif isinstance(o, (decimal.Decimal, uuid.UUID, Promise)):
-            return str(o)
-        else:
-            try:
-                return force_str(o)
-            except Exception:
-                return super().default(o)
+        if isinstance(obj, datetime.datetime):
+            return self.process_datetime(obj)
+        if isinstance(obj, datetime.date):
+            return self.process_date(obj)
+        if isinstance(obj, datetime.time):
+            return self.process_time(obj)
+        if isinstance(obj, datetime.timedelta):
+            return self.process_timedelta(obj)
+        if isinstance(obj, (decimal.Decimal, uuid.UUID, Promise)):
+            return self.process_decimal_uuid_or_promise(obj)
+        return self.process_other(obj)
+
+    def process_other(self, obj):
+        try:
+            return force_str(obj)
+        except Exception:  # noqa: BLE
+            return super().default(obj)
+
+    def process_decimal_uuid_or_promise(self, obj):
+        return str(obj)
+
+    def process_timedelta(self, obj):
+        return duration_iso_string(obj)
+
+    def process_time(self, obj):
+        if is_aware(obj):
+            msg = "JSON can't represent timezone-aware times."
+            raise ValueError(msg)
+        iso = obj.isoformat()
+        if obj.microsecond:
+            return iso[:12]
+        return iso
+
+    def process_date(self, obj):
+        return obj.isoformat()
+
+    def process_datetime(self, obj):
+        iso = obj.isoformat()
+        if obj.microsecond:
+            iso = iso[:23] + iso[26:]
+        if iso.endswith("+00:00"):
+            iso = iso[:-6] + "Z"
+        return iso

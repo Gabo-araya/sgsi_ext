@@ -1,4 +1,3 @@
-# django
 from django import template
 from django.utils.http import urlencode
 
@@ -22,7 +21,7 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
     if not current_order:
         return urlencode(params, doseq=True)
 
-    reversed_current_order = "-{}".format(current_order)
+    reversed_current_order = f"-{current_order}"
 
     ordering_params = []
 
@@ -40,9 +39,11 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
 
     # remove ordering parameters if not declared either as "current_order" or
     # "reversed_current_order"
-    if not (current_order in ordering or reversed_current_order in ordering):
-        if not remove:
-            ordering_params.append(current_order)
+    if (
+        not (current_order in ordering or reversed_current_order in ordering)
+        and not remove
+    ):
+        ordering_params.append(current_order)
 
     params = {"o": ordering_params}
 

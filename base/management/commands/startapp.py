@@ -1,10 +1,8 @@
-# standard library
 import os
 import shutil
 
 from importlib import import_module
 
-# django
 from django.core.management.base import CommandError
 from django.core.management.templates import TemplateCommand
 
@@ -64,7 +62,7 @@ class AppTemplateCommand(TemplateCommand):
 
 
 class Command(AppTemplateCommand):
-    help = (
+    help = (  # noqa: A003
         "Creates a Django app directory structure for the given app name in "
         "the current directory or optionally in the given directory."
     )
@@ -86,7 +84,7 @@ class Command(AppTemplateCommand):
         options["model_verbose_name"] = snake_case_model_name.replace("_", " ")
         options["plural_model_verbose_name"] = pluralize(options["model_verbose_name"])
         options["plural_model_name"] = camelize(
-            pluralize(options["plural_model_verbose_name"])
+            pluralize(options["plural_model_verbose_name"]),
         )
 
         self.validate_name(app_name, "app")
@@ -99,16 +97,16 @@ class Command(AppTemplateCommand):
         else:
             raise CommandError(
                 "%r conflicts with the name of an existing Python module and "
-                "cannot be used as an app name. Please try another name." % app_name
+                "cannot be used as an app name. Please try another name." % app_name,
             )
 
-        super(Command, self).handle("app", app_name, target, **options)
+        super().handle("app", app_name, target, **options)
 
-        templates_dir = "{}/templates/{}/".format(app_name, app_name)
+        templates_dir = f"{app_name}/templates/{app_name}/"
 
-        for root, dirs, files in os.walk(templates_dir):
+        for root, _dirs, files in os.walk(templates_dir):
             for pug_file in files:
                 shutil.move(
-                    "{}{}".format(root, pug_file),
-                    "{}{}_{}".format(root, snake_case_model_name, pug_file),
+                    f"{root}{pug_file}",
+                    f"{root}{snake_case_model_name}_{pug_file}",
                 )
