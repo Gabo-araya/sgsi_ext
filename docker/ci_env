@@ -11,6 +11,6 @@ PGPASSWORD=jenkinspassword
 PGDATABASE=jenkins_test
 POSTGRES_HOST_AUTH_METHOD=trust
 
- settings
+# Django settings
 SECRET_KEY=itsnotsosecretbutisenoughfortestingpleasedonotcopy(c)magnet
 DEBUG=True
