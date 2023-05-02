@@ -477,8 +477,8 @@ SECURE_HSTS_PRELOAD = True
 # before django.
 SECURE_SSL_REDIRECT = not DEBUG
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 # Celery settings
 CELERY_TIMEZONE = TIME_ZONE
@@ -525,3 +525,9 @@ MESSAGE_TAGS = {
     messages.DEBUG: "dark",
     messages.ERROR: "danger",
 }
+
+if DEBUG:
+    SILENCED_SYSTEM_CHECKS = [
+        "security.W012",
+        "security.W016",
+    ]
