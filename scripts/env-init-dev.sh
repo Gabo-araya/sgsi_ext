@@ -34,9 +34,9 @@ fi
   postgres_host="localhost"
   postgres_port="15432"
   postgres_user="postgres"
-  postgres_password=$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
+  postgres_password=$(perl -pe 'binmode(STDIN, ":bytes"); tr/A-Za-z0-9//dc;' < /dev/urandom | head -c 20)
   postgres_db=$project_name
-  secret_key=$(LC_CTYPE=C tr -dc A-Za-z0-9 </dev/urandom | head -c 50)
+  secret_key=$(perl -pe 'binmode(STDIN, ":bytes"); tr/A-Za-z0-9//dc;' < /dev/urandom | head -c 50)
   django_debug=True
   environment_name=Development
   enable_debug_toolbar=True
