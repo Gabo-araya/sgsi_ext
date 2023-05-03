@@ -154,7 +154,11 @@
       debug:
         msg: "{{ depl_checks.stdout }}"
         # TODO: show something if the container is "restarting"
-        # (stderr when stdout is empty, is enough?)
+        # (print stderr when stdout is empty, is enough?).
+        # This happens when the container fails to start,
+        # for example because a check in its CMD fails with "exit 1".
+        # And then "docker-compose exec" fails with no output,
+        # so this task mysteriously fails without explanation.
       failed_when: depl_checks.rc > 0
       tags: update
 
