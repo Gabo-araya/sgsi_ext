@@ -16,7 +16,7 @@ from users.models import User
 logger = logging.getLogger(__name__)
 
 
-@admin.action(description=_("Log out from all devices"))
+@admin.action(permissions=("logout",), description=_("Log out from all devices"))
 def force_logout(modeladmin, request, queryset):
     user_id = request.user.pk
     requested_user_ids = set(queryset.values_list("pk", flat=True))
@@ -104,6 +104,9 @@ class UserAdmin(DjangoUserAdmin):
 
     change_password_link.allow_tags = True
     change_password_link.short_description = _("change password")
+
+    def has_logout_permission(self, request):
+        return request.user.is_superuser
 
 
 admin.site.register(User, UserAdmin)
