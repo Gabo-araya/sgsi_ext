@@ -81,7 +81,7 @@ omit = [
 
 [tool.ruff]
 select = ["S", "DTZ", "PGH", "E", "F", "W", "C90", "N", "UP", "BLE", "B", "A", "COM", "C4", "T10", "DJ", "EM", "ISC", "ICN", "PIE", "T20", "Q", "RET", "SIM", "ERA", "PL", "PLC", "PLE", "PLR", "PLW", "TRY", "RUF", "I"]
-ignore = ["FBT", "G", "INP", "I", "PYI", "PT", "RSE", "SLF", "TID", "TCH", "INT", "ARG", "PTH", "PD", "NPY"]
+ignore = ["FBT", "G", "INP", "PYI", "PT", "RSE", "SLF", "TID", "TCH", "INT", "ARG", "PTH", "PD", "NPY"]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = ["A", "B", "C", "D", "E", "F", "G", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT", "I"]
