@@ -366,6 +366,12 @@ LOGGING = {
                 "[PID:%(process)d:%(threadName)s]"
             ),
         },
+        "app_logging": {
+            "format": (
+                "%(levelname)s %(asctime)s [%(name)s] %(message)s "
+                "[PID:%(process)d:%(threadName)s]"
+            ),
+        },
         "django.server": {
             "()": "django.utils.log.ServerFormatter",
             "format": "[{server_time}] {message}",
@@ -401,6 +407,11 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose" if DEBUG else "json",
         },
+        "app_logger": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "app_logging",
+        },
         "django.server": {
             "level": "INFO",
             "class": "logging.StreamHandler",
@@ -433,6 +444,11 @@ LOGGING = {
             # https://stackoverflow.com/a/70343506
             "handlers": ["default", "mail_admins"],
             "level": "INFO",
+        },
+        "users": {
+            "handlers": ["app_logger"],
+            "level": "INFO",
+            "propagate": False,
         },
         "django.server": {
             "handlers": ["django.server"],
