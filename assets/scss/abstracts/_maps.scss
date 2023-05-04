@@ -1,0 +1,44 @@
+/*
+ * Content:
+ *
+ * Modules
+ * Colors maps
+ * Utilities maps
+ * Bootstrap maps
+ */
+
+
+// Modules
+// ============================================================================
+
+@use "sass:map";
+
+
+// Colors maps
+// ============================================================================
+
+$grays-rgb: map-loop($grays, to-rgb, "$value");
+
+$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+
+
+// Utilities maps
+// ============================================================================
+
+$utilities-colors: map.merge(
+  map.merge(
+    $theme-colors-rgb,
+    map-add-key-prefix($grays-rgb, gray-)
+  ),
+  (
+    "black": to-rgb($black),
+    "white": to-rgb($white),
+    "body": to-rgb($body-bg)
+  )
+);
+
+
+// Bootstrap maps
+// ============================================================================
+
+@import "~bootstrap/scss/maps";
