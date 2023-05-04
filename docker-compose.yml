@@ -1,34 +1,39 @@
 version: '3.8'
 
+x-base: &base-app
+  env_file: .env
+  restart: unless-stopped
+
+x-base-build-args: &base-build-args
+  HOST_UID: "${HOST_UID:-2640}"
+  HOST_GID: "${HOST_GID:-2640}"
+
 services:
   # Note: don't change service names as they are hardcoded in other places.
 
   postgres:
+    <<: *base-app
     build:
       context: ./docker/postgres/
       args:
-        HOST_UID: "${HOST_UID:-2640}"
-        HOST_GID: "${HOST_GID:-2640}"
-    env_file: .env
+        <<: *base-build-args
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: unless-stopped
     volumes:
       - ./docker/volumes/postgres-data/:/var/lib/postgresql/data/
       - ./db_dumps/:/db_dumps/
 
   django:
+    <<: *base-app
     build:
       context: .
       target: production
       args:
-        HOST_UID: "${HOST_UID:-2640}"
-        HOST_GID: "${HOST_GID:-2640}"
+        <<: *base-build-args
         WHO: "${WHO:-magnet}"
-    env_file: .env
     environment:
       - PATH=${DEV_PATH}
       - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
