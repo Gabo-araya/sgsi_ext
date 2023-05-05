@@ -15,7 +15,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.files import FieldFile
 from django.utils.duration import duration_iso_string
 from django.utils.encoding import force_str
-from django.utils.encoding import force_text
 from django.utils.functional import Promise
 from django.utils.timezone import is_aware
 
@@ -37,7 +36,7 @@ class ModelEncoder(DjangoJSONEncoder):
             return str(obj)
 
         if isinstance(obj, Promise):
-            return force_text(obj)
+            return force_str(obj)
 
         return super().default(obj)
 
