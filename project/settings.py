@@ -477,6 +477,7 @@ SECURE_HSTS_PRELOAD = True
 # before django.
 SECURE_SSL_REDIRECT = not DEBUG
 
+# Disable "Secure" cookies to enable access from LAN over http
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 
