@@ -27,7 +27,7 @@ fi
 
 # Stop this project's postgres so port is free:
 command -v docker-compose >/dev/null && [ -f .env ] && \
-  echo "docker-compose stop postgres" | newgrp docker
+  echo "docker-compose stop postgres || true" | newgrp docker
 scripts/assert-15432-free.sh
 
 # Create a local .env file if it does not exist
