@@ -66,10 +66,11 @@ The `quickstart.sh` script includes the following actions:
 > ```sh
 > code .
 > ```
-> and having click to reopen in container every time, install this:
-> ```sh
-> npm install -g @devcontainers/cli
-> ```
+> and having to click to reopen in container every time, execute these steps once:
+> - Open VSCode
+> - Install the Dev Containers extension
+> - In the Command Palette (F1), run `Dev Containers: Install devcontainer CLI`
+>
 > and then in place of `code .` , use this:
 > ```sh
 > devcontainer open
