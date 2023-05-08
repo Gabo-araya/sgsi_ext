@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     # internal
     "parameters",
     "regions",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
