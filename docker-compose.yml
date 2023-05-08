@@ -34,5 +34,5 @@ services:
       - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
     depends_on:
       - postgres
-    init: yes
+    init: true
     restart: unless-stopped

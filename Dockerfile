@@ -1,7 +1,7 @@
 #####################################
 # Base image python + node + poetry
 #####################################
-FROM python:3.9.16-slim-bullseye AS project-dependencies
+FROM python:3.10.11-slim-bullseye AS project-dependencies
 
 # Nicer prompt is managed by zsh themes, so disable default venv prompt:
 ENV VIRTUAL_ENV_DISABLE_PROMPT=x
