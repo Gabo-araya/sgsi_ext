@@ -6,7 +6,7 @@ authors = ["Magnet DPT3 Team <d3pt@magnet.cl>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "~3.10.11"
+python = "~3.10"
 # semver packages
 django = "~3.2.18"
 psycopg2 = "2.9.4"
