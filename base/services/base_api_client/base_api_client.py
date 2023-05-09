@@ -1,3 +1,5 @@
+import os
+
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
@@ -86,7 +88,8 @@ class BaseApiClient(ABC):
         )
 
     def get_url(self, endpoint: str, path_params: dict | None = None) -> str:
-        url = f"{self.base_url}{endpoint}"
+        parsed_endpoint = endpoint[1:] if endpoint.startswith("/") else endpoint
+        url = os.join(self.base_url, parsed_endpoint)
         return url.format(**path_params) if path_params else url
 
     @property
