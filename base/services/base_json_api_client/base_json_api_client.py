@@ -36,6 +36,16 @@ class BaseJsonApiClient(BaseApiClient):
         response = super().patch_blocking(endpoint, path_params, query_params, body)
         return self.get_response_json(response), response.status_code
 
+    def put_blocking(
+        self,
+        endpoint: str,
+        path_params: Optional[dict[str, Any]] = None,
+        query_params: Optional[dict[str, Any]] = None,
+        body: Optional[dict[str, Any]] = None,
+    ) -> tuple[dict[str, Any], int]:
+        response = super().put_blocking(endpoint, path_params, query_params, body)
+        return self.get_response_json(response), response.status_code
+
     def delete_blocking(
         self,
         endpoint: str,

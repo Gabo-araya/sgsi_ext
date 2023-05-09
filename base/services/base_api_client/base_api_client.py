@@ -1,5 +1,3 @@
-import logging
-
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
@@ -18,7 +16,6 @@ class BaseConfigurationType(TypedDict):
 class BaseApiClient(ABC):
     def __init__(self) -> None:
         self.configuration = self.get_configuration()
-        self.logger = logging.getLogger("django")
 
     def get_blocking(
         self,
@@ -57,6 +54,21 @@ class BaseApiClient(ABC):
     ) -> requests.Response:
         url = self.get_url(endpoint, path_params)
         return requests.patch(
+            url,
+            json=body,
+            params=query_params,
+            timeout=self.configuration["timeout"],
+        )
+
+    def put_blocking(
+        self,
+        endpoint: str,
+        path_params: Optional[dict[str, Any]] = None,
+        query_params: Optional[dict[str, Any]] = None,
+        body: Optional[dict[str, Any]] = None,
+    ) -> requests.Response:
+        url = self.get_url(endpoint, path_params)
+        return requests.put(
             url,
             json=body,
             params=query_params,

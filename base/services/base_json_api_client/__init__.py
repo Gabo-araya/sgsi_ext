@@ -1,3 +1,3 @@
-from .base_json_api_client import BaseJsonApiClients
+from .base_json_api_client import BaseJsonApiClient
 
-__all__ = ["BaseJsonApiClients"]
+__all__ = ["BaseJsonApiClient"]
