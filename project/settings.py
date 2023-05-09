@@ -526,9 +526,3 @@ MESSAGE_TAGS = {
     messages.DEBUG: "dark",
     messages.ERROR: "danger",
 }
-
-if DEBUG:
-    SILENCED_SYSTEM_CHECKS = [
-        "security.W012",
-        "security.W016",
-    ]
