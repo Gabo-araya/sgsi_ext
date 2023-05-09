@@ -1,5 +1,4 @@
 from typing import Any
-from typing import Optional
 
 import requests
 
@@ -10,8 +9,8 @@ class BaseJsonApiClient(BaseApiClient):
     def get_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
     ) -> tuple[dict[str, Any], int]:
         response = super().get_blocking(endpoint, path_params, query_params)
         return self.get_response_json(response), response.status_code
@@ -19,9 +18,9 @@ class BaseJsonApiClient(BaseApiClient):
     def post_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
-        body: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
+        body: dict[str, Any] | None = None,
     ) -> tuple[dict[str, Any], int]:
         response = super().post_blocking(endpoint, path_params, query_params, body)
         return self.get_response_json(response), response.status_code
@@ -29,9 +28,9 @@ class BaseJsonApiClient(BaseApiClient):
     def patch_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
-        body: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
+        body: dict[str, Any] | None = None,
     ) -> tuple[dict[str, Any], int]:
         response = super().patch_blocking(endpoint, path_params, query_params, body)
         return self.get_response_json(response), response.status_code
@@ -39,9 +38,9 @@ class BaseJsonApiClient(BaseApiClient):
     def put_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
-        body: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
+        body: dict[str, Any] | None = None,
     ) -> tuple[dict[str, Any], int]:
         response = super().put_blocking(endpoint, path_params, query_params, body)
         return self.get_response_json(response), response.status_code
@@ -49,7 +48,7 @@ class BaseJsonApiClient(BaseApiClient):
     def delete_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
     ) -> tuple[dict[str, Any], int]:
         response = super().delete_blocking(endpoint, path_params)
         return self.get_response_json(response), response.status_code

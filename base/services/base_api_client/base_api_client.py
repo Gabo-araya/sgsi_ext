@@ -1,7 +1,6 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
-from typing import Optional
 from typing import TypedDict
 
 import requests
@@ -20,8 +19,8 @@ class BaseApiClient(ABC):
     def get_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
     ) -> requests.Response:
         url = self.get_url(endpoint, path_params)
         return requests.get(
@@ -33,9 +32,9 @@ class BaseApiClient(ABC):
     def post_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
-        body: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
+        body: dict[str, Any] | None = None,
     ) -> requests.Response:
         url = self.get_url(endpoint, path_params)
         return requests.post(
@@ -48,9 +47,9 @@ class BaseApiClient(ABC):
     def patch_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
-        body: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
+        body: dict[str, Any] | None = None,
     ) -> requests.Response:
         url = self.get_url(endpoint, path_params)
         return requests.patch(
@@ -63,9 +62,9 @@ class BaseApiClient(ABC):
     def put_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
-        query_params: Optional[dict[str, Any]] = None,
-        body: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
+        query_params: dict[str, Any] | None = None,
+        body: dict[str, Any] | None = None,
     ) -> requests.Response:
         url = self.get_url(endpoint, path_params)
         return requests.put(
@@ -78,7 +77,7 @@ class BaseApiClient(ABC):
     def delete_blocking(
         self,
         endpoint: str,
-        path_params: Optional[dict[str, Any]] = None,
+        path_params: dict[str, Any] | None = None,
     ) -> requests.Response:
         url = self.get_url(endpoint, path_params)
         return requests.delete(
@@ -86,7 +85,7 @@ class BaseApiClient(ABC):
             timeout=self.configuration["timeout"],
         )
 
-    def get_url(self, endpoint: str, path_params: Optional[dict] = None) -> str:
+    def get_url(self, endpoint: str, path_params: dict | None = None) -> str:
         url = f"{self.base_url}{endpoint}"
         return url.format(**path_params) if path_params else url
 
