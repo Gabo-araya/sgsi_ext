@@ -6,13 +6,13 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 
-class DummyDataType(TypedDict):
+class DummyData(TypedDict):
     pk: int
     name: str
 
 
 class DummyViewset(ViewSet):
-    DUMMY_DATA: list[DummyDataType] = [
+    DUMMY_DATA: list[DummyData] = [
         {"pk": "1", "name": "Dummy 1"},
         {"pk": "2", "name": "Dummy 2"},
     ]

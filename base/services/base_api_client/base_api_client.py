@@ -6,7 +6,7 @@ from typing import TypedDict
 import requests
 
 
-class BaseConfigurationType(TypedDict):
+class BaseConfiguration(TypedDict):
     timeout: int
     protocol: str
     host: str
@@ -96,5 +96,5 @@ class BaseApiClient(ABC):
         return f"{protocol}://{host}"
 
     @abstractmethod
-    def get_configuration(self) -> BaseConfigurationType:
+    def get_configuration(self) -> BaseConfiguration:
         ...

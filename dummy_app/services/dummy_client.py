@@ -1,7 +1,7 @@
 from rest_framework import status
 
 from base.services import BaseJsonApiClient
-from base.services.base_api_client.base_api_client import BaseConfigurationType
+from base.services.base_api_client.base_api_client import BaseConfiguration
 
 
 class DummyError(Exception):
@@ -9,7 +9,7 @@ class DummyError(Exception):
 
 
 class DummyClient(BaseJsonApiClient):
-    def get_configuration(self) -> BaseConfigurationType:
+    def get_configuration(self) -> BaseConfiguration:
         return {
             "host": "localhost:8000/api/v1",
             "protocol": "http",
