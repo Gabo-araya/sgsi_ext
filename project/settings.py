@@ -477,8 +477,9 @@ SECURE_HSTS_PRELOAD = True
 # before django.
 SECURE_SSL_REDIRECT = not DEBUG
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Disable "Secure" cookies to enable access from LAN over http
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 # Celery settings
 CELERY_TIMEZONE = TIME_ZONE
