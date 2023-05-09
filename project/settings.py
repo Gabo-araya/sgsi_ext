@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     "loginas",
     "webpack_loader",
     "django_celery_beat",
+    "rest_framework",
     # internal
     "parameters",
     "regions",
