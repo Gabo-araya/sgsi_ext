@@ -5,12 +5,12 @@
  * Paths
  * Color system
  * Body
- * Utilities maps
  * Components
  * Typography
- * Buttons
  * Navbar
  * Footer
+ * Button + Forms
+ * Buttons
  * Forms
  * Dropdown
  * Close
@@ -59,8 +59,6 @@ $grays: (
   "800": $gray-800,
   "900": $gray-900
 );
-
-$grays-rgb: map-loop($grays, to-rgb, "$value");
 
 // Colors
 $blue: #0d6efd;
@@ -111,30 +109,12 @@ $theme-colors: (
   "dark": $dark
 );
 
-$theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
-
 
 // Body
 // ============================================================================
 
 $body-color: $gray-900;
 $body-bg: $white;
-
-
-// Utilities maps
-// ============================================================================
-
-$utilities-colors: map.merge(
-  map.merge(
-    $theme-colors-rgb,
-    map-add-key-prefix($grays-rgb, gray-)
-  ),
-  (
-    "black": to-rgb($black),
-    "white": to-rgb($white),
-    "body": to-rgb($body-bg)
-  )
-);
 
 
 // Components
@@ -182,12 +162,6 @@ $lead-font-size: $font-size-base * 1.25;
 $small-font-size: 80%;
 
 
-// Buttons
-// ============================================================================
-
-$btn-hover-bg-shade-amount: 15%;
-
-
 // Navbar
 // ============================================================================
 
@@ -199,6 +173,12 @@ $navbar-nav-item-link-padding-x: 14.4px;
 // ============================================================================
 
 $footer-min-height: 56px;
+
+
+// Buttons
+// ============================================================================
+
+$btn-hover-bg-shade-amount: 15%;
 
 
 // Forms
@@ -230,70 +210,10 @@ $btn-close-bg: url("data:image/svg+xml,<svg width='8' height='8' viewBox='0 0 8 
 // ============================================================================
 
 @import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/variables-dark";
 
 
 // Choices variables
 // ============================================================================
 
-$choices-guttering: 0;
-$choices-border-radius: $form-select-border-radius;
-$choices-bg-color: $form-select-bg;
-$choices-bg-color-disabled: $form-select-disabled-bg;
-$choices-keyline-color: $form-select-border-color;
-
-// Dropdown
-$choices-bg-color-dropdown: $gray-100;
-$choices-dropdown-border-width: 0;
-$choices-dropdown-border-color: $choices-keyline-color;
-
-$choices-dropdown-item-paddiny-y: $form-select-padding-y;
-$choices-dropdown-item-paddiny-x: $form-select-padding-x;
-$choices-dropdown-item-font-size: $font-size-base;
-$choices-dropdown-item-line-height: $line-height-base;
-$choices-dropdown-item-color: $dropdown-link-color;
-
-$choices-dropdown-item-active-color: $dropdown-link-active-color;
-$choices-dropdown-item-active-bg: $dropdown-link-active-bg;
-
-$choices-dropdown-item-hover-color: $dropdown-link-hover-color;
-$choices-dropdown-item-hover-bg: $dropdown-link-hover-bg;
-
-$choices-dropdown-item-disabled-color: $dropdown-link-disabled-color;
-
-$choices-dropdown-group-item-padding-l: $choices-dropdown-item-paddiny-x * 2;
-
-// Multiple item
-$choices-border-radius-item: $badge-border-radius;
-$choices-multiple-item-padding-y: 0;
-$choices-multiple-item-padding-x: spacer(1);
-$choices-multiple-item-bg: $gray-100;
-$choices-multiple-item-font-size: $font-size-base;
-$choices-multiple-item-line-height: $line-height-base;
-$choices-multiple-item-color: $secondary;
-$choices-multiple-item-border-width: $border-width;
-$choices-multiple-item-border-color: $choices-multiple-item-color;
-$choices-multiple-item-spacer: spacer(2);
-
-$choices-multiple-item-disabled-bg: $form-select-disabled-bg;
-$choices-multiple-item-disabled-color: $choices-multiple-item-color;
-$choices-multiple-item-disabled-border-color: $choices-multiple-item-border-color;
-
-// Remove button
-$choices-button-dimension: .5rem;
-$choices-button-offset: spacer(1);
-$choices-button-color: $choices-multiple-item-color;
-$choices-button-disabled-color: $choices-multiple-item-disabled-color;
-$choices-button-focus-shadow: $btn-close-focus-shadow;
-
-$choices-icon-cross-svg: str-replace($btn-close-bg, #{$btn-close-color}, #{$choices-button-color});
-$choices-icon-cross: escape-svg($choices-icon-cross-svg);
-
-// Heading
-$choices-heading-padding-y: $choices-dropdown-item-paddiny-y;
-$choices-heading-padding-x: $choices-dropdown-item-paddiny-x;
-$choices-heading-font-weight: $font-weight-base;
-$choices-heading-font-size: $font-size-base;
-$choices-heading-line-height: $line-height-base;
-$choices-heading-color: $gray-700;
-$choices-heading-border-width: $border-width;
-$choices-heading-border-color: $border-color;
+$choices-selector: "choices";

@@ -1,5 +1,5 @@
 
-from django import forms  # noqa
+from django import forms  # noqa: F401
 
 from base.forms import BaseModelForm
 

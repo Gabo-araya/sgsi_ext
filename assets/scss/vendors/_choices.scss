@@ -8,6 +8,8 @@
  * Input
  * Placeholder
  * Heading
+ * Item
+ * Button
  * List
  * Select single
  * Select multiple
@@ -21,25 +23,68 @@
 @use "sass:map";
 
 
-// Choices
+// Placeholders
 // ============================================================================
 
-@import "~choices.js/src/styles/choices";
+%choices-dropdown {
+  position: absolute;
+  top: 100%;
+  z-index: 1;
+  width: 100%;
+  margin-top: -1px;
+  overflow: hidden;
+  word-break: break-all;
+  visibility: hidden;
+  background-color: $white;
+  border: 1px solid $form-select-border-color;
+  will-change: visibility;
+
+  @include border-radius();
+
+  &.is-active {
+    visibility: visible;
+  }
+
+  .is-flipped & {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: -1px;
+  }
+
+  .#{$choices-selector}__list {
+    position: relative;
+    max-height: 300px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+  }
+
+  .#{$choices-selector}__item {
+    position: relative;
+    padding: 10px;
+  }
+
+  .#{$choices-selector}__item--selectable {
+    &.is-highlighted {
+      background-color: color.mix(#000, #fff, 5%);
+    }
+  }
+}
 
 
 // Base
 // ============================================================================
 
 .#{$choices-selector} {
-  overflow: initial;
+  position: relative;
 
-  &.is-disabled {
-    .#{$choices-selector}__inner,
-    .#{$choices-selector}__input,
-    .#{$choices-selector}__item,
-    .#{$choices-selector}__button {
-      cursor: default;
-    }
+  &:focus {
+    outline: none;
+  }
+
+  [hidden] {
+    display: none !important; // stylelint-disable-line declaration-no-important
   }
 }
 
@@ -49,17 +94,21 @@
 
 .#{$choices-selector}__inner {
   display: block;
-  min-height: calc(#{$form-select-border-width * 2} + #{$form-select-padding-y * 2} + #{$form-select-font-size * $form-select-line-height});
+  width: 100%;
+  min-height: calc(#{$form-select-border-width} * 2 + #{$form-select-padding-y} * 2 + #{$form-select-font-size * $form-select-line-height});
   padding: $form-select-padding-y $form-select-indicator-padding $form-select-padding-y $form-select-padding-x;
+  overflow: hidden;
   font-family: $form-select-font-family;
   font-weight: $form-select-font-weight;
   line-height: $form-select-line-height;
   color: $form-select-color;
+  vertical-align: top;
+  background-color: $form-select-bg;
   background-image: escape-svg($form-select-indicator);
   background-repeat: no-repeat;
   background-position: $form-select-bg-position;
   background-size: $form-select-bg-size;
-  border-width: $form-select-border-width;
+  border: $form-select-border-width solid $form-select-border-color;
 
   @include font-size($form-select-font-size);
   @include border-radius($form-select-border-radius, 0);
@@ -83,11 +132,14 @@
   }
 
   .is-disabled & {
+    user-select: none;
+    background-color: $form-select-disabled-bg;
     border-color: $form-select-disabled-border-color;
   }
 
   @each $state, $data in $form-validation-states {
     $color: map.get($data, "color");
+    $border-color: map.get($data, "border-color");
     $icon: map.get($data, "icon");
     $focus-box-shadow: map.get($data, "focus-box-shadow");
 
@@ -95,7 +147,8 @@
     $focus-box-shadow: 0 0 $input-btn-focus-blur $input-focus-width color.change($color, $alpha: $input-btn-focus-color-opacity) !default;
 
     .is-#{$state} & {
-      border-color: $color;
+      color: $color;
+      border-color: $border-color;
 
       @if $enable-validation-icons {
         padding-right: $form-select-feedback-icon-padding-end;
@@ -106,7 +159,6 @@
     }
 
     .is-focused.is-#{$state} & {
-      border-color: $color;
       box-shadow: $focus-box-shadow;
     }
   }
@@ -117,11 +169,13 @@
 // ============================================================================
 
 .#{$choices-selector}__input {
+  display: inline-block;
+  max-width: 100%;
   padding: 0;
-  margin-bottom: 0;
-  line-height: $form-select-line-height;
-
-  @include font-size($form-select-font-size);
+  vertical-align: baseline;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
 
   &::placeholder {
     color: $input-placeholder-color;
@@ -130,6 +184,24 @@
 
   .is-disabled &::placeholder {
     color: $form-select-disabled-color;
+  }
+
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+
+  &::-ms-clear,
+  &::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  &:focus {
+    outline: 0;
   }
 }
 
@@ -155,25 +227,53 @@
 // ============================================================================
 
 .#{$choices-selector}__heading {
-  padding: $choices-heading-padding-y $choices-heading-padding-x;
-  font-weight: $choices-heading-font-weight;
-  line-height: $choices-heading-line-height;
-  color: $choices-heading-color;
-  cursor: default;
-  border-bottom: $choices-heading-border-width solid $choices-heading-border-color;
+  padding: $form-select-padding-y $form-select-padding-x;
+  font-weight: $font-weight-bold;
+  color: $gray-700;
+  border-bottom: $border-width solid $border-color;
+}
 
-  @include font-size($choices-heading-font-size);
+
+// Item
+// ============================================================================
+
+.#{$choices-selector}__item--disabled {
+  user-select: none;
+  opacity: .5;
+}
+
+
+// Button
+// ============================================================================
+
+.#{$choices-selector}__button {
+  text-indent: -9999px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 0;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 
 // List
 // ============================================================================
 
-.#{$choices-selector}__list--single {
+.#{$choices-selector}__list {
   display: block;
-  padding: 0;
 
+  &[aria-expanded] {
+    @extend %choices-dropdown;
+  }
+}
+
+.#{$choices-selector}__list--single {
   .#{$choices-selector}__item {
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -181,73 +281,32 @@
 }
 
 .#{$choices-selector}__list--multiple {
-  display: block;
-
   .#{$choices-selector}__item {
-    padding: $choices-multiple-item-padding-y $choices-multiple-item-padding-x;
-    margin-right: $choices-multiple-item-spacer;
-    margin-bottom: $choices-multiple-item-spacer;
-    line-height: $choices-multiple-item-line-height;
-    color: $choices-multiple-item-color;
-    cursor: default;
-    background: $choices-multiple-item-bg;
-    border: $choices-multiple-item-border-width solid $choices-multiple-item-border-color;
+    display: inline-block;
+    padding: $badge-padding-y $badge-padding-x;
+    margin-right: spacer(2);
+    margin-bottom: spacer(2);
+    font-weight: $badge-font-weight;
+    line-height: 1;
+    color: $component-active-color;
+    word-break: break-all;
+    vertical-align: middle;
+    background-color: $component-active-bg;
+    border: 1px solid $component-active-bg;
 
-    @include font-size($choices-multiple-item-font-size);
-
-    &[data-deletable] {
-      padding-right: $choices-multiple-item-padding-x;
-    }
-
-    &.is-highlighted {
-      background: $choices-multiple-item-bg;
-      border: $choices-multiple-item-border-width solid $choices-multiple-item-border-color;
-    }
+    @include font-size($badge-font-size);
+    @include border-radius($badge-border-radius);
 
     .is-disabled & {
-      color: $choices-multiple-item-disabled-color;
-      background: $choices-multiple-item-disabled-bg;
-      border: $choices-multiple-item-border-width solid $choices-multiple-item-disabled-border-color;
+      color: $form-select-disabled-color;
+      background-color: $form-select-disabled-bg;
+      border-color: $form-select-border-color;
     }
   }
 }
 
 .#{$choices-selector}__list--dropdown {
-  margin-top: 0;
-  border: $choices-dropdown-border-width solid $choices-dropdown-border-color;
-  border-radius: $choices-border-radius;
-
-  .#{$choices-selector}__item {
-    padding: $choices-dropdown-item-paddiny-y $choices-dropdown-item-paddiny-x;
-    line-height: $choices-dropdown-item-line-height;
-    color: $choices-dropdown-item-color;
-
-    @include font-size($choices-dropdown-item-font-size);
-
-    &[role="treeitem"] {
-      padding-left: $choices-dropdown-group-item-padding-l;
-    }
-
-    &.is-highlighted {
-      color: $choices-dropdown-item-hover-color;
-      background: $choices-dropdown-item-hover-bg;
-    }
-
-    &.is-selected {
-      color: $choices-dropdown-item-active-color;
-      background: $choices-dropdown-item-active-bg;
-    }
-
-    &.#{$choices-selector}__item--disabled {
-      color: $choices-dropdown-item-disabled-color;
-      background: none;
-    }
-  }
-
-  .is-flipped & {
-    margin-bottom: 0;
-    border-radius: $choices-border-radius;
-  }
+  @extend %choices-dropdown;
 }
 
 
@@ -255,14 +314,6 @@
 // ============================================================================
 
 .#{$choices-selector}[data-type*="select-one"] {
-  &::after {
-    content: none;
-  }
-
-  .#{$choices-selector}__inner {
-    padding-bottom: $form-select-padding-y;
-  }
-
   .#{$choices-selector}__list--dropdown {
     padding: $form-select-padding-y $form-select-padding-x 0;
 
@@ -274,6 +325,8 @@
   }
 
   .#{$choices-selector}__input {
+    display: block;
+    width: 100%;
     padding: $input-padding-y $input-padding-x;
     font-family: $input-font-family;
     font-weight: $input-font-weight;
@@ -307,26 +360,28 @@
 
 .#{$choices-selector}[data-type*="select-multiple"] {
   .#{$choices-selector}__inner {
-    padding-bottom: $form-select-padding-y - $choices-multiple-item-spacer;
+    cursor: text;
   }
 
   .#{$choices-selector}__button {
-    margin-left: $choices-button-offset * .5;
-    color: $choices-button-color;
-    border-left: none;
-    opacity: 1;
+    display: inline-block;
+    width: 8px;
+    padding: 0;
+    margin-left: spacer(1);
+    line-height: 1;
+    background-image: escape-svg(str-replace($btn-close-bg, #{$btn-close-color}, #{$component-active-color}));
+    background-size: 8px;
 
     @include border-radius();
 
     &:focus {
-      box-shadow: $choices-button-focus-shadow;
+      box-shadow: $btn-close-focus-shadow;
     }
   }
 
   &.is-disabled {
     .#{$choices-selector}__button {
-      color: $choices-button-disabled-color;
-      background-image: escape-svg(str-replace($choices-icon-cross-svg, #{$choices-button-color}, #{$choices-button-disabled-color}));
+      background-image: escape-svg(str-replace($btn-close-bg, #{$btn-close-color}, #{$form-select-disabled-color}));
     }
   }
 }

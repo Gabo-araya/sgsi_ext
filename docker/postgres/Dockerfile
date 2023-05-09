@@ -1,4 +1,4 @@
-FROM postgres:14-bullseye
+FROM postgres:15-bullseye
 
 ARG HOST_UID=2640
 ARG HOST_GID=2640
