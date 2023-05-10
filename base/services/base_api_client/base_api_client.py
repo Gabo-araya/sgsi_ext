@@ -88,15 +88,19 @@ class BaseApiClient(ABC):
         )
 
     def get_url(self, endpoint: str, path_params: dict | None = None) -> str:
-        parsed_endpoint = endpoint[1:] if endpoint.startswith("/") else endpoint
-        url = os.join(self.base_url, parsed_endpoint)
+        parsed_endpoint = self.standarize_url_slashes(endpoint)
+        url = os.path.join(self.base_url, parsed_endpoint)
         return url.format(**path_params) if path_params else url
+
+    @staticmethod
+    def standarize_url_slashes(url):
+        return f"{url.strip('/')}/"
 
     @property
     def base_url(self) -> str:
         protocol = self.configuration["protocol"]
         host = self.configuration["host"]
-        return f"{protocol}://{host}"
+        return f"{protocol}://{self.standarize_url_slashes(host)}"
 
     @abstractmethod
     def get_configuration(self) -> BaseConfiguration:
