@@ -16,6 +16,7 @@ from django.utils import timezone
 from faker import Faker
 from inflection import underscore
 
+from base.utils import random_rut
 from base.utils import random_string
 from parameters.models import Parameter
 from regions.models import Commune
@@ -70,7 +71,6 @@ class Mockup:
 
     def set_required_boolean(self, data, field, default=None, **kwargs):
         if field not in data:
-
             if default is None:
                 data[field] = self.faker.boolean()
             else:
@@ -154,6 +154,9 @@ class Mockup:
     def set_required_url(self, data, field, length=6):
         if field not in data:
             data[field] = f"http://{random_string(length=length)}.com"
+
+    def set_required_rut(self, data: dict, field: str):
+        data.setdefault(field, random_rut())
 
 
 def add_get_or_create(cls, model):
