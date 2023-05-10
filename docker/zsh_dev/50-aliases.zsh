@@ -13,6 +13,7 @@ alias djr='./reset.sh'
 alias djcc='dj clear_cache'
 alias djm='dj migrate'
 alias djmm='dj makemigrations'
+alias djsm='dj showmigrations'
 
 djt() {
   if [[ "$1" == "--help" ]]; then
