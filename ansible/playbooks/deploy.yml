@@ -114,11 +114,11 @@
     - name: gather container build arguments
       block:
         - name: retrieve git commit hash
-          shell: git describe --match=NeVeRmAtCh --always --abbrev --dirty
+          command: git describe --match=NeVeRmAtCh --always --abbrev --dirty
           register: git_commit
 
         - name: retrieve build time
-          shell: "date --iso-8601=seconds"
+          command: "date --iso-8601=seconds"
           register: build_time
 
     - name: build and start containers
