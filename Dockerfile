@@ -176,6 +176,11 @@ ARG WHO=magnet
 ARG HOST_UID=2640
 ARG HOST_GID=2640
 
+ARG GIT_COMMIT="<unknown>"
+ENV GIT_COMMIT=$GIT_COMMIT
+ARG BUILD_TIME="<unknown>"
+ENV BUILD_TIME=$BUILD_TIME
+
 ENV NODE_ENV=production
 
 COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./

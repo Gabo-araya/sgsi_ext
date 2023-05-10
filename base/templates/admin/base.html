@@ -1,5 +1,27 @@
 {% extends 'admin/base.html' %}
+{% load i18n %}
 
 {% block extrastyle %}
+  {{ block.super }}
   {% include 'admin/ribbon_base.html' %}
+  <style>
+    #footer {
+      text-align: center;
+      color: var(--body-fg);
+      font-size: 11px;
+    }
+  </style>
+{% endblock %}
+
+{% block footer %}
+  <div id="footer">
+    {% if build_info.build_time %}
+      {% blocktranslate trimmed with commit=build_info.git_commit build_time=build_info.build_time|date:"SHORT_DATETIME_FORMAT" %}
+          Version {{ commit }}, built on {{ build_time }}
+      {% endblocktranslate %}
+    {% else %}
+      {% blocktranslate with commit=build_info.git_commit%}Version {{ commit }}{% endblocktranslate %}
+    {% endif %}
+
+  </div>
 {% endblock %}

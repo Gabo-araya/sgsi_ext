@@ -58,6 +58,10 @@ echo "docker compose build" | newgrp docker
 
 scripts/set-vscode-settings.sh
 
+# Set dummy git commit and build time
+echo "GIT_COMMIT=development" >> $env_file
+echo "BUILD_TIME=$(date --iso-8601=seconds)" >> $env_file
+
 # Finally create and start the containers:
 echo "docker compose up --detach" | newgrp docker
 

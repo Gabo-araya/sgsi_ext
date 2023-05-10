@@ -111,15 +111,26 @@
         path: "{{ project_name }}/docker/volumes/nginx_secrets/"
       register: stat_nginx_secrets
 
+    - name: gather container build arguments
+      block:
+        - name: retrieve git commit hash
+          shell: git describe --match=NeVeRmAtCh --always --abbrev --dirty
+          register: git_commit
+
+        - name: retrieve build time
+          shell: "date --iso-8601=seconds"
+          register: build_time
+
     - name: build and start containers
       # Note: "community.docker.docker_compose" requires docker-compose v1 and always disables BuildKit
       shell:
         chdir: "{{ project_name }}"
         cmd: "{{ build_cmd }} && {{ up_cmd }}"  # Two commands because not all build flags are available in up
       vars:
-        build_cmd: docker compose build {{ nocache_arg }} {{ pull_arg }}
+        build_cmd: docker compose build {{ build_args }} {{ nocache_arg }} {{ pull_arg }}
         up_cmd: docker compose up -d --remove-orphans {{ recreate_arg }}
 
+        build_args: "--build-arg GIT_COMMIT={{ git_commit }} --build-arg BUILD_TIME={{ build_time }}"
         nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
         pull_arg:    "{{ '--pull'     if env_cache_ignore == '1' else '' }}"
         recreate_arg: "{{ '--force-recreate' if env_recreate == '1' else '' }}"
