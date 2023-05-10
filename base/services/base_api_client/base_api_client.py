@@ -4,6 +4,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Any
 from typing import TypedDict
+from urllib.parse import quote
 
 import requests
 
@@ -88,19 +89,31 @@ class BaseApiClient(ABC):
         )
 
     def get_url(self, endpoint: str, path_params: dict | None = None) -> str:
-        parsed_endpoint = self.standarize_url_slashes(endpoint)
-        url = os.path.join(self.base_url, parsed_endpoint)
-        return url.format(**path_params) if path_params else url
+        parsed_endpoint = self.parse_endpoint(endpoint, path_params)
+        return os.path.join(self.base_url, parsed_endpoint)
+
+    def parse_endpoint(self, endpoint: str, path_params: dict | None = None) -> str:
+        parsed_endpoint = endpoint.lstrip("/")
+        parsed_path_params = self.parse_path_params(path_params)
+        if parsed_path_params:
+            return parsed_endpoint.format(**parsed_path_params)
+        return parsed_endpoint
 
     @staticmethod
-    def standarize_url_slashes(url):
-        return f"{url.strip('/')}/"
+    def parse_path_params(path_params: dict | None = None) -> dict | None:
+        if not path_params:
+            return None
+        return {
+            key: quote(value, safe="")
+            for key, value in path_params.items()
+            if value is not None
+        }
 
     @property
     def base_url(self) -> str:
         protocol = self.configuration["protocol"]
         host = self.configuration["host"]
-        return f"{protocol}://{self.standarize_url_slashes(host)}"
+        return f"{protocol}://{host.strip('/')}"
 
     @abstractmethod
     def get_configuration(self) -> BaseConfiguration:
