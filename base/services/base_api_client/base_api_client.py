@@ -2,16 +2,12 @@ import os
 
 from abc import ABC
 from abc import abstractmethod
-from typing import TypedDict
 from urllib.parse import quote
 
 import requests
 
-
-class BaseConfiguration(TypedDict):
-    timeout: int
-    protocol: str
-    host: str
+DEFAULT_TIMEOUT = 10
+DEFAULT_PROTCOL = "https"
 
 
 class BaseApiClient(ABC):
@@ -120,6 +116,18 @@ class BaseApiClient(ABC):
         host = self.configuration["host"]
         return f"{protocol}://{host.strip('/')}"
 
+    def get_configuration(self) -> dict:
+        return {
+            **self.get_default_configuration(),
+            **self.get_extra_configuration(),
+        }
+
+    def get_default_configuration(self):
+        return {
+            "timeout": DEFAULT_TIMEOUT,
+            "protocol": DEFAULT_PROTCOL,
+        }
+
     @abstractmethod
-    def get_configuration(self) -> BaseConfiguration:
+    def get_extra_configuration(self) -> dict:
         ...

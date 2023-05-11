@@ -13,7 +13,6 @@ class DummyClient(BaseJsonApiClient):
         return {
             "host": "localhost:8000/api/v1",
             "protocol": "http",
-            "timeout": 10,
         }
 
     def get_dummies(self):

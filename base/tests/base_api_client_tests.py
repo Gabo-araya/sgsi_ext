@@ -1,5 +1,4 @@
 from base.services import BaseApiClient
-from base.services.base_api_client.base_api_client import BaseConfiguration
 from base.tests import BaseTestCase
 
 
@@ -8,11 +7,10 @@ class MockApiClient(BaseApiClient):
         self.mock_host = mock_host
         super().__init__()
 
-    def get_configuration(self) -> BaseConfiguration:
+    def get_extra_configuration(self):
         return {
             "host": self.mock_host,
             "protocol": "http",
-            "timeout": 10,
         }
 
 
