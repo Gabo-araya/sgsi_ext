@@ -1,58 +1,17 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-"""
-
-
 from http import HTTPStatus
 
 from django.contrib import admin
-from django.test import TestCase
 from django.urls import NoReverseMatch
 from django.urls import reverse
 from django.urls.converters import SlugConverter
 
-# others libraries
 from inflection import underscore
 
-# base
-from base.middleware import RequestMiddleware
-
-# utils
-from base.mockups import Mockup
+from base.tests import BaseTestCase
 from base.utils import get_our_models
 from base.utils import get_slug_fields
 from base.utils import random_string
-
-# urls
 from project.urls import urlpatterns
-
-
-class BaseTestCase(TestCase):
-    mockup = Mockup()
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.password = random_string()
-        cls.user = cls.mockup.create_user(cls.password)
-
-    def setUp(self):
-        super().setUp()
-        self.login()
-
-    def tearDown(self, *args, **kwargs):
-        super().tearDown(*args, **kwargs)
-        thread_local = RequestMiddleware.thread_local
-        thread_local.user = None
-
-    def login(self, user=None, password=None):
-        if user is None:
-            user = self.user
-            password = self.password
-
-        username = getattr(user, user.USERNAME_FIELD)
-
-        self.assertTrue(self.client.login(username=username, password=password))
 
 
 def reverse_pattern(pattern, namespace, args=None, kwargs=None):
@@ -237,9 +196,3 @@ class UrlsTest(BaseTestCase):
         for _, model_admin in admin.site._registry.items():
             patterns = model_admin.get_urls()
             test_url_patterns(patterns, namespace="admin")
-
-
-class CheckErrorPages(TestCase):
-    def test_404(self):
-        response = self.client.get("/this-url-does-not-exist")
-        self.assertTemplateUsed(response, "exceptions/404.pug")
