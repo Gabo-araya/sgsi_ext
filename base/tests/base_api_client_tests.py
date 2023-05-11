@@ -17,9 +17,6 @@ class MockApiClient(BaseApiClient):
 
 
 class BaseApiClientGetUrlTestCase(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-
     def test_get_url_without_end_slashes(self):
         client = MockApiClient("example.com")
         self.assertEqual(client.get_url(""), "http://example.com/")
@@ -50,4 +47,37 @@ class BaseApiClientGetUrlTestCase(BaseTestCase):
         self.assertEqual(client.get_url("test/"), "http://example.com/test/")
         self.assertEqual(
             client.get_url("test/{pk}/", {"pk": "5"}), "http://example.com/test/5/"
+        )
+
+
+class BaseApiClientPathParamsTestCase(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.mock_api_client = MockApiClient("example.com")
+
+    def test_only_str_path_params(self):
+        self.assertEqual(
+            self.mock_api_client.get_url(
+                "{category}/{pk}/",
+                {"category": "test", "pk": "5"},
+            ),
+            "http://example.com/test/5/",
+        )
+
+    def test_only_int_path_params(self):
+        self.assertEqual(
+            self.mock_api_client.get_url(
+                "{category}/{pk}/",
+                {"category": 1, "pk": 5},
+            ),
+            "http://example.com/1/5/",
+        )
+
+    def test_mixed_path_params(self):
+        self.assertEqual(
+            self.mock_api_client.get_url(
+                "{category}/{pk}/",
+                {"category": "test", "pk": 5},
+            ),
+            "http://example.com/test/5/",
         )

@@ -24,11 +24,7 @@ class DummyClient(BaseJsonApiClient):
         return data
 
     def get_dummy(self, pk):
-        data, status_code = self.get_blocking(
-            "/dummy/{pk}/",
-            path_params={"pk": pk},
-            query_params={"TEST": "dsal😱kjdsäßðó®öé"},
-        )
+        data, status_code = self.get_blocking("/dummy/{pk}/", path_params={"pk": pk})
         if status_code != status.HTTP_200_OK:
             msg = f"Error getting dummy {pk}"
             raise DummyError(msg)
@@ -43,7 +39,7 @@ class DummyClient(BaseJsonApiClient):
 
     def update_dummy(self, pk, name):
         data, status_code = self.put_blocking(
-            "/dummy/{pk}/", path_params={"pk": "153"}, body={"name": name}
+            "/dummy/{pk}/", path_params={"pk": pk}, body={"name": name}
         )
         if status_code != status.HTTP_200_OK:
             msg = f"Error updating dummy {pk}"
@@ -51,9 +47,7 @@ class DummyClient(BaseJsonApiClient):
         return data
 
     def delete_dummy(self, pk):
-        data, status_code = self.delete_blocking(
-            "/dummy/{pk}/", path_params={"pk": "153"}
-        )
+        data, status_code = self.delete_blocking("/dummy/{pk}/", path_params={"pk": pk})
         if status_code != status.HTTP_204_NO_CONTENT:
             msg = f"Error deleting dummy {pk}"
             raise DummyError(msg)
