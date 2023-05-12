@@ -17,28 +17,28 @@ class DummyViewset(ViewSet):
         {"pk": "2", "name": "Dummy 2"},
     ]
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         dummy = {"pk": str(uuid4()), "name": request.data["name"]}
         self.DUMMY_DATA.append(dummy)
         return Response(dummy, status=status.HTTP_201_CREATED)
 
-    def list(self, request):  # noqa: A003
+    def list(self, request, *args, **kwargs):  # noqa: A003
         return Response(self.DUMMY_DATA)
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, pk=None, **kwargs):
         dummy = self.find_dummy(pk)
         if dummy:
             return Response(dummy)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def update(self, request, pk=None):
+    def update(self, request, pk=None, **kwargs):
         dummy = self.find_dummy(pk)
         if dummy:
             dummy["name"] = request.data["name"]
             return Response(dummy)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def destroy(self, request, pk=None):
+    def destroy(self, request, pk=None, **kwargs):
         dummy = self.find_dummy(pk)
         if dummy:
             self.DUMMY_DATA.remove(dummy)

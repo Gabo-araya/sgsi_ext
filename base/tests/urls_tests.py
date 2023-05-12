@@ -37,7 +37,9 @@ class UrlsTest(BaseTestCase):
         super().setUp()
 
         # store default values for urls. E.g. user_id
-        self.default_params = {}
+        self.default_params = {
+            "format": "json",
+        }
 
         # store default objects to get foreign key parameters
         self.default_objects = {}
