@@ -23,7 +23,7 @@ class UserQuerySet(BaseQuerySet):
         return queryset
 
 
-class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
+class CustomUserManager(BaseUserManager):
     def _create_user(self, email, first_name, last_name, password, **extra_fields):
         """
         Creates and saves a User with the given username, email and password.
@@ -76,3 +76,6 @@ class UserManager(BaseUserManager.from_queryset(UserQuerySet)):
 
     def get_or_none(self, **fields):
         return self.get_queryset().get_or_none(**fields)
+
+
+UserManager = CustomUserManager.from_queryset(UserQuerySet)
