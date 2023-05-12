@@ -111,3 +111,7 @@ docker/docker-compose.*.yml
 # development scripts
 reset.sh
 quickstart.sh
+
+build.sh
+quickstart.sh
+reset.sh
