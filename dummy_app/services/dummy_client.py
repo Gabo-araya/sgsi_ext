@@ -1,4 +1,4 @@
-from rest_framework import status
+from http import HTTPStatus
 
 from base.services import BaseJsonApiClient
 
@@ -11,26 +11,26 @@ class DummyClient(BaseJsonApiClient):
     def get_extra_configuration(self) -> dict:
         return {
             "host": "localhost:8000/api/v1",
-            "schema": "http",
+            "scheme": "http",
         }
 
     def get_dummies(self):
         data, status_code = self.get_blocking("/dummy/")
-        if status_code != status.HTTP_200_OK:
+        if status_code != HTTPStatus.OK:
             msg = "Error getting dummies"
             raise DummyError(msg)
         return data
 
     def get_dummy(self, pk):
         data, status_code = self.get_blocking("/dummy/{pk}/", path_params={"pk": pk})
-        if status_code != status.HTTP_200_OK:
+        if status_code != HTTPStatus.OK:
             msg = f"Error getting dummy {pk}"
             raise DummyError(msg)
         return data
 
     def create_dummy(self, name):
         data, status_code = self.post_blocking("/dummy/", body={"name": name})
-        if status_code != status.HTTP_201_CREATED:
+        if status_code != HTTPStatus.CREATED:
             msg = f"Error creating dummy {name}"
             raise DummyError(msg)
         return data
@@ -39,14 +39,14 @@ class DummyClient(BaseJsonApiClient):
         data, status_code = self.put_blocking(
             "/dummy/{pk}/", path_params={"pk": pk}, body={"name": name}
         )
-        if status_code != status.HTTP_200_OK:
+        if status_code != HTTPStatus.OK:
             msg = f"Error updating dummy {pk}"
             raise DummyError(msg)
         return data
 
     def delete_dummy(self, pk):
         data, status_code = self.delete_blocking("/dummy/{pk}/", path_params={"pk": pk})
-        if status_code != status.HTTP_204_NO_CONTENT:
+        if status_code != HTTPStatus.NO_CONTENT:
             msg = f"Error deleting dummy {pk}"
             raise DummyError(msg)
         return data
