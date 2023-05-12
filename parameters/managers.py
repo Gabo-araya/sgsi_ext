@@ -1,7 +1,7 @@
-from base.managers import QuerySet
+from base.managers import BaseQuerySet
 
 
-class ParameterQuerySet(QuerySet):
+class ParameterQuerySet(BaseQuerySet):
     def search(self, query):
         """
         Search Parameter objects by name
