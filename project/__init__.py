@@ -4,7 +4,7 @@ from dateutil.parser import isoparse
 
 from .celeryconf import app as celery_app
 
-_GIT_COMMIT = os.environ.get("GIT_COMMIT", "<unknown>")
+_GIT_REF = os.environ.get("GIT_REF", "<unknown>")
 _RAW_BUILD_TIME = os.environ.get("BUILD_TIME", "")
 try:
     _BUILD_TIME = isoparse(_RAW_BUILD_TIME)

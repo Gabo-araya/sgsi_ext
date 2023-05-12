@@ -8,7 +8,7 @@ def build_info(request):
 
     return {
         "build_info": {
-            "git_commit": project._GIT_COMMIT,
+            "git_ref": project._GIT_REF,
             "build_time": project._BUILD_TIME,
         }
     }

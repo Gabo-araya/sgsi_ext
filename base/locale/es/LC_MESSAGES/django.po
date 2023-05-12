@@ -62,8 +62,8 @@ msgstr "orden de presentación"
 
 #: templates/admin/base.html
 #, python-format
-msgid "Version %(commit)s, built on %(build_time)s"
-msgstr "Versión %(commit)s, construida el %(build_time)s"
+msgid "Version %(ref)s, built on %(build_time)s"
+msgstr "Versión %(ref)s, construida el %(build_time)s"
 
 #: templates/admin/base.html
 #, python-format
