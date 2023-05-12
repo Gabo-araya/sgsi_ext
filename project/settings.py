@@ -369,8 +369,13 @@ LOGGING = {
             "format": "[{server_time}] {message}",
             "style": "{",
         },
-        "api_clients": {
+        "json": {
             "()": "project.logging.JsonFormatter",
+            "datefmt": "%Y-%m-%dT%H:%M:%SZ",
+            "format": (
+                "%(asctime)s %(levelname)s %(lineno)s %(message)s %(name)s "
+                "%(pathname)s %(process)d %(threadName)s"
+            ),
         },
         "celery_json": {
             "()": "project.logging.JsonCeleryFormatter",
@@ -389,15 +394,15 @@ LOGGING = {
         },
     },
     "handlers": {
-        "console": {
-            "level": "INFO",
-            # No 'filters', to log even when DEBUG=False
+        "default": {
+            "level": "DEBUG",
             "class": "logging.StreamHandler",
+            "formatter": "verbose" if DEBUG else "json",
         },
         "django.server": {
             "level": "INFO",
             "class": "logging.StreamHandler",
-            "formatter": "django.server",
+            "formatter": "django.server" if DEBUG else "json",
         },
         "mail_admins": {
             "level": "ERROR",
@@ -407,7 +412,7 @@ LOGGING = {
         "api_clients": {
             "level": "ERROR",
             "class": "logging.StreamHandler",
-            "formatter": "api_clients",
+            "formatter": "verbose" if DEBUG else "json",
         },
         "celery_app": {
             "level": "DEBUG" if DEBUG else "INFO",
@@ -422,9 +427,9 @@ LOGGING = {
     },
     "loggers": {
         "": {
-            # "": To print "logger.info" to console
-            # https://stackoverflow.com/questions/62782979/logger-info-not-working-in-django-logging/70343506#70343506
-            "handlers": ["console", "mail_admins"],
+            # Catch-all to print "logger.info" to console
+            # https://stackoverflow.com/a/70343506
+            "handlers": ["default", "mail_admins"],
             "level": "INFO",
         },
         "django.server": {
