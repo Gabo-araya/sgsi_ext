@@ -10,7 +10,7 @@ class MockApiClient(BaseApiClient):
     def get_extra_configuration(self):
         return {
             "host": self.mock_host,
-            "protocol": "http",
+            "schema": "http",
         }
 
 

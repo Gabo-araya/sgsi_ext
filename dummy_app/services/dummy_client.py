@@ -11,7 +11,7 @@ class DummyClient(BaseJsonApiClient):
     def get_extra_configuration(self) -> dict:
         return {
             "host": "localhost:8000/api/v1",
-            "protocol": "http",
+            "schema": "http",
         }
 
     def get_dummies(self):

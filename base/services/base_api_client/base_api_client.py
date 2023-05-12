@@ -7,7 +7,7 @@ from urllib.parse import quote
 import requests
 
 DEFAULT_TIMEOUT = 10
-DEFAULT_PROTCOL = "https"
+DEFAULT_SCHEMA = "https"
 
 
 class BaseApiClient(ABC):
@@ -112,9 +112,9 @@ class BaseApiClient(ABC):
 
     @property
     def base_url(self) -> str:
-        protocol = self.configuration["protocol"]
+        schema = self.configuration["schema"]
         host = self.configuration["host"]
-        return f"{protocol}://{host.strip('/')}"
+        return f"{schema}://{host.strip('/')}"
 
     def get_configuration(self) -> dict:
         return {
@@ -125,7 +125,7 @@ class BaseApiClient(ABC):
     def get_default_configuration(self):
         return {
             "timeout": DEFAULT_TIMEOUT,
-            "protocol": DEFAULT_PROTCOL,
+            "schema": DEFAULT_SCHEMA,
         }
 
     @abstractmethod
