@@ -1,9 +1,3 @@
-""" Models for the base application.
-
-All apps should use the BaseModel as parent for all models
-"""
-
-
 import json
 
 from django.conf import settings
@@ -130,39 +124,3 @@ class BaseModel(AuditMixin, models.Model):
 
     def get_full_url(self):
         return build_absolute_url_wo_req(self.get_absolute_url())
-
-
-class OrderableModel(BaseModel):
-    display_order = models.PositiveSmallIntegerField(
-        _("display order"),
-        default=0,
-    )
-
-    class Meta:
-        abstract = True
-        ordering = ("display_order",)
-
-    def _set_display_order(self):
-        """
-        When adding a new object, set display_order field
-        counting all objects plus 1
-        """
-        obj_count = self.__class__.objects.count()
-        self.display_order = obj_count + 1
-
-    @classmethod
-    def reorder_display_order(cls):
-        """
-        Take all objects and change order value
-        """
-        objects = cls.objects.all()
-        order = 0
-        for obj in objects:
-            obj.display_order = order
-            obj.save()
-            order += 1
-
-    def save(self, *args, **kwargs):
-        if self.pk is None:
-            self._set_display_order()
-        super().save(*args, **kwargs)

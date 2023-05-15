@@ -93,7 +93,6 @@ INSTALLED_APPS = [
     # internal
     "parameters",
     "regions",
-    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -195,6 +194,17 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("PGDATABASE"),
+        "USER": os.environ.get("PGUSER"),
+        "PASSWORD": os.environ.get("PGPASSWORD"),
+        "HOST": os.environ.get("PGHOST", "127.0.0.1"),
+        "PORT": os.environ.get("PGPORT", "5432"),
+        "DISABLE_SERVER_SIDE_CURSORS": (
+            get_bool_from_env("POSTGRES_DISABLE_SERVER_SIDE_CURSORS", False)
+        ),
+    },
+    "logs": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": f"{os.environ.get('PGDATABASE')}-logs",
         "USER": os.environ.get("PGUSER"),
         "PASSWORD": os.environ.get("PGPASSWORD"),
         "HOST": os.environ.get("PGHOST", "127.0.0.1"),
