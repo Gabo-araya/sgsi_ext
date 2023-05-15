@@ -2,10 +2,17 @@ x-base-dev: &base-dev-app
   restart: "no"
   network_mode: host
 
+x-base-build-args: &base-build-args
+  HOST_UID: "${HOST_UID:-2640}"
+  HOST_GID: "${HOST_GID:-2640}"
+  WHO: "${WHO:-magnet}"
+
 x-django-app: &base-django-app
   build:
     context: .
     target: development
+    args:
+      <<: *base-build-args
   env_file: .env
   environment:
     - PATH=${DEV_PATH}
@@ -52,16 +59,6 @@ services:
   # celery:
   #   <<: *base-dev-app
   #   <<: *base-django-app
-  #   build:
-  #     context: .
-  #     target: development
-  #   env_file: .env
-  #   environment:
-  #     - PATH=${DEV_PATH}
-  #     - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
-  #   volumes:
-  #     - ./project/media/:/usr/src/app/project/media/
-  #     - ./:/usr/src/app/
   #   depends_on:
   #     - redis
   #   command:
