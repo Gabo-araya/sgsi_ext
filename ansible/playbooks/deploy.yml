@@ -114,7 +114,7 @@
     - name: gather container build arguments
       block:
         - name: retrieve git commit hash
-          command: "git describe --match=NeVeRmAtCh --tags --always --abbrev --dirty"
+          command: "git describe --tags --always --abbrev --dirty"
           register: git_ref
 
         - name: retrieve build time
