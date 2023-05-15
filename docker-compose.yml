@@ -40,4 +40,3 @@ services:
     depends_on:
       - postgres
     init: true
-    restart: unless-stopped
