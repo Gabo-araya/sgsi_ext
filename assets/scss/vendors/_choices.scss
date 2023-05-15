@@ -84,7 +84,13 @@
   }
 
   [hidden] {
-    display: none !important; // stylelint-disable-line declaration-no-important
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    display: block !important; // stylelint-disable-line declaration-no-important
+
+    @include visually-hidden();
   }
 }
 
@@ -115,6 +121,7 @@
   @include box-shadow($form-select-box-shadow);
   @include transition($form-select-transition);
 
+  &:focus-within,
   .is-focused &,
   .is-open & {
     border-color: $form-select-focus-border-color;
