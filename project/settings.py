@@ -96,6 +96,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "xff.middleware.XForwardedForMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -466,6 +467,15 @@ WEBPACK_LOADER = {
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # This assumes the provided nginx is always before django. It contains:
 # "proxy_set_header X-Forwarded-Proto $scheme;"
+
+# Get client IP at request.META.get('REMOTE_ADDR'), instead of 127.0.0.1 from nginx.
+# Assumes a configuration like:
+#   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# See https://github.com/ferrix/xff/.
+# Assume single nginx before django:
+XFF_TRUSTED_PROXY_DEPTH = 1
+# Allow "curl localhost:8000" to succeed without X-Forwarded-For:
+XFF_STRICT = False
 
 # HSTS added by Django. This is redundant because nginx adds it as well,
 # but it silences deploy check warnings.
