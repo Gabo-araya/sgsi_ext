@@ -46,7 +46,7 @@ class BaseApiClient(ABC):
         return self.request(
             "post",
             url,
-            json=body,
+            data=body,
             params=query_params,
         )
 
@@ -61,7 +61,7 @@ class BaseApiClient(ABC):
             "patch",
             endpoint=endpoint,
             path_params=path_params,
-            json=body,
+            data=body,
             params=query_params,
         )
 
@@ -76,7 +76,7 @@ class BaseApiClient(ABC):
             "put",
             endpoint=endpoint,
             path_params=path_params,
-            json=body,
+            data=body,
             params=query_params,
         )
 
@@ -100,29 +100,31 @@ class BaseApiClient(ABC):
     ) -> requests.Response:
         try:
             url = self.get_url(endpoint, path_params)
-            log = self.create_log(method, endpoint, url, kwargs.get("json", ""))
-            response = self.make_request(method, url, **kwargs)
-            self.update_log(log, response)
+            request = self.get_request(method, url, **kwargs)
+            log = self.create_log(request)
+            session = requests.Session()
+            response = session.send(
+                request.prepare(), timeout=self.configuration["timeout"]
+            )
+            log.update_from_response(response)
         except Exception as error:
-            log.request_error = str(error)
-            log.save()
+            if isinstance(log, ClientLog):
+                log.response_error = str(error)
+                log.save()
             raise Exception from error
         else:
             return response
 
-    def update_log(self, log, response):
-        log.response_headers = str(response.headers)
-        log.response_content = response.text
-        log.save()
+    def create_log(self, request: requests.Request) -> ClientLog:
+        return ClientLog.objects.create_from_request(
+            request=request, client_code=self.client_code
+        )
 
-    def make_request(
-        self,
-        method: Method,
-        url: str,
-        **kwargs,
-    ):
-        return requests.request(
-            method, url, timeout=self.configuration["timeout"], **kwargs
+    def get_request(self, method: Method, url: str, **kwargs) -> requests.Request:
+        return requests.Request(
+            method,
+            url,
+            **kwargs,
         )
 
     def get_url(
@@ -139,18 +141,6 @@ class BaseApiClient(ABC):
         if parsed_path_params:
             return parsed_endpoint.format(**parsed_path_params)
         return parsed_endpoint
-
-    def create_log(
-        self, method: Method, endpoint: str, url: str, request_body: dict | None
-    ):
-        return ClientLog.objects.create(
-            method=method,
-            url=url,
-            endpoint=endpoint,
-            client_url=self.base_url,
-            client_code=self.client_code,
-            request_content=request_body,
-        )
 
     def get_configuration(self) -> dict:
         return {

@@ -1,6 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+import requests
+
+from base.managers import ClientLogQueryset
+
+ClientLogManager = models.Manager.from_queryset(ClientLogQueryset)
+
 
 class ClientLog(models.Model):
     class MethodOptions(models.TextChoices):
@@ -50,5 +56,13 @@ class ClientLog(models.Model):
         null=True,
     )
 
+    objects = ClientLogManager()
+
     def __str__(self) -> str:
         return f"{self.method.upper()} {self.url}"
+
+    def update_from_response(self, response: requests.Response):
+        self.response_headers = str(response.headers)
+        self.response_content = response.text
+        self.response_status_code = response.status_code
+        self.save()
