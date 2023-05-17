@@ -2,8 +2,7 @@ from api_client.models import ClientLog
 
 
 class ClientLogDbRouter:
-    # TODO: Change this value to "logs" when the automatic creation and migration of this database is implemented  # noqa: E501
-    LOG_DB = "default"
+    LOG_DB = "logs"
     DEFAULT_DB = "default"
 
     def db_for_read(self, model, **hints):

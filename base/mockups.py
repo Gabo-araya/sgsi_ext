@@ -16,6 +16,7 @@ from django.utils import timezone
 from faker import Faker
 from inflection import underscore
 
+from api_client.models import ClientLog
 from base.utils import random_string
 from parameters.models import Parameter
 from regions.models import Commune
@@ -28,6 +29,9 @@ class Mockup:
         language = settings.FAKER_LOCALES
         # DOCS: https://faker.readthedocs.io/en/master/index.html
         self.faker = Faker(language)
+
+    def create_client_log(self, **kwargs):
+        return ClientLog.objects.create(**kwargs)
 
     def create_commune(self, **kwargs):
         self.set_required_string(kwargs, "name")

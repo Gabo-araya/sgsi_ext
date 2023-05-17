@@ -24,6 +24,8 @@ def reverse_pattern(pattern, namespace, args=None, kwargs=None):
 
 
 class UrlsTest(BaseTestCase):
+    databases = ["default", "logs"]
+
     @classmethod
     def setUpTestData(cls):
         # create a superuser account
