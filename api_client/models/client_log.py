@@ -28,6 +28,12 @@ class ClientLog(models.Model):
         help_text=_("edition date"),
         verbose_name=_("updated at"),
     )
+    client_side_error = models.TextField(
+        verbose_name=_("client side error"),
+    )
+    server_side_error = models.TextField(
+        verbose_name=_("server side error"),
+    )
     method = models.CharField(
         max_length=10,
         verbose_name=_("method"),
@@ -56,9 +62,6 @@ class ClientLog(models.Model):
     request_content = models.TextField(
         verbose_name=_("content"),
     )
-    request_error = models.TextField(
-        verbose_name=_("error"),
-    )
     response_time = models.DateTimeField(
         help_text=_("response time"),
         verbose_name=_("response time"),
@@ -69,9 +72,6 @@ class ClientLog(models.Model):
     )
     response_content = models.TextField(
         verbose_name=_("content"),
-    )
-    response_error = models.TextField(
-        verbose_name=_("error"),
     )
     response_status_code = models.IntegerField(
         verbose_name=_("status code"),
