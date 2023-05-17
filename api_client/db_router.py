@@ -1,7 +1,7 @@
-from base.models import ClientLog
+from api_client.models import ClientLog
 
 
-class LogsDbRouter:
+class ClientLogDbRouter:
     # TODO: Change this value to "logs" when the automatic creation and migration of this database is implemented  # noqa: E501
     LOG_DB = "default"
 

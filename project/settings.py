@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     "users",
     # external
     "loginas",
+    "api_client",
     "webpack_loader",
     "django_celery_beat",
     "rest_framework",
@@ -190,7 +191,7 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASE_ROUTERS = ["base.db_router.LogsDbRouter"]
+DATABASE_ROUTERS = ["api_client.db_router.ClientLogDbRouter"]
 
 DATABASES = {
     "default": {

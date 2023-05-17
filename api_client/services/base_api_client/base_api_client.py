@@ -8,7 +8,7 @@ from urllib.parse import quote
 
 import requests
 
-from base.models import ClientLog
+from api_client.models import ClientLog
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"

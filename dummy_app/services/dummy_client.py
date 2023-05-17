@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from base.services import BaseJsonApiClient
+from api_client.services import BaseJsonApiClient
 
 
 class DummyError(Exception):

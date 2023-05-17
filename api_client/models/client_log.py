@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 import requests
 
-from base.managers import ClientLogQueryset
+from api_client.managers import ClientLogQueryset
 
 ClientLogManager = models.Manager.from_queryset(ClientLogQueryset)
 
