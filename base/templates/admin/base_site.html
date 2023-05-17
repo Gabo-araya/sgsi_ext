@@ -1,0 +1,7 @@
+{% extends "admin/base_site.html" %}
+{% load environment_badge %}
+
+{% block branding %}
+  {% env_badge %}
+  {{ block.super }}
+{% endblock %}
