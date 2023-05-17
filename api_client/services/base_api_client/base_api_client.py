@@ -16,6 +16,11 @@ DEFAULT_SCHEME = "https"
 Method = Literal["get", "post", "patch", "put", "delete"]
 
 
+# TODO: remove when proper error management is implemented
+class ClientError(Exception):
+    ...
+
+
 class BaseApiClient(ABC):
     code: str | None = None
 
@@ -107,11 +112,33 @@ class BaseApiClient(ABC):
                 request.prepare(), timeout=self.configuration["timeout"]
             )
             log.update_from_response(response)
-        except Exception as error:
+        except (
+            requests.URLRequired,
+            requests.MissingSchema,
+            requests.InvalidJSONError,
+            requests.InvalidSchema,
+            requests.InvalidURL,
+            requests.InvalidHeader,
+            requests.ChunkedEncodingError,
+            requests.StreamConsumedError,
+            requests.RetryError,
+            requests.UnrewindableBodyError,
+        ) as error:
             if isinstance(log, ClientLog):
-                log.response_error = str(error)
+                log.request_error = str(error)
                 log.save()
-            raise Exception from error
+            raise ClientError(str(error)) from error
+        except (
+            requests.HTTPError,
+            requests.ConnectionError,
+            requests.Timeout,
+            requests.TooManyRedirects,
+            requests.ContentDecodingError,
+        ) as error:
+            if isinstance(log, ClientLog):
+                log.resposne_error = str(error)
+                log.save()
+            raise ClientError(str(error)) from error
         else:
             return response
 
