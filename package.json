@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "prepare": "husky install",
+    "prepare": "[ \"$NODE_ENV\" = production ] && exit 0; husky install",
     "lint": "eslint '**/*.ts' && stylelint '**/*.{css,scss}'",
     "lint:fix": "eslint '**/*.ts' --fix && stylelint '**/*.{css,scss}' --fix",
     "preinstall": "scripts/assert-npm-inside-container.sh",
