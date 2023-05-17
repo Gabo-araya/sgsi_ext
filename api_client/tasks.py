@@ -10,6 +10,6 @@ logger = get_task_logger(__name__)
 @app.task
 def client_log_cleanup():
     old_logs = ClientLog.objects.old()
-    logger.info(f"Deleting {old_logs}...")
+    logger.info(f"Deleting {old_logs.count()} logs...")
     old_logs.delete()
     logger.info("Logs deleted!")
