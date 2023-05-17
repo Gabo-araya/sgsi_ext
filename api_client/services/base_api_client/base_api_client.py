@@ -4,7 +4,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Any
 from typing import Literal
-from urllib.parse import quote
+from urllib.parse import quote_plus
 
 import requests
 
@@ -188,7 +188,7 @@ class BaseApiClient(ABC):
         if not path_params:
             return None
         return {
-            key: quote(str(value), safe="")
+            key: quote_plus(str(value))
             for key, value in path_params.items()
             if value is not None
         }

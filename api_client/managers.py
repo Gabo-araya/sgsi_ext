@@ -1,3 +1,5 @@
+from urllib.parse import quote_plus
+from urllib.parse import urlencode
 from urllib.parse import urlparse
 
 from django.db import models
@@ -7,10 +9,10 @@ import requests
 
 
 def prepare_url(url: str, query_params: dict[str, str]) -> str:
-    string_params = [f"{key}={value}" for key, value in query_params.items()]
     if not query_params:
         return url
-    return f"{url}?{'&'.join(string_params)}"
+    string_params = urlencode(query_params, quote_via=quote_plus)
+    return f"{url}?{string_params}"
 
 
 class ClientLogQueryset(models.QuerySet):
