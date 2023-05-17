@@ -113,27 +113,27 @@ class BaseApiClient(ABC):
             )
             log.update_from_response(response)
         except (
-            requests.URLRequired,
-            requests.MissingSchema,
-            requests.InvalidJSONError,
-            requests.InvalidSchema,
-            requests.InvalidURL,
-            requests.InvalidHeader,
-            requests.ChunkedEncodingError,
-            requests.StreamConsumedError,
-            requests.RetryError,
-            requests.UnrewindableBodyError,
+            requests.exceptions.URLRequired,
+            requests.exceptions.MissingSchema,
+            requests.exceptions.InvalidJSONError,
+            requests.exceptions.InvalidSchema,
+            requests.exceptions.InvalidURL,
+            requests.exceptions.InvalidHeader,
+            requests.exceptions.ChunkedEncodingError,
+            requests.exceptions.StreamConsumedError,
+            requests.exceptions.RetryError,
+            requests.exceptions.UnrewindableBodyError,
         ) as error:
             if isinstance(log, ClientLog):
                 log.request_error = str(error)
                 log.save()
             raise ClientError(str(error)) from error
         except (
-            requests.HTTPError,
-            requests.ConnectionError,
-            requests.Timeout,
-            requests.TooManyRedirects,
-            requests.ContentDecodingError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+            requests.exceptions.TooManyRedirects,
+            requests.exceptions.ContentDecodingError,
         ) as error:
             if isinstance(log, ClientLog):
                 log.resposne_error = str(error)

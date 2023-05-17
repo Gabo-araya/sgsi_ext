@@ -20,6 +20,8 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 from django.urls import reverse_lazy
 
+from celery.schedules import crontab
+
 
 def get_env_value(key, default, default_if_blank=False):
     try:
@@ -525,6 +527,10 @@ CELERY_BEAT_SCHEDULE = {
     "sample-scheduled-task-minutely": {
         "task": "base.tasks.sample_scheduled_task",
         "schedule": timedelta(seconds=60),
+    },
+    "monthly-api-logs-cleanup": {
+        "task": "api_client.tasks.client_log_cleanup",
+        "schedule": crontab(0, 0, day_of_month="1"),
     },
 }
 """

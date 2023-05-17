@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 import requests
@@ -16,6 +17,17 @@ class ClientLog(models.Model):
         PATCH = "PATCH", _("PATCH")
         DELETE = "DELETE", _("DELETE")
 
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_("creation date"),
+        verbose_name=_("created at"),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+        help_text=_("edition date"),
+        verbose_name=_("updated at"),
+    )
     method = models.CharField(
         max_length=10,
         verbose_name=_("method"),
@@ -33,6 +45,11 @@ class ClientLog(models.Model):
     client_code = models.TextField(
         verbose_name=_("client code"),
     )
+    request_time = models.DateTimeField(
+        help_text=_("request time"),
+        verbose_name=_("request time"),
+        null=True,
+    )
     request_headers = models.TextField(
         verbose_name=_("headers"),
     )
@@ -41,6 +58,11 @@ class ClientLog(models.Model):
     )
     request_error = models.TextField(
         verbose_name=_("error"),
+    )
+    response_time = models.DateTimeField(
+        help_text=_("response time"),
+        verbose_name=_("response time"),
+        null=True,
     )
     response_headers = models.TextField(
         verbose_name=_("headers"),
@@ -62,6 +84,7 @@ class ClientLog(models.Model):
         return f"{self.method.upper()} {self.url}"
 
     def update_from_response(self, response: requests.Response):
+        self.response_time = timezone.now()
         self.response_headers = str(response.headers)
         self.response_content = response.text
         self.response_status_code = response.status_code
