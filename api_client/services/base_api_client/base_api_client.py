@@ -15,6 +15,27 @@ DEFAULT_SCHEME = "https"
 
 Method = Literal["get", "post", "patch", "put", "delete"]
 
+ClientSideErrors = (
+    requests.exceptions.URLRequired,
+    requests.exceptions.MissingSchema,
+    requests.exceptions.InvalidJSONError,
+    requests.exceptions.InvalidSchema,
+    requests.exceptions.InvalidURL,
+    requests.exceptions.InvalidHeader,
+    requests.exceptions.ChunkedEncodingError,
+    requests.exceptions.StreamConsumedError,
+    requests.exceptions.RetryError,
+    requests.exceptions.UnrewindableBodyError,
+)
+
+
+ServerSideErrors = (
+    requests.exceptions.HTTPError,
+    requests.exceptions.ConnectionError,
+    requests.exceptions.Timeout,
+    requests.exceptions.TooManyRedirects,
+    requests.exceptions.ContentDecodingError,
+)
 
 # TODO: remove when proper error management is implemented
 class ClientError(Exception):
@@ -112,31 +133,14 @@ class BaseApiClient(ABC):
                 request.prepare(), timeout=self.configuration["timeout"]
             )
             log.update_from_response(response)
-        except (
-            requests.exceptions.URLRequired,
-            requests.exceptions.MissingSchema,
-            requests.exceptions.InvalidJSONError,
-            requests.exceptions.InvalidSchema,
-            requests.exceptions.InvalidURL,
-            requests.exceptions.InvalidHeader,
-            requests.exceptions.ChunkedEncodingError,
-            requests.exceptions.StreamConsumedError,
-            requests.exceptions.RetryError,
-            requests.exceptions.UnrewindableBodyError,
-        ) as error:
+        except ClientSideErrors as error:
             if isinstance(log, ClientLog):
-                log.request_error = str(error)
+                log.client_side_error = str(error)
                 log.save()
             raise ClientError(str(error)) from error
-        except (
-            requests.exceptions.HTTPError,
-            requests.exceptions.ConnectionError,
-            requests.exceptions.Timeout,
-            requests.exceptions.TooManyRedirects,
-            requests.exceptions.ContentDecodingError,
-        ) as error:
+        except ServerSideErrors as error:
             if isinstance(log, ClientLog):
-                log.resposne_error = str(error)
+                log.server_side_error = str(error)
                 log.save()
             raise ClientError(str(error)) from error
         else:
