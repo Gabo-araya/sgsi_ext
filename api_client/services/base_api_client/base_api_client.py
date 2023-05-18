@@ -47,10 +47,10 @@ class BaseApiClient(ABC):
         query_params: dict[str, str | int] | None = None,
         body: dict[str, Any] | None = None,
     ) -> requests.Response:
-        url = self.get_url(endpoint, path_params)
         return self.request(
             "post",
-            url,
+            endpoint=endpoint,
+            path_params=path_params,
             data=body,
             params=query_params,
         )
