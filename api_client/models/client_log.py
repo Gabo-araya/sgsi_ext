@@ -28,11 +28,8 @@ class ClientLog(models.Model):
         help_text=_("edition date"),
         verbose_name=_("updated at"),
     )
-    client_side_error = models.TextField(
-        verbose_name=_("client side error"),
-    )
-    server_side_error = models.TextField(
-        verbose_name=_("server side error"),
+    error = models.TextField(
+        verbose_name=_("error"),
     )
     method = models.CharField(
         max_length=10,

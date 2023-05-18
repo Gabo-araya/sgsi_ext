@@ -1,4 +1,5 @@
 import os
+import traceback
 
 from abc import ABC
 from abc import abstractmethod
@@ -14,28 +15,6 @@ DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"
 
 Method = Literal["get", "post", "patch", "put", "delete"]
-
-ClientSideErrors = (
-    requests.exceptions.URLRequired,
-    requests.exceptions.MissingSchema,
-    requests.exceptions.InvalidJSONError,
-    requests.exceptions.InvalidSchema,
-    requests.exceptions.InvalidURL,
-    requests.exceptions.InvalidHeader,
-    requests.exceptions.ChunkedEncodingError,
-    requests.exceptions.StreamConsumedError,
-    requests.exceptions.RetryError,
-    requests.exceptions.UnrewindableBodyError,
-)
-
-
-ServerSideErrors = (
-    requests.exceptions.HTTPError,
-    requests.exceptions.ConnectionError,
-    requests.exceptions.Timeout,
-    requests.exceptions.TooManyRedirects,
-    requests.exceptions.ContentDecodingError,
-)
 
 # TODO: remove when proper error management is implemented
 class ClientError(Exception):
@@ -133,16 +112,11 @@ class BaseApiClient(ABC):
                 request.prepare(), timeout=self.configuration["timeout"]
             )
             log.update_from_response(response)
-        except ClientSideErrors as error:
+        except requests.RequestException as error:
             if isinstance(log, ClientLog):
-                log.client_side_error = str(error)
+                log.error = traceback.format_exc()
                 log.save()
-            raise ClientError(str(error)) from error
-        except ServerSideErrors as error:
-            if isinstance(log, ClientLog):
-                log.server_side_error = str(error)
-                log.save()
-            raise ClientError(str(error)) from error
+            raise ClientError(error) from error
         else:
             return response
 
