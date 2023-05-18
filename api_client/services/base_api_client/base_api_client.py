@@ -103,34 +103,33 @@ class BaseApiClient(ABC):
         path_params: dict[str, str | int] | None = None,
         **kwargs,
     ) -> requests.Response:
+        log: ClientLog = ClientLog.objects.create()
         try:
-            url = self.get_url(endpoint, path_params)
-            request = self.get_request(method, url, **kwargs)
-            log = self.create_log(request)
+            request = self.get_request(method, endpoint, path_params, **kwargs)
+            log.update_from_request(request=request, client_code=self.client_code)
             session = requests.Session()
             response = session.send(
                 request.prepare(), timeout=self.configuration["timeout"]
             )
-            log.update_from_response(response)
+            log.update_from_response(response=response)
         except requests.RequestException as error:
-            if isinstance(log, ClientLog):
-                log.error = traceback.format_exc()
-                log.save()
+            log.error = traceback.format_exc()
+            log.save()
             raise ClientError(error) from error
         else:
             return response
+        finally:
+            session.close()
 
-    def create_log(self, request: requests.Request) -> ClientLog:
-        return ClientLog.objects.create_from_request(
-            request=request, client_code=self.client_code
-        )
-
-    def get_request(self, method: Method, url: str, **kwargs) -> requests.Request:
-        return requests.Request(
-            method,
-            url,
-            **kwargs,
-        )
+    def get_request(
+        self,
+        method: Method,
+        endpoint: str,
+        path_params: dict[str, str | int] | None = None,
+        **kwargs,
+    ) -> requests.Request:
+        url = self.get_url(endpoint, path_params)
+        return requests.Request(method, url, **kwargs)
 
     def get_url(
         self, endpoint: str, path_params: dict[str, str | int] | None = None
