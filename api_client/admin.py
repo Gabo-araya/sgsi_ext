@@ -14,7 +14,7 @@ class ClientLogAdmin(admin.ModelAdmin):
         "url",
         "response_status_code",
     ]
-
+    list_filter = ["client_code"]
     fieldsets = (
         (
             "Metadata",
