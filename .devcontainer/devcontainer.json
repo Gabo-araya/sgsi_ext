@@ -38,7 +38,8 @@
         "mechatroner.rainbow-csv",
         "eamodio.gitlens",
         "donjayamanne.githistory",
-        "charliermarsh.ruff"
+        "charliermarsh.ruff",
+        "bungcip.better-toml"
       ]
     }
   },
