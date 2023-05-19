@@ -90,7 +90,7 @@ class ClientLog(models.Model):
     objects = ClientLogManager()
 
     def __str__(self) -> str:
-        return f"{self.method.upper()} {self.url}"
+        return f"{self.client_code}: {self.method.upper()} {self.url}"
 
     def update_from_response(self, *, response: requests.Response):
         self.response_time = timezone.now()
