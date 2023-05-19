@@ -16,10 +16,6 @@ DEFAULT_SCHEME = "https"
 
 Method = Literal["get", "post", "patch", "put", "delete"]
 
-# TODO: remove when proper error management is implemented
-class ClientError(Exception):
-    ...
-
 
 class BaseApiClient(ABC):
     code: str | None = None
@@ -32,7 +28,7 @@ class BaseApiClient(ABC):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-    ) -> requests.Response:
+    ) -> tuple[requests.Response, None] | tuple[None, requests.RequestException]:
         return self.request(
             "get",
             endpoint=endpoint,
@@ -46,7 +42,7 @@ class BaseApiClient(ABC):
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
         body: dict[str, Any] | None = None,
-    ) -> requests.Response:
+    ) -> tuple[requests.Response, None] | tuple[None, requests.RequestException]:
         return self.request(
             "post",
             endpoint=endpoint,
@@ -61,7 +57,7 @@ class BaseApiClient(ABC):
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
         body: dict[str, Any] | None = None,
-    ) -> requests.Response:
+    ) -> tuple[requests.Response, None] | tuple[None, requests.RequestException]:
         return self.request(
             "patch",
             endpoint=endpoint,
@@ -76,7 +72,7 @@ class BaseApiClient(ABC):
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
         body: dict[str, Any] | None = None,
-    ) -> requests.Response:
+    ) -> tuple[requests.Response, None] | tuple[None, requests.RequestException]:
         return self.request(
             "put",
             endpoint=endpoint,
@@ -89,7 +85,7 @@ class BaseApiClient(ABC):
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
-    ) -> requests.Response:
+    ) -> tuple[requests.Response, None] | tuple[None, requests.RequestException]:
         return self.request(
             "delete",
             endpoint=endpoint,
@@ -102,7 +98,7 @@ class BaseApiClient(ABC):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         **kwargs,
-    ) -> requests.Response:
+    ) -> tuple[requests.Response, None] | tuple[None, requests.RequestException]:
         log: ClientLog = ClientLog.objects.create()
         try:
             request = self.get_request(method, endpoint, path_params, **kwargs)
@@ -115,9 +111,9 @@ class BaseApiClient(ABC):
         except requests.RequestException as error:
             log.error = traceback.format_exc()
             log.save()
-            raise ClientError(error) from error
+            return None, error
         else:
-            return response
+            return response, None
         finally:
             session.close()
 

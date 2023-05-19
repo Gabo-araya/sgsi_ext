@@ -13,9 +13,11 @@ class BaseJsonApiClient(BaseApiClient):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-    ) -> tuple[JSONType, int]:
-        response = super().get_blocking(endpoint, path_params, query_params)
-        return self.get_response_json(response), response.status_code
+    ) -> tuple[tuple[JSONType, int], None] | tuple[
+        tuple[None, None], requests.RequestException
+    ]:
+        response, error = super().get_blocking(endpoint, path_params, query_params)
+        return self.process_response(response, error)
 
     def post_blocking(
         self,
@@ -23,9 +25,13 @@ class BaseJsonApiClient(BaseApiClient):
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
         body: dict[str, Any] | None = None,
-    ) -> tuple[JSONType, int]:
-        response = super().post_blocking(endpoint, path_params, query_params, body)
-        return self.get_response_json(response), response.status_code
+    ) -> tuple[tuple[JSONType, int], None] | tuple[
+        tuple[None, None], requests.RequestException
+    ]:
+        response, error = super().post_blocking(
+            endpoint, path_params, query_params, body
+        )
+        return self.process_response(response, error)
 
     def patch_blocking(
         self,
@@ -33,9 +39,13 @@ class BaseJsonApiClient(BaseApiClient):
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
         body: dict[str, Any] | None = None,
-    ) -> tuple[JSONType, int]:
-        response = super().patch_blocking(endpoint, path_params, query_params, body)
-        return self.get_response_json(response), response.status_code
+    ) -> tuple[tuple[JSONType, int], None] | tuple[
+        tuple[None, None], requests.RequestException
+    ]:
+        response, error = super().patch_blocking(
+            endpoint, path_params, query_params, body
+        )
+        return self.process_response(response, error)
 
     def put_blocking(
         self,
@@ -43,17 +53,34 @@ class BaseJsonApiClient(BaseApiClient):
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
         body: dict[str, Any] | None = None,
-    ) -> tuple[JSONType, int]:
-        response = super().put_blocking(endpoint, path_params, query_params, body)
-        return self.get_response_json(response), response.status_code
+    ) -> tuple[tuple[JSONType, int], None] | tuple[
+        tuple[None, None], requests.RequestException
+    ]:
+        response, error = super().put_blocking(
+            endpoint, path_params, query_params, body
+        )
+        return self.process_response(response, error)
 
     def delete_blocking(
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
-    ) -> tuple[JSONType, int]:
-        response = super().delete_blocking(endpoint, path_params)
-        return self.get_response_json(response), response.status_code
+    ) -> tuple[tuple[JSONType, int], None] | tuple[
+        tuple[None, None], requests.RequestException
+    ]:
+        response, error = super().delete_blocking(endpoint, path_params)
+        return self.process_response(response, error)
+
+    def process_response(
+        self,
+        response: requests.Response | None,
+        error: requests.RequestException | None,
+    ) -> tuple[tuple[JSONType, int], None] | tuple[
+        tuple[None, None], requests.RequestException
+    ]:
+        if response:
+            return (self.get_response_json(response), response.status_code), error
+        return (None, None), error
 
     def get_response_json(self, response: requests.Response) -> JSONType:
         if len(response.content) == 0:
