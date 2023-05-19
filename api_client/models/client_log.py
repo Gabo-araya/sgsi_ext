@@ -102,7 +102,7 @@ class ClientLog(models.Model):
     def update_from_request(self, *, request: requests.Request, client_code: str):
         prepared_url = prepare_url(request.url, request.params)
         parsed_url = urlparse(prepared_url)
-        self.method = request.method
+        self.method = request.method.upper()
         self.url = parsed_url.geturl()
         self.client_url = f"{parsed_url.scheme}://{parsed_url.hostname}"
         self.client_code = client_code
