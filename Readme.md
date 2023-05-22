@@ -379,11 +379,7 @@ variables empty (do not delete them):
 ### Poetry
 #### Solving `poetry.lock` merge conflicts
 
-If `pyproject.toml` is not conflicted, and the only conflict in `poetry.lock` is:
-```toml
-content-hash = "..."
-```
-you can solve it by running this inside the devcontainer:
+After solving conflicts in `pyproject.toml` (or doing nothing if it had no conflicts), run this inside the devcontainer:
 ```sh
 git restore --staged --worktree poetry.lock && poetry lock --no-update && git add poetry.lock
 ```
