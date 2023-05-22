@@ -1,5 +1,3 @@
-from urllib.parse import quote_plus
-from urllib.parse import urlencode
 from urllib.parse import urlparse
 
 from django.db import models
@@ -10,14 +8,6 @@ import requests
 
 from api_client.managers import ClientLogQueryset
 from base.serializers import StringFallbackJSONEncoder
-
-
-def prepare_url(url: str, query_params: dict[str, str]) -> str:
-    if not query_params:
-        return url
-    string_params = urlencode(query_params, quote_via=quote_plus)
-    return f"{url}?{string_params}"
-
 
 ClientLogManager = models.Manager.from_queryset(ClientLogQueryset)
 
@@ -104,9 +94,10 @@ class ClientLog(models.Model):
         self.response_status_code = response.status_code
         self.save()
 
-    def update_from_request(self, *, request: requests.Request, client_code: str):
-        prepared_url = prepare_url(request.url, request.params)
-        parsed_url = urlparse(prepared_url)
+    def update_from_request(
+        self, *, request: requests.PreparedRequest, client_code: str
+    ):
+        parsed_url = urlparse(request.url)
         self.method = request.method.upper()
         self.url = parsed_url.geturl()
         self.client_url = f"{parsed_url.scheme}://{parsed_url.hostname}"
@@ -114,5 +105,5 @@ class ClientLog(models.Model):
         self.endpoint = parsed_url.path
         self.request_time = timezone.now()
         self.request_headers = request.headers
-        self.request_content = str(request.data)
+        self.request_content = str(request.body)
         self.save()

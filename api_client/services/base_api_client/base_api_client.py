@@ -103,10 +103,13 @@ class BaseApiClient(ABC):
         session = None
         try:
             request = self.get_request(method, endpoint, path_params, **kwargs)
-            log.update_from_request(request=request, client_code=self.client_code)
+            prepared_request = request.prepare()
+            log.update_from_request(
+                request=prepared_request, client_code=self.client_code
+            )
             session = requests.Session()
             response = session.send(
-                request.prepare(), timeout=self.configuration["timeout"]
+                prepared_request, timeout=self.configuration["timeout"]
             )
             log.update_from_response(response=response)
         except requests.RequestException as error:
