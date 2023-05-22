@@ -1,0 +1,12 @@
+{% load i18n %}
+{% autoescape off %}
+
+{% blocktrans %}
+Error Report:
+
+Client: {{ client_code }}
+Request: {{ method }} {{ url }}
+Error: {{ error }}
+{% endblocktrans %}
+
+{% endautoescape %}

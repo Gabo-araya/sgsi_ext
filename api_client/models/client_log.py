@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -8,6 +11,7 @@ import requests
 
 from api_client.managers import ClientLogQueryset
 from base.serializers import StringFallbackJSONEncoder
+from messaging import email_manager
 
 ClientLogManager = models.Manager.from_queryset(ClientLogQueryset)
 
@@ -81,6 +85,10 @@ class ClientLog(models.Model):
         verbose_name=_("status code"),
         null=True,
     )
+    error_email_sent = models.BooleanField(
+        verbose_name=_("error email sent"),
+        default=False,
+    )
 
     objects = ClientLogManager()
 
@@ -106,4 +114,28 @@ class ClientLog(models.Model):
         self.request_time = timezone.now()
         self.request_headers = request.headers
         self.request_content = str(request.body)
+        self.save()
+
+    def should_send_error_email(self) -> bool:
+        return self.error and not self.error_email_sent
+
+    def send_error_email(self):
+        self.perform_email_send()
+        self.mark_error_email_sent()
+
+    def perform_email_send(self):
+        email_manager.send_emails(
+            emails=[email for _, email in settings.ADMINS],
+            template_name="client_log_error",
+            subject=_("Error in {} API Client").format(self.client_code),
+            context={
+                "error": self.error,
+                "client_code": self.client_code,
+                "method": self.get_method_display(),
+                "url": self.url,
+            },
+        )
+
+    def mark_error_email_sent(self):
+        self.error_email_sent = True
         self.save()
