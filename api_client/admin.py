@@ -81,11 +81,8 @@ class ClientLogAdmin(admin.ModelAdmin):
 
     def _format_headers(self, obj, field):
         value = getattr(obj, field)
-        try:
-            formatted_headers = [f"{key}: {value}" for key, value in value.items()]
-            return format_html("<pre>{}</pre>", "\n".join(formatted_headers))
-        except (ValueError, SyntaxError):
-            return format_html("<pre>{}</pre>", value)
+        formatted_headers = [f"{key}: {value}" for key, value in value.items()]
+        return format_html("<pre>{}</pre>", "\n".join(formatted_headers))
 
     def _format_body(self, obj, field):
         value = getattr(obj, field)
