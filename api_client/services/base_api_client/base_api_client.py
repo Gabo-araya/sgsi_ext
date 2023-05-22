@@ -100,6 +100,7 @@ class BaseApiClient(ABC):
         **kwargs,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         log: ClientLog = ClientLog.objects.create()
+        session = None
         try:
             request = self.get_request(method, endpoint, path_params, **kwargs)
             log.update_from_request(request=request, client_code=self.client_code)
@@ -115,7 +116,8 @@ class BaseApiClient(ABC):
         else:
             return response, None
         finally:
-            session.close()
+            if session is not None:  # guard against request preparation failures
+                session.close()
 
     def get_request(
         self,
@@ -125,7 +127,12 @@ class BaseApiClient(ABC):
         **kwargs,
     ) -> requests.Request:
         url = self.get_url(endpoint, path_params)
-        return requests.Request(method, url, **kwargs)
+        request = requests.Request(method, url, **kwargs)
+
+        if auth := self.configuration.get("authentication"):
+            request.auth = auth
+
+        return request
 
     def get_url(
         self, endpoint: str, path_params: dict[str, str | int] | None = None
