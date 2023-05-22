@@ -1,5 +1,3 @@
-import ast
-
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
@@ -84,12 +82,7 @@ class ClientLogAdmin(admin.ModelAdmin):
     def _format_headers(self, obj, field):
         value = getattr(obj, field)
         try:
-            # request and response fields do not contain a JSON representation but a
-            # str() representation of the original dictionary
-            parsed_headers = ast.literal_eval(value)
-            formatted_headers = (
-                f"{key}: {value}" for key, value in parsed_headers.items()
-            )
+            formatted_headers = [f"{key}: {value}" for key, value in value.items()]
             return format_html("<pre>{}</pre>", "\n".join(formatted_headers))
         except (ValueError, SyntaxError):
             return format_html("<pre>{}</pre>", value)

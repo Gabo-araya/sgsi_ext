@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 import requests
 
 from api_client.managers import ClientLogQueryset
+from base.serializers import StringFallbackJSONEncoder
 
 
 def prepare_url(url: str, query_params: dict[str, str]) -> str:
@@ -65,8 +66,10 @@ class ClientLog(models.Model):
         verbose_name=_("request time"),
         null=True,
     )
-    request_headers = models.TextField(
+    request_headers = models.JSONField(
         verbose_name=_("headers"),
+        encoder=StringFallbackJSONEncoder,
+        default=dict,
     )
     request_content = models.TextField(
         verbose_name=_("content"),
@@ -76,8 +79,10 @@ class ClientLog(models.Model):
         verbose_name=_("response time"),
         null=True,
     )
-    response_headers = models.TextField(
+    response_headers = models.JSONField(
         verbose_name=_("headers"),
+        encoder=StringFallbackJSONEncoder,
+        default=dict,
     )
     response_content = models.TextField(
         verbose_name=_("content"),
@@ -94,7 +99,7 @@ class ClientLog(models.Model):
 
     def update_from_response(self, *, response: requests.Response):
         self.response_time = timezone.now()
-        self.response_headers = str(response.headers)
+        self.response_headers = response.headers
         self.response_content = response.text
         self.response_status_code = response.status_code
         self.save()
@@ -108,6 +113,6 @@ class ClientLog(models.Model):
         self.client_code = client_code
         self.endpoint = parsed_url.path
         self.request_time = timezone.now()
-        self.request_headers = str(request.headers)
+        self.request_headers = request.headers
         self.request_content = str(request.data)
         self.save()
