@@ -2,8 +2,31 @@ from typing import TypedDict
 from uuid import uuid4
 
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
+
+from users.models import User
+
+
+class DummyTokenAuthentication(TokenAuthentication):
+    keyword = "DummyToken"
+    secret = "thisismagnetbestkeptsecretpleasedonotcopy(c)magnet"  # noqa: S105
+
+    def get_secret(self):
+        return self.secret
+
+    def get_model(self):
+        return User.objects.first()
+
+    def authenticate_credentials(self, key):
+        if key != self.secret:
+            msg = "Invalid token."
+            raise AuthenticationFailed(msg)
+
+        return self.get_model(), key
 
 
 class DummyData(TypedDict):
@@ -50,3 +73,8 @@ class DummyViewset(ViewSet):
             if dummy["pk"] == pk:
                 return dummy
         return None
+
+
+class DummyAuthenticatedViewset(DummyViewset):
+    authentication_classes = [DummyTokenAuthentication]
+    permission_classes = [IsAuthenticated]
