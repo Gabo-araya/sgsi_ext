@@ -35,7 +35,7 @@ pypugjs = "5.9.12"
 pytz = ">=2022.2"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.0.262"
+ruff = "~0.0.262"
 
 # semver packages
 pytest = "7.2.1"
