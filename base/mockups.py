@@ -26,6 +26,7 @@ from users.models import User
 class Mockup:
     def __init__(self):
         language = settings.FAKER_LOCALES
+        # DOCS: https://faker.readthedocs.io/en/master/index.html
         self.faker = Faker(language)
 
     def create_commune(self, **kwargs):
@@ -70,7 +71,6 @@ class Mockup:
 
     def set_required_boolean(self, data, field, default=None, **kwargs):
         if field not in data:
-
             if default is None:
                 data[field] = self.faker.boolean()
             else:
@@ -154,6 +154,9 @@ class Mockup:
     def set_required_url(self, data, field, length=6):
         if field not in data:
             data[field] = f"http://{random_string(length=length)}.com"
+
+    def set_required_rut(self, data: dict, field: str, **kwargs):
+        data.setdefault(field, self.faker.rut(**kwargs))
 
 
 def add_get_or_create(cls, model):

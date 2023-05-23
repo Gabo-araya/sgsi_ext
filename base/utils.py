@@ -90,15 +90,6 @@ def tz_datetime(*args, **kwargs):
     return timezone.make_aware(naive_dt, tz)
 
 
-def random_rut(minimum=1000000, maximum=99999999):
-    """
-    Generates a random but valid RUT number
-    """
-
-    digits = str(random.randint(minimum, maximum))  # noqa: S311
-    return format_rut(digits + rut_verifying_digit(digits))
-
-
 def random_string(length=6, chars=None, include_spaces=True):
     if chars is None:
         chars = string.ascii_uppercase + string.digits
