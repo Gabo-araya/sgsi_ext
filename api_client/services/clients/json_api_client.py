@@ -2,9 +2,9 @@ from typing import Any
 
 import requests
 
-from ..api_client import ApiClient
-from ..types import JSONType
-from ..types import UploadFiles
+from .api_client import ApiClient
+from .types import JSONType
+from .types import UploadFiles
 
 
 class JsonApiClient(ApiClient):
