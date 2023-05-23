@@ -3,8 +3,7 @@ from typing import Any
 import requests
 
 from api_client.services import BaseApiClient
-
-JSONType = str | int | float | bool | None | dict[str, "JSONType"] | list["JSONType"]
+from api_client.services.base_api_client.types import JSONType
 
 
 class BaseJsonApiClient(BaseApiClient):

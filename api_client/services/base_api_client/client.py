@@ -4,17 +4,15 @@ import traceback
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
-from typing import Literal
 from urllib.parse import quote_plus
 
 import requests
 
 from api_client.models import ClientLog
+from api_client.services.base_api_client.types import Method
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"
-
-Method = Literal["get", "post", "patch", "put", "delete"]
 
 
 class BaseApiClient(ABC):
