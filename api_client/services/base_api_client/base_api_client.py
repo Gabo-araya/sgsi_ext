@@ -100,14 +100,13 @@ class BaseApiClient(ABC):
         **kwargs,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         log: ClientLog = ClientLog.objects.create()
-        session = None
+        session = requests.Session()
         try:
             request = self.get_request(method, endpoint, path_params, **kwargs)
             prepared_request = request.prepare()
             log.update_from_request(
                 request=prepared_request, client_code=self.client_code
             )
-            session = requests.Session()
             response = session.send(
                 prepared_request, timeout=self.configuration["timeout"]
             )
@@ -119,8 +118,7 @@ class BaseApiClient(ABC):
         else:
             return response, None
         finally:
-            if session is not None:  # guard against request preparation failures
-                session.close()
+            session.close()
 
     def get_request(
         self,
