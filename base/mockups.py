@@ -16,7 +16,6 @@ from django.utils import timezone
 from faker import Faker
 from inflection import underscore
 
-from base.utils import random_rut
 from base.utils import random_string
 from parameters.models import Parameter
 from regions.models import Commune
@@ -27,6 +26,7 @@ from users.models import User
 class Mockup:
     def __init__(self):
         language = settings.FAKER_LOCALES
+        # DOCS: https://faker.readthedocs.io/en/master/index.html
         self.faker = Faker(language)
 
     def create_commune(self, **kwargs):
@@ -155,8 +155,8 @@ class Mockup:
         if field not in data:
             data[field] = f"http://{random_string(length=length)}.com"
 
-    def set_required_rut(self, data: dict, field: str):
-        data.setdefault(field, random_rut())
+    def set_required_rut(self, data: dict, field: str, **kwargs):
+        data.setdefault(field, self.faker.rut(**kwargs))
 
 
 def add_get_or_create(cls, model):
