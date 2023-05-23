@@ -10,15 +10,15 @@ import requests
 
 from api_client.models import ClientLog
 
-from .types import JSONType
-from .types import Method
-from .types import UploadFiles
+from ..types import JSONType
+from ..types import Method
+from ..types import UploadFiles
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"
 
 
-class BaseApiClient(ABC):
+class ApiClient(ABC):
     code: str | None = None
 
     def __init__(self) -> None:

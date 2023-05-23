@@ -1,8 +1,8 @@
-from api_client.services.clients import BaseApiClient
+from api_client.services.clients import ApiClient
 from base.tests import BaseTestCase
 
 
-class MockApiClient(BaseApiClient):
+class MockApiClient(ApiClient):
     def __init__(self, mock_host: str) -> None:
         self.mock_host = mock_host
         super().__init__()

@@ -2,12 +2,12 @@ from typing import Any
 
 import requests
 
-from ..base_api_client import BaseApiClient
-from ..base_api_client.types import JSONType
-from ..base_api_client.types import UploadFiles
+from ..api_client import ApiClient
+from ..types import JSONType
+from ..types import UploadFiles
 
 
-class BaseJsonApiClient(BaseApiClient):
+class JsonApiClient(ApiClient):
     def get_blocking(
         self,
         endpoint: str,
