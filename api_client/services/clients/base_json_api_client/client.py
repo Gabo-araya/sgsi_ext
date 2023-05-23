@@ -2,9 +2,9 @@ from typing import Any
 
 import requests
 
-from api_client.services import BaseApiClient
-from api_client.services.base_api_client.types import JSONType
-from api_client.services.base_api_client.types import UploadFiles
+from ..base_api_client import BaseApiClient
+from ..base_api_client.types import JSONType
+from ..base_api_client.types import UploadFiles
 
 
 class BaseJsonApiClient(BaseApiClient):

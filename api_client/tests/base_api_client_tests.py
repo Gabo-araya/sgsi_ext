@@ -1,4 +1,4 @@
-from api_client.services import BaseApiClient
+from api_client.services.clients import BaseApiClient
 from base.tests import BaseTestCase
 
 

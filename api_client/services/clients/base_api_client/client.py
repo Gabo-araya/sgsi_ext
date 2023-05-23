@@ -9,9 +9,10 @@ from urllib.parse import quote_plus
 import requests
 
 from api_client.models import ClientLog
-from api_client.services.base_api_client.types import JSONType
-from api_client.services.base_api_client.types import Method
-from api_client.services.base_api_client.types import UploadFiles
+
+from .types import JSONType
+from .types import Method
+from .types import UploadFiles
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"
