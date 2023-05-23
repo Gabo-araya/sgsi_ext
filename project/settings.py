@@ -472,8 +472,12 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Assumes a configuration like:
 #   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 # See https://github.com/ferrix/xff/.
-# Assume single nginx before django:
-XFF_TRUSTED_PROXY_DEPTH = 1
+#
+# The default value for .env is "1", a single nginx before django.
+# Default to 0 on misconfiguration, to prevent header spoofing.
+XFF_TRUSTED_PROXY_DEPTH = int(
+    get_env_value("XFF_TRUSTED_PROXY_DEPTH", default=0, default_if_blank=True)
+)
 # Allow "curl localhost:8000" to succeed without X-Forwarded-For:
 XFF_STRICT = False
 
