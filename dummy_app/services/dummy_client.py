@@ -52,7 +52,7 @@ class DummyClient(BaseJsonApiClient):
         return data
 
     def create_dummy(self, name):
-        (data, status_code), error = self.post_blocking("/dummy/", body={"name": name})
+        (data, status_code), error = self.post_blocking("/dummy/", json={"name": name})
         if error:
             raise DummyError(error)
         if status_code != HTTPStatus.CREATED:
@@ -62,7 +62,7 @@ class DummyClient(BaseJsonApiClient):
 
     def update_dummy(self, pk, name):
         (data, status_code), error = self.put_blocking(
-            "/dummy/{pk}/", path_params={"pk": pk}, body={"name": name}
+            "/dummy/{pk}/", path_params={"pk": pk}, json={"name": name}
         )
         if error:
             raise DummyError(error)

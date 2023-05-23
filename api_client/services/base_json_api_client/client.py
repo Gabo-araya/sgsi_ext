@@ -4,6 +4,7 @@ import requests
 
 from api_client.services import BaseApiClient
 from api_client.services.base_api_client.types import JSONType
+from api_client.services.base_api_client.types import UploadFiles
 
 
 class BaseJsonApiClient(BaseApiClient):
@@ -21,10 +22,12 @@ class BaseJsonApiClient(BaseApiClient):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-        body: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        files: UploadFiles | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
         response, error = super().post_blocking(
-            endpoint, path_params, query_params, body
+            endpoint, path_params, query_params, data, json, files
         )
         return (self.get_response_json(response), response.status_code), error
 
@@ -33,10 +36,12 @@ class BaseJsonApiClient(BaseApiClient):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-        body: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        files: UploadFiles | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
         response, error = super().patch_blocking(
-            endpoint, path_params, query_params, body
+            endpoint, path_params, query_params, data, json, files
         )
         return (self.get_response_json(response), response.status_code), error
 
@@ -45,10 +50,12 @@ class BaseJsonApiClient(BaseApiClient):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-        body: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        files: UploadFiles | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
         response, error = super().put_blocking(
-            endpoint, path_params, query_params, body
+            endpoint, path_params, query_params, data, json, files
         )
         return (self.get_response_json(response), response.status_code), error
 

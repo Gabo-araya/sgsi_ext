@@ -9,7 +9,9 @@ from urllib.parse import quote_plus
 import requests
 
 from api_client.models import ClientLog
+from api_client.services.base_api_client.types import JSONType
 from api_client.services.base_api_client.types import Method
+from api_client.services.base_api_client.types import UploadFiles
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"
@@ -39,14 +41,18 @@ class BaseApiClient(ABC):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-        body: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        files: UploadFiles | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request(
             "post",
             endpoint=endpoint,
             path_params=path_params,
-            data=body,
             params=query_params,
+            data=data,
+            json=json,
+            files=files,
         )
 
     def patch_blocking(
@@ -54,14 +60,18 @@ class BaseApiClient(ABC):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-        body: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        files: UploadFiles | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request(
             "patch",
             endpoint=endpoint,
             path_params=path_params,
-            data=body,
             params=query_params,
+            data=data,
+            json=json,
+            files=files,
         )
 
     def put_blocking(
@@ -69,14 +79,18 @@ class BaseApiClient(ABC):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
-        body: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        files: UploadFiles | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request(
             "put",
             endpoint=endpoint,
             path_params=path_params,
-            data=body,
             params=query_params,
+            data=data,
+            json=json,
+            files=files,
         )
 
     def delete_blocking(
