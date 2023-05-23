@@ -36,7 +36,7 @@ class BaseApiClient(ABC):
             params=query_params,
         )
 
-    def post_blocking(
+    def post_blocking(  # noqa: PLR0913
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
@@ -55,7 +55,7 @@ class BaseApiClient(ABC):
             files=files,
         )
 
-    def patch_blocking(
+    def patch_blocking(  # noqa: PLR0913
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
@@ -74,7 +74,7 @@ class BaseApiClient(ABC):
             files=files,
         )
 
-    def put_blocking(
+    def put_blocking(  # noqa: PLR0913
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
