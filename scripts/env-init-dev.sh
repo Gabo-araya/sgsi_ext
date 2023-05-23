@@ -42,6 +42,7 @@ else
   redis_cache_url=
   celery_broker_url=
   celery_result_backend=
+  xff_trusted_proxy_depth=1
 
   # Replace placeholders from template env file
   sed -i "s|{{who}}|$who|g" $env_file
@@ -66,6 +67,7 @@ else
   sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
   sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
   sed -i "s|{{do_spaces_region}}|$do_spaces_region|g" $env_file
+  sed -i "s|{{xff_trusted_proxy_depth}}|$xff_trusted_proxy_depth|g" $env_file
 
   echo "Created $env_file file"
 fi

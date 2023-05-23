@@ -104,6 +104,9 @@ select files_loc in Local "Amazon S3" "DigitalOcean Spaces"; do
   fi
 done
 
+prompt "How many proxies which add X-Forwarded-For, are before Django?" 1
+xff_trusted_proxy_depth=$input
+
 # To be set later by ansible:
 who=magnet
 host_uid=2640
@@ -135,3 +138,4 @@ sed -i "s|{{aws_access_key_id}}|$aws_access_key_id|g" $env_file
 sed -i "s|{{aws_secret_access_key}}|$aws_secret_access_key|g" $env_file
 sed -i "s|{{bucket_name}}|$bucket_name|g" $env_file
 sed -i "s|{{do_spaces_region}}|$do_spaces_region|g" $env_file
+sed -i "s|{{xff_trusted_proxy_depth}}|$xff_trusted_proxy_depth|g" $env_file
