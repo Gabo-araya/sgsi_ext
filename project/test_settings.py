@@ -25,3 +25,9 @@ CACHES = {
 # disable and remove debug toolbar, as normal settings are loaded before this module
 # and pytest overrides are applied after
 ENABLE_DEBUG_TOOLBAR = False
+
+
+# Define URL namespaces to be ignored during URLs test
+URLS_TEST_IGNORED_NAMESPACES = [
+    "dummy-app",
+]

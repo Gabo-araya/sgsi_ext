@@ -64,6 +64,9 @@ ENVIRONMENT_NAME = get_env_value(
 # WARNING: do not make your code depend on this value
 TEST = False
 
+# Please edit test_settings to define your ignored namespaces
+URLS_TEST_IGNORED_NAMESPACES = []
+
 ALLOWED_HOSTS = [
     os.environ.get("ALLOWED_HOST", ""),
     "localhost",

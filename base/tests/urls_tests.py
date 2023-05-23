@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from django.conf import settings
 from django.contrib import admin
 from django.urls import NoReverseMatch
 from django.urls import reverse
@@ -154,6 +155,7 @@ class UrlsTest(BaseTestCase):
     def test_responses(self):
 
         ignored_namespaces = [
+            *settings.URLS_TEST_IGNORED_NAMESPACES,
             "admin",
         ]
 
