@@ -2,7 +2,8 @@ from http import HTTPStatus
 
 from requests.auth import AuthBase
 
-from api_client.services import BaseJsonApiClient
+from api_client.services.clients import ApiClientConfiguration
+from api_client.services.clients import JsonApiClient
 
 
 class DummyError(Exception):
@@ -24,15 +25,18 @@ class SimpleTokenAuth(AuthBase):
         return r
 
 
-class DummyClient(BaseJsonApiClient):
-    def get_extra_configuration(self) -> dict:
-        return {
-            "host": "localhost:8000/api/v1",
-            "scheme": "http",
-        }
+class DummyIntegrationService:
+    def __init__(self) -> None:
+        configuration = ApiClientConfiguration(
+            code="dummy_integration_service",
+            scheme="http",
+            host="localhost:8000/api/v1",
+            auth=SimpleTokenAuth,
+        )
+        self.api_client = JsonApiClient(configuration)
 
     def get_dummies(self):
-        (data, status_code), error = self.get_blocking("/dummy/")
+        (data, status_code), error = self.api_client.get_blocking("/dummy/")
         if error:
             raise DummyError(error)
         if status_code != HTTPStatus.OK:
@@ -41,7 +45,7 @@ class DummyClient(BaseJsonApiClient):
         return data
 
     def get_dummy(self, pk):
-        (data, status_code), error = self.get_blocking(
+        (data, status_code), error = self.api_client.get_blocking(
             "/dummy/{pk}/", path_params={"pk": pk}
         )
         if error:
@@ -52,7 +56,9 @@ class DummyClient(BaseJsonApiClient):
         return data
 
     def create_dummy(self, name):
-        (data, status_code), error = self.post_blocking("/dummy/", json={"name": name})
+        (data, status_code), error = self.api_client.post_blocking(
+            "/dummy/", json={"name": name}
+        )
         if error:
             raise DummyError(error)
         if status_code != HTTPStatus.CREATED:
@@ -61,7 +67,7 @@ class DummyClient(BaseJsonApiClient):
         return data
 
     def update_dummy(self, pk, name):
-        (data, status_code), error = self.put_blocking(
+        (data, status_code), error = self.api_client.put_blocking(
             "/dummy/{pk}/", path_params={"pk": pk}, json={"name": name}
         )
         if error:
@@ -72,7 +78,7 @@ class DummyClient(BaseJsonApiClient):
         return data
 
     def delete_dummy(self, pk):
-        (data, status_code), error = self.delete_blocking(
+        (data, status_code), error = self.api_client.delete_blocking(
             "/dummy/{pk}/", path_params={"pk": pk}
         )
         if error:
@@ -81,14 +87,3 @@ class DummyClient(BaseJsonApiClient):
             msg = f"Error deleting dummy {pk}"
             raise DummyError(msg)
         return data
-
-
-class DummyAuthenticatedClient(DummyClient):
-    def get_extra_configuration(self) -> dict:
-        return {
-            **super().get_extra_configuration(),
-            "host": "localhost:8000/api/v1/auth",
-            "authentication": SimpleTokenAuth(
-                "thisismagnetbestkeptsecretpleasedonotcopy(c)magnet"
-            ),
-        }

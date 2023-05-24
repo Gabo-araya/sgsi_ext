@@ -7,6 +7,6 @@ app_name = "dummy-app"
 router = DefaultRouter()
 
 router.register(r"dummy", DummyViewset, basename="dummy")
-router.register(r"auth/dummy", DummyAuthenticatedViewset, basename="auth-dummy")
+router.register(r"auth-dummy", DummyAuthenticatedViewset, basename="auth-dummy")
 
 urlpatterns = router.urls
