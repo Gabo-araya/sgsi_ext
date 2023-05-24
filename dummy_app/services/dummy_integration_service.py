@@ -1,5 +1,7 @@
 from http import HTTPStatus
 
+import requests
+
 from requests.auth import AuthBase
 
 from api_client.services.clients import ApiClientConfiguration
@@ -8,6 +10,35 @@ from api_client.services.clients import JsonApiClient
 
 class DummyError(Exception):
     ...
+
+
+def handle_dummies_fetch(response: requests.Response, error):
+    print(response.json())  # noqa: T201
+
+
+def handle_dummies_creation(response: requests.Response, error):
+    if response.status_code != HTTPStatus.CREATED:
+        print("Error creating dummy")  # noqa: T201
+    else:
+        print(response.json())  # noqa: T201
+
+
+def handle_dummies_edition(response: requests.Response, error):
+    if response.status_code != HTTPStatus.OK:
+        print("Error editing dummy")  # noqa: T201
+    else:
+        print(response.json())  # noqa: T201
+
+
+def handle_dummies_deletion(response: requests.Response, error):
+    if response.status_code != HTTPStatus.NO_CONTENT:
+        print("Error deleting dummy")  # noqa: T201
+    else:
+        print("Deleted successfully")  # noqa: T201
+
+
+def handle_error(response: requests.Response, error):
+    print(f"Something happened: {str(error)}")  # noqa: T201
 
 
 class SimpleTokenAuth(AuthBase):
@@ -54,6 +85,46 @@ class DummyIntegrationService:
             msg = f"Error getting dummy {pk}"
             raise DummyError(msg)
         return data
+
+    def get_dummies_nonblocking(self):
+        self.api_client.get(
+            "/dummy/",
+            on_success=handle_dummies_fetch,
+            on_error=handle_error,
+        )
+
+    def get_dummy_nonblocking(self, pk):
+        self.api_client.get(
+            "/dummy/{pk}/",
+            path_params={"pk": pk},
+            on_success=handle_dummies_fetch,
+            on_error=handle_error,
+        )
+
+    def create_dummy_nonblocking(self, name):
+        self.api_client.post(
+            "/dummy/",
+            json={"name": name},
+            on_success=handle_dummies_fetch,
+            on_error=handle_error,
+        )
+
+    def update_dummy_nonblocking(self, pk, name):
+        self.api_client.put(
+            "/dummy/{pk}/",
+            path_params={"pk": pk},
+            json={"name": name},
+            on_success=handle_dummies_edition,
+            on_error=handle_error,
+        )
+
+    def delete_dummy_nonblocking(self, pk):
+        self.api_client.delete(
+            "/dummy/{pk}/",
+            path_params={"pk": pk},
+            on_success=handle_dummies_deletion,
+            on_error=handle_error,
+        )
 
     def create_dummy(self, name):
         (data, status_code), error = self.api_client.post_blocking(

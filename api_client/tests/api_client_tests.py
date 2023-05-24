@@ -1,5 +1,5 @@
+from api_client.services.clients import ApiClientConfiguration
 from api_client.services.clients.api_client import ApiClient
-from api_client.services.clients.api_client import ApiClientConfiguration
 from base.tests import BaseTestCase
 
 

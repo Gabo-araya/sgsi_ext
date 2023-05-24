@@ -1,44 +1,37 @@
 import os
 import traceback
 
-from dataclasses import dataclass
 from typing import Any
 from urllib.parse import quote_plus
 
 import requests
 
-from requests.auth import AuthBase
-
 from api_client.models import ClientLog
 
+from .config import ApiClientConfiguration
+from .handlers import default_success_handler
+from .tasks import run_nonblocking_request
+from .types import Callback
 from .types import JSONType
 from .types import Method
 from .types import UploadFiles
-
-DEFAULT_TIMEOUT = 10
-DEFAULT_SCHEME = "https"
-
-
-@dataclass
-class ApiClientConfiguration:
-    host: str
-    code: str
-    scheme: str = DEFAULT_SCHEME
-    timeout: int = DEFAULT_TIMEOUT
-    auth: AuthBase | None = None
+from .utils import get_fully_qualified_name
+from .utils import make_configuration_dict
+from .utils import validate_nonblocking_callbacks
 
 
 class ApiClient:
     def __init__(self, configuration: ApiClientConfiguration) -> None:
         self.configuration = configuration
 
+    # Synchronous, blocking verbs
     def get_blocking(
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
-        return self.request(
+        return self.request_blocking(
             "get",
             endpoint=endpoint,
             path_params=path_params,
@@ -54,7 +47,7 @@ class ApiClient:
         json: JSONType = None,
         files: UploadFiles | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
-        return self.request(
+        return self.request_blocking(
             "post",
             endpoint=endpoint,
             path_params=path_params,
@@ -73,7 +66,7 @@ class ApiClient:
         json: JSONType = None,
         files: UploadFiles | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
-        return self.request(
+        return self.request_blocking(
             "patch",
             endpoint=endpoint,
             path_params=path_params,
@@ -92,7 +85,7 @@ class ApiClient:
         json: JSONType = None,
         files: UploadFiles | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
-        return self.request(
+        return self.request_blocking(
             "put",
             endpoint=endpoint,
             path_params=path_params,
@@ -107,13 +100,13 @@ class ApiClient:
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
-        return self.request(
+        return self.request_blocking(
             "delete",
             endpoint=endpoint,
             path_params=path_params,
         )
 
-    def request(
+    def request_blocking(
         self,
         method: Method,
         endpoint: str,
@@ -151,10 +144,144 @@ class ApiClient:
         url = self.get_url(endpoint, path_params)
         request = requests.Request(method, url, **kwargs)
 
-        if auth := self.configuration.auth:
-            request.auth = auth
+        if hasattr(self.configuration, "auth"):
+            request.auth = self.configuration.auth
 
         return request
+
+    # non-blocking verbs
+
+    def get(
+        self,
+        endpoint: str,
+        path_params: dict[str, str | int] | None = None,
+        query_params: dict[str, str | int] | None = None,
+        *,
+        on_success: Callback = default_success_handler,
+        on_error: Callback,
+    ):
+        self.request(
+            "get",
+            endpoint,
+            path_params=path_params,
+            query_params=query_params,
+            on_success=on_success,
+            on_error=on_error,
+        )
+
+    def post(  # noqa: PLR0913
+        self,
+        endpoint: str,
+        path_params: dict[str, str | int] | None = None,
+        query_params: dict[str, str | int] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        *,
+        on_success: Callback = default_success_handler,
+        on_error: Callback,
+    ):
+        self.request(
+            "post",
+            endpoint,
+            path_params=path_params,
+            query_params=query_params,
+            data=data,
+            json=json,
+            on_success=on_success,
+            on_error=on_error,
+        )
+
+    def patch(  # noqa: PLR0913
+        self,
+        endpoint: str,
+        path_params: dict[str, str | int] | None = None,
+        query_params: dict[str, str | int] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        *,
+        on_success: Callback,
+        on_error: Callback,
+    ):
+        self.request(
+            "patch",
+            endpoint,
+            path_params=path_params,
+            query_params=query_params,
+            data=data,
+            json=json,
+            on_success=on_success,
+            on_error=on_error,
+        )
+
+    def put(  # noqa: PLR0913
+        self,
+        endpoint: str,
+        path_params: dict[str, str | int] | None = None,
+        query_params: dict[str, str | int] | None = None,
+        data: dict[str, Any] | None = None,
+        json: JSONType = None,
+        *,
+        on_success: Callback = default_success_handler,
+        on_error: Callback,
+    ):
+        self.request(
+            "put",
+            endpoint,
+            path_params=path_params,
+            query_params=query_params,
+            data=data,
+            json=json,
+            on_success=on_success,
+            on_error=on_error,
+        )
+
+    def delete(
+        self,
+        endpoint: str,
+        path_params: dict[str, str | int] | None = None,
+        query_params: dict[str, str | int] | None = None,
+        *,
+        on_success: Callback = default_success_handler,
+        on_error: Callback,
+    ):
+        self.request(
+            "delete",
+            endpoint,
+            path_params=path_params,
+            on_success=on_success,
+            on_error=on_error,
+            query_params=query_params,
+        )
+
+    def request(
+        self,
+        method: Method,
+        endpoint: str,
+        path_params: dict[str, str | int] | None = None,
+        *,
+        on_success: Callback = default_success_handler,
+        on_error: Callback,
+        **kwargs,
+    ):
+        validate_nonblocking_callbacks(on_success, on_error)
+
+        # Generate fully qualified names for handlers and class
+        client_name = get_fully_qualified_name(self.__class__)
+        success_handler_name = get_fully_qualified_name(on_success)
+        error_handler_name = get_fully_qualified_name(on_error)
+
+        client_config = make_configuration_dict(self.configuration)
+
+        run_nonblocking_request.delay(
+            client_name,
+            client_config,
+            method,
+            endpoint,
+            success_handler_name,
+            error_handler_name,
+            path_params,
+            **kwargs,
+        )
 
     def get_url(
         self, endpoint: str, path_params: dict[str, str | int] | None = None
