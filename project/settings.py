@@ -424,6 +424,11 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+        "clients": {
+            "handlers": ["django.server"],
+            "level": "ERROR",
+            "propagate": False,
+        },
         "celery.app.trace": {
             "handlers": ["celery_app"],
             "level": "DEBUG" if DEBUG else "INFO",
