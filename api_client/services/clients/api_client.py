@@ -20,11 +20,45 @@ from .utils import make_configuration_dict
 from .utils import validate_nonblocking_callbacks
 
 
-class ApiClient:
+class BaseApiClient:
+    def get_url(
+        self, endpoint: str, path_params: dict[str, str | int] | None = None
+    ) -> str:
+        parsed_endpoint = self.parse_endpoint(endpoint, path_params)
+        return os.path.join(self.base_url, parsed_endpoint)
+
+    def parse_endpoint(
+        self, endpoint: str, path_params: dict[str, str | int] | None = None
+    ) -> str:
+        parsed_endpoint = endpoint.lstrip("/")
+        parsed_path_params = self.parse_path_params(path_params)
+        if parsed_path_params:
+            return parsed_endpoint.format(**parsed_path_params)
+        return parsed_endpoint
+
+    @staticmethod
+    def parse_path_params(
+        path_params: dict[str, str | int] | None = None
+    ) -> dict | None:
+        if not path_params:
+            return None
+        return {
+            key: quote_plus(str(value))
+            for key, value in path_params.items()
+            if value is not None
+        }
+
+    @property
+    def base_url(self) -> str:
+        scheme = self.configuration.scheme
+        host = self.configuration.host
+        return f"{scheme}://{host.strip('/')}"
+
+
+class BlockingApiClient(BaseApiClient):
     def __init__(self, configuration: ApiClientConfiguration) -> None:
         self.configuration = configuration
 
-    # Synchronous, blocking verbs
     def get_blocking(
         self,
         endpoint: str,
@@ -149,7 +183,10 @@ class ApiClient:
 
         return request
 
-    # non-blocking verbs
+
+class NonBlockingApiClient(BaseApiClient):
+    def __init__(self, configuration: ApiClientConfiguration) -> None:
+        self.configuration = configuration
 
     def get(
         self,
@@ -283,35 +320,6 @@ class ApiClient:
             **kwargs,
         )
 
-    def get_url(
-        self, endpoint: str, path_params: dict[str, str | int] | None = None
-    ) -> str:
-        parsed_endpoint = self.parse_endpoint(endpoint, path_params)
-        return os.path.join(self.base_url, parsed_endpoint)
 
-    def parse_endpoint(
-        self, endpoint: str, path_params: dict[str, str | int] | None = None
-    ) -> str:
-        parsed_endpoint = endpoint.lstrip("/")
-        parsed_path_params = self.parse_path_params(path_params)
-        if parsed_path_params:
-            return parsed_endpoint.format(**parsed_path_params)
-        return parsed_endpoint
-
-    @staticmethod
-    def parse_path_params(
-        path_params: dict[str, str | int] | None = None
-    ) -> dict | None:
-        if not path_params:
-            return None
-        return {
-            key: quote_plus(str(value))
-            for key, value in path_params.items()
-            if value is not None
-        }
-
-    @property
-    def base_url(self) -> str:
-        scheme = self.configuration.scheme
-        host = self.configuration.host
-        return f"{scheme}://{host.strip('/')}"
+class ApiClient(BlockingApiClient, NonBlockingApiClient):
+    pass
