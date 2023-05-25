@@ -31,7 +31,7 @@ class DummyIntegrationService:
             code="dummy_integration_service",
             scheme="http",
             host="localhost:8000/api/v1",
-            auth=SimpleTokenAuth,
+            auth=SimpleTokenAuth("thisismagnetbestkeptsecretpleasedonotcopy(c)magnet"),
         )
         self.api_client = JsonApiClient(configuration)
 
@@ -46,7 +46,7 @@ class DummyIntegrationService:
 
     def get_dummy(self, pk):
         (data, status_code), error = self.api_client.get_blocking(
-            "/dummy/{pk}/", path_params={"pk": pk}
+            "/dummy-auth/{pk}/", path_params={"pk": pk}
         )
         if error:
             raise DummyError(error)
