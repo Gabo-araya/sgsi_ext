@@ -2,10 +2,9 @@ from http import HTTPStatus
 
 import requests
 
-from requests.auth import AuthBase
-
 from api_client.services.clients import ApiClientConfiguration
 from api_client.services.clients import JsonApiClient
+from api_client.services.clients import SerializableAuthBase
 
 
 class DummyError(Exception):
@@ -41,7 +40,10 @@ def handle_error(response: requests.Response, error):
     print(f"Something happened: {str(error)}")  # noqa: T201
 
 
-class SimpleTokenAuth(AuthBase):
+class SimpleTokenAuth(SerializableAuthBase):
+    def get_init_kwargs(self):
+        return {"token": self.token}
+
     def __init__(self, token):
         self.token = token
 

@@ -1,22 +1,8 @@
-import dataclasses
 import inspect
-
-from .config import ApiClientConfiguration
 
 
 def get_fully_qualified_name(obj):
     return f"{obj.__module__}.{obj.__qualname__}"
-
-
-def make_configuration_dict(configuration: ApiClientConfiguration):
-    """
-    Converts an APIClientConfiguration object to a dict that can serialize to JSON.
-    """
-    client_config = dataclasses.asdict(configuration)
-    if "auth" in client_config:
-        # TODO: implement a way to serialize AuthBase object initialization parameters
-        del client_config["auth"]
-    return client_config
 
 
 def validate_callback(callback):

@@ -31,7 +31,9 @@ def run_nonblocking_request(  # noqa: PLR0913
     success_handler: Callback = import_string(on_success)
     error_handler: Callback = import_string(on_error)
 
-    client_config = ApiClientConfiguration(**client_configuration)
+    client_config = ApiClientConfiguration.from_serialized_configuration(
+        **client_configuration
+    )
     client = client_klass(client_config)
 
     response, error = client.request_blocking(

@@ -16,7 +16,6 @@ from .types import JSONType
 from .types import Method
 from .types import UploadFiles
 from .utils import get_fully_qualified_name
-from .utils import make_configuration_dict
 from .utils import validate_nonblocking_callbacks
 
 
@@ -307,7 +306,7 @@ class NonBlockingApiClient(BaseApiClient):
         success_handler_name = get_fully_qualified_name(on_success)
         error_handler_name = get_fully_qualified_name(on_error)
 
-        client_config = make_configuration_dict(self.configuration)
+        client_config = self.configuration.serialize()
 
         run_nonblocking_request.delay(
             client_name,
