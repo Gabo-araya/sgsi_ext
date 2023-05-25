@@ -35,9 +35,6 @@ class ClientLog(models.Model):
         help_text=_("edition date"),
         verbose_name=_("updated at"),
     )
-    error = models.TextField(
-        verbose_name=_("error"),
-    )
     method = models.CharField(
         max_length=10,
         verbose_name=_("method"),
@@ -85,6 +82,9 @@ class ClientLog(models.Model):
         verbose_name=_("status code"),
         null=True,
     )
+    error = models.TextField(
+        verbose_name=_("error"),
+    )
     error_email_sent = models.BooleanField(
         verbose_name=_("error email sent"),
         default=False,
@@ -120,10 +120,10 @@ class ClientLog(models.Model):
         return self.error and not self.error_email_sent
 
     def send_error_email(self):
-        self.perform_email_send()
-        self.mark_error_email_sent()
+        self.mail_error_to_admins()
+        self.mark_error_email_as_sent()
 
-    def perform_email_send(self):
+    def mail_error_to_admins(self):
         email_manager.send_emails(
             emails=[email for _, email in settings.ADMINS],
             template_name="client_log_error",
@@ -136,6 +136,20 @@ class ClientLog(models.Model):
             },
         )
 
-    def mark_error_email_sent(self):
+    def mark_error_email_as_sent(self):
         self.error_email_sent = True
         self.save()
+
+    def to_dict(self):
+        return {
+            "method": self.method,
+            "url": self.url,
+            "client_code": self.client_code,
+            "request_time": self.request_time,
+            "request_headers": self.request_headers,
+            "request_content": self.request_content,
+            "response_time": self.response_time,
+            "response_headers": self.response_headers,
+            "response_content": self.response_content,
+            "response_status_code": self.response_status_code,
+        }

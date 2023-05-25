@@ -369,6 +369,9 @@ LOGGING = {
             "format": "[{server_time}] {message}",
             "style": "{",
         },
+        "api_clients": {
+            "()": "project.logging.JsonFormatter",
+        },
         "celery_json": {
             "()": "project.logging.JsonCeleryFormatter",
             "datefmt": "%Y-%m-%dT%H:%M:%SZ",
@@ -401,6 +404,11 @@ LOGGING = {
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
         },
+        "api_clients": {
+            "level": "ERROR",
+            "class": "logging.StreamHandler",
+            "formatter": "api_clients",
+        },
         "celery_app": {
             "level": "DEBUG" if DEBUG else "INFO",
             "class": "logging.StreamHandler",
@@ -424,8 +432,8 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        "clients": {
-            "handlers": ["django.server"],
+        "api_clients": {
+            "handlers": ["api_clients"],
             "level": "ERROR",
             "propagate": False,
         },

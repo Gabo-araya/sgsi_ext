@@ -1,3 +1,4 @@
+import logging
 import os
 import traceback
 
@@ -11,6 +12,8 @@ from ..config import ApiClientConfiguration
 from ..types import JSONType
 from ..types import Method
 from ..types import UploadFiles
+
+logger = logging.getLogger("api_clients")
 
 
 class BlockingApiClient:
@@ -118,6 +121,7 @@ class BlockingApiClient:
             )
             log.update_from_response(response=response)
         except requests.RequestException as error:
+            self.log_exception(log)
             log.error = traceback.format_exc()
             log.save()
             return requests.Response(), error
@@ -155,6 +159,15 @@ class BlockingApiClient:
         if parsed_path_params:
             return parsed_endpoint.format(**parsed_path_params)
         return parsed_endpoint
+
+    def log_exception(self, log: ClientLog):
+        logger.exception(
+            "Client Integration Error",
+            extra={
+                **log.to_dict(),
+                "timeout": self.configuration.timeout,
+            },
+        )
 
     @staticmethod
     def parse_path_params(
