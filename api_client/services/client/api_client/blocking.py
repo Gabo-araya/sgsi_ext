@@ -25,12 +25,14 @@ class BlockingApiClient:
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
+        headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request_blocking(
             "get",
             endpoint=endpoint,
             path_params=path_params,
             params=query_params,
+            headers=headers,
         )
 
     def post_blocking(  # noqa: PLR0913
@@ -41,6 +43,7 @@ class BlockingApiClient:
         data: dict[str, Any] | None = None,
         json: JSONType = None,
         files: UploadFiles | None = None,
+        headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request_blocking(
             "post",
@@ -50,6 +53,7 @@ class BlockingApiClient:
             data=data,
             json=json,
             files=files,
+            headers=headers,
         )
 
     def patch_blocking(  # noqa: PLR0913
@@ -60,6 +64,7 @@ class BlockingApiClient:
         data: dict[str, Any] | None = None,
         json: JSONType = None,
         files: UploadFiles | None = None,
+        headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request_blocking(
             "patch",
@@ -69,6 +74,7 @@ class BlockingApiClient:
             data=data,
             json=json,
             files=files,
+            headers=headers,
         )
 
     def put_blocking(  # noqa: PLR0913
@@ -79,6 +85,7 @@ class BlockingApiClient:
         data: dict[str, Any] | None = None,
         json: JSONType = None,
         files: UploadFiles | None = None,
+        headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request_blocking(
             "put",
@@ -88,17 +95,20 @@ class BlockingApiClient:
             data=data,
             json=json,
             files=files,
+            headers=headers,
         )
 
     def delete_blocking(
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
+        headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
         return self.request_blocking(
             "delete",
             endpoint=endpoint,
             path_params=path_params,
+            headers=headers,
         )
 
     def request_blocking(

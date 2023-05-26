@@ -26,6 +26,7 @@ def run_nonblocking_request(  # noqa: PLR0913
     query_params: dict[str, str | int] | None = None,
     data: dict[str, Any] | None = None,
     json: JSONType = None,
+    headers=None,
 ):
     client_klass: type[BaseApiClient] = import_string(client_class)
     success_handler: Callback = import_string(on_success)
@@ -37,7 +38,13 @@ def run_nonblocking_request(  # noqa: PLR0913
     client = client_klass(client_config)
 
     response, error = client.request_blocking(
-        method, endpoint, path_params, params=query_params, data=data, json=json
+        method,
+        endpoint,
+        path_params,
+        params=query_params,
+        data=data,
+        json=json,
+        headers=headers,
     )
 
     if error:

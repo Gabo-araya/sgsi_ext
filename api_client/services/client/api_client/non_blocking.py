@@ -19,6 +19,7 @@ class NonBlockingApiClient:
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
+        headers: dict[str, Any] | None = None,
         *,
         on_success: Callback = default_success_handler,
         on_error: Callback,
@@ -28,6 +29,7 @@ class NonBlockingApiClient:
             endpoint,
             path_params=path_params,
             query_params=query_params,
+            headers=headers,
             on_success=on_success,
             on_error=on_error,
         )
@@ -39,6 +41,7 @@ class NonBlockingApiClient:
         query_params: dict[str, str | int] | None = None,
         data: dict[str, Any] | None = None,
         json: JSONType = None,
+        headers: dict[str, Any] | None = None,
         *,
         on_success: Callback = default_success_handler,
         on_error: Callback,
@@ -50,6 +53,7 @@ class NonBlockingApiClient:
             query_params=query_params,
             data=data,
             json=json,
+            headers=headers,
             on_success=on_success,
             on_error=on_error,
         )
@@ -61,6 +65,7 @@ class NonBlockingApiClient:
         query_params: dict[str, str | int] | None = None,
         data: dict[str, Any] | None = None,
         json: JSONType = None,
+        headers: dict[str, Any] | None = None,
         *,
         on_success: Callback,
         on_error: Callback,
@@ -72,6 +77,7 @@ class NonBlockingApiClient:
             query_params=query_params,
             data=data,
             json=json,
+            headers=headers,
             on_success=on_success,
             on_error=on_error,
         )
@@ -83,6 +89,7 @@ class NonBlockingApiClient:
         query_params: dict[str, str | int] | None = None,
         data: dict[str, Any] | None = None,
         json: JSONType = None,
+        headers: dict[str, Any] | None = None,
         *,
         on_success: Callback = default_success_handler,
         on_error: Callback,
@@ -94,6 +101,7 @@ class NonBlockingApiClient:
             query_params=query_params,
             data=data,
             json=json,
+            headers=headers,
             on_success=on_success,
             on_error=on_error,
         )
@@ -103,6 +111,7 @@ class NonBlockingApiClient:
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         query_params: dict[str, str | int] | None = None,
+        headers: dict[str, Any] | None = None,
         *,
         on_success: Callback = default_success_handler,
         on_error: Callback,
@@ -111,9 +120,10 @@ class NonBlockingApiClient:
             "delete",
             endpoint,
             path_params=path_params,
+            query_params=query_params,
+            headers=headers,
             on_success=on_success,
             on_error=on_error,
-            query_params=query_params,
         )
 
     def request(
