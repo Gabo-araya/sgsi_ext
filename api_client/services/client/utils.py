@@ -1,6 +1,10 @@
 import inspect
 
 
+class InvalidCallbackError(Exception):
+    pass
+
+
 def get_fully_qualified_name(obj):
     return f"{obj.__module__}.{obj.__qualname__}"
 
@@ -27,8 +31,8 @@ def validate_nonblocking_callbacks(on_success, on_error):
     try:
         validate_callback(on_success)
     except (TypeError, ValueError) as e:
-        raise type(e)("Invalid success handler: " + str(e)) from e
+        raise InvalidCallbackError("Invalid success handler: " + str(e)) from e
     try:
         validate_callback(on_error)
     except (TypeError, ValueError) as e:
-        raise type(e)("Invalid error handler: " + str(e)) from e
+        raise InvalidCallbackError("Invalid error handler: " + str(e)) from e
