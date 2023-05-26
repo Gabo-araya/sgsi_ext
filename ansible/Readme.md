@@ -170,3 +170,98 @@ In this case, you can override the variables and access with local trust by runn
 ```sh
 docker-compose exec postgres su - postgres -c psql
 ```
+
+### Nginx
+
+We block requests that use the IP of the server (https://1.2.3.4 instead of https://example.com), or a misconfigured/spoofed DNS domain (random.com instead of example.com).
+
+This was previously implemented with:
+```nginx
+server {
+  listen 80 default_server;
+  server_name _;
+  return 444;
+}
+```
+
+But had a small problem: on port 443, it replied with the right certificate, which leaked the expected domain (https://1.2.3.4 --> "This certificate is only valid for example.com")
+
+The current implementation fixes this, but replies with cryptic errors.
+
+#### `ERR_SSL_UNRECOGNIZED_NAME_ALERT`/`SSL_ERROR_UNRECOGNIZED_NAME_ALERT`
+
+These error codes (from Chrome and Firefox respectively) happen when the domain doesn't match the `server_name` (the situation explained above).
+
+With `curl` the message is:
+```
+$ curl --no-progress-meter https://dj3-dev.do.magnet.cl/ | head -n1
+<!DOCTYPE html>
+$
+$ dig +short dj3-dev.do.magnet.cl
+165.227.79.89
+$
+$ curl https://165.227.79.89/
+curl: (35) error:0A000458:SSL routines::tlsv1 unrecognized name
+```
+
+In case of DNS problems, to force a connection to IP with curl:
+```
+$ curl --no-progress-meter --connect-to dj3-dev.do.magnet.cl:443:165.227.79.89 https://dj3-dev.do.magnet.cl/ | head -n1
+<!DOCTYPE html>
+```
+
+It can be used to try a request to localhost from the server itself:
+```
+$ curl -v --connect-to dj3-dev.do.magnet.cl:443:localhost https://dj3-dev.do.magnet.cl/
+* Connecting to hostname: localhost
+*   Trying 127.0.0.1:443...
+* Connected to (nil) (127.0.0.1) port 443 (#0)
+* ALPN, offering h2
+[...]
+<!DOCTYPE html>
+[...]
+```
+
+#### Connection refused / `ERR_CONNECTION_REFUSED`
+
+If connections are refused on port 443:
+```
+$ curl https://dj3-dev.do.magnet.cl/
+curl: (7) Failed to connect to dj3-dev.do.magnet.cl port 443 after 454 ms: Connection refused
+```
+
+But redirection on port 80 works:
+```
+$ curl -vL http://dj3-dev.do.magnet.cl/
+*   Trying 165.227.79.89:80...
+* Connected to dj3-dev.do.magnet.cl (165.227.79.89) port 80 (#0)
+> GET / HTTP/1.1
+[...]
+< HTTP/1.1 301 Moved Permanently
+[...]
+< Location: https://dj3-dev.do.magnet.cl/
+[...]
+* Connection #0 to host dj3-dev.do.magnet.cl left intact
+* Clear auth, redirects to port from 80 to 443
+* Issue another request to this URL: 'https://dj3-dev.do.magnet.cl/'
+*   Trying 165.227.79.89:443...
+* connect to 165.227.79.89 port 443 failed: Connection refused
+[...]
+```
+
+It's probably the built-in conf that is working, but our app conf is not active.
+
+As a sanity check, search for the domain name on the configuration printed by nginx:
+```
+$ dce nginx nginx -T | grep \\.cl
+  server_name dj3-dev.do.magnet.cl;
+[...]
+```
+
+If it's not there, check the contents of `docker/nginx.env`, or the startup logs of the container.
+
+#### Something like `SSL_ERROR_SYSCALL`
+
+We ran into this very strange error (already lost the exact string) when nginx failed as in the "connection refused" case above, but there's some weird proxy managed by infrastructure providers, outside of the VM we control.
+
+In this case, try curl with "--connect-to [...]:localhost", or "nginx -T", as described above, as a shortcut to diagnosing with `nc` or Wireshark.
