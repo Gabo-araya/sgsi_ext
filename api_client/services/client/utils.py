@@ -1,8 +1,6 @@
 import inspect
 
-
-class InvalidCallbackError(Exception):
-    pass
+from .errors import InvalidCallbackError
 
 
 def get_fully_qualified_name(obj):

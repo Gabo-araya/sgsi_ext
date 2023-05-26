@@ -1,6 +1,9 @@
 from typing import Any
+from typing import cast
 
 import requests
+
+from requests import RequestException
 
 from .api_client import ApiClient
 from .types import JSONType
@@ -9,6 +12,8 @@ from .types import UploadFiles
 
 
 class JsonApiClient(ApiClient):
+    empty_response = None, None
+
     def get_blocking(
         self,
         endpoint: str,
@@ -16,10 +21,13 @@ class JsonApiClient(ApiClient):
         query_params: dict[str, str | int] | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
-        response, error = super().get_blocking(
-            endpoint, path_params, query_params, headers
+        return self.request_blocking(
+            "get",
+            endpoint=endpoint,
+            path_params=path_params,
+            params=query_params,
+            headers=headers,
         )
-        return (self.get_response_json(response), response.status_code), error
 
     def post_blocking(  # noqa: PLR0913
         self,
@@ -31,10 +39,16 @@ class JsonApiClient(ApiClient):
         files: UploadFiles | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
-        response, error = super().post_blocking(
-            endpoint, path_params, query_params, data, json, files, headers
+        return self.request_blocking(
+            "post",
+            endpoint=endpoint,
+            path_params=path_params,
+            params=query_params,
+            data=data,
+            json=json,
+            files=files,
+            headers=headers,
         )
-        return (self.get_response_json(response), response.status_code), error
 
     def patch_blocking(  # noqa: PLR0913
         self,
@@ -46,10 +60,16 @@ class JsonApiClient(ApiClient):
         files: UploadFiles | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
-        response, error = super().patch_blocking(
-            endpoint, path_params, query_params, data, json, files, headers
+        return self.request_blocking(
+            "patch",
+            endpoint=endpoint,
+            path_params=path_params,
+            params=query_params,
+            data=data,
+            json=json,
+            files=files,
+            headers=headers,
         )
-        return (self.get_response_json(response), response.status_code), error
 
     def put_blocking(  # noqa: PLR0913
         self,
@@ -61,10 +81,16 @@ class JsonApiClient(ApiClient):
         files: UploadFiles | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
-        response, error = super().put_blocking(
-            endpoint, path_params, query_params, data, json, files, headers
+        return self.request_blocking(
+            "put",
+            endpoint=endpoint,
+            path_params=path_params,
+            params=query_params,
+            data=data,
+            json=json,
+            files=files,
+            headers=headers,
         )
-        return (self.get_response_json(response), response.status_code), error
 
     def delete_blocking(
         self,
@@ -72,8 +98,12 @@ class JsonApiClient(ApiClient):
         path_params: dict[str, str | int] | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
-        response, error = super().delete_blocking(endpoint, path_params, headers)
-        return (self.get_response_json(response), response.status_code), error
+        return self.request_blocking(
+            "delete",
+            endpoint=endpoint,
+            path_params=path_params,
+            headers=headers,
+        )
 
     def request_blocking(
         self,
@@ -81,16 +111,25 @@ class JsonApiClient(ApiClient):
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
         **kwargs,
-    ) -> tuple[requests.Response, requests.RequestException | None]:
+    ) -> tuple[tuple[JSONType, int], requests.RequestException | None]:
         kwargs.setdefault("headers", {})
         if kwargs["headers"] is None:
             kwargs["headers"] = {}
         kwargs["headers"].setdefault("Accept", "application/json")
 
-        return super().request_blocking(method, endpoint, path_params, **kwargs)
+        raw_response, error = super().request_blocking(
+            method, endpoint, path_params, **kwargs
+        )
+        response, status_code = cast(tuple[JSONType, int], raw_response)
 
-    @staticmethod
-    def get_response_json(response: requests.Response) -> JSONType:
+        return (response, status_code), error
+
+    def parse_response(self, response: requests.Response):
+        content_type = response.headers.get("Content-Type")
+        if content_type and content_type != "application/json":
+            msg = f"Expected content type application/json, got {content_type}."
+            raise RequestException(msg, response=response)
         if not response.content:
-            return None
-        return response.json()
+            return None, response.status_code
+
+        return response.json(), response.status_code

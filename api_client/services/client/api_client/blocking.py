@@ -17,6 +17,8 @@ logger = logging.getLogger("api_clients")
 
 
 class BlockingApiClient:
+    empty_response = requests.Response()
+
     def __init__(self, configuration: ApiClientConfiguration) -> None:
         self.configuration = configuration
 
@@ -129,14 +131,15 @@ class BlockingApiClient:
             response = session.send(
                 prepared_request, timeout=self.configuration.timeout
             )
+            parsed_response = self.parse_response(response)
             log.update_from_response(response=response)
         except requests.RequestException as error:
             self.log_exception(log)
             log.error = traceback.format_exc()
             log.save()
-            return requests.Response(), error
+            return self.empty_response, error
         else:
-            return response, None
+            return parsed_response, None
         finally:
             session.close()
 
@@ -178,6 +181,13 @@ class BlockingApiClient:
                 "timeout": self.configuration.timeout,
             },
         )
+
+    def parse_response(self, response: requests.Response):
+        """
+        Converts the raw response into the expected output format.
+        By default, it returns the response as-is.
+        """
+        return response
 
     @staticmethod
     def parse_path_params(

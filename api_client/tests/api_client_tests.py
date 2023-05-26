@@ -1,7 +1,7 @@
 from base.tests import BaseTestCase
 
+from ..services.client import ApiClient
 from ..services.client import ApiClientConfiguration
-from ..services.client.api_client import ApiClient
 
 
 class ApiClientGetUrlTestCase(BaseTestCase):
