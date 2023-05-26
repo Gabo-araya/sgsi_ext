@@ -5,7 +5,7 @@ from api_client.models import ClientLog
 from project.celeryconf import app
 
 # HACK: import manually so celery also imports the task
-from .services.clients import tasks  # noqa: F401
+from .services.client import tasks  # noqa: F401
 
 logger = get_task_logger(__name__)
 

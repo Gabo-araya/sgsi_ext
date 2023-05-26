@@ -1,7 +1,7 @@
 import dataclasses
 
+from abc import ABCMeta
 from abc import abstractmethod
-from dataclasses import dataclass
 
 from django.utils.module_loading import import_string
 
@@ -13,7 +13,7 @@ DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"
 
 
-class SerializableAuthBase(AuthBase):
+class SerializableAuthBase(AuthBase, metaclass=ABCMeta):
     @abstractmethod
     def get_init_kwargs(self):
         """
@@ -39,7 +39,7 @@ class SerializableAuthBase(AuthBase):
         return cls(**kwargs)
 
 
-@dataclass
+@dataclasses.dataclass
 class ApiClientConfiguration:
     host: str
     code: str

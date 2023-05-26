@@ -1,6 +1,7 @@
-from api_client.services.clients import ApiClientConfiguration
-from api_client.services.clients.api_client import ApiClient
 from base.tests import BaseTestCase
+
+from ..services.client import ApiClientConfiguration
+from ..services.client.api_client import ApiClient
 
 
 class ApiClientGetUrlTestCase(BaseTestCase):
