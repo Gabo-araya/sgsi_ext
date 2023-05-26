@@ -7,7 +7,7 @@ from django.utils.module_loading import import_string
 
 from requests.auth import AuthBase
 
-from api_client.services.clients.utils import get_fully_qualified_name
+from .utils import get_fully_qualified_name
 
 DEFAULT_TIMEOUT = 10
 DEFAULT_SCHEME = "https"

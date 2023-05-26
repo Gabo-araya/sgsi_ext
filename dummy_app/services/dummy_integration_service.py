@@ -2,9 +2,9 @@ from http import HTTPStatus
 
 import requests
 
-from api_client.services.clients import ApiClientConfiguration
-from api_client.services.clients import JsonApiClient
-from api_client.services.clients import SerializableAuthBase
+from api_client.services.client import ApiClientConfiguration
+from api_client.services.client import JsonApiClient
+from api_client.services.client import SerializableAuthBase
 
 
 class DummyError(Exception):
