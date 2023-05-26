@@ -7,6 +7,8 @@ from django.utils.module_loading import import_string
 
 from requests.auth import AuthBase
 
+from api_client.enums import ClientCodes
+
 from .utils import get_fully_qualified_name
 
 DEFAULT_TIMEOUT = 10
@@ -42,7 +44,7 @@ class SerializableAuthBase(AuthBase, metaclass=ABCMeta):
 @dataclasses.dataclass
 class ApiClientConfiguration:
     host: str
-    code: str
+    code: ClientCodes
     scheme: str = DEFAULT_SCHEME
     timeout: int = DEFAULT_TIMEOUT
     auth: SerializableAuthBase | None = None

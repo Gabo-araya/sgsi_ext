@@ -1,6 +1,5 @@
 from typing import Any
 
-from ..config import ApiClientConfiguration
 from ..handlers import default_success_handler
 from ..tasks import run_nonblocking_request
 from ..types import Callback
@@ -8,12 +7,10 @@ from ..types import JSONType
 from ..types import Method
 from ..utils import get_fully_qualified_name
 from ..utils import validate_nonblocking_callbacks
+from .base import BaseApiClient
 
 
-class NonBlockingApiClient:
-    def __init__(self, configuration: ApiClientConfiguration) -> None:
-        self.configuration = configuration
-
+class NonBlockingApiClient(BaseApiClient):
     def get(
         self,
         endpoint: str,

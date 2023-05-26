@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from base.tests import BaseTestCase
 
 from ..services.client import ApiClient
@@ -10,6 +12,12 @@ class ApiClientGetUrlTestCase(BaseTestCase):
         super().setUpTestData()
         config = ApiClientConfiguration(scheme="http", host="example.com", code="test")
         cls.api_client = ApiClient(config)
+
+    def setUp(self):
+        super().setUp()
+        self.patcher = patch(
+            "api_client.services.client.api_client.base.BaseApiClient.validate_configuration"
+        )
 
     def test_get_url_without_end_slashes(self):
         self.assertEqual(self.api_client.get_url(""), "http://example.com/")
@@ -50,6 +58,17 @@ class ApiClientPathParamsTestCase(BaseTestCase):
         super().setUpTestData()
         config = ApiClientConfiguration(scheme="http", host="example.com", code="test")
         cls.api_client = ApiClient(config)
+
+    def setUp(self):
+        super().setUp()
+        self.patcher = patch.object(
+            "api_client.services.client.api_client.client.ApiClient.validate_configuration"
+        )
+        self.patcher.start()
+
+    def tearDown(self, *args, **kwargs):
+        super().tearDown(*args, **kwargs)
+        self.patcher.stop()
 
     def test_only_str_path_params(self):
         self.assertEqual(

@@ -7,20 +7,19 @@ from urllib.parse import quote_plus
 
 import requests
 
+from api_client.models import DisabledClient
+
 from ....models import ClientLog
-from ..config import ApiClientConfiguration
 from ..types import JSONType
 from ..types import Method
 from ..types import UploadFiles
+from .base import BaseApiClient
 
 logger = logging.getLogger("api_clients")
 
 
-class BlockingApiClient:
+class BlockingApiClient(BaseApiClient):
     empty_response = requests.Response()
-
-    def __init__(self, configuration: ApiClientConfiguration) -> None:
-        self.configuration = configuration
 
     def get_blocking(
         self,
@@ -120,6 +119,12 @@ class BlockingApiClient:
         path_params: dict[str, str | int] | None = None,
         **kwargs,
     ) -> tuple[requests.Response, requests.RequestException | None]:
+        if DisabledClient.objects.is_disabled(self.configuration.code):
+            return (
+                self.empty_response(),
+                Exception(),
+            )  # TODO: Must create own RequestException subclass
+
         log: ClientLog = ClientLog.objects.create()
         session = requests.Session()
         try:
