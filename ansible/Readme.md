@@ -251,14 +251,14 @@ $ curl -vL http://dj3-dev.do.magnet.cl/
 
 It's probably the built-in conf that is working, but our app conf is not active.
 
-As a sanity check, search for the domain name on the configuration printed by nginx:
+Check if `dcl nginx` contains: "Important file(s) for 'app.conf' are missing or empty, disabling...", which means that certificate or dhparams files were not found. In this case, check `SERVER_DOMAIN` in `docker/nginx.env`, and the paths for `ssl_certificate` in `app.conf.template`.
+
+As a sanity check, you can confirm that the domain name is present in the configuration printed by nginx:
 ```
 $ dce nginx nginx -T | grep \\.cl
   server_name dj3-dev.do.magnet.cl;
 [...]
 ```
-
-If it's not there, check the contents of `docker/nginx.env`, or the startup logs of the container.
 
 #### Something like `SSL_ERROR_SYSCALL`
 
