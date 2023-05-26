@@ -8,6 +8,7 @@ from requests.utils import get_encoding_from_headers
 
 from base.tests import BaseTestCase
 
+from ..models import ClientLog
 from ..services.client import ApiClientConfiguration
 from ..services.client import JsonApiClient
 
@@ -59,6 +60,7 @@ class JsonApiClientTests(BaseTestCase):
         (response, code), error = self.api_client.get_blocking("/test/")
         self.assertIs(type(error), requests.RequestException)
         self.assertIsNone(code)
+        self.assertTrue(ClientLog.objects.exists())
 
     @patch("requests.Session.send")
     def test_request_returning_404_with_undeclared_html_body_returns_error(
@@ -74,6 +76,7 @@ class JsonApiClientTests(BaseTestCase):
         (response, code), error = self.api_client.get_blocking("/test/")
         self.assertIs(type(error), requests.JSONDecodeError)
         self.assertIsNone(code)
+        self.assertTrue(ClientLog.objects.exists())
 
     @patch("requests.Session.send")
     def test_request_returning_404_without_body_returns_none(self, patched_send):
