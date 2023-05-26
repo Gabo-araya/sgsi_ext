@@ -12,13 +12,13 @@ def get_fully_qualified_name(obj):
 def validate_callback(callback):
     if not callable(callback):
         msg = "Handler is not callable."
-        raise TypeError(msg)
+        raise InvalidCallbackError(msg)
     if inspect.ismethod(callback):
         msg = "Bound methods cannot be used as handlers."
-        raise ValueError(msg)
+        raise InvalidCallbackError(msg)
     if callback.__name__ == "<lambda>":
         msg = "Lambdas are not serializable and cannot be used as handlers."
-        raise TypeError(msg)
+        raise InvalidCallbackError(msg)
 
 
 def validate_nonblocking_callbacks(on_success, on_error):
@@ -30,9 +30,9 @@ def validate_nonblocking_callbacks(on_success, on_error):
     """
     try:
         validate_callback(on_success)
-    except (TypeError, ValueError) as e:
+    except InvalidCallbackError as e:
         raise InvalidCallbackError("Invalid success handler: " + str(e)) from e
     try:
         validate_callback(on_error)
-    except (TypeError, ValueError) as e:
+    except InvalidCallbackError as e:
         raise InvalidCallbackError("Invalid error handler: " + str(e)) from e
