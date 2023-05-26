@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 import requests
 
+from api_client.enums import ClientCodes
 from api_client.managers import ClientLogQueryset
 from base.serializers import StringFallbackJSONEncoder
 from messaging import email_manager
@@ -51,6 +52,7 @@ class ClientLog(models.Model):
     )
     client_code = models.TextField(
         verbose_name=_("client code"),
+        choices=ClientCodes.choices,
     )
     request_time = models.DateTimeField(
         help_text=_("request time"),
@@ -103,7 +105,7 @@ class ClientLog(models.Model):
         self.save()
 
     def update_from_request(
-        self, *, request: requests.PreparedRequest, client_code: str
+        self, *, request: requests.PreparedRequest, client_code: ClientCodes
     ):
         parsed_url = urlparse(request.url)
         self.method = request.method.upper()

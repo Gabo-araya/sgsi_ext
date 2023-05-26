@@ -3,6 +3,13 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from api_client.models import ClientLog
+from api_client.models import DisabledClient
+
+
+@admin.register(DisabledClient)
+class DisabledClientnAdmin(admin.ModelAdmin):
+    list_display = ["client_code", "disabled_at"]
+    search_fields = ["client_code"]
 
 
 @admin.register(ClientLog)
