@@ -10,14 +10,18 @@ class ApiClientGetUrlTestCase(BaseTestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
+        cls.patcher = patch(
+            "api_client.services.client.ApiClient.validate_configuration"
+        )
+        cls.patcher.start()
+
         config = ApiClientConfiguration(scheme="http", host="example.com", code="test")
         cls.api_client = ApiClient(config)
 
-    def setUp(self):
-        super().setUp()
-        self.patcher = patch(
-            "api_client.services.client.api_client.base.BaseApiClient.validate_configuration"
-        )
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        cls.patcher.stop()
 
     def test_get_url_without_end_slashes(self):
         self.assertEqual(self.api_client.get_url(""), "http://example.com/")
@@ -56,19 +60,17 @@ class ApiClientPathParamsTestCase(BaseTestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
+        cls.patcher = patch(
+            "api_client.services.client.ApiClient.validate_configuration"
+        )
+        cls.patcher.start()
         config = ApiClientConfiguration(scheme="http", host="example.com", code="test")
         cls.api_client = ApiClient(config)
 
-    def setUp(self):
-        super().setUp()
-        self.patcher = patch.object(
-            "api_client.services.client.api_client.client.ApiClient.validate_configuration"
-        )
-        self.patcher.start()
-
-    def tearDown(self, *args, **kwargs):
-        super().tearDown(*args, **kwargs)
-        self.patcher.stop()
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        cls.patcher.stop()
 
     def test_only_str_path_params(self):
         self.assertEqual(
