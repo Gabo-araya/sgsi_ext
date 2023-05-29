@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "project-name-placeholder"
-version = "0.1.0"
+version = "2023.2"
 description = "The project template for Django 3.2. This project aims to provide a common starting point for Magnet projects."
 authors = ["Magnet DPT3 Team <d3pt@magnet.cl>"]
 license = "MIT"
