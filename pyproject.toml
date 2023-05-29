@@ -24,7 +24,7 @@ Faker = "14.2.0"
 # non-semver packages (or no information found)
 django-debug-toolbar = "4.0.0"
 django-extensions = "3.2.1"
-python-json-logger = "==2.0.4"
+python-json-logger = "2.0.7"
 django-storages = "1.13.2"
 django-webpack-loader = "1.8.0"
 django-redis = "5.2.0"
