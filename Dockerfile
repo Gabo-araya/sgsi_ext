@@ -35,7 +35,7 @@ RUN \
     # to install from extra repositories:
     curl gnupg \
     # to compile psycopg2:
-    gcc libpq-dev \
+    gcc \
     # for Django translations:
     gettext \
     # to wait for DB:
@@ -54,7 +54,7 @@ RUN \
   && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
 \
   && title_print "Install Postgres and Node.js" \
-  && apt-get install -y nodejs postgresql-client-14 \
+  && apt-get install -y nodejs libpq-dev postgresql-client-15 \
   # Update npm:
   && mkdir "$NPM_CACHE_DIR" \
   && npm install --global --cache "$NPM_CACHE_DIR" npm \
