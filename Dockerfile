@@ -64,7 +64,7 @@ RUN \
   && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
 \
   && title_print "Install Poetry" \
-  && pip install poetry~=1.3 \
+  && pip install "poetry==1.4.2" \
 \
   && title_print "Create non-privileged user to run apps" \
   && groupadd --gid $HOST_GID $WHO \
