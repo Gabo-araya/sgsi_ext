@@ -15,7 +15,7 @@ gunicorn = "~20.1.0"
 django-celery-beat = "~2.5.0"
 django-loginas = "0.3.10"
 djangorestframework = "3.14.0"
-boto3 = "1.26.54"
+boto3 = "1.26.142"
 ipdb = "0.13.13"
 ipython = "8.13.2"
 ansible-core = { version = "2.13", optional = true }
