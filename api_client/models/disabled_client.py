@@ -4,8 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from api_client.enums import ClientCodes
 from api_client.managers import DisabledClientQueryset
 
-DisabledClientManager = models.Manager.from_queryset(DisabledClientQueryset)
-
 
 class DisabledClient(models.Model):
     disabled_at = models.DateTimeField(
@@ -19,7 +17,7 @@ class DisabledClient(models.Model):
         unique=True,
     )
 
-    objects = DisabledClientManager()
+    objects = DisabledClientQueryset.as_manager()
 
     class Meta:
         verbose_name = _("disabled client")
