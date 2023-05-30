@@ -1,0 +1,197 @@
+# Translations for the API client app
+# Copyright (C) 2023 Magnet S.p.A
+# This file is distributed under the same license as the django3-project-template package.
+# Raúl Esteban <raul.esteban@magnet.cl>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: Magnet D3PT Team <d3pt@magnet.cl>\n"
+"POT-Creation-Date: 2023-05-30 15:25-0400\n"
+"PO-Revision-Date: 2023-05-30 15:28-0400\n"
+"Last-Translator: Nicolás Stuardo <nicolas.stuardo@magnet.cl>\n"
+"Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#: admin.py
+msgid "request headers"
+msgstr "encabezados de solicitud"
+
+#: admin.py
+msgid "response headers"
+msgstr "encabezados de respuesta"
+
+#: admin.py
+msgid "request content"
+msgstr "contenido de la solicitud"
+
+#: admin.py
+msgid "response content"
+msgstr "contenido de la respuesta"
+
+#: apps.py
+msgid "api_client"
+msgstr "api_client"
+
+#: enums.py
+msgid "Dummy Integration"
+msgstr "Integración falsa"
+
+#: models/client_log.py
+msgid "GET"
+msgstr "GET"
+
+#: models/client_log.py
+msgid "POST"
+msgstr "POST"
+
+#: models/client_log.py
+msgid "PUT"
+msgstr "PUT"
+
+#: models/client_log.py
+msgid "PATCH"
+msgstr "PATCH"
+
+#: models/client_log.py
+msgid "DELETE"
+msgstr "DELETE"
+
+#: models/client_log.py
+msgid "creation date"
+msgstr "fecha de creación"
+
+#: models/client_log.py
+msgid "created at"
+msgstr "creado el"
+
+#: models/client_log.py
+msgid "edition date"
+msgstr "fecha de edición"
+
+#: models/client_log.py
+msgid "updated at"
+msgstr "editado el"
+
+#: models/client_log.py
+msgid "method"
+msgstr "método"
+
+#: models/client_log.py
+msgid "url"
+msgstr "URL"
+
+#: models/client_log.py
+msgid "endpoint"
+msgstr "endpoint"
+
+#: models/client_log.py
+msgid "client url"
+msgstr "URL de cliente"
+
+#: models/client_log.py models/disabled_client.py
+msgid "client code"
+msgstr "código de cliente"
+
+#: models/client_log.py
+msgid "request time"
+msgstr "hora de solicitud"
+
+#: models/client_log.py
+msgid "headers"
+msgstr "encabezados"
+
+#: models/client_log.py
+msgid "content"
+msgstr "contenido"
+
+#: models/client_log.py
+msgid "response time"
+msgstr "hora de respuesta"
+
+#: models/client_log.py
+msgid "status code"
+msgstr "código de estado"
+
+#: models/client_log.py
+msgid "error"
+msgstr "error"
+
+#: models/client_log.py
+msgid "error email sent"
+msgstr "mensaje de error enviado"
+
+#: models/client_log.py
+msgid "Error in {} API Client"
+msgstr "Error en cliente de API {}"
+
+#: models/disabled_client.py
+msgid "disabled at"
+msgstr "deshabilitado el"
+
+#: models/disabled_client.py
+msgid "disabled client"
+msgstr "cliente deshabilitado"
+
+#: models/disabled_client.py
+msgid "disabled clients"
+msgstr "clientes deshabilitados"
+
+#: templates/emails/client_log_error.html
+#, python-format
+msgid ""
+"\n"
+"<h2>Error Report:</h2>\n"
+"<table>\n"
+"    <tr>\n"
+"        <td>Client</td>\n"
+"        <td>%(client_code)s</td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td>Request</td>\n"
+"        <td>%(method)s %(url)s</td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td>Error</td>\n"
+"        <td>%(error)s</td>\n"
+"    </tr>\n"
+"</table>\n"
+msgstr ""
+"\n"
+"<h2>Informe de error:</h2>\n"
+"<table>\n"
+"    <tr>\n"
+"        <td>Cliente</td>\n"
+"        <td>%(client_code)s</td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td>Solicitud</td>\n"
+"        <td>%(method)s %(url)s</td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td>Error</td>\n"
+"        <td>%(error)s</td>\n"
+"    </tr>\n"
+"</table>\n"
+
+#: templates/emails/client_log_error.txt
+#, python-format
+msgid ""
+"\n"
+"Error Report:\n"
+"\n"
+"Client: %(client_code)s\n"
+"Request: %(method)s %(url)s\n"
+"Error: %(error)s\n"
+msgstr ""
+"\n"
+"Informe de error:\n"
+"\n"
+"Cliente: %(client_code)s\n"
+"Solicitud: %(method)s %(url)s\n"
+"Error: %(error)s\n"
