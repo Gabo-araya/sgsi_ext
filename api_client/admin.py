@@ -7,7 +7,7 @@ from api_client.models import DisabledClient
 
 
 @admin.register(DisabledClient)
-class DisabledClientnAdmin(admin.ModelAdmin):
+class DisabledClientAdmin(admin.ModelAdmin):
     list_display = ["client_code", "disabled_at"]
     search_fields = ["client_code"]
 
