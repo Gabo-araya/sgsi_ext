@@ -821,14 +821,14 @@ pytz = "*"
 
 [[package]]
 name = "django-webpack-loader"
-version = "1.8.0"
+version = "2.0.0"
 description = "Transparently use webpack with django"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "django-webpack-loader-1.8.0.tar.gz", hash = "sha256:a6e679805e9607b073ee52702d9b426bac1a54609d966131aa434c78602ac050"},
-    {file = "django_webpack_loader-1.8.0-py2.py3-none-any.whl", hash = "sha256:e2d19979772bfa7c9c566a67690368bd1ba9979a7e3f3ba485dc621e0206f997"},
+    {file = "django-webpack-loader-2.0.0.tar.gz", hash = "sha256:da1822e6d83ffc0e9949b3e15a55046ebba6c416381b6026e5f2caf6e1eff654"},
+    {file = "django_webpack_loader-2.0.0-py2.py3-none-any.whl", hash = "sha256:e3ab6fd242a9fd0aa17d7155f578442d8b5cd8be56a6f667411a93981afeb669"},
 ]
 
 [[package]]
@@ -2005,4 +2005,4 @@ ansible = ["ansible-core", "yq"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "a3a61da32a92f42f47dc089afe40c0ac420db75d6621ae9ea767e7dd4db643d0"
+content-hash = "937ab83031489bc73dc4106ebad17d761316e29bff0a8f9a8b5760f0f1e9c1e7"
