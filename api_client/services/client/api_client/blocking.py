@@ -10,6 +10,7 @@ import requests
 from api_client.models import DisabledClient
 
 from ....models import ClientLog
+from ..errors import DisabledClientError
 from ..types import JSONType
 from ..types import Method
 from ..types import UploadFiles
@@ -121,9 +122,9 @@ class BlockingApiClient(BaseApiClient):
     ) -> tuple[requests.Response, requests.RequestException | None]:
         if DisabledClient.objects.is_disabled(self.configuration.code):
             return (
-                self.empty_response(),
-                Exception(),
-            )  # TODO: Must create own RequestException subclass
+                self.empty_response,
+                DisabledClientError("Client is disabled and cannot make requests."),
+            )
 
         log: ClientLog = ClientLog.objects.create()
         session = requests.Session()
