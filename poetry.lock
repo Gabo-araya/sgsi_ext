@@ -752,14 +752,14 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-loginas"
-version = "0.3.10"
+version = "0.3.11"
 description = "An app to add a \"Log in as user\" button in the Django user admin page."
 category = "main"
 optional = false
-python-versions = ">3.3"
+python-versions = "*"
 files = [
-    {file = "django-loginas-0.3.10.tar.gz", hash = "sha256:8d81f31d993b3c3c9f9018b385bfbdf74ead320e0a4b18493141d0e2dbc8ad6b"},
-    {file = "django_loginas-0.3.10-py2.py3-none-any.whl", hash = "sha256:2d609ddcc68ff840b3e59baa58ac58b870cd1aef491aaab8cd796d022d961c40"},
+    {file = "django-loginas-0.3.11.tar.gz", hash = "sha256:37aec6fcd1cdb72378b69d2468d2ae39b12cd013f838a9bf9b9b5132e8341735"},
+    {file = "django_loginas-0.3.11-py2.py3-none-any.whl", hash = "sha256:5492eb5b4eb86c05e86cd84fb1f89c9796498643dc23d19e9c9bf83f5768ba86"},
 ]
 
 [[package]]
@@ -2005,4 +2005,4 @@ ansible = ["ansible-core", "yq"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "249322aeb8d8f213ee33c765964fb3abd03c84e7ddceb4388399c3941b51dc6b"
+content-hash = "e6f9057f13db23aa46537bfab30d373ebb6caa4d4806fbede60c2ea980a7063f"

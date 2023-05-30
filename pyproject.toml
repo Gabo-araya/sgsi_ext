@@ -13,7 +13,7 @@ psycopg2 = "2.9.6"
 celery = { version = "~5.2", extras = ["redis"] }
 gunicorn = "~20.1.0"
 django-celery-beat = "~2.5.0"
-django-loginas = "0.3.10"
+django-loginas = "0.3.11"
 djangorestframework = "3.14.0"
 boto3 = "1.26.142"
 ipdb = "0.13.13"
