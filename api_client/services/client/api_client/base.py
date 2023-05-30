@@ -9,6 +9,11 @@ class BaseApiClient:
         self.validate_configuration()
 
     def validate_configuration(self) -> None:
-        if not isinstance(self.configuration.code, ClientCodes):
+        # Try coercing value into an enum one. If this fail then raise an error.
+        # This is done to support the non-blocking implementation which serializes
+        # the enum into a string.
+        try:
+            ClientCodes(self.configuration.code)
+        except ValueError as e:
             msg = f"Invalid client code: {self.configuration.code}"
-            raise TypeError(msg)
+            raise TypeError(msg) from e
