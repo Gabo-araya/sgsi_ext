@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 import requests
 
+from api_client.enums import ClientCodes
 from api_client.services.client import ApiClientConfiguration
 from api_client.services.client import JsonApiClient
 from api_client.services.client import SerializableAuthBase
@@ -61,7 +62,7 @@ class SimpleTokenAuth(SerializableAuthBase):
 class DummyIntegrationService:
     def __init__(self) -> None:
         configuration = ApiClientConfiguration(
-            code="dummy_integration_service",
+            code=ClientCodes.DUMMY_INTEGRATION,
             scheme="http",
             host="localhost:8000/api/v1",
             auth=SimpleTokenAuth("thisismagnetbestkeptsecretpleasedonotcopy(c)magnet"),
