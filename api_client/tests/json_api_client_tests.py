@@ -28,10 +28,20 @@ class JsonApiClientTests(BaseTestCase):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
+        cls.patcher = patch(
+            "api_client.services.client.JsonApiClient.validate_configuration"
+        )
+        cls.patcher.start()
+
         config = ApiClientConfiguration(
             scheme="http", host="example.com", code="json_test"
         )
         cls.api_client = JsonApiClient(config)
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        cls.patcher.stop()
 
     @patch("requests.Session.send")
     def test_request_returning_404_with_json_body_returns_content(self, patched_send):
