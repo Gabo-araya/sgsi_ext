@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from api_client.enums import ClientCodes
 from api_client.models import ClientLog
 from api_client.models import DisabledClient
 
@@ -10,6 +11,13 @@ from api_client.models import DisabledClient
 class DisabledClientAdmin(admin.ModelAdmin):
     list_display = ["client_code", "disabled_at"]
     search_fields = ["client_code"]
+
+    def has_add_permission(self, request):
+        disabled_count = self.model.objects.count()
+        if disabled_count == len(ClientCodes.choices):
+            return False
+
+        return super().has_add_permission(request)
 
 
 @admin.register(ClientLog)
