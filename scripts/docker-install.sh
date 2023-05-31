@@ -76,7 +76,7 @@ have_compose() {
 
 compose_is_last_version() {
   # docker-compose v1 is final. Eventually we will have to upgrade to v2.
-  [[ $(docker-compose --version) == "docker-compose version 1.29.2, build 5becea4c" ]]
+  [[ $(docker-compose --version | grep -Eo '[0-9]+\.[0-9]+') == "1.29" ]]
 }
 
 if have_compose && compose_is_last_version; then
