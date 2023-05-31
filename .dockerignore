@@ -95,4 +95,13 @@
 **/tmp/
 **/.coverage
 
+# caches
 .stylelintcache
+.husky/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# development scripts
+reset.sh
+quickstart.sh
