@@ -37,6 +37,21 @@ ENV RUNNING_IN_CONTAINER=x
 ARG NPM_CACHE_DIR=/tmp/npm-cache
 ARG PIP_NO_CACHE_DIR=off
 
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+
+# Dev tools
+RUN \
+  apt-get update && apt-get install -y \
+    # for Django translations:
+    gettext \
+    # commit inside container:
+    git \
+    # parse ansible outputs:
+    jq \
+  && rm -rf /var/lib/apt/lists/*
+
 # Node
 RUN \
   curl -fsSL https://deb.nodesource.com/setup_16.x \
@@ -58,58 +73,14 @@ RUN \
   && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
   && pip install "poetry==1.4.2"
 
-
-FROM dev-base as development
-
-ARG WHO=magnet
-ARG HOST_UID=2640
-ARG HOST_GID=2640
-
-# Dev utilities
-RUN \
-  apt-get update && apt-get install -y \
-    # for Django translations:
-    gettext \
-    # to wait for DB:
-    wait-for-it \
-    # better shell:
-    zsh \
-    # sudo
-    sudo \
-    # commit inside container:
-    git \
-    # see container processes:
-    htop \
-    # parse ansible outputs:
-    jq \
-    # editors:
-    vim nano \
-    # to grep for TODOs:
-    ripgrep \
-    # prevents "spawn ps ENOENT" error in lint-staged:
-    procps \
-  && rm -rf /var/lib/apt/lists/* \
-\
-  # Create unprivileged user
-  && groupadd --gid $HOST_GID $WHO \
-  && useradd --uid $HOST_UID --gid $HOST_GID --create-home --shell /bin/zsh $WHO
-
 RUN mkdir /usr/src/app && chown -R $HOST_UID:$HOST_GID /usr/src/app
 
 WORKDIR /usr/src/app
-COPY docker/zsh_shared docker/zsh_shared/
-COPY docker/zsh_dev docker/zsh_dev/
 
+# Create unprivileged user
 RUN \
-  # Configure oh my zsh
-  sudo -u $WHO docker/zsh_dev/setup_dev.sh \
-\
-  # add user to sudo group
-  && usermod -aG sudo --password '' $WHO \
-  # Disable initial sudo lecture
-  && (umask 337; echo "Defaults lecture=never" > /etc/sudoers.d/no_lecture) \
-  # "install editable" ansible-ssh:
-  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/
+  groupadd --gid $HOST_GID $WHO \
+  && useradd --uid $HOST_UID --gid $HOST_GID --create-home $WHO
 
 # Switch to unprivileged user
 USER $WHO
@@ -118,11 +89,58 @@ COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
 COPY --chown=$HOST_UID:$HOST_GID scripts/ ./scripts/
 RUN npm ci --no-audit
 
-# Install Poetry dev-dependencies, then ansible + collections and link `dj`.
-COPY --chown=$HOST_UID:$HOST_GID pyproject.toml poetry.lock requirements.yml ./
+# Install Poetry dev-dependencies
+COPY --chown=$HOST_UID:$HOST_GID pyproject.toml poetry.lock ./
+RUN poetry install --with dev -E "ansible"
+
+
+FROM dev-base as development
+
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+
+USER root
+
+# Dev utilities
 RUN \
-  poetry install -E "ansible" \
-  && poetry run ansible-galaxy collection install -r requirements.yml \
+  apt-get update && apt-get install -y \
+    # to wait for DB:
+    wait-for-it \
+    # better shell:
+    zsh \
+    # sudo
+    sudo \
+    # see container processes:
+    htop \
+    # editors:
+    vim nano \
+    # to grep for TODOs:
+    ripgrep \
+    # prevents "spawn ps ENOENT" error in lint-staged:
+    procps \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY docker/zsh_shared docker/zsh_shared/
+COPY docker/zsh_dev docker/zsh_dev/
+
+RUN \
+  # Configure oh my zsh
+  sudo -u $WHO docker/zsh_dev/setup_dev.sh \
+  # "install editable" ansible-ssh:
+  && ln -s /usr/src/app/ansible/ansible-ssh /usr/local/bin/ \
+  # add user to sudo group, set zsh as default shell
+  && usermod -aG sudo --password '' -s /bin/zsh $WHO \
+  # Disable initial sudo lecture
+  && (umask 337; echo "Defaults lecture=never" > /etc/sudoers.d/no_lecture)
+
+# Switch back to unprivileged user
+USER $WHO
+
+# Install ansible + collections and link `dj`.
+COPY --chown=$HOST_UID:$HOST_GID requirements.yml ./
+RUN \
+  poetry run ansible-galaxy collection install -r requirements.yml \
   # "dj" alias available from anywhere.
   # No aliases for production, as there may not be consensus for them.
   && ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
@@ -153,7 +171,7 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 
 
-FROM development as prod-js-builder
+FROM dev-base as prod-js-builder
 
 ARG WHO=magnet
 ARG HOST_UID=2640
@@ -166,7 +184,7 @@ COPY webpack.* tsconfig.json .eslint* .stylelint* ./
 RUN npm run build
 
 
-FROM development as test
+FROM dev-base as test
 
 COPY . ./
 COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
