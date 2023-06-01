@@ -1,5 +1,11 @@
 .git
 
+# Dockerfiles
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+docker/docker-compose.*.yml
+
 # Other gitignored files and folders
 **/__pycache__
 **/*.py[cod]
