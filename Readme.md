@@ -328,7 +328,7 @@ To disable `Do you really want to exit ([y]/n)?` prompt of IPython, run in conta
 
 ```sh
 ipython profile create
-sed -i 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
+perl -pi -e 's/# c.TerminalInteractiveShell.confirm_exit = True/c.TerminalInteractiveShell.confirm_exit = False/' ~/.ipython/profile_default/ipython_config.py
 ```
 
 #### Changing project name after starting development
