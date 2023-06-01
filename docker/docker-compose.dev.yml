@@ -23,8 +23,7 @@ x-django-app: &base-django-app
 
 services:
   django:
-    <<: *base-dev-app
-    <<: *base-django-app
+    <<: [*base-django-app, *base-dev-app]
     # Note that the path of the Dockerfile and context is relative to the *primary*
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array).
@@ -57,8 +56,7 @@ services:
   #     - ./docker/volumes/redis-data/:/data/
 
   # celery:
-  #   <<: *base-dev-app
-  #   <<: *base-django-app
+  #   <<: [*base-django-app, *base-dev-app]
   #   depends_on:
   #     - redis
   #   command:
