@@ -166,6 +166,13 @@ COPY webpack.* tsconfig.json .eslint* .stylelint* ./
 RUN npm run build
 
 
+FROM development as test
+
+COPY . ./
+COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
+COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
+
+
 FROM python:3.10-slim-bullseye AS production
 
 ENV VIRTUAL_ENV_DISABLE_PROMPT=x
@@ -204,6 +211,7 @@ WORKDIR /app
 COPY --from=prod-py-builder /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
 COPY --from=prod-py-builder /usr/local/bin/ /usr/local/bin/
 COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
+COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 
 COPY --chown=$HOST_UID:$HOST_GID . ./
 
