@@ -91,7 +91,7 @@ RUN npm ci --no-audit
 
 # Install Poetry dev-dependencies
 COPY --chown=$HOST_UID:$HOST_GID pyproject.toml poetry.lock ./
-RUN poetry install --with dev -E "ansible"
+RUN poetry install --with dev
 
 
 FROM dev-base as development
@@ -140,6 +140,7 @@ USER $WHO
 # Install ansible + collections and link `dj`.
 COPY --chown=$HOST_UID:$HOST_GID requirements.yml ./
 RUN \
+  poetry install --with ansible \
   poetry run ansible-galaxy collection install -r requirements.yml \
   # "dj" alias available from anywhere.
   # No aliases for production, as there may not be consensus for them.
