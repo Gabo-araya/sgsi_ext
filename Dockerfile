@@ -214,8 +214,11 @@ COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
 COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 
 COPY --chown=$HOST_UID:$HOST_GID . ./
+COPY --chown=$HOST_UID:$HOST_GID ./docker/django/prod_cmd.sh ./
+
+RUN ln -s /app/manage.py /usr/local/bin/dj
 
 RUN django-admin compilemessages
 
 USER $WHO
-CMD ["/usr/local/bin/prod_cmd.sh"]
+CMD ["/app/prod_cmd.sh"]
