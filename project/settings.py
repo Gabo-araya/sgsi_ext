@@ -577,3 +577,16 @@ MESSAGE_TAGS = {
     messages.DEBUG: "dark",
     messages.ERROR: "danger",
 }
+
+
+# Client settings
+DEFAULT_TIMEOUT = get_env_value(
+    "DEFAULT_TIMEOUT",
+    60,
+    default_if_blank=True,
+)
+CLIENT_LOG_AGE_IN_DAYS_FOR_DELETION = get_env_value(
+    "CLIENT_LOG_AGE_IN_DAYS_FOR_DELETION",
+    365,
+    default_if_blank=True,
+)
