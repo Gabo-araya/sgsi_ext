@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http.request import HttpRequest
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
@@ -18,6 +19,9 @@ class DisabledClientAdmin(admin.ModelAdmin):
             return False
 
         return super().has_add_permission(request)
+
+    def has_change_permission(self, request: HttpRequest, obj=None):
+        return False
 
 
 @admin.register(ClientLog)
