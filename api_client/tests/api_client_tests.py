@@ -8,7 +8,6 @@ from requests.utils import get_encoding_from_headers
 
 from base.tests import BaseTestCase
 
-from ..models import DisabledClient
 from ..services.client import ApiClient
 from ..services.client import ApiClientConfiguration
 from ..services.client.errors import DisabledClientError
@@ -135,7 +134,7 @@ class DisabledApiClientTests(BaseTestCase):
 
     def test_making_request_to_disabled_client_should_raise(self):
         """Make a request with a disabled client should raise an exception."""
-        DisabledClient.objects.create(client_code="test")
+        self.mockup.create_client_config(client_code="test", enabled=False)
 
         with patch("requests.Session.send") as mock_send:
             self._setup_mock_response(mock_send, 200, "application/json", b"""OK""")

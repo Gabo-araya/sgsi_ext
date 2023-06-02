@@ -1,4 +1,4 @@
+from .client_config import ClientConfig
 from .client_log import ClientLog
-from .disabled_client import DisabledClient
 
-__all__ = ["ClientLog", "DisabledClient"]
+__all__ = ["ClientLog", "ClientConfig"]

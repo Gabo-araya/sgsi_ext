@@ -7,7 +7,7 @@ from urllib.parse import quote_plus
 
 import requests
 
-from api_client.models import DisabledClient
+from api_client.models import ClientConfig
 
 from ....models import ClientLog
 from ..errors import DisabledClientError
@@ -120,7 +120,7 @@ class BlockingApiClient(BaseApiClient):
         path_params: dict[str, str | int] | None = None,
         **kwargs,
     ) -> tuple[requests.Response, requests.RequestException | None]:
-        if DisabledClient.objects.is_disabled(self.configuration.code):
+        if ClientConfig.objects.is_disabled(self.configuration.code):
             return (
                 self.empty_response,
                 DisabledClientError("Client is disabled and cannot make requests."),

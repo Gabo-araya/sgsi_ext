@@ -17,8 +17,8 @@ from faker import Faker
 from inflection import underscore
 
 from api_client.enums import ClientCodes
+from api_client.models import ClientConfig
 from api_client.models import ClientLog
-from api_client.models import DisabledClient
 from base.utils import random_string
 from parameters.models import Parameter
 from regions.models import Commune
@@ -35,9 +35,9 @@ class Mockup:
     def create_client_log(self, **kwargs):
         return ClientLog.objects.create(**kwargs)
 
-    def create_disabled_client(self, **kwargs):
+    def create_client_config(self, **kwargs):
         self.set_required_choice(kwargs, "client_code", ClientCodes.choices)
-        return DisabledClient.objects.create()
+        return ClientConfig.objects.create(**kwargs)
 
     def create_commune(self, **kwargs):
         self.set_required_string(kwargs, "name")

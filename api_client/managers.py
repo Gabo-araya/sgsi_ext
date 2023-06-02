@@ -12,6 +12,7 @@ class ClientLogQueryset(models.QuerySet):
         return self.filter(created_at__lt=deletion_time)
 
 
-class DisabledClientQueryset(models.QuerySet):
+class ClientConfigQueryset(models.QuerySet):
     def is_disabled(self, client_code: ClientCodes):
-        return self.filter(client_code=client_code).exists()
+        client_config, _ = self.get_or_create(client_code=client_code)
+        return not client_config.enabled
