@@ -27,8 +27,10 @@ class ClientConfig(BaseModel):
     objects = ClientConfigQueryset.as_manager()
 
     class Meta:
-        verbose_name = _("disabled client")
-        verbose_name_plural = _("disabled clients")
+        verbose_name = _("client configuration")
+        verbose_name_plural = _("clients configurations")
 
     def __str__(self) -> str:
-        return f"{self.disabled_at} - {self.client_code}"
+        return (
+            f"{self.client_code} - (enabled: {self.enabled}, retries: {self.retries})"
+        )

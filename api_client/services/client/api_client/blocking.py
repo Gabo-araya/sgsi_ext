@@ -159,7 +159,7 @@ class BlockingApiClient(BaseApiClient):
             return session
         retries = Retry(total=total_retries)
         session.mount("http://", HTTPAdapter(max_retries=retries))
-        session.mount("http://", HTTPAdapter(max_retries=retries))
+        session.mount("https://", HTTPAdapter(max_retries=retries))
         return session
 
     def perform_request(  # noqa: PLR0913
