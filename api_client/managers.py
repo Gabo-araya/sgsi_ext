@@ -7,7 +7,7 @@ from api_client.enums import ClientCodes
 
 class ClientLogQueryset(models.QuerySet):
     def old(self):
-        days = settings.CLIENT_LOG_AGE_IN_DAYS_FOR_DELETION
+        days = settings.API_CLIENT_LOG_MAX_AGE_DAYS
         deletion_time = timezone.now() - timezone.timedelta(days=days)
         return self.filter(created_at__lt=deletion_time)
 

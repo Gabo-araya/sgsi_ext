@@ -23,9 +23,9 @@ class BaseApiClient:
             raise ClientConfigurationError(msg) from e
 
     def validate_timeout(self) -> None:
-        if self.configuration.timeout > settings.DEFAULT_TIMEOUT:
+        if self.configuration.timeout > settings.API_CLIENT_MAX_TIMEOUT:
             msg = (
                 f"Can't set timeout at {self.configuration.timeout}s, the max is "
-                f"{settings.DEFAULT_TIMEOUT}s"
+                f"{settings.API_CLIENT_MAX_TIMEOUT}s"
             )
             raise ClientConfigurationError(msg)

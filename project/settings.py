@@ -580,13 +580,17 @@ MESSAGE_TAGS = {
 
 
 # Client settings
-DEFAULT_TIMEOUT = get_env_value(
-    "DEFAULT_TIMEOUT",
-    60,
-    default_if_blank=True,
+API_CLIENT_MAX_TIMEOUT = int(
+    get_env_value(
+        "API_CLIENT_MAX_TIMEOUT",
+        60,
+        default_if_blank=True,
+    )
 )
-CLIENT_LOG_AGE_IN_DAYS_FOR_DELETION = get_env_value(
-    "CLIENT_LOG_AGE_IN_DAYS_FOR_DELETION",
-    365,
-    default_if_blank=True,
+API_CLIENT_LOG_MAX_AGE_DAYS = int(
+    get_env_value(
+        "API_CLIENT_LOG_MAX_AGE_DAYS",
+        365,
+        default_if_blank=True,
+    )
 )
