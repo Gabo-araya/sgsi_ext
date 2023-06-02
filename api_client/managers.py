@@ -16,3 +16,7 @@ class ClientConfigQueryset(models.QuerySet):
     def is_disabled(self, client_code: ClientCodes):
         client_config, _ = self.get_or_create(client_code=client_code)
         return not client_config.enabled
+
+    def get_total_retries(self, client_code: ClientCodes):
+        client_config, _ = self.get_or_create(client_code=client_code)
+        return client_config.retries

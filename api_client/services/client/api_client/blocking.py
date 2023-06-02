@@ -7,6 +7,9 @@ from urllib.parse import quote_plus
 
 import requests
 
+from requests.adapters import HTTPAdapter
+from requests.adapters import Retry
+
 from api_client.models import ClientConfig
 
 from ....models import ClientLog
@@ -127,27 +130,56 @@ class BlockingApiClient(BaseApiClient):
             )
 
         log: ClientLog = ClientLog.objects.create()
-        session = requests.Session()
+        session = self.get_session()
         try:
-            request = self.get_request(method, endpoint, path_params, **kwargs)
-            prepared_request = request.prepare()
-            log.update_from_request(
-                request=prepared_request, client_code=self.configuration.code
+            parsed_response = self.perform_request(
+                method,
+                endpoint,
+                path_params,
+                session,
+                log,
+                **kwargs,
             )
-            response = session.send(
-                prepared_request, timeout=self.configuration.timeout
-            )
-            parsed_response = self.parse_response(response)
-            log.update_from_response(response=response)
         except requests.RequestException as error:
             self.log_exception(log)
-            log.error = traceback.format_exc()
-            log.save()
             return self.empty_response, error
         else:
             return parsed_response, None
         finally:
             session.close()
+
+    def get_session(self) -> requests.Session:
+        session = requests.Session()
+        session = self.set_session_retries(session)
+        return session
+
+    def set_session_retries(self, session: requests.Session) -> requests.Session:
+        total_retries = self.get_total_retries()
+        if not total_retries:
+            return session
+        retries = Retry(total=total_retries)
+        session.mount("http://", HTTPAdapter(max_retries=retries))
+        session.mount("http://", HTTPAdapter(max_retries=retries))
+        return session
+
+    def perform_request(  # noqa: PLR0913
+        self,
+        method: Method,
+        endpoint: str,
+        path_params: dict[str, str | int] | None,
+        session: requests.Session,
+        log: ClientLog,
+        **kwargs,
+    ):
+        request = self.get_request(method, endpoint, path_params, **kwargs)
+        prepared_request = request.prepare()
+        log.update_from_request(
+            request=prepared_request, client_code=self.configuration.code
+        )
+        response = session.send(prepared_request, timeout=self.configuration.timeout)
+        parsed_response = self.parse_response(response)
+        log.update_from_response(response=response)
+        return parsed_response
 
     def get_request(
         self,
@@ -187,6 +219,8 @@ class BlockingApiClient(BaseApiClient):
                 "timeout": self.configuration.timeout,
             },
         )
+        log.error = traceback.format_exc()
+        log.save()
 
     def parse_response(self, response: requests.Response):
         """
@@ -206,6 +240,9 @@ class BlockingApiClient(BaseApiClient):
             for key, value in path_params.items()
             if value is not None
         }
+
+    def get_total_retries(self) -> int:
+        return ClientConfig.objects.get_total_retries(self.configuration.code)
 
     @property
     def base_url(self) -> str:
