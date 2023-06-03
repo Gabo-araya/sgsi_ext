@@ -1,6 +1,5 @@
 {
   "name": "project-name-placeholder",
-  "version": "0.3.2",
   "description": "A base for a django project",
   "main": "index.js",
   "scripts": {
