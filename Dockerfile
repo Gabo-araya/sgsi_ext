@@ -51,7 +51,7 @@ RUN \
   && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 \
   && title_print "Set up Node.js repository" \
-  && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+  && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 \
   && title_print "Install Postgres and Node.js" \
   && apt-get install -y nodejs libpq-dev postgresql-client-15 \
