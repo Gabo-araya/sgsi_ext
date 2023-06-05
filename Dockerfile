@@ -143,7 +143,6 @@ RUN \
   poetry install --with ansible \
   poetry run ansible-galaxy collection install -r requirements.yml \
   # "dj" alias available from anywhere.
-  # No aliases for production, as there may not be consensus for them.
   && ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
 
 # Prevent development container shutdown:
