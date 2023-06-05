@@ -9,7 +9,7 @@ if [[ $DEBUG != "True" ]]; then
   exit 1
 fi
 
-psql \
+psql -e \
   -c 'drop database if exists "'"$PGDATABASE"'";' \
   -c 'drop database if exists "'"$PGDATABASE"'-logs";' \
   -c 'create database "'"$PGDATABASE"'";' \
