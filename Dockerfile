@@ -54,7 +54,7 @@ RUN \
 
 # Node
 RUN \
-  curl -fsSL https://deb.nodesource.com/setup_16.x \
+  curl -fsSL https://deb.nodesource.com/setup_18.x \
     # Skip ridiculous delay
     | sed '/sleep 20/d' \
     | bash - \
