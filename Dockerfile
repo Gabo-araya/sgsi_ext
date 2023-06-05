@@ -166,8 +166,6 @@ FROM dev-base-pg15 AS prod-py-builder
 WORKDIR /app
 
 COPY --from=prod-py-dependency-export /usr/src/app/requirements.txt /app/
-WORKDIR /app
-
 RUN pip install -r requirements.txt
 
 
