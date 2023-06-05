@@ -165,6 +165,7 @@ FROM dev-base-pg15 AS prod-py-builder
 
 WORKDIR /app
 
+ARG PIP_NO_CACHE_DIR=off
 COPY --from=prod-py-dependency-export /usr/src/app/requirements.txt /app/
 RUN pip install -r requirements.txt
 
