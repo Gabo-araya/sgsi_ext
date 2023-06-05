@@ -61,6 +61,9 @@ scripts/set-vscode-settings.sh
 # Finally create and start the containers:
 echo "docker compose up --detach" | newgrp docker
 
+# Initialize logs database
+echo "docker-compose exec -T postgres initlogdb" | newgrp docker
+
 prompt "\n\nWould you like to run migrations? [Y/n]" "Y"
 input_lower=${input,,}
 if [[ $input_lower == y ]]; then
