@@ -85,9 +85,7 @@ RUN \
 # Switch to unprivileged user
 USER $WHO
 
-COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
 COPY --chown=$HOST_UID:$HOST_GID scripts/ ./scripts/
-RUN npm ci --no-audit
 
 # Install Poetry dev-dependencies
 COPY --chown=$HOST_UID:$HOST_GID pyproject.toml poetry.lock ./
@@ -177,6 +175,11 @@ ARG HOST_UID=2640
 ARG HOST_GID=2640
 
 ENV NODE_ENV=production
+
+COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
+# Empty "--omit" because devDependencies are currently required to build:
+RUN npm ci --omit="" --no-audit \
+  && rm -rf "$NPM_CACHE_DIR"/*
 
 COPY --chown=$HOST_UID:$HOST_GID assets ./assets/
 COPY webpack.* tsconfig.json .eslint* .stylelint* ./
