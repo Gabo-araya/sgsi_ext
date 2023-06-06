@@ -160,10 +160,10 @@ RUN poetry export --without-hashes -o requirements.txt
 
 FROM dev-base-pg15 AS prod-py-builder
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 ARG PIP_NO_CACHE_DIR=off
-COPY --from=prod-py-dependency-export /usr/src/app/requirements.txt /app/
+COPY --from=prod-py-dependency-export /usr/src/app/requirements.txt /usr/src/app/
 RUN pip install -r requirements.txt
 
 
@@ -194,8 +194,6 @@ COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 
 FROM python:3.10-slim-bullseye AS production
 
-ENV VIRTUAL_ENV_DISABLE_PROMPT=x
-
 ARG WHO=magnet
 ARG HOST_UID=2640
 ARG HOST_GID=2640
@@ -223,9 +221,9 @@ RUN \
   && apt-get remove -y curl gpg \
   && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /app/media /app/static && chown -R $HOST_UID:$HOST_GID /app/
+RUN mkdir -p /usr/src/app/media /usr/src/app/static && chown -R $HOST_UID:$HOST_GID /usr/src/app/
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 COPY --from=prod-py-builder /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
 COPY --from=prod-py-builder /usr/local/bin/ /usr/local/bin/
@@ -235,9 +233,9 @@ COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 COPY --chown=$HOST_UID:$HOST_GID . ./
 COPY --chown=$HOST_UID:$HOST_GID ./docker/django/prod_cmd.sh ./
 
-RUN ln -s /app/manage.py /usr/local/bin/dj
+RUN ln -s /usr/src/app/manage.py /usr/local/bin/dj
 
 RUN django-admin compilemessages
 
 USER $WHO
-CMD ["/app/prod_cmd.sh"]
+CMD ["/usr/src/app/prod_cmd.sh"]
