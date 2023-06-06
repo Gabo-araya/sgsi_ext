@@ -16,9 +16,9 @@ from ..services.client import JsonApiClient
 class JsonApiClientTests(BaseTestCase):
     databases = ["default", "logs"]
 
-    def _setup_mock_404(self, mock_obj, content_type=None, body=None):
+    def _setup_mock_response(self, mock_obj, status_code, content_type=None, body=None):
         mock_response = requests.Response()
-        mock_response.status_code = 404
+        mock_response.status_code = status_code
         mock_response.headers = CaseInsensitiveDict({"Content-Type": content_type})
         mock_response.encoding = get_encoding_from_headers(mock_response.headers)
         mock_response.raw = BytesIO(body)
@@ -46,8 +46,9 @@ class JsonApiClientTests(BaseTestCase):
     @patch("requests.Session.send")
     def test_request_returning_404_with_json_body_returns_content(self, patched_send):
         """Request with a 404 response with body should return content"""
-        self._setup_mock_404(
+        self._setup_mock_response(
             patched_send,
+            404,
             "application/json",
             b"""{"message": "Not found"}""",
         )
@@ -61,8 +62,9 @@ class JsonApiClientTests(BaseTestCase):
         self, patched_send
     ):
         """Request with 404 response with body with content-type should return error"""
-        self._setup_mock_404(
+        self._setup_mock_response(
             patched_send,
+            404,
             "text/html",
             b"""<html><body><p>Not found</p></body></html>""",
         )
@@ -77,8 +79,9 @@ class JsonApiClientTests(BaseTestCase):
         self, patched_send
     ):
         """Request with 404 response with body w/o content-type should return error"""
-        self._setup_mock_404(
+        self._setup_mock_response(
             patched_send,
+            404,
             None,
             b"""<html><body><p>Not found</p></body></html>""",
         )
@@ -91,8 +94,23 @@ class JsonApiClientTests(BaseTestCase):
     @patch("requests.Session.send")
     def test_request_returning_404_without_body_returns_none(self, patched_send):
         """Request with a 404 response with body should return None"""
-        self._setup_mock_404(patched_send, "application/json")
+        self._setup_mock_response(patched_send, 404, "application/json")
 
         (response, code), error = self.api_client.get_blocking("/test/")
         self.assertEqual(None, response)
         self.assertEqual(404, code)
+
+    @patch("requests.Session.send")
+    def test_request_returning_malformed_json_body_returns_error(self, patched_send):
+        """Request with malformed JSON response should return error"""
+        self._setup_mock_response(
+            patched_send,
+            200,
+            "application/json",
+            b"""{malformed: "body"}""",
+        )
+
+        (response, code), error = self.api_client.get_blocking("/test/")
+        self.assertIs(type(error), requests.JSONDecodeError)
+        self.assertIsNone(code)
+        self.assertTrue(ClientLog.objects.exists())
