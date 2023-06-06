@@ -10,6 +10,13 @@ from .types import UploadFiles
 
 
 class JsonApiClient(ApiClient):
+    """
+    Variant of ApiClient that operates with JSON endpoints.
+
+    It expects JSON from the server and returns parsed responses from it, avoiding the
+    need to parse them manually.
+    """
+
     empty_response = None, None
 
     def get_blocking(
