@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-psql <<EOSQL
-SELECT 'CREATE DATABASE "$PGDATABASE-logs"' WHERE NOT EXISTS
-  (SELECT FROM pg_database WHERE datname = '$PGDATABASE-logs')\gexec
-EOSQL
-
