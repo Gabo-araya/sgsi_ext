@@ -23,8 +23,6 @@ logger = logging.getLogger("api_clients")
 
 
 class BlockingApiClient(BaseApiClient):
-    empty_response = requests.Response()
-
     def get_blocking(
         self,
         endpoint: str,

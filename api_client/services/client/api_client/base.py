@@ -1,5 +1,7 @@
 from django.conf import settings
 
+import requests
+
 from api_client.enums import ClientCodes
 
 from ..config import ApiClientConfiguration
@@ -7,6 +9,8 @@ from ..errors import ClientConfigurationError
 
 
 class BaseApiClient:
+    empty_response = requests.Response()
+
     def __init__(self, configuration: ApiClientConfiguration) -> None:
         self.configuration = configuration
         self.validate_configuration()
