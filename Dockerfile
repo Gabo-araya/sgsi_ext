@@ -201,6 +201,11 @@ ARG HOST_GID=2640
 RUN groupadd --gid $HOST_GID $WHO \
   && useradd --uid $HOST_UID --gid $HOST_GID --create-home --shell /bin/zsh $WHO
 
+WORKDIR /usr/src/app
+
+COPY docker/zsh_shared docker/zsh_shared/
+COPY docker/zsh_prod docker/zsh_prod/
+
 # System dependencies
 RUN \
   apt-get update && apt-get install -y --no-install-recommends \
@@ -217,13 +222,13 @@ RUN \
   && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor > /usr/share/keyrings/postgresql.gpg \
   && echo "deb [signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
   && apt-get update && apt-get install -y libpq5 postgresql-client-15 \
+  # oh-my-zsh: (requires curl. "su" instead of multiple layers with RUN-USER-RUN-USER-RUN)
+  && su $WHO docker/zsh_prod/setup_prod.sh \
   # Reduce image size and prevent use of potentially obsolete lists:
   && apt-get remove -y curl gpg \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/app/media /usr/src/app/static && chown -R $HOST_UID:$HOST_GID /usr/src/app/
-
-WORKDIR /usr/src/app
 
 COPY --from=prod-py-builder /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
 COPY --from=prod-py-builder /usr/local/bin/ /usr/local/bin/
