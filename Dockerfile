@@ -240,7 +240,7 @@ COPY --chown=$HOST_UID:$HOST_GID ./docker/django/prod_cmd.sh ./
 
 RUN ln -s /usr/src/app/manage.py /usr/local/bin/dj
 
+USER $WHO
 RUN django-admin compilemessages
 
-USER $WHO
 CMD ["/usr/src/app/prod_cmd.sh"]
