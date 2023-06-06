@@ -11,6 +11,8 @@ from .base import BaseApiClient
 
 
 class NonBlockingApiClient(BaseApiClient):
+    """Implementation of non-blocking methods for the API client."""
+
     def get(
         self,
         endpoint: str,

@@ -9,6 +9,13 @@ from ..errors import ClientConfigurationError
 
 
 class BaseApiClient:
+    """
+    General methods for API clients.
+
+    You should not use this class directly. Use BlockingApiClient, NonBlockingApiClient
+    or ApiClient instead.
+    """
+
     empty_response = requests.Response()
 
     def __init__(self, configuration: ApiClientConfiguration) -> None:

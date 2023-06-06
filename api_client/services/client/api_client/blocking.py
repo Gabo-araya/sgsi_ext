@@ -23,6 +23,8 @@ logger = logging.getLogger("api_clients")
 
 
 class BlockingApiClient(BaseApiClient):
+    """Implementation of blocking methods for the API client."""
+
     def get_blocking(
         self,
         endpoint: str,
