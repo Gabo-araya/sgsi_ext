@@ -59,31 +59,30 @@ RUN \
     | sed '/sleep 20/d' \
     | bash - \
   && apt-get install -y nodejs \
-  # Reduce image size and prevent use of potentially obsolete lists:
-  && rm -rf /var/lib/apt/lists/*
-
-# npm and poetry
-RUN \
   # Update npm:
-  mkdir "$NPM_CACHE_DIR" \
+  && mkdir "$NPM_CACHE_DIR" \
   && npm install --global --cache "$NPM_CACHE_DIR" npm \
   # Delete but keeping the directory:
   && rm -rf "$NPM_CACHE_DIR"/* \
   # Ensure npm cache can be written by unprivileged users later:
   && chown $HOST_UID:$HOST_GID "$NPM_CACHE_DIR" \
-  && pip install "poetry==1.4.2"
+  # Reduce image size and prevent use of potentially obsolete lists:
+  && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /usr/src/app && chown -R $HOST_UID:$HOST_GID /usr/src/app
-
-WORKDIR /usr/src/app
+# Poetry
+RUN pip install "poetry==1.4.2"
 
 # Create unprivileged user
 RUN \
   groupadd --gid $HOST_GID $WHO \
   && useradd --uid $HOST_UID --gid $HOST_GID --create-home $WHO
 
+RUN mkdir /usr/src/app && chown -R $HOST_UID:$HOST_GID /usr/src/app
+
 # Switch to unprivileged user
 USER $WHO
+
+WORKDIR /usr/src/app
 
 COPY --chown=$HOST_UID:$HOST_GID scripts/ ./scripts/
 
