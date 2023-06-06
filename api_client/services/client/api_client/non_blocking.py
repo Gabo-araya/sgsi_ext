@@ -21,6 +21,25 @@ class NonBlockingApiClient(BaseApiClient):
         on_success: Callback = default_success_handler,
         on_error: Callback,
     ):
+        """
+        Makes a GET request to the specified endpoint. This method and its response will
+        be handled on a separate worker.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            on_success: Fully qualified name of the success handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+            on_error: Fully qualified name of the error handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+        """
         self.request(
             "get",
             endpoint,
@@ -43,6 +62,28 @@ class NonBlockingApiClient(BaseApiClient):
         on_success: Callback = default_success_handler,
         on_error: Callback,
     ):
+        """
+        Makes a POST request to the specified endpoint. This method and its response
+        will be handled on a separate worker.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+            on_success: Fully qualified name of the success handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+            on_error: Fully qualified name of the error handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+        """
         self.request(
             "post",
             endpoint,
@@ -67,6 +108,28 @@ class NonBlockingApiClient(BaseApiClient):
         on_success: Callback,
         on_error: Callback,
     ):
+        """
+        Makes a PATCH request to the specified endpoint. This method and its response
+        will be handled on a separate worker.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+            on_success: Fully qualified name of the success handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+            on_error: Fully qualified name of the error handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+        """
         self.request(
             "patch",
             endpoint,
@@ -91,6 +154,28 @@ class NonBlockingApiClient(BaseApiClient):
         on_success: Callback = default_success_handler,
         on_error: Callback,
     ):
+        """
+        Makes a PUT request to the specified endpoint. This method and its response
+        will be handled on a separate worker.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+            on_success: Fully qualified name of the success handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+            on_error: Fully qualified name of the error handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+        """
         self.request(
             "put",
             endpoint,
@@ -112,6 +197,23 @@ class NonBlockingApiClient(BaseApiClient):
         on_success: Callback = default_success_handler,
         on_error: Callback,
     ):
+        """
+        Makes a DELETE request to the specified endpoint. This method and its response
+        will be handled on a separate worker.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            headers: A key-value mapping of request headers.
+            on_success: Fully qualified name of the success handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+            on_error: Fully qualified name of the error handler. It must be the name
+                        of a function receiving a 2-tuple of response and error.
+        """
         self.request(
             "delete",
             endpoint,
@@ -131,6 +233,30 @@ class NonBlockingApiClient(BaseApiClient):
         on_error: Callback,
         **kwargs,
     ):
+        """
+        Makes a request to the specified endpoint. You should normally not use this
+        method.
+
+        This method accepts many of the parameters accepted by requests.Request.
+
+        This method will not block the thread and responses are handled in a separate
+        worker.
+
+        Args:
+            method: Request method.
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+        """
         validate_nonblocking_callbacks(on_success, on_error)
 
         # Generate fully qualified names for handlers and class

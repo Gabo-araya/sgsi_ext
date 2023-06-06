@@ -7,6 +7,8 @@ from base.models import BaseModel
 
 
 class ClientConfig(BaseModel):
+    """Represents an API client configuration."""
+
     client_code = models.CharField(
         verbose_name=_("client code"),
         max_length=255,

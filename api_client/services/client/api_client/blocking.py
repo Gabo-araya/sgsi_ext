@@ -32,6 +32,21 @@ class BlockingApiClient(BaseApiClient):
         query_params: dict[str, str | int] | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
+        """
+        Makes a GET request to the specified endpoint. This method blocks the thread
+        until a response is received.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+        """
         return self.request_blocking(
             "get",
             endpoint=endpoint,
@@ -50,6 +65,26 @@ class BlockingApiClient(BaseApiClient):
         files: UploadFiles | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
+        """
+        Makes a POST request to the specified endpoint. This method blocks the thread
+        until a response is received.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+            files: A key-value mapping of filenames and files. It cannot be used along
+                   with JSON payloads.
+        """
         return self.request_blocking(
             "post",
             endpoint=endpoint,
@@ -71,6 +106,26 @@ class BlockingApiClient(BaseApiClient):
         files: UploadFiles | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
+        """
+        Makes a PATCH request to the specified endpoint. This method blocks the thread
+        until a response is received.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+            files: A key-value mapping of filenames and files. It cannot be used along
+                   with JSON payloads.
+        """
         return self.request_blocking(
             "patch",
             endpoint=endpoint,
@@ -92,6 +147,26 @@ class BlockingApiClient(BaseApiClient):
         files: UploadFiles | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
+        """
+        Makes a PUT request to the specified endpoint. This method blocks the thread
+        until a response is received.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+            files: A key-value mapping of filenames and files. It cannot be used along
+                   with JSON payloads.
+        """
         return self.request_blocking(
             "put",
             endpoint=endpoint,
@@ -109,6 +184,19 @@ class BlockingApiClient(BaseApiClient):
         path_params: dict[str, str | int] | None = None,
         headers: dict[str, Any] | None = None,
     ) -> tuple[requests.Response, requests.RequestException | None]:
+        """
+        Makes a DELETE request to the specified endpoint. This method blocks the thread
+        until a response is received.
+
+        Args:
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            headers: A key-value mapping of request headers.
+        """
         return self.request_blocking(
             "delete",
             endpoint=endpoint,
@@ -123,6 +211,31 @@ class BlockingApiClient(BaseApiClient):
         path_params: dict[str, str | int] | None = None,
         **kwargs,
     ) -> tuple[requests.Response, requests.RequestException | None]:
+        """
+        Makes a request to the specified endpoint. You should normally not use this
+        method.
+
+        This method accepts many of the parameters accepted by requests.Request.
+
+        This method blocks the thread until a response is received.
+
+        Args:
+            method: Request method.
+            endpoint: Endpoint to request. This string can contain parameters enclosed
+                      by brackets. Those parameters will be substituted later.
+
+        Keyword Args:
+            path_params: A mapping of parameter names and values. Keys must match with
+                         parameters defined in the endpoint.
+            query_params: A key-value mapping that is appended to the URL as a query
+                          string.
+            headers: A key-value mapping of request headers.
+            data: A key-value mapping that is sent to the external service as
+                  urlencoded form-data parameters.
+            json: Data to be encoded as JSON and sent to the service.
+            files: A key-value mapping of filenames and files. It cannot be used along
+                   with JSON payloads.
+        """
         if ClientConfig.objects.is_disabled(self.configuration.code):
             return (
                 self.empty_response,

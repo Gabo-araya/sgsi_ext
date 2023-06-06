@@ -18,6 +18,12 @@ ClientLogManager = models.Manager.from_queryset(ClientLogQueryset)
 
 
 class ClientLog(models.Model):
+    """
+    This model represents a log entry for a request made by a given API client.
+
+    Both request and response are stored in the same tuple.
+    """
+
     class MethodOptions(models.TextChoices):
         GET = "GET", _("GET")
         POST = "POST", _("POST")

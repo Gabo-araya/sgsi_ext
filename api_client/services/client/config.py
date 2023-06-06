@@ -16,6 +16,18 @@ DEFAULT_SCHEME = "https"
 
 
 class SerializableAuthBase(AuthBase, metaclass=ABCMeta):
+    """
+    Variation of requests.auth.AuthBase that allows serialization of
+    initialization parameters.
+
+    Non-blocking requests are run outside the request-response cycle and may be run
+    on a different worker and therefore there exists a need to pass authentication data
+    to workers in order to make valid requests.
+
+    Implementations of this class must define `get_init_kwargs` in order to be usable
+    in both blocking and non-blocking requests.
+    """
+
     @abstractmethod
     def get_init_kwargs(self):
         """
@@ -43,6 +55,25 @@ class SerializableAuthBase(AuthBase, metaclass=ABCMeta):
 
 @dataclasses.dataclass
 class ApiClientConfiguration:
+    """
+    Represents an API client configuration.
+
+    As with SerializableAuthBase, this class needs to be serializable to allow workers
+    to initialize the client. Unlike the former, this class does not need overriding.
+
+    Attributes:
+        host: Specifies the hostname of the external service and optionally, its API
+              prefix.
+        code: The internal code of the client that allows for request identification
+              in logs. This must be a valid ClientCodes choice.
+        scheme: The request scheme to use. http and https are supported.
+        timeout: Maximum waiting time in seconds for requests.
+        auth: An initialized authentication class, used to authenticate the request.
+              It needs to be a serializable object according to the SerializableAuthBase
+              definition.
+
+    """
+
     host: str
     code: ClientCodes
     scheme: str = DEFAULT_SCHEME
