@@ -137,7 +137,7 @@ USER $WHO
 # Install ansible + collections and link `dj`.
 COPY --chown=$HOST_UID:$HOST_GID requirements.yml ./
 RUN \
-  poetry install --with ansible \
+  poetry install --extras=ansible \
   && poetry run ansible-galaxy collection install -r requirements.yml \
   # "dj" alias available from anywhere.
   && ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
