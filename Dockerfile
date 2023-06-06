@@ -49,9 +49,8 @@ RUN \
     # commit inside container:
       git \
       # actually non-slim version already includes git, but sadly not all it's recommended packages
-      # (specifically "less"), so ensure they all get installed too:
-      # https://askubuntu.com/questions/556753/how-to-install-suggests-on-an-already-installed-package/612741#612741
-      $(LANG=c apt-cache depends git | grep Recommends: | cut -d' ' -f4 | sed "s/<\(.*\)>/\1/g" | xargs) \
+      # (specifically "less"), so include them explicitly:
+      ca-certificates patch less ssh-client \
     # parse ansible outputs:
     jq \
   && rm -rf /var/lib/apt/lists/*
