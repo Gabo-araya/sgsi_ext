@@ -101,7 +101,7 @@ holds basic settings for each client:
 * `host`: hostname and API prefix of the service.
 * `scheme`: request scheme to use. It can be either `http` or `https`.
 * `timeout`: request timeout in seconds.
-* `auth`: authentication class instance. Takes a request and inserts the appropiate
+* `auth`: authentication class instance. Takes a request and inserts the appropriate
   authentication headers. This setting is optional.
 
 #### Authentication classes
