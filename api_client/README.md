@@ -1,4 +1,4 @@
-# DPT's  API Client
+# DPT's API Client
 
 DPT's APIClient aims to standardize the way projects connect with external webservices
 by providing a common interface to make requests.
@@ -11,14 +11,18 @@ by providing a common interface to make requests.
 - Enforce mandatory error handling.
 - Have a log of every request and response received as evidence in case of problems.
 
+The APIClient is built on top of the `requests` library due to its simplicity and
+flexibility.
+
 ## Classes
 
 ### APIClient
 
 This is the base class for the API client. It provides the basic HTTP methods in both
-blocking and non-blocking implementation.
+blocking and non-blocking implementation. This class requires to be initialized with
+an `APIClientConfiguration` object.
 
-#### Structure of a request
+#### Request arguments
 
 GET and DELETE requests consume the following arguments:
 
@@ -62,6 +66,15 @@ outside the Django's request-response lifecycle, using a Celery job. Typical use
 for non-blocking requests are sending SMS messages using third-party platforms, or
 notify external webservices of an event that happened in our app.
 
+What non-blocking calls basically do is:
+
+1. Check if callbacks are valid functions.
+2. Serialize client configuration into a _JSON-able_ object.
+3. Invoke a celery task with request parameters and client configuration.
+4. Inside the celery worker, reconstruct the client and send request **using the
+   blocking implementation.**
+5. After a response is received, invoke the defined callbacks.
+
 ##### Non-blocking request parameters
 
 In addition to the blocking parameters and just like JavaScript, you must also define
@@ -79,9 +92,42 @@ sent reliably over a message queue.
 Built on top of APIClient, this client allows to interact with webservices that output
 JSON, delivering parsed responses.
 
+### APIClientConfiguration
+
+All clients configuration is performed through this class. This is a dataclass that
+holds basic settings for each client:
+
+* `code`: a unique code that identifies each client.
+* `host`: hostname and API prefix of the service.
+* `scheme`: request scheme to use. It can be either `http` or `https`.
+* `timeout`: request timeout in seconds.
+* `auth`: authentication class instance. Takes a request and inserts the appropiate
+  authentication headers. This setting is optional.
+
+#### Authentication classes
+
+To ensure requests can be executed in non-blocking modes, outside the main worker,
+the API client configuration needs to only store JSON-serializable values.
+Although almost all settings are basic strings or integers or have a trivial string
+representation, the authentication class is typically not.
+To remedy this situation, authentication is not transmitted to the worker but
+reconstructed entirely when non-blocking calls are used. This was achieved by extending
+`requests.AuthBase` to allow the serialization of its initialization parameters and
+recreating the instance from serialized data.
+
+##### SerializableAuthBase
+
+This class provides the necessary serialization/deserialization routines to transport
+authentication data between nodes. Custom authentication classes must inherit from this
+base class and define the `get_init_kwargs()` method to return the required parameters
+to properly initialize the class on the non-blocking worker.
+
 ### Implementing a custom client
 
-TODO
+Unless there's a good reason, custom clients should inherit from `APIClient`, as it will
+give you blocking and non-blocking support at once. Since non-blocking calls basically
+end up calling `request_blocking()` on a separate worker, you only need to override
+the blocking implementation, unless your function signature or typing changes.
 
 ## Logging
 
