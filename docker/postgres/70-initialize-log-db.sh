@@ -4,6 +4,4 @@ set -e
 unset PGHOST
 
 echo "Initializing log database"
-psql --set db="$PGDATABASE-logs" <<EOSQL
-CREATE DATABASE :"db";
-EOSQL
+createdb "$PGDATABASE-logs"
