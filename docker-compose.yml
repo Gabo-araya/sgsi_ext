@@ -34,9 +34,6 @@ services:
       args:
         <<: *base-build-args
         WHO: "${WHO:-magnet}"
-    environment:
-      - PATH=${DEV_PATH}
-      - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
     depends_on:
       - postgres
     init: true

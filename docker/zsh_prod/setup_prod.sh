@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Don't use the installer, which requires git, and installs whatever is at master branch.
 
-FULL_COMMIT=53863e7b3ff0c2e2816e90dab3d870adebdf49c7
+FULL_COMMIT=115cee17015e4b5665e16dc4fd15c53e06a22f9a
 
 cd ~
 curl -fsSL https://github.com/ohmyzsh/ohmyzsh/archive/$FULL_COMMIT.tar.gz | tar xz

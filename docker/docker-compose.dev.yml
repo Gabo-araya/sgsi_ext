@@ -17,9 +17,6 @@ x-django-app: &base-django-app
   environment:
     - PATH=${DEV_PATH}
     - VIRTUAL_ENV=${DEV_VIRTUAL_ENV}
-  volumes:
-    - ./project/media/:/usr/src/app/project/media/
-    - ./:/usr/src/app/
 
 services:
   django:
@@ -28,7 +25,7 @@ services:
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array).
     volumes:
-      # Update this to wherever you want to mount the folder of your project
+      - ./project/media/:/usr/src/app/project/media/
       - ./:/usr/src/app/
 
       # Uncomment the next line to use Docker from inside the container.
@@ -59,6 +56,9 @@ services:
   #   <<: [*base-django-app, *base-dev-app]
   #   depends_on:
   #     - redis
+  #   volumes:
+  #     - ./project/media/:/usr/src/app/project/media/
+  #     - ./:/usr/src/app/
   #   command:
   #     - celery
   #     - --app=project.celeryconf:app
