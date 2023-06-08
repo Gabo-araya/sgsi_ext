@@ -70,7 +70,7 @@ class JsonApiClientTests(BaseTestCase):
         )
 
         (response, code), error = self.api_client.get_blocking("/test/")
-        self.assertIs(type(error), requests.RequestException)
+        self.assertIsInstance(error, requests.RequestException)
         self.assertIsNone(code)
         self.assertTrue(ClientLog.objects.exists())
 
