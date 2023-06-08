@@ -3,8 +3,6 @@ from typing import cast
 
 import requests
 
-from requests import RequestException
-
 from .api_client import ApiClient
 from .types import JSONType
 from .types import Method
@@ -125,10 +123,6 @@ class JsonApiClient(ApiClient):
         return (response, status_code), error
 
     def parse_response(self, response: requests.Response):
-        content_type = response.headers.get("Content-Type")
-        if content_type and content_type != "application/json":
-            msg = f"Expected content type application/json, got {content_type}."
-            raise RequestException(msg, response=response)
         if not response.content:
             return None, response.status_code
 
