@@ -41,6 +41,28 @@ class NonBlockingApiClient(BaseApiClient):
                         of a function receiving a 2-tuple of response and error.
             on_error: Fully qualified name of the error handler. It must be the name
                         of a function receiving a 2-tuple of response and error.
+
+        Examples:
+            Assuming `success_handler` and `error_handler` are valid functions, a basic
+            request would be::
+
+                client = ApiClient(...)
+                client.get(
+                    "products/",
+                    on_success=success_handler
+                )
+
+            A request using path params, query string and headers would be::
+
+                client = ApiClient(...)
+                client.get(
+                    "items/{id}/",
+                    path_params={"id": 1},
+                    query_params={"detail": "full", "format": "json"},
+                    headers={"Some-Special-Header": "magic"},
+                    on_success=success_handler,
+                    on_error=error_handler,
+                )
         """
         self.request(
             "get",
@@ -85,6 +107,39 @@ class NonBlockingApiClient(BaseApiClient):
                         of a function receiving a 2-tuple of response and error.
             on_error: Fully qualified name of the error handler. It must be the name
                         of a function receiving a 2-tuple of response and error.
+
+        Examples:
+            Assuming `success_handler` and `error_handler` are valid functions, a basic
+            request would be::
+
+                client = ApiClient(...)
+                response, error = client.post_blocking(
+                    "items/",
+                    data={"name": "ABC", "price": 1000},
+                    on_success=success_handler
+                )
+
+            And in turn will generate a POST items/ with the following encoded body::
+
+                name=ABC&price=1000
+
+            A request using path params, query string and JSON data would be::
+
+                client = ApiClient(...)
+                response, error = client.get_blocking(
+                    "items/{id}/extras",
+                    path_params={"id": 1},
+                    query_params={"detail": "basic", "format": "json"},
+                    json={"name": "ABC", "price": 1000},
+                    on_success=success_handler,
+                    on_error=error_handler,
+                )
+
+            This makes a POST request to items/1/extras?detail=basic&format=json
+            Content-Encoding will be set to `application/json` with body::
+
+                {"name": "ABC", "price": 1000}
+
         """
         self.request(
             "post",
@@ -131,6 +186,8 @@ class NonBlockingApiClient(BaseApiClient):
                         of a function receiving a 2-tuple of response and error.
             on_error: Fully qualified name of the error handler. It must be the name
                         of a function receiving a 2-tuple of response and error.
+
+        For examples, see the documentation for POST, as the signature is the same.
         """
         self.request(
             "patch",
@@ -177,6 +234,8 @@ class NonBlockingApiClient(BaseApiClient):
                         of a function receiving a 2-tuple of response and error.
             on_error: Fully qualified name of the error handler. It must be the name
                         of a function receiving a 2-tuple of response and error.
+
+        For examples, see the documentation for POST, as the signature is the same.
         """
         self.request(
             "put",
@@ -215,6 +274,8 @@ class NonBlockingApiClient(BaseApiClient):
                         of a function receiving a 2-tuple of response and error.
             on_error: Fully qualified name of the error handler. It must be the name
                         of a function receiving a 2-tuple of response and error.
+
+        For examples, see the documentation for POST, as the signature is the same.
         """
         self.request(
             "delete",

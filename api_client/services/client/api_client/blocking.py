@@ -46,6 +46,27 @@ class BlockingApiClient(BaseApiClient):
             query_params: A key-value mapping that is appended to the URL as a query
                           string.
             headers: A key-value mapping of request headers.
+
+        Examples:
+            A basic request would be::
+
+                client = ApiClient(...)
+                response, error = client.get_blocking(
+                    "items/",
+                )
+
+            A request using path params, query string and headers would be::
+
+                client = ApiClient(...)
+                response, error = client.get_blocking(
+                    "items/{id}/",
+                    path_params={"id": 1},
+                    query_params={"detail": "full", "format": "json"},
+                    headers={"Some-Special-Header": "magic"},
+                )
+
+            This translates to GET items/1/?detail=full&format=json
+
         """
         return self.request_blocking(
             "get",
@@ -84,6 +105,43 @@ class BlockingApiClient(BaseApiClient):
             json: Data to be encoded as JSON and sent to the service.
             files: A key-value mapping of filenames and files. It cannot be used along
                    with JSON payloads.
+
+        Examples:
+            A basic request would be::
+
+                client = ApiClient(...)
+                response, error = client.post_blocking(
+                    "items/",
+                    data={"name": "ABC", "price": 1000},
+                )
+
+            And in turn will generate a POST items/ with the following encoded body::
+
+                name=ABC&price=1000
+
+            A request using path params, query string and JSON data would be::
+
+                client = ApiClient(...)
+                response, error = client.get_blocking(
+                    "items/{id}/extras",
+                    path_params={"id": 1},
+                    query_params={"detail": "basic", "format": "json"},
+                    json={"name": "ABC", "price": 1000},
+                )
+
+            This makes a POST request to items/1/extras?detail=basic&format=json
+            Content-Encoding will be set to `application/json` with body::
+
+                {"name": "ABC", "price": 1000}
+
+            A request using path params, and file data would be::
+
+                client = ApiClient(...)
+                response, error = client.get_blocking(
+                    "items/{id}/picture",
+                    path_params={"id": 1},
+                    files={"image.jpg": open("file.jpg", "rb")},
+                )
         """
         return self.request_blocking(
             "post",
@@ -125,6 +183,8 @@ class BlockingApiClient(BaseApiClient):
             json: Data to be encoded as JSON and sent to the service.
             files: A key-value mapping of filenames and files. It cannot be used along
                    with JSON payloads.
+
+        For examples, see the documentation for POST, as the signature is the same.
         """
         return self.request_blocking(
             "patch",
@@ -166,6 +226,8 @@ class BlockingApiClient(BaseApiClient):
             json: Data to be encoded as JSON and sent to the service.
             files: A key-value mapping of filenames and files. It cannot be used along
                    with JSON payloads.
+
+        For examples, see the documentation for POST, as the signature is the same.
         """
         return self.request_blocking(
             "put",
