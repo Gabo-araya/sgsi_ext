@@ -9,7 +9,8 @@ from api_client.models import ClientLog
 
 @admin.register(ClientConfig)
 class ClientConfigAdmin(admin.ModelAdmin):
-    """Admin class for API client configurations.
+    """
+    Admin class for API client configurations.
 
     It enforces the following rules:
     - No more instances can be created when there's a config for all possible codes.
@@ -31,7 +32,8 @@ class ClientConfigAdmin(admin.ModelAdmin):
 
 @admin.register(ClientLog)
 class ClientLogAdmin(admin.ModelAdmin):
-    """Admin class for API client logs.
+    """
+    Admin class for API client logs.
 
     It provides pretty-print for headers and blocks creation or modification of items.
     """
