@@ -30,7 +30,7 @@ class ApiClientGetUrlTestCase(BaseTestCase):
         super().tearDownClass()
         cls.patcher.stop()
 
-    def test_get_url_without_end_slashes(self):
+    def test_get_url(self):
         self.assertEqual(self.api_client.get_url(""), "http://example.com/")
         self.assertEqual(self.api_client.get_url("test"), "http://example.com/test")
         self.assertEqual(
@@ -38,7 +38,15 @@ class ApiClientGetUrlTestCase(BaseTestCase):
             "http://example.com/test/5",
         )
 
-    def test_get_url_with_end_slashes(self):
+    def test_get_url_with_leading_slashes(self):
+        self.assertEqual(self.api_client.get_url("/"), "http://example.com/")
+        self.assertEqual(self.api_client.get_url("/test"), "http://example.com/test")
+        self.assertEqual(
+            self.api_client.get_url("/test/{pk}", {"pk": "5"}),
+            "http://example.com/test/5",
+        )
+
+    def test_get_url_with_trailing_slashes(self):
         self.assertEqual(self.api_client.get_url("/"), "http://example.com/")
         self.assertEqual(self.api_client.get_url("test/"), "http://example.com/test/")
         self.assertEqual(
@@ -46,7 +54,33 @@ class ApiClientGetUrlTestCase(BaseTestCase):
             "http://example.com/test/5/",
         )
 
-    def test_get_url_with_base_url_end_slash_and_without_endpoint_end_slash(self):
+    def test_get_url_with_leading_slashes_trailing_slashes(self):
+        self.assertEqual(self.api_client.get_url("/"), "http://example.com/")
+        self.assertEqual(self.api_client.get_url("/test/"), "http://example.com/test/")
+        self.assertEqual(
+            self.api_client.get_url("/test/{pk}/", {"pk": "5"}),
+            "http://example.com/test/5/",
+        )
+
+
+class ApiClientGetUrlWithSlashInHostTestCase(BaseTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+        cls.patcher = patch(
+            "api_client.services.client.ApiClient.validate_configuration"
+        )
+        cls.patcher.start()
+
+        config = ApiClientConfiguration(scheme="http", host="example.com/", code="test")
+        cls.api_client = ApiClient(config)
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        cls.patcher.stop()
+
+    def test_get_url(self):
         self.assertEqual(self.api_client.get_url(""), "http://example.com/")
         self.assertEqual(self.api_client.get_url("test"), "http://example.com/test")
         self.assertEqual(
@@ -54,11 +88,27 @@ class ApiClientGetUrlTestCase(BaseTestCase):
             "http://example.com/test/5",
         )
 
-    def test_get_url_without_base_url_end_slash_and_with_endpoint_end_slash(self):
+    def test_get_url_with_leading_slashes(self):
+        self.assertEqual(self.api_client.get_url("/"), "http://example.com/")
+        self.assertEqual(self.api_client.get_url("/test"), "http://example.com/test")
+        self.assertEqual(
+            self.api_client.get_url("/test/{pk}", {"pk": "5"}),
+            "http://example.com/test/5",
+        )
+
+    def test_get_url_with_trailing_slashes(self):
         self.assertEqual(self.api_client.get_url("/"), "http://example.com/")
         self.assertEqual(self.api_client.get_url("test/"), "http://example.com/test/")
         self.assertEqual(
             self.api_client.get_url("test/{pk}/", {"pk": "5"}),
+            "http://example.com/test/5/",
+        )
+
+    def test_get_url_with_leading_slashes_trailing_slashes(self):
+        self.assertEqual(self.api_client.get_url("/"), "http://example.com/")
+        self.assertEqual(self.api_client.get_url("/test/"), "http://example.com/test/")
+        self.assertEqual(
+            self.api_client.get_url("/test/{pk}/", {"pk": "5"}),
             "http://example.com/test/5/",
         )
 
