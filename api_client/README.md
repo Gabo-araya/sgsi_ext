@@ -45,10 +45,14 @@ POST, PUT, PATCH accept the following arguments:
 
 #### Blocking methods
 
-For tasks where there is no need to respond as soon as possible, such as management
-commands and Celery tasks, blocking methods can be used. All blocking methods are
-appended with the `_blocking` suffix. As the name says, those methods wait until the
-remote endpoint delivers its response to the client.
+Blocking methods are recommended for the following use cases:
+
+* When the external response is necessary to deliver a response to the user (like a
+  search).
+* When the external service is being invoked from a Celery task or a management command.
+
+All blocking methods are appended with the `_blocking` suffix. As the name says, those
+methods wait until the remote endpoint delivers its response to the client.
 
 ##### Response value for blocking methods
 
