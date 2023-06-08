@@ -101,7 +101,8 @@ JSON, delivering parsed responses.
 All clients configuration is performed through this class. This is a dataclass that
 holds basic settings for each client:
 
-* `code`: a unique code that identifies each client.
+* `code`: a unique code that identifies each client. This code must be one of the values
+  defined in `ClientCodes`.
 * `host`: hostname and API prefix of the service.
 * `scheme`: request scheme to use. It can be either `http` or `https`.
 * `timeout`: request timeout in seconds.
