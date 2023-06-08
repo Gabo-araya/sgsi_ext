@@ -215,7 +215,7 @@ class BlockingApiClient(BaseApiClient):
         Makes a request to the specified endpoint. You should normally not use this
         method.
 
-        This method accepts many of the parameters accepted by requests.Request.
+        This method accepts all the parameters admitted by requests.Request.
 
         This method blocks the thread until a response is received.
 
