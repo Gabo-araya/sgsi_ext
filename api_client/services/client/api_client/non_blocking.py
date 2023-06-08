@@ -239,7 +239,8 @@ class NonBlockingApiClient(BaseApiClient):
         Makes a request to the specified endpoint. You should normally not use this
         method.
 
-        This method accepts many of the parameters accepted by requests.Request.
+        This method accepts all the parameters admitted by requests.Request except for
+        `files`, which is not supported for non-blocking requests.
 
         This method will not block the thread and responses are handled in a separate
         worker.
