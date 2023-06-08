@@ -24,8 +24,8 @@ class SerializableAuthBase(AuthBase, metaclass=ABCMeta):
     on a different worker and therefore there exists a need to pass authentication data
     to workers in order to make valid requests.
 
-    Implementations of this class must define `get_init_kwargs` in order to be usable
-    in both blocking and non-blocking requests.
+    Implementations of this class must define `get_init_kwargs` to allow non-blocking
+    methods to correctly create instances of this class in workers.
     """
 
     @abstractmethod
