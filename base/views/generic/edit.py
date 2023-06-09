@@ -4,17 +4,20 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.db.models import ForeignKey
 from django.db.models import ProtectedError
+from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
-from django.views.generic import DeleteView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
+from django.views.generic.detail import BaseDetailView as GenericBaseDetailView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import BaseCreateView as GenericBaseCreateView
 from django.views.generic.edit import BaseUpdateView as GenericBaseUpdateView
+from django.views.generic.edit import DeletionMixin
+from django.views.generic.edit import FormMixin
 
 from ..mixins import LoginPermissionRequiredMixin
 
@@ -237,7 +240,10 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
         return super(GenericBaseUpdateView, self).post(request, *args, **kwargs)
 
 
-class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
+class BaseDeleteView(
+    LoginPermissionRequiredMixin, DeletionMixin, FormMixin, GenericBaseDetailView
+):
+    form_class = Form
     login_required = True
     permission_required = ()
     next_url = None
@@ -268,11 +274,30 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
         model_name = self.model.__name__.lower()
         return reverse(f"{model_name}_list")
 
+    def post(self, request, *args, **kwargs):
+        # Set self.object before the usual form processing flow.
+        # Inlined because having DeletionMixin as the second base, for
+        # get_success_url(), makes leveraging super() with ProcessFormView
+        # overly complex.
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
     def delete(self, request, *args, **kwargs):
         try:
             return super().delete(request, *args, **kwargs)
         except ProtectedError as error:
             return self.handle_protected_error(request, error)
+
+    def form_valid(self, form):
+        success_url = self.get_success_url()
+        try:
+            self.object.delete()
+            return HttpResponseRedirect(success_url)
+        except ProtectedError as error:
+            return self.handle_protected_error(self.request, error)
 
     def handle_protected_error(self, request, error):
         """
