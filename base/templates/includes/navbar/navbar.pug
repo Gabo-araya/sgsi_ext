@@ -22,7 +22,7 @@ header
 
       //- Menu
       #navbarCollapse.collapse.navbar-collapse
-        {% with navbar_link_template="includes/navbar/navbar_link.pug" dropdown_link_template="includes/dropdown/dropdown_link.pug" %}
+        {% with navbar_link_template="includes/navbar/navbar_link.pug" dropdown_link_template="includes/dropdown/dropdown_link.pug" dropdown_button_link_template="includes/dropdown/dropdown_button_link.pug"%}
         ul.navbar-nav.me-auto
           if user.is_authenticated
             if user.is_staff
@@ -44,7 +44,7 @@ header
               ul.dropdown-menu(aria-labelledby="dropdownLoggedIn")
                 {% include dropdown_link_template with text="My profile" url_name="user_profile" %}
                 {% include dropdown_link_template with text="Change password" url_name="password_change" %}
-                {% include dropdown_link_template with text="Logout" url_name=request.session.loginas_from_user|yesno:"loginas-logout,logout" %}
+                {% include dropdown_button_link_template with text="Logout" url_name=request.session.loginas_from_user|yesno:"loginas-logout,logout" %}
           else
             {% include navbar_link_template with text="login" url_name="login" %}
         {% endwith %}
