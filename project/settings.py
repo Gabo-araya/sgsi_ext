@@ -314,8 +314,14 @@ if AWS_STORAGE_BUCKET_NAME:
         AWS_S3_ENDPOINT_URL = f"https://{DO_SPACES_REGION}.digitaloceanspaces.com"
         DO_SPACES_CDN_ENABLED = get_bool_from_env("DO_SPACES_CDN_ENABLED", True)
 
-    STATICFILES_STORAGE = "project.storage_backends.S3StaticStorage"
-    DEFAULT_FILE_STORAGE = "project.storage_backends.S3MediaStorage"
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "project.storage_backends.S3StaticStorage",
+        },
+        "default": {
+            "BACKEND": "project.storage_backends.S3MediaStorage",
+        },
+    }
 
 else:
     STATIC_ROOT = PROJECT_DIR / "static"
