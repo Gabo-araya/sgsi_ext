@@ -14,4 +14,4 @@ psql \
   -c "create database \"$PGDATABASE\";" \
   postgres
 
-dj migrate # --yes-input
+./manage.py migrate # --yes-input
