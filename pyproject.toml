@@ -21,6 +21,7 @@ ipython = "8.13.2"
 ansible-core = { version = "2.13", optional = true }
 yq = { version = "2.14.0", optional = true }
 Faker = "14.2.0"
+cryptography = "41.0.1"
 # non-semver packages (or no information found)
 django-debug-toolbar = "4.1.0"
 django-extensions = "3.2.1"
