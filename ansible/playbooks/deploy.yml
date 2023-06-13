@@ -162,6 +162,18 @@
       failed_when: depl_checks.rc > 0
       tags: update
 
+    - name: Set default site name
+      command: docker-compose exec django dj setsitename --domain "{{ server_domain }}" --name "{{ site_name }}"
+      args:
+        chdir: "{{ project_name }}"
+      changed_when: true
+      register: site_name_result
+
+    - name: Show default site name
+      debug:
+        msg: "{{ site_name_result.stdout }}"
+      failed_when: site_name_result.rc > 0
+
     - name: make a test request to https://{{ server_domain }}
       uri:
         url: https://{{ server_domain }}
