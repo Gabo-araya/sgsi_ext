@@ -35,15 +35,19 @@ class Command(BaseCommand):
         try:
             site = Site.objects.get(pk=settings.SITE_ID)
 
-            if name and name != site.name:
-                site.name = name
-            if domain and domain != site.domain:
-                site.domain = domain
+            if domain and domain == site.domain and (name and name == site.name):
+                self.stdout.write("Nothing to update.")
+            else:
+                if name and name != site.name:
+                    site.name = name
+                if domain and domain != site.domain:
+                    site.domain = domain
 
-            site.save()
-            self.stdout.write(
-                "Updated default site. Restart Django as sites are cached aggressively."
-            )
+                site.save()
+                self.stdout.write(
+                    "Updated default site. "
+                    "Restart Django as sites are cached aggressively."
+                )
         except Site.DoesNotExist:
             msg = "Default site with pk={:s} does not exist. Creating default site."
             self.stdout.write(msg.format(settings.SITE_ID))
