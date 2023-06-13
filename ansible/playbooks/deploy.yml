@@ -166,13 +166,21 @@
       command: docker-compose exec django dj setsitename --domain "{{ server_domain }}" --name "{{ site_name }}"
       args:
         chdir: "{{ project_name }}"
-      changed_when: true
-      register: site_name_result
+      register: setsitename_result
+      changed_when: "'Updated default site' in setsitename_result.stdout"
 
     - name: Show default site name
       debug:
-        msg: "{{ site_name_result.stdout }}"
-      failed_when: site_name_result.rc > 0
+        msg: "{{ setsitename_result.stdout }}"
+      failed_when: setsitename_result.rc > 0
+
+    - name: Restart Django app
+      docker_compose:
+        project_src: "{{ project_name }}"
+        services:
+          - django
+        restarted: true
+      when: setsitename_result is changed
 
     - name: make a test request to https://{{ server_domain }}
       uri:
