@@ -167,7 +167,7 @@
       args:
         chdir: "{{ project_name }}"
       register: setsitename_result
-      changed_when: "'Updated default site' in setsitename_result.stdout"
+      changed_when: "'Nothing to update' not in setsitename_result.stdout"
 
     - name: Show default site name
       debug:
