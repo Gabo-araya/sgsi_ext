@@ -3,6 +3,7 @@ all:
    # dev:
     #   ansible_host: 12.34.56.78
     #   server_domain: dj3-dev.do.magnet.cl
+    #   Avoid putting 'production' on production sites in case emails use the site name.
     #   site_name: "DPT Playground"
     #   branch: dev
 
