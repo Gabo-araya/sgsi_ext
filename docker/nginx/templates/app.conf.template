@@ -14,6 +14,12 @@ server {
 
   root /usr/share/nginx;
 
+  ${ADD_ROBOTS_HEADER}  # "add_header" or nothing, according to ALLOW_ROBOTS
+
+  location =/robots.txt {
+      alias /var/www/robots/${ROBOTS_FILE};  # From ALLOW_ROBOTS
+  }
+
   location /static {
     try_files $uri =404;
   }

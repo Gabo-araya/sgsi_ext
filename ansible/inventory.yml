@@ -6,6 +6,7 @@ all:
     #   Avoid putting 'production' on production sites in case emails use the site name.
     #   site_name: "DPT Playground"
     #   branch: dev
+    #   allow_indexing: false
 
   vars:
     ansible_user: magnet
