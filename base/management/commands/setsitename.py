@@ -8,7 +8,6 @@ class Command(BaseCommand):
     help = "Set the default django.contrib.sites Site"  # noqa: A003
 
     def add_arguments(self, parser):
-        super().add_arguments(parser)
         parser.add_argument(
             "--name",
             dest="site_name",
@@ -37,8 +36,9 @@ class Command(BaseCommand):
             msg = "Domain cannot be empty."
             raise CommandError(msg)
 
+        site_id = settings.SITE_ID
         try:
-            site = Site.objects.get(pk=settings.SITE_ID)
+            site = Site.objects.get(pk=site_id)
 
             if domain and domain == site.domain and (name and name == site.name):
                 self.stdout.write("Nothing to update.")
@@ -54,9 +54,12 @@ class Command(BaseCommand):
                     "Restart Django as sites are cached aggressively."
                 )
         except Site.DoesNotExist:
-            msg = "Default site with pk={:s} does not exist. Creating default site."
-            self.stdout.write(msg.format(settings.SITE_ID))
-            site = Site.objects.create(pk=settings.SITE_ID, name=name, domain=domain)
+            msg = (
+                f"Default site with pk={site_id} does not exist. "
+                "Creating default site."
+            )
+            self.stdout.write(msg)
+            site = Site.objects.create(pk=site_id, name=name, domain=domain)
 
         msg = """Default Site:
 \tid = {:d}
