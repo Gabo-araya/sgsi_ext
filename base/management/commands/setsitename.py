@@ -32,6 +32,11 @@ class Command(BaseCommand):
 
         domain = options["site_domain"]
         name = options["site_name"] or domain
+
+        if not domain:
+            msg = "Domain cannot be empty."
+            raise CommandError(msg)
+
         try:
             site = Site.objects.get(pk=settings.SITE_ID)
 
