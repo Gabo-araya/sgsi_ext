@@ -1,12 +1,12 @@
 #!/bin/sh
 
 # If not declared, assume robots should be sent
-if [ -z "$ALLOW_ROBOTS" ]; then
-  echo "\$NO_ROBOTS not set, assuming development or staging!"
-  export ALLOW_ROBOTS=0
+if [ -z "$ENVIRONMENT_NAME" ]; then
+  echo "\$ENVIRONMENT_NAME not set, assuming staging!"
+  export ENVIRONMENT_NAME="staging"
 fi
 
-if [ "$ALLOW_ROBOTS" -eq 0 ]; then
+if [ "$ENVIRONMENT_NAME" != "production" ]; then
   export ADD_ROBOTS_HEADER='add_header X-Robots-Tag "noindex,nofollow";'
   export ROBOTS_FILE=robots-staging.txt
 else

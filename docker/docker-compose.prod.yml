@@ -18,6 +18,8 @@ services:
     build:
       context: ./docker/nginx/
     env_file: docker/nginx.env
+    environment:
+      ENVIRONMENT_NAME: ${ENVIRONMENT_NAME}
     ports:
       - 80:80
       - 443:443
