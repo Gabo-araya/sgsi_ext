@@ -20,31 +20,31 @@ class BaseModelForm(ModelForm):
             if "class" not in attrs:
                 attrs["class"] = ""
 
-            # TODO: Install Tempus Dominus for date/time inputs
-            # https://getdatepicker.com/6/
+            match field.widget:
+                case forms.widgets.DateInput():
+                    attrs["class"] += " form-control"
+                    field.widget.input_type = "date"
+                    field.widget.format = "%Y-%m-%d"
 
-            if isinstance(field.widget, forms.widgets.DateTimeInput):
-                attrs["class"] += " datetimepicker-input form-control"
-                attrs["data-format"] = "DD/MM/YYYY HH:mm:s"
-                attrs["data-toggle"] = "datetimepicker"
+                case forms.widgets.DateTimeInput():
+                    attrs["class"] += " form-control"
+                    field.widget.input_type = "datetime-local"
+                    field.widget.format = "%Y-%m-%d %H:%M:%S"
 
-            elif isinstance(field.widget, forms.widgets.DateInput):
-                attrs["class"] += " datetimepicker-input form-control"
-                attrs["data-format"] = "DD/MM/YYYY"
-                attrs["data-toggle"] = "datetimepicker"
+                case forms.widgets.TimeInput():
+                    attrs["class"] += " form-control"
+                    field.widget.input_type = "time"
+                    field.widget.format = "%H:%M:%S"
 
-            elif isinstance(field.widget, forms.widgets.TimeInput):
-                attrs["class"] += " datetimepicker-input form-control"
-                attrs["data-format"] = "HH:mm:s"
-                attrs["data-toggle"] = "datetimepicker"
+                case forms.widgets.FileInput():
+                    attrs["class"] += " form-control is-invalid"
 
-            elif isinstance(field.widget, forms.widgets.FileInput):
-                attrs["class"] += " form-control is-invalid"
+                case forms.widgets.CheckboxInput():
+                    attrs["class"] += " form-check-input"
+                    attrs["role"] = "switch"
 
-            elif isinstance(field.widget, forms.widgets.CheckboxInput):
-                attrs["class"] += " form-check-input"
-            else:
-                attrs["class"] += " form-control"
+                case _:
+                    attrs["class"] += " form-control"
 
     def hide_field(self, field_name):
         self.fields[field_name].widget = HiddenInput()
