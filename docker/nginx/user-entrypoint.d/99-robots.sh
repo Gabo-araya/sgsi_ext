@@ -7,7 +7,7 @@ if [ -z "$ENVIRONMENT_NAME" ]; then
 fi
 
 if [ "$ENVIRONMENT_NAME" != "production" ]; then
-  export ADD_ROBOTS_HEADER='add_header X-Robots-Tag "noindex,nofollow";'
+  export ADD_ROBOTS_HEADER='add_header X-Robots-Tag "noindex,nofollow,nosnippet,noarchive";'
   export ROBOTS_FILE=robots-staging.txt
 else
   export ADD_ROBOTS_HEADER=''
