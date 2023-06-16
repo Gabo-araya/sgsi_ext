@@ -13,34 +13,35 @@ from users.forms import UserCreationForm
 from users.models import User
 
 
-class UserTests(BaseTestCase):
-    def test_lower_case_emails(self):
-        """
-        Test that users are created with lower case emails
-        """
-        self.user.email = "Hello@magnet.cl"
-        self.user.save()
-        self.assertEqual("hello@magnet.cl", self.user.email)
+def test_lower_case_emails(regular_user):
+    """
+    Test that users are created with lower case emails
+    """
+    regular_user.email = "Hello@magnet.cl"
+    regular_user.save()
+    assert regular_user.email == "hello@magnet.cl"
 
-    def test_force_logout(self):
-        """
-        Test that `force_logout` actually logs out user
-        """
-        url = reverse("password_change")
-        login_url = reverse("login")
-        response = self.client.get(url)
 
-        # test that the user is logged in
-        self.assertEqual(HTTPStatus.OK, response.status_code)
+def test_force_logout(regular_user_client, regular_user):
+    """
+    Test that `force_logout` actually logs out user
+    """
+    url = reverse("password_change")
+    login_url = reverse("login")
+    response = regular_user_client.get(url)
 
-        self.user.force_logout()
+    # test that the user is logged in
+    assert response.status_code == HTTPStatus.OK
 
-        response = self.client.get(url)
+    regular_user.force_logout()
 
-        # user is logged out, so it will redirect to login
-        self.assertEqual(HTTPStatus.FOUND, response.status_code)
-        parsed_location = urlparse(response.url)
-        self.assertEqual(login_url, parsed_location.path)
+    response = regular_user_client.get(url)
+
+    # user is logged out, so it will redirect to login
+    assert response.status_code == HTTPStatus.FOUND
+
+    parsed_location = urlparse(response.url)
+    assert parsed_location.path == login_url
 
 
 class UserCreationFormTests(BaseTestCase):
