@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django import forms
+from django.forms import Form
 from django.forms import HiddenInput
 from django.forms import ModelForm
 
@@ -12,7 +13,7 @@ forms.fields.Field.is_checkbox = lambda self: isinstance(
 forms.fields.Field.is_file_input = lambda self: isinstance(self.widget, forms.FileInput)
 
 
-class BaseModelForm(ModelForm):
+class BaseFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for _, field in self.fields.items():
@@ -48,3 +49,11 @@ class BaseModelForm(ModelForm):
 
     def hide_field(self, field_name):
         self.fields[field_name].widget = HiddenInput()
+
+
+class BaseForm(BaseFormMixin, Form):
+    pass
+
+
+class BaseModelForm(BaseFormMixin, ModelForm):
+    pass
