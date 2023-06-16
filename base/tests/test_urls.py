@@ -136,6 +136,7 @@ def reverse_urlpattern(
     return reverse_pattern(url_pattern, namespace, kwargs=url_params)
 
 
+@pytest.mark.slow
 @pytest.mark.django_db(transaction=True)
 def test_responses(
     superuser_user, superuser_client, default_objects, default_parameter_values
