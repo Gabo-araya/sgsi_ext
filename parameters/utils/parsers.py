@@ -36,7 +36,7 @@ def parse_str_value(value):
     if value in EMPTY_VALUES:
         return None
 
-    return value
+    return str(value).strip()
 
 
 def parse_int_value(value):
@@ -166,6 +166,9 @@ def parse_hostname_value(value, multiple=False):
     return value will always be a list."""
     if value in EMPTY_VALUES:
         return None
+
+    if isinstance(value, (tuple, list)):
+        return value
 
     value = str(value).strip()
     if multiple:
