@@ -70,28 +70,18 @@ fi
 
 title_print "Installing Docker-compose..."
 
-have_compose() {
+have_docker_dash_compose() {
   command -v docker-compose >/dev/null
 }
 
-compose_is_last_version() {
-  # docker-compose v1 is final. Eventually we will have to upgrade to v2.
-  [[ $(docker-compose --version | grep -Eo '[0-9]+\.[0-9]+') == "1.29" ]]
-}
-
-if have_compose && compose_is_last_version; then
-  color_print $green "Skipped! Last docker-compose v1 found."
+if have_docker_dash_compose; then
+  color_print $green "Skipped! docker-compose command found."
 else
-  if have_compose && [[ $(command -v docker-compose) != "/usr/local/bin/docker-compose" ]]; then
-    color_print $red "Error: old docker-compose is installed but not in typical location: $(command -v docker-compose)
-Please remove that version, or manually upgrade it to 1.29.2."
-    exit 1
-  fi
   # Download and allow execute
   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
 
-  color_print $green "Docker-compose installation completed."
+  color_print $green "Docker-compose v1 installation completed."
 fi
 
 enable_buildkit() {
