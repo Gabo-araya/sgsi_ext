@@ -1,4 +1,4 @@
-import string
+import uuid
 
 from base import utils
 
@@ -16,11 +16,7 @@ def file_path(self, name):
 
     return base_path.format(
         self.__class__.__name__,
-        str(utils.today()),
-        utils.random_string(
-            30,
-            chars=string.ascii_lowercase + string.digits,
-            include_spaces=False,
-        ),
+        utils.today().strftime(r"%Y/%m/%d"),
+        uuid.uuid4(),
         name,
     )
