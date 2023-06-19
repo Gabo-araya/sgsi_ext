@@ -18,19 +18,6 @@ EXCLUDED_NAMESPACES = [
 
 
 @pytest.fixture
-def default_objects(regular_user):
-    """
-    Return a dictionary of underscore model names to models.
-
-    Each time a model is defined, a fixture must be defined and added to the signature.
-    Also, a mapping of underscored model name to fixture value must be appended.
-    """
-    return {
-        "user": regular_user,
-    }
-
-
-@pytest.fixture
 def default_parameter_values(default_objects):
     """Return a dictionary of parameter names to values."""
 
