@@ -18,32 +18,5 @@ if [[ ! -f .vscode/settings.json ]]; then
 }" > .vscode/settings.json
 fi
 if [[ ! -f .vscode/launch.json ]]; then
-  echo \
-  "{
-    \"version\": \"0.2.0\",
-    \"configurations\": [
-        {
-            \"name\": \"Server\",
-            \"type\": \"python\",
-            \"request\": \"launch\",
-            \"program\": \"\${workspaceFolder}/manage.py\",
-            \"args\": [
-                \"runserver_plus\", \"8002\"
-            ],
-            \"django\": true,
-            \"justMyCode\": true
-        },
-        {
-            \"name\": \"Shell\",
-            \"type\": \"python\",
-            \"request\": \"launch\",
-            \"program\": \"\${workspaceFolder}/manage.py\",
-            \"args\": [
-                \"shell_plus\",
-            ],
-            \"django\": true,
-            \"justMyCode\": true
-        }
-    ]
-}" > .vscode/launch.json
+  cp scripts/vscode-launch.json .vscode/launch.json
 fi
