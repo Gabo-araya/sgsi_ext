@@ -57,20 +57,7 @@ scripts/add-aliases.sh
 echo "docker-compose build && docker-compose down" | newgrp docker
 # "down" because https://github.com/docker/compose/issues/4548
 
-# Now that the image is built, set virtual_env in .env:
-env_file='.env'
-# VIRTUAL_ENV must be unset for poetry to generate the path itself
-virtual_env=$(echo "docker-compose run --rm -T django env --unset=VIRTUAL_ENV poetry env info --path" | newgrp docker)
-perl -pi -e "s|{{virtual_env}}|$virtual_env|g" $env_file
-
-# Set vscode to use python in poetry env
-mkdir -p .vscode
-if [[ ! -f .vscode/settings.json ]]; then
-  echo \
-"{
-  \"python.defaultInterpreterPath\": \"$virtual_env/bin/python\",
-}" > .vscode/settings.json
-fi
+scripts/set-vscode-settings.sh
 
 # Finally create and start the containers:
 echo "docker-compose up --detach" | newgrp docker
