@@ -8,7 +8,6 @@
  * Base
  * Inner
  * Input
- * Placeholder
  * Heading
  * Item
  * Button
@@ -23,60 +22,6 @@
 
 @use "sass:color";
 @use "sass:map";
-
-
-// Placeholders
-// ============================================================================
-
-%choices-dropdown {
-  position: absolute;
-  top: 100%;
-  z-index: $zindex-dropdown;
-  width: 100%;
-  margin-top: -1px;
-  overflow: hidden;
-  word-break: break-all;
-  visibility: hidden;
-  background-color: $white;
-  border: $border-width solid $form-select-border-color;
-  will-change: visibility;
-
-  @include border-radius();
-
-  &.is-active {
-    visibility: visible;
-  }
-
-  .is-flipped & {
-    top: auto;
-    bottom: 100%;
-    margin-top: 0;
-    margin-bottom: -1px;
-  }
-
-  .#{$choices-selector}__list {
-    position: relative;
-    max-height: 300px;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
-  }
-
-  .#{$choices-selector}__item {
-    position: relative;
-    padding: $form-select-padding-y $form-select-padding-x;
-
-    &.choices__item--disabled {
-      color: var(--#{$prefix}secondary-color);
-    }
-  }
-
-  .#{$choices-selector}__item--selectable {
-    &.is-highlighted {
-      background-color: color.mix(#000, #fff, 5%);
-    }
-  }
-}
 
 
 // Base
@@ -278,10 +223,6 @@
 
 .#{$choices-selector}__list {
   display: block;
-
-  &[aria-expanded] {
-    @extend %choices-dropdown;
-  }
 }
 
 .#{$choices-selector}__list--single {
@@ -318,8 +259,54 @@
   }
 }
 
-.#{$choices-selector}__list--dropdown {
-  @extend %choices-dropdown;
+.#{$choices-selector}__list--dropdown[aria-expanded] {
+  position: absolute;
+  top: 100%;
+  z-index: $zindex-dropdown;
+  width: 100%;
+  margin-top: -1px;
+  overflow: hidden;
+  word-break: break-all;
+  visibility: hidden;
+  background-color: $white;
+  border: $border-width solid $form-select-border-color;
+  will-change: visibility;
+
+  @include border-radius();
+
+  &.is-active {
+    visibility: visible;
+  }
+
+  .is-flipped & {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: -1px;
+  }
+
+  .#{$choices-selector}__list {
+    position: relative;
+    max-height: 300px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+  }
+
+  .#{$choices-selector}__item {
+    position: relative;
+    padding: $form-select-padding-y $form-select-padding-x;
+
+    &.choices__item--disabled {
+      color: var(--#{$prefix}secondary-color);
+    }
+  }
+
+  .#{$choices-selector}__item--selectable {
+    &.is-highlighted {
+      background-color: color.mix(#000, #fff, 5%);
+    }
+  }
 }
 
 
