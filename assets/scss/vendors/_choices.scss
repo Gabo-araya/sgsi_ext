@@ -31,7 +31,7 @@
 %choices-dropdown {
   position: absolute;
   top: 100%;
-  z-index: 1;
+  z-index: $zindex-dropdown;
   width: 100%;
   margin-top: -1px;
   overflow: hidden;
