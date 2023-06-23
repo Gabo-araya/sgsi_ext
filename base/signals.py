@@ -5,7 +5,14 @@ from base.middleware import RequestMiddleware
 from base.utils import get_our_models
 
 
-def audit_log(sender, instance, created, raw, update_fields, **kwargs):
+class NotExists:
+    """
+    This class represents no data available for a given dict key.
+    It is required because `None` may be a valid value.
+    """
+
+
+def audit_log(sender, instance, created, raw, update_fields=None, **kwargs):
     """
     Post save signal that creates a log when an object from a models from
     our apps is created or updated.
@@ -32,14 +39,11 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
     else:
         changed_field_labels = {}
         original_dict = instance.original_dict
-        actual_dict = instance.to_dict(
-            exclude=ignored_fields,
-            include_m2m=False,
-        )
-        change = False
-        for key in original_dict:
-            if original_dict[key] != actual_dict[key]:
-                change = True
+        actual_dict = instance.to_dict(exclude=ignored_fields, include_m2m=False)
+        keys_to_check = update_fields if update_fields else original_dict.keys()
+
+        for key in keys_to_check:
+            if original_dict.get(key, NotExists) != actual_dict.get(key, NotExists):
                 if key in sensitive_fields:
                     changed_field_labels[key] = "field updated"
                 else:
@@ -47,7 +51,7 @@ def audit_log(sender, instance, created, raw, update_fields, **kwargs):
                         "from": original_dict[key],
                         "to": actual_dict[key],
                     }
-        if change:
+        if changed_field_labels:
             message = {"changed": {"fields": changed_field_labels}}
             instance._save_edition(user, message)
 
