@@ -55,7 +55,7 @@ server {
     application/x-javascript
     text/javascript;
 
-    # To force-renew certificate, run "docker-compose exec nginx /scripts/run_certbot.sh force"
+    # To force-renew certificate, run "docker compose exec nginx /scripts/run_certbot.sh force"
     # https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v3.0.0-nginx1.21.3/docs/advanced_usage.md#manualforce-renewal
     ssl_certificate         /etc/letsencrypt/live/${SERVER_DOMAIN}/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/${SERVER_DOMAIN}/privkey.pem;

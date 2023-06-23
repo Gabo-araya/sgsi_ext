@@ -69,7 +69,7 @@ The `postgres` container in docker-compose.yml has to be kept. It has a custom e
 
 So you can run queries on this remote DB running this command from server:
 ```sh
-docker-compose exec postgres psql
+docker compose exec postgres psql
 ```
 
 ## S3
@@ -125,7 +125,7 @@ Then in _API_, in _Spaces access keys_ click _Generate New Key_. Take note of th
 ## Logs
 
 If you are not familiar with docker-compose:
-- Run `docker-compose logs django` to see the output of the `django` container
+- Run `docker compose logs django` to see the output of the `django` container
 - Add `-f` after `logs` to wait for new messages
 - Add `-t` after `logs` if you want extra timestamps
 
@@ -138,7 +138,7 @@ Logs are stored in the `celery` container log when running on production. They a
 The simple way is to remove containers and delete files:
 ```sh
 cd project-name-placeholder
-docker-compose down
+docker compose down
 cd ..
 sudo rm -rf project-name-placeholder
 ```
@@ -148,7 +148,7 @@ However if you want to re-deploy (for example to try changes in a playground ser
 So, to backup nginx's volume and use it for the newly deployed instance:
 ```sh
 cd project-name-placeholder
-docker-compose down
+docker compose down
 cd ..
 sudo mv project-name-placeholder/docker/volumes/nginx_secrets .
 sudo rm -rf project-name-placeholder
@@ -164,11 +164,11 @@ sudo mv nginx_secrets project-name-placeholder/docker/volumes/
 
 ### `psql` fails with local postgres
 
-If the database name is wrong or there are problems with PG* env vars, `docker-compose exec postgres psql` can fail with _database "something" does not exist_, _password authentication failed for user "postgres"_, etc.
+If the database name is wrong or there are problems with PG* env vars, `docker compose exec postgres psql` can fail with _database "something" does not exist_, _password authentication failed for user "postgres"_, etc.
 
 In this case, you can override the variables and access with local trust by running:
 ```sh
-docker-compose exec postgres su - postgres -c psql
+docker compose exec --user=postgres postgres env -i PGPORT=15432 psql
 ```
 
 ### Nginx

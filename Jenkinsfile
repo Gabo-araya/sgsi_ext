@@ -15,25 +15,25 @@ pipeline {
   stages {
     stage('Build image') {
       steps {
-        sh(script: 'docker-compose build', label: 'Build images')
-        sh(script: 'docker-compose pull', label: 'Pull images')
+        sh(script: 'docker compose build', label: 'Build images')
+        sh(script: 'docker compose pull', label: 'Pull images')
       }
     }
     stage('Run code checks') {
       steps {
         warnError('Some code checks have failed') {
-          sh(script: 'docker-compose run app-test poetry run black --check .', label: 'Check code formatting')
-          sh(script: 'docker-compose run app-test poetry run ruff .', label: 'Check linting')
+          sh(script: 'docker compose run app-test poetry run black --check .', label: 'Check code formatting')
+          sh(script: 'docker compose run app-test poetry run ruff .', label: 'Check linting')
         }
       }
     }
     stage('Run tests') {
       environment {
-        COLLECTOR_CONTAINER_ID = """${sh(returnStdout: true, script:'docker-compose run -d --user root artifact-collector').trim()}"""
+        COLLECTOR_CONTAINER_ID = """${sh(returnStdout: true, script:'docker compose run -d --user root artifact-collector').trim()}"""
       }
       steps {
         sh(
-          script: 'docker-compose ' +
+          script: 'docker compose ' +
             'run app-test poetry run pytest ' +
             '--cov ' +
             '--cov-report=html:test-results/coverage ' +
@@ -65,7 +65,7 @@ pipeline {
   }
   post {
     always {
-      sh 'docker-compose down -v'
+      sh 'docker compose down -v'
       cleanWs(
         deleteDirs: true,
         disableDeferredWipeout: true,

@@ -75,17 +75,9 @@
     - name: install apt packages
       apt:
         name:
-          - python3-pip   # For ansible requirements
-          - pv            # Progress for dump download
+          - pv    # Progress for dump download
         state: present
       become: yes
-
-    - name: install ansible requirements
-      pip:
-        name:
-          - docker==5.0.3
-          - docker-compose==1.29.2  # (yes, they use it as a library, instead of /usr/local/bin/docker-compose)
-        state: present
 
     - name: enable Docker BuildKit
       copy:
@@ -103,16 +95,15 @@
       when: docker_daemon.changed
 
     - name: make free space by pruning dangling images
-      community.docker.docker_prune:
-        images: yes
-        images_filters:
-          dangling: yes
+      command: docker image prune --force
       register: prune
+      changed_when: "'Total reclaimed space: 0B' not in prune.stdout"
       tags: update
 
     - name: show freed space
       debug:
-        msg: Freed {{ prune.images_space_reclaimed | human_readable }}
+        msg: "{{ prune.stdout }}"
+      changed_when: prune.changed   # Just to match previous task color
       tags: update
 
     - name: check if nginx will take a long time to start
@@ -121,13 +112,13 @@
       register: stat_nginx_secrets
 
     - name: build and start containers
-      # "community.docker.docker_compose" somehow manages to always disable BuildKit
+      # Note: "community.docker.docker_compose" requires docker-compose v1 and always disables BuildKit
       shell:
         chdir: "{{ project_name }}"
         cmd: "{{ build_cmd }} && {{ up_cmd }}"  # Two commands because not all build flags are available in up
       vars:
-        build_cmd: docker-compose build {{ nocache_arg }} {{ pull_arg }}
-        up_cmd: docker-compose up -d --remove-orphans {{ recreate_arg }}
+        build_cmd: docker compose build {{ nocache_arg }} {{ pull_arg }}
+        up_cmd: docker compose up -d --remove-orphans {{ recreate_arg }}
 
         nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
         pull_arg:    "{{ '--pull'     if env_cache_ignore == '1' else '' }}"
@@ -141,7 +132,7 @@
       tags: update
 
     - name: run deployment checks
-      command: docker-compose exec django dj check --deploy
+      command: docker compose exec django dj check --deploy
       # Note: it's possible to fail on warning by appending: --fail-level WARNING
       args:
         chdir: "{{ project_name }}"
@@ -157,13 +148,13 @@
         # (print stderr when stdout is empty, is enough?).
         # This happens when the container fails to start,
         # for example because a check in its CMD fails with "exit 1".
-        # And then "docker-compose exec" fails with no output,
+        # And then "docker compose exec" fails with no output,
         # so this task mysteriously fails without explanation.
       failed_when: depl_checks.rc > 0
       tags: update
 
     - name: Set default site name
-      command: docker-compose exec django dj setsitename --domain "{{ server_domain }}" --name "{{ site_name }}"
+      command: docker compose exec django dj setsitename --domain "{{ server_domain }}" --name "{{ site_name }}"
       args:
         chdir: "{{ project_name }}"
       register: setsitename_result
@@ -175,11 +166,10 @@
       failed_when: setsitename_result.rc > 0
 
     - name: Restart Django app
-      docker_compose:
-        project_src: "{{ project_name }}"
-        services:
-          - django
-        restarted: true
+      command: docker compose restart django
+      args:
+        chdir: "{{ project_name }}"
+      changed_when: true
       when: setsitename_result is changed
 
     - name: make a test request to https://{{ server_domain }}

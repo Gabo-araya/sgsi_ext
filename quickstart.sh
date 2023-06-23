@@ -34,14 +34,14 @@ You have been warned."
 fi
 
 # Stop this project's postgres so port is free:
-command -v docker-compose >/dev/null && [ -f .env ] && \
-  echo "docker-compose stop postgres || true" | newgrp docker
+has_compose_plugin && [ -f .env ] && \
+  echo "docker compose stop postgres || true" | newgrp docker
 scripts/assert-15432-free.sh
 
 # Create a local .env file if it does not exist
 scripts/env-init-dev.sh
 
-# Install docker and docker-compose
+# Install docker and compose plugin
 scripts/docker-install.sh
 
 # Build and start the containers
@@ -54,21 +54,20 @@ fi
 
 scripts/add-aliases.sh
 
-echo "docker-compose build && docker-compose down" | newgrp docker
-# "down" because https://github.com/docker/compose/issues/4548
+echo "docker compose build" | newgrp docker
 
 scripts/set-vscode-settings.sh
 
 # Finally create and start the containers:
-echo "docker-compose up --detach" | newgrp docker
+echo "docker compose up --detach" | newgrp docker
 
 prompt "\n\nWould you like to run migrations? [Y/n]" "Y"
 input_lower=${input,,}
 if [[ $input_lower == y ]]; then
-  echo "docker-compose exec -T django dj migrate" | newgrp docker
+  echo "docker compose exec -T django dj migrate" | newgrp docker
 
   superuserexists_ret=0
-  echo "docker-compose exec -T django dj superuserexists" | newgrp docker \
+  echo "docker compose exec -T django dj superuserexists" | newgrp docker \
     || superuserexists_ret=$?
   if (( superuserexists_ret == 1 )); then
 
@@ -77,9 +76,10 @@ if [[ $input_lower == y ]]; then
     if [[ $input_lower == y ]]; then
       # Black magic: normally newgrp reads commands from pipe,
       # so can't get keyboard answers to createsuperuser.  https://www.scosales.com/ta/kb/104260.html
+      # (Less convoluted alternative: just run with sudo haha)
       exec 3<&0
       echo "exec \
-        docker-compose exec django dj createsuperuser \
+        docker compose exec django dj createsuperuser \
         0<&3 3<&-" | newgrp docker
       echo -e "\n"
     fi

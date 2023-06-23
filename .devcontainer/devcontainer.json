@@ -3,18 +3,14 @@
 {
   "name": "Magnet's DPT3 container",
 
-  // The symlink docker-compose.override.yml --> docker/docker-compose.dev.yml provides config
-  // for Remote-Containers and docker-compose CLI, so this should be blank.
-  // https://github.com/microsoft/vscode-remote-release/issues/1080#issuecomment-824087033
-  // https://docs.docker.com/compose/extends/#understanding-multiple-compose-files
+  // For easy CLI usage, we are using the default docker-compose.override.yml to customize,
+  // instead of custom files. So this is empty.
   "dockerComposeFile": [],
 
-  // The 'service' property is the name of the service for the container that VS Code should
-  // use. Update this value and .devcontainer/docker-compose.yml to the real service name.
+  // The 'service' property is the name of the service for the container that VS Code should use.
   "service": "django",
 
-  // The optional 'workspaceFolder' property is the path VS Code should open by default when
-  // connected. This is typically a file mount in .devcontainer/docker-compose.yml
+  // The optional 'workspaceFolder' property is the path VS Code should open by default when connected.
   "workspaceFolder": "/usr/src/app",
 
   "customizations": {
@@ -23,7 +19,7 @@
       "settings": {
         // Default to zsh:
         "terminal.integrated.defaultProfile.linux": "zsh",
-        // The environment is handled with other methods. See 50-venv-hints.zsh
+        // The environment is handled with other methods. See 50-virtualenv.zsh
         "python.terminal.activateEnvironment": false
       },
       // improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
