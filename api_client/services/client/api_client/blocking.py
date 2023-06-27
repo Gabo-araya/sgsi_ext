@@ -25,6 +25,12 @@ logger = logging.getLogger("api_clients")
 class BlockingApiClient(BaseApiClient):
     """Implementation of blocking methods for the API client."""
 
+    def __new__(cls, *args, **kwargs):
+        if cls is BlockingApiClient:
+            msg = "This class is not meant to be used directly. Use ApiClient instead."
+            raise TypeError(msg)
+        return super().__new__(cls)
+
     def get_blocking(
         self,
         endpoint: str,

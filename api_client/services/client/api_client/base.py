@@ -18,6 +18,12 @@ class BaseApiClient:
 
     empty_response = requests.Response()
 
+    def __new__(cls, *args, **kwargs):
+        if cls is BaseApiClient:
+            msg = "This class is not meant to be used directly. Use ApiClient instead."
+            raise TypeError(msg)
+        return super().__new__(cls)
+
     def __init__(self, configuration: ApiClientConfiguration) -> None:
         self.configuration = configuration
         self.validate_configuration()

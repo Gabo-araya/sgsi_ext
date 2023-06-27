@@ -13,6 +13,12 @@ from .base import BaseApiClient
 class NonBlockingApiClient(BaseApiClient):
     """Implementation of non-blocking methods for the API client."""
 
+    def __new__(cls, *args, **kwargs):
+        if cls is NonBlockingApiClient:
+            msg = "This class is not meant to be used directly. Use ApiClient instead."
+            raise TypeError(msg)
+        return super().__new__(cls)
+
     def get(
         self,
         endpoint: str,
