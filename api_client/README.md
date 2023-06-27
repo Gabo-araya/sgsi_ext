@@ -14,6 +14,51 @@ by providing a common interface to make requests.
 The APIClient is built on top of the `requests` library due to its simplicity and
 flexibility.
 
+## Getting started
+
+1. Define a client codename at `api_client/enums.py`
+  ```python
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+class ClientCodes(models.TextChoices):
+    MY_CUSTOM_CLIENT = "MY_CUSTOM_CLIENT", _("My custom client")
+```
+2. Implement your custom service that uses the client.
+```python
+from http import HTTPStatus
+
+from api_client.enums import ClientCodes
+from api_client.services.client import ApiClient
+from api_client.services.client import ApiClientConfiguration
+
+class MyCustomIntegrationService:
+    def __init__(self):
+        configuration = ApiClientConfiguration(
+            code=ClientCodes.MY_CUSTOM_CLIENT,
+            scheme="https",
+            host="api.externalservice.com:8443/api/v1",
+        )
+        self.api_client = ApiClient(configuration)
+
+    def get_something(self):
+        response, error = self.api_client.get_blocking("/something/")
+        if not response or response.status_code != HTTPStatus.OK:
+            ...
+        data = response.content.decode()
+        return data
+```
+3. Call your service from your code.
+```python
+def do_something():
+    ws_service = MyCustomIntegrationService()
+    data = ws.get_something()
+    # do something with data
+    ...
+```
+
+The `dummy_app` directory provides an example usage of the API client. 
+
 ## Classes
 
 ### APIClient
