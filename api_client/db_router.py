@@ -15,6 +15,6 @@ class ClientLogDbRouter:
         return None
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        if db == self.LOG_DB and model_name == "clientlog":
-            return True
-        return db != self.LOG_DB and model_name != "clientlog"
+        if db == self.LOG_DB:
+            return model_name == "clientlog"
+        return None
