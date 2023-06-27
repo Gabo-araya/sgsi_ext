@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 services:
   postgres:
     build:
@@ -24,6 +24,7 @@ services:
     image: busybox:stable
     volumes:
       - test-artifacts:/artifacts
+    init: true
     command: |
       sh -c "
         chmod -R 777 /artifacts
