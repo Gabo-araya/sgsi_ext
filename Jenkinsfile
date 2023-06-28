@@ -9,7 +9,7 @@ pipeline {
     SHORT_COMMIT = "${GIT_COMMIT[0..7]}"
     DOCKER_BUILDKIT = '1'
     COMPOSE_DOCKER_CLI_BUILD = '1'
-    COMPOSE_FILE = 'docker/docker-compose.jenkins.yml'
+    COMPOSE_FILE = "${WORKSPACE}/docker/docker-compose.jenkins.yml"
     COMPOSE_PROJECT_NAME = "${PROJECT_REPONAME}-${env.SHORT_COMMIT}-${env.CHANGE_ID ?: 0}-${env.BUILD_NUMBER}"
   }
   stages {
@@ -28,10 +28,11 @@ pipeline {
       }
     }
     stage('Run tests') {
-      environment {
-        COLLECTOR_CONTAINER_ID = """${sh(returnStdout: true, script:'docker compose run -d --user root artifact-collector').trim()}"""
-      }
       steps {
+        sh(
+          script: 'docker compose up -d artifact-collector',
+          label: 'Start artifact collector'
+        )
         sh(
           script: 'docker compose ' +
             'run app-test poetry run pytest ' +
@@ -45,7 +46,7 @@ pipeline {
       post {
         always {
           dir ('artifacts') {
-            sh "docker cp \"${env.COLLECTOR_CONTAINER_ID}\":/artifacts/. ."
+            sh(script: 'docker compose cp artifact-collector:/artifacts/. .', label: 'Copy test results')
             sh(script: 'ls -l', label: 'List copied files')
             sh(
               script: 'tar czf coverage.tar.gz coverage/*',
