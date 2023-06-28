@@ -22,20 +22,16 @@ pipeline {
     stage('Run code checks') {
       steps {
         warnError('Some code checks have failed') {
-          sh(script: 'docker compose run app-test poetry run black --check .', label: 'Check code formatting')
-          sh(script: 'docker compose run app-test poetry run ruff .', label: 'Check linting')
+          sh(script: 'docker compose run --rm app-test poetry run black --check .', label: 'Check code formatting')
+          sh(script: 'docker compose run --rm app-test poetry run ruff .', label: 'Check linting')
         }
       }
     }
     stage('Run tests') {
       steps {
         sh(
-          script: 'docker compose up -d artifact-collector',
-          label: 'Start artifact collector'
-        )
-        sh(
-          script: 'docker compose ' +
-            'run app-test poetry run pytest ' +
+          script: 'docker compose run --rm app-test ' +
+            'poetry run pytest ' +
             '--cov ' +
             '--cov-report=html:test-results/coverage ' +
             '--cov-report=xml:test-results/coverage.xml ' +
