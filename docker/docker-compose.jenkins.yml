@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 services:
   postgres:
     build:
@@ -17,6 +17,7 @@ services:
     env_file: "ci_env"
     depends_on:
       - postgres
+      - artifact-collector
     volumes:
       - test-artifacts:/usr/src/app/test-results
 
@@ -24,11 +25,12 @@ services:
     image: busybox:stable
     volumes:
       - test-artifacts:/artifacts
+    init: true
     command: |
       sh -c "
         chmod -R 777 /artifacts
         echo Waiting for artifacts
-        sleep 1h  # Wait a long time
+        sleep inf  # Wait a long time
       "
 
 volumes:

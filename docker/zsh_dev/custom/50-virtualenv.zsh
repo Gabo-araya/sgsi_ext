@@ -6,7 +6,7 @@ RECREATE_FIX_MSG="To fix it, run:
 and in your .env, change DEV_VIRTUAL_ENV to the path printed by that command.
 Then recreate the container:
   - vscode devcontainer: F1 --> Rebuild Container
-  - compose: docker-compose up -d --force-recreate"
+  - compose: docker compose up -d --force-recreate"
 
 # Check that VIRTUAL_ENV exists:
 if ! [[ -d "$VIRTUAL_ENV" ]]; then

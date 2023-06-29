@@ -47,7 +47,7 @@ Remove the `LICENSE` if your new project does not have an MIT license.
 The `quickstart.sh` script includes the following actions:
 
 * Create a local .env file if not present.
-* Install docker and docker-compose.
+* Install docker and compose plugin.
 * Build and start the containers.
 * Prompt to run django migrations.
 * Prompt to create a superuser.
@@ -101,9 +101,9 @@ In a terminal in this folder,
 
 #### Resetting to initial state
 
-If you are used to work with docker-compose, you may try to reset your project to an initial state with `docker-compose down -v`. However we are not using volumes, just bind mounts. So use instead:
+If you are used to work with docker-compose, you may try to reset your project to an initial state with `docker compose down -v`. However we are not using volumes, just bind mounts. So use instead:
 ```sh
-docker-compose down
+docker compose down
 rm -rf docker/volumes/
 git restore docker/volumes/
 ```
@@ -478,8 +478,8 @@ If you absolutely need to test with a proper broker and worker:
 2. Edit your .env and define the following variables:
   * `CELERY_BROKER_URL=redis://localhost:6379/1`
   * `CELERY_RESULT_BACKEND=redis://localhost:6379/2`
-3. Outside the container, run `docker-compose build`.
-4. Start the worker process using `docker-compose up -d celery`.
+3. Outside the container, run `docker compose build`.
+4. Start the worker process using `docker compose up -d celery`.
 
 The celery worker has no hot reloading support so any change will require a service restart.
 

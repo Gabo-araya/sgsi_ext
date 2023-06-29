@@ -19,7 +19,7 @@ if will_start_postgres_server && host_is_remote; then
   echo
   echo "magnet-entrypoint: Not running postgres server, container will just sleep."
   echo
-  # Sleep and stay running so postgresql-client commands can be run with "docker-compose exec".
+  # Sleep and stay running so postgresql-client commands can be run with "docker compose exec".
 
   # Fake the healthcheck:
   echo -e '#!/bin/sh'"\necho fake ok" > /usr/local/bin/pg_isready   # chmod not required

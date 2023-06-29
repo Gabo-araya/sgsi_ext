@@ -5,19 +5,13 @@
 
     - name: stop django
       # 'ERROR:  database "..." is being accessed by other users'
-      # "dcstop django":
-      community.docker.docker_compose:
-        services:
-          - django
-        state: present
-        stopped: yes
-        project_src: "{{ project_name }}"
-        files:
-          - docker-compose.yml
-          - docker/docker-compose.prod.yml
+      command: docker compose stop django celery
+      args:
+        chdir: "{{ project_name }}"
+      changed_when: true  # Unfortunately "Stopping"/"Stopped" are always printed
 
     - name: drop and create database
-      command: docker-compose exec postgres sh -c 'psql -c "{{ cmd1 }}" -c "{{ cmd2 }}" postgres'
+      command: docker compose exec postgres sh -c 'psql -c "{{ cmd1 }}" -c "{{ cmd2 }}" postgres'
       args:
         chdir: "{{ project_name }}"
       vars:
@@ -25,7 +19,7 @@
         cmd2: create database \"$PGDATABASE\";
 
     - name: restore dump
-      command: docker-compose exec postgres sh -c '{{ restore_cmd }}'
+      command: docker compose exec postgres bash -c '{{ restore_cmd }}'
       args:
         chdir: "{{ project_name }}"
       vars:
@@ -46,11 +40,7 @@
 
     - name: start django
       # The entrypoint will run migrations
-      community.docker.docker_compose:
-        services:
-          - django
-        state: present
-        project_src: "{{ project_name }}"
-        files:
-          - docker-compose.yml
-          - docker/docker-compose.prod.yml
+      command: docker compose start django celery
+      args:
+        chdir: "{{ project_name }}"
+      changed_when: true

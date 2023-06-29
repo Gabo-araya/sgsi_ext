@@ -66,3 +66,9 @@ This script will terminate now."
   fi
   rm test.sh
 }
+
+function has_compose_plugin() {
+  docker compose version &>/dev/null
+  # Either prints "Docker Compose version v2.x" and returns with 0,
+  # or prints "docker: 'compose' is not a docker command." and returns with 1.
+}

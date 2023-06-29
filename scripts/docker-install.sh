@@ -49,8 +49,9 @@ docker_version_new_enough() (
 if command -v docker >/dev/null && docker_version_new_enough; then
   color_print $green "Skipped! $(docker --version) found."
 else
-  # Download and install
-  # The script says it can be used to update  https://github.com/docker/docker-install/blob/0c9037543e67d311c57fe5ec9626052e0f37bb3f/install.sh#L276
+  # Download and install.
+  # The script says it can be used to update  (https://github.com/docker/docker-install/blob/c2de0811708b6d9015ed1a2c80f02c9b70c8ce7b/install.sh#L377)
+  # and that it installs Compose              (https://github.com/docker/docker-install/blob/c2de0811708b6d9015ed1a2c80f02c9b70c8ce7b/install.sh#L19)
   sudo apt-get install -y curl jq
   curl -fsSL https://get.docker.com -o get-docker.sh
   chmod +x get-docker.sh
@@ -68,21 +69,17 @@ if ! groups | grep -qw docker; then
 fi
 
 
-title_print "Installing Docker-compose..."
-
-have_docker_dash_compose() {
-  command -v docker-compose >/dev/null
-}
-
-if have_docker_dash_compose; then
-  color_print $green "Skipped! docker-compose command found."
-else
-  # Download and allow execute
-  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  sudo chmod +x /usr/local/bin/docker-compose
-
-  color_print $green "Docker-compose v1 installation completed."
+if ! has_compose_plugin; then
+  color_print $yellow "Modern docker version is present, but compose plugin is not?"
+  # Hope this fixes it:
+  sudo apt-get install -y docker-compose-plugin
+  if ! has_compose_plugin; then
+    color_print $red 'This is unexpected. docker-compose-plugin should have been installed,
+but "docker compose" is not working.'
+    exit 1
+  fi
 fi
+
 
 enable_buildkit() {
   if ! [ -s /etc/docker/daemon.json ]; then
