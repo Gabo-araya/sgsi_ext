@@ -88,6 +88,8 @@ omit = [
   "*/tests.py",
   "*/test_*.py",
   "*/*_tests.py",
+  "project/test_settings.py",
+  "project/settings.py",
 ]
 
 [tool.ruff]
