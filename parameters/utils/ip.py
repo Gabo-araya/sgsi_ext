@@ -19,6 +19,11 @@ class BaseRange:
             raise TypeError(msg)
         return self.start <= other <= self.end
 
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        return self.start == other.start and self.end == other.end
+
     def __init__(self, start, end):
         if isinstance(start, str):
             start = self._address_class(start)

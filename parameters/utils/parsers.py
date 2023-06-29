@@ -8,6 +8,7 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.utils import formats
+from django.utils.timezone import get_current_timezone
 from django.utils.translation import gettext_lazy as _
 
 from pytz import timezone
@@ -103,9 +104,9 @@ def parse_time_value(value):
             value,
             input_formats,
             lambda v, f: (
-                datetime.datetime.strptime(v, f)
-                .astimezone(timezone(settings.TIME_ZONE))
+                datetime.datetime.strptime(v, f)  # noqa: DTZ007
                 .time()
+                .replace(tzinfo=get_current_timezone())
             ),
         )
     except ValidationError as error:
@@ -178,6 +179,9 @@ def parse_ip_address_value(value):
     if value in EMPTY_VALUES:
         return None
 
+    if isinstance(value, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
+        return value
+
     value = value.strip()
     if ":" in value:
         try:
@@ -197,6 +201,9 @@ def parse_ip_prefix_value(value):
     if value in EMPTY_VALUES:
         return None
 
+    if isinstance(value, (ipaddress.IPv4Network, ipaddress.IPv6Network)):
+        return value
+
     value = value.strip()
     if ":" in value:
         try:
@@ -212,16 +219,25 @@ def parse_ip_prefix_value(value):
         raise ValidationError(msg, code="invalid") from error
 
 
-def parse_ip_range_value(value):
+def parse_ip_range_value(value):  # noqa: C901
     if value in EMPTY_VALUES:
         return None
 
+    if isinstance(value, (IPv4Range, IPv6Range)):
+        return value
+
     value = value.strip()
     range_values = value.split("-")
-    valid_range = 2
-    if len(range_values) != valid_range:
+    if not range_values or len(range_values) > 2:  # noqa: PLR2004
         msg = _("Enter a valid address range.")
         raise ValidationError(msg, code="invalid")
+    elif len(range_values) == 1:  # noqa: RET506
+        address = parse_ip_address_value(range_values[0])
+        if isinstance(address, ipaddress.IPv4Address):
+            return IPv4Range(address, address)
+        if isinstance(address, ipaddress.IPv6Address):
+            return IPv6Range(address, address)
+        raise ValidationError(_("Unknown address family."), code="invalid")
 
     range_lower, range_higher = (
         parse_ip_address_value(range_values[0]),
@@ -230,7 +246,7 @@ def parse_ip_range_value(value):
     if type(range_lower) is not type(range_higher):
         msg = _("Both values must belong to the same address family.")
         raise ValidationError(msg, code="family_mismatch")
-    if range_lower >= range_higher:
+    if range_lower > range_higher:
         msg = _("Lower address must be put first.")
         raise ValidationError(msg, code="ordering")
 
@@ -246,6 +262,11 @@ def parse_single_ip_network_value(value):
     if value in EMPTY_VALUES:
         return None
 
+    if isinstance(
+        value, (IPv4Range, IPv6Range, ipaddress.IPv4Network, ipaddress.IPv6Network)
+    ):
+        return value
+
     value = value.strip()
     if "-" in value:
         return parse_ip_range_value(value)
@@ -258,8 +279,18 @@ def parse_ip_network_value(value, multiple=False):
 
     Multiple values are supported by setting `multiple=True`. In this case, the
     return value will always be a list."""
+    valid_values = (IPv4Range, IPv6Range, ipaddress.IPv4Network, ipaddress.IPv6Network)
+
     if value in EMPTY_VALUES:
         return None
+
+    if multiple:
+        if isinstance(value, (tuple, list)) and all(
+            isinstance(item, valid_values) for item in value
+        ):
+            return value
+    elif isinstance(value, valid_values):
+        return value
 
     value = value.strip()
     if multiple:
