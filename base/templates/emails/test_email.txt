@@ -1,0 +1,6 @@
+This is a test email.
+
+Context:
+{{ value_a }}
+{{ value_b }}
+{{ value_c }}
