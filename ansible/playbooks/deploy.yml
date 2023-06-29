@@ -143,13 +143,13 @@
 
     - name: show deployment checks
       debug:
-        msg: "{{ depl_checks.stdout }}"
-        # TODO: show something if the container is "restarting"
-        # (print stderr when stdout is empty, is enough?).
-        # This happens when the container fails to start,
-        # for example because a check in its CMD fails with "exit 1".
-        # And then "docker compose exec" fails with no output,
-        # so this task mysteriously fails without explanation.
+        msg: "{{ depl_checks.stdout }}\n{{ depl_checks.stderr }}"
+        # stdout normally contains the output from "dj check",
+        # but in case of errors, the output from compose should be shown as well, for example:
+        #   - "cannot exec in a stopped state: unknown" from stdout
+        #   - "Error response from daemon: Container 123... is restarting" from stderr
+        # The "build and start containers" task run before checks if the containers started,
+        # but not that they didn't crash shortly afterwards.
       failed_when: depl_checks.rc > 0
       tags: update
 
