@@ -76,7 +76,7 @@ python_files = [
 junit_family = "xunit2"
 
 [tool.coverage.report]
-fail_under = 60
+fail_under = 70
 sort = "-Cover"
 
 [tool.coverage.run]
