@@ -13,6 +13,7 @@ from itertools import cycle
 from django.apps import apps
 from django.conf import settings
 from django.db import models
+from django.utils import numberformat
 from django.utils import timezone
 
 # others libraries
@@ -42,11 +43,17 @@ def format_rut(rut):
     if type(verifier) == str:
         verifier = verifier.upper()
 
-    code = rut[0:-1][::-1]
+    int_code = int(rut[0:-1])
 
-    code = re.sub("(.{3})", "\\1.", code, 0, re.DOTALL)
-
-    code = code[::-1]
+    code = numberformat.format(
+        int_code,
+        ",",
+        decimal_pos=0,
+        grouping=3,
+        thousand_sep=".",
+        force_grouping=True,
+        use_l10n=False,
+    )
 
     return f"{code}-{verifier}"
 
