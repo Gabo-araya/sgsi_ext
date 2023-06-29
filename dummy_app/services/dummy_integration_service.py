@@ -12,25 +12,25 @@ class DummyError(Exception):
     ...
 
 
-def handle_dummies_fetch(response: requests.Response, error):
-    print(response.json())  # noqa: T201
+def handle_dummies_fetch(response, error):
+    print(response)  # noqa: T201
 
 
-def handle_dummies_creation(response: requests.Response, error):
+def handle_dummies_creation(response, error):
     if response.status_code != HTTPStatus.CREATED:
         print("Error creating dummy")  # noqa: T201
     else:
-        print(response.json())  # noqa: T201
+        print(response)  # noqa: T201
 
 
-def handle_dummies_edition(response: requests.Response, error):
+def handle_dummies_edition(response, error):
     if response.status_code != HTTPStatus.OK:
         print("Error editing dummy")  # noqa: T201
     else:
-        print(response.json())  # noqa: T201
+        print(response)  # noqa: T201
 
 
-def handle_dummies_deletion(response: requests.Response, error):
+def handle_dummies_deletion(response, error):
     if response.status_code != HTTPStatus.NO_CONTENT:
         print("Error deleting dummy")  # noqa: T201
     else:
