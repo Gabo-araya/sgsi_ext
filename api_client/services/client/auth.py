@@ -51,15 +51,26 @@ class BasicAuth(SerializableAuthBase, HTTPBasicAuth):
 
 
 class BearerAuth(SerializableAuthBase):
-    """Basic bearer authentication."""
+    """
+    Basic bearer authentication.
 
-    def __init__(self, token, auth_type="Bearer"):
+    By default, it sends the following string::
+
+        Authorization: <auth_type> <token>
+
+    Both auth_type and header can be customized to better suit specific services. If
+    auth_type is not set, only the token will be sent.
+    """
+
+    def __init__(self, token, auth_type="Bearer", auth_header="Authorization"):
+        self.auth_header = auth_header
         self.token = token
         self.auth_type = auth_type
 
     def __eq__(self, other):
         return all(
             [
+                self.auth_header == getattr(other, "auth_header", None),
                 self.token == getattr(other, "token", None),
                 self.auth_type == getattr(other, "auth_type", None),
             ]
@@ -69,8 +80,13 @@ class BearerAuth(SerializableAuthBase):
         return not self == other
 
     def __call__(self, request):
-        request.headers["Authorization"] = f"{self.auth_type} {self.token}"
+        auth_string = f"{self.auth_type} {self.token}" if self.auth_type else self.token
+        request.headers[self.auth_header] = auth_string
         return request
 
     def get_init_kwargs(self):
-        return {"token": self.token, "auth_type": self.auth_type}
+        return {
+            "auth_header": self.auth_header,
+            "token": self.token,
+            "auth_type": self.auth_type,
+        }
