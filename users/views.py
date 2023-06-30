@@ -45,13 +45,10 @@ class LoginView(auth_views.LoginView):
         return context
 
     def get_form_class(self):
-        login_try_count = self.request.session.get("login_try_count", 0)
-        if self.request.method == "POST":
-            self.request.session["login_try_count"] = login_try_count + 1
-
-        if login_try_count >= settings.RECAPTCHA_LOGIN_ATTEMPTS:
+        session = self.request.session
+        session["login_try_count"] = session.get("login_try_count", 0) + 1
+        if session["login_try_count"] > settings.RECAPTCHA_LOGIN_ATTEMPTS:
             return CaptchaAuthenticationForm
-
         return super().get_form_class()
 
 
