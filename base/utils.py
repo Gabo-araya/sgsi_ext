@@ -34,19 +34,16 @@ def format_rut(rut):
         return ""
 
     rut = re.sub(RUT_FILTER_RE, "", rut)
-    rut = rut[:9]
-
     if not rut:
         return ""
 
-    verifier = rut[-1]
-    if type(verifier) == str:
-        verifier = verifier.upper()
+    if len(rut) < 2:  # noqa: PLR2004
+        msg = "RUTs must have at least two digits"
+        raise ValueError(msg)
 
-    int_code = int(rut[0:-1])
-
+    digits, verifier = int(rut[:-1]), rut[-1]
     code = numberformat.format(
-        int_code,
+        digits,
         ",",
         decimal_pos=0,
         grouping=3,
