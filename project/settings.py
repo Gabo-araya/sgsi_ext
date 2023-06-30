@@ -67,6 +67,8 @@ TEST = False
 # Please edit test_settings to define your ignored namespaces
 URLS_TEST_IGNORED_NAMESPACES = []
 
+TEST_RUNNER = "project.test_runner.PytestTestRunner"
+
 ALLOWED_HOSTS = [
     os.environ.get("ALLOWED_HOST", ""),
     "localhost",
