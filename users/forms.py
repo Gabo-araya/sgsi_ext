@@ -129,8 +129,6 @@ class AuthenticationForm(forms.Form):
 
 
 class CaptchaAuthenticationForm(AuthenticationForm):
-    """a user authentication form with a captcha"""
-
     captcha = ReCaptchaField(
         label=_("¿Are you Human?"),
     )
