@@ -789,6 +789,21 @@ files = [
 ]
 
 [[package]]
+name = "django-recaptcha"
+version = "3.0.0"
+description = "Django recaptcha form field/widget app."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-recaptcha-3.0.0.tar.gz", hash = "sha256:253197051288923cae675d7eff91b619e3775311292a5dbaf27a8a55ffebc670"},
+    {file = "django_recaptcha-3.0.0-py3-none-any.whl", hash = "sha256:1aed69fd6ac8fd9e99e52665392ae6748f8b6339ace656fad779fe0c6c915a52"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-redis"
 version = "5.2.0"
 description = "Full featured redis cache backend for Django."
@@ -2079,4 +2094,4 @@ ansible = ["ansible-core", "yq"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "58eb19e312d92d1dd9bf8acea93d575ff78560ee7e17a367a26485bed913da66"
+content-hash = "22b46be0b7445afd2fc2684c7c57d9492ab6553361ebc2c69bb6d0f236dbd787"
