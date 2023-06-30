@@ -5,32 +5,32 @@ import requests
 from api_client.enums import ClientCodes
 from api_client.services.client import ApiClientConfiguration
 from api_client.services.client import JsonApiClient
-from api_client.services.client import SerializableAuthBase
+from api_client.services.client.auth import BearerAuth
 
 
 class DummyError(Exception):
     ...
 
 
-def handle_dummies_fetch(response: requests.Response, error):
-    print(response.json())  # noqa: T201
+def handle_dummies_fetch(response, error):
+    print(response)  # noqa: T201
 
 
-def handle_dummies_creation(response: requests.Response, error):
+def handle_dummies_creation(response, error):
     if response.status_code != HTTPStatus.CREATED:
         print("Error creating dummy")  # noqa: T201
     else:
-        print(response.json())  # noqa: T201
+        print(response)  # noqa: T201
 
 
-def handle_dummies_edition(response: requests.Response, error):
+def handle_dummies_edition(response, error):
     if response.status_code != HTTPStatus.OK:
         print("Error editing dummy")  # noqa: T201
     else:
-        print(response.json())  # noqa: T201
+        print(response)  # noqa: T201
 
 
-def handle_dummies_deletion(response: requests.Response, error):
+def handle_dummies_deletion(response, error):
     if response.status_code != HTTPStatus.NO_CONTENT:
         print("Error deleting dummy")  # noqa: T201
     else:
@@ -41,31 +41,16 @@ def handle_error(response: requests.Response, error):
     print(f"Something happened: {str(error)}")  # noqa: T201
 
 
-class SimpleTokenAuth(SerializableAuthBase):
-    def get_init_kwargs(self):
-        return {"token": self.token}
-
-    def __init__(self, token):
-        self.token = token
-
-    def __eq__(self, other):
-        return self.token == getattr(other, "token", None)
-
-    def __ne__(self, other):
-        return not self == other
-
-    def __call__(self, r):
-        r.headers["Authorization"] = f"DummyToken {self.token}"
-        return r
-
-
 class DummyIntegrationService:
     def __init__(self) -> None:
         configuration = ApiClientConfiguration(
             code=ClientCodes.DUMMY_INTEGRATION,
             scheme="http",
             host="localhost:8000/api/v1",
-            auth=SimpleTokenAuth("thisismagnetbestkeptsecretpleasedonotcopy(c)magnet"),
+            auth=BearerAuth(
+                "thisismagnetbestkeptsecretpleasedonotcopy(c)magnet",
+                auth_type="DummyToken",
+            ),
         )
         self.api_client = JsonApiClient(configuration)
 
