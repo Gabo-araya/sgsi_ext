@@ -1,6 +1,7 @@
 """ The users app views"""
 
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -19,6 +20,7 @@ from base.views.generic import BaseListView
 
 # forms
 from users.forms import AuthenticationForm
+from users.forms import CaptchaAuthenticationForm
 from users.forms import UserCreationForm
 from users.forms import UserForm
 from users.models import User
@@ -43,9 +45,13 @@ class LoginView(auth_views.LoginView):
         return context
 
     def get_form_class(self):
-        """
-        TODO Consider using captcha.
-        """
+        login_try_count = self.request.session.get("login_try_count", 0)
+        if self.request.method == "POST":
+            self.request.session["login_try_count"] = login_try_count + 1
+
+        if login_try_count >= settings.RECAPTCHA_LOGIN_ATTEMPTS:
+            return CaptchaAuthenticationForm
+
         return super().get_form_class()
 
 

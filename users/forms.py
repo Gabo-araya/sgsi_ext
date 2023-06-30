@@ -9,6 +9,8 @@ from django.template import loader
 from django.utils.http import int_to_base36
 from django.utils.translation import gettext_lazy as _
 
+from captcha.fields import ReCaptchaField
+
 from base.forms import BaseModelForm
 from users.models import User
 
@@ -124,6 +126,14 @@ class AuthenticationForm(forms.Form):
             code="invalid_login",
             params={"email": self.email_field.verbose_name},
         )
+
+
+class CaptchaAuthenticationForm(AuthenticationForm):
+    """a user authentication form with a captcha"""
+
+    captcha = ReCaptchaField(
+        label=_("¿Are you Human?"),
+    )
 
 
 class AdminAuthenticationForm(AuthenticationForm):
@@ -243,7 +253,6 @@ class UserCreationForm(BaseModelForm):
             user.save()
 
         if verify_email_address:
-
             from django.core.mail import send_mail
 
             if not domain_override:
