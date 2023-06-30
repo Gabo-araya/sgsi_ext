@@ -23,13 +23,8 @@ class ChileanRUTField(CharField):
 
     description = _("Chilean RUT (up to %(max_length)s)")
     default_error_messages = {
-        "invalid_format": _(
-            "'%(value)s' value has an invalid format. "
-            "It must be in XX.XXX.XXX-Y format or "
-            "XXXXXXXXY format.",
-        ),
-        "invalid_rut": _(
-            "'%(value)s' value has the correct format but it is an invalid rut.",
+        "invalid": _(
+            "'%(value)s' is an invalid RUT.",
         ),
         "invalid_type": _("'%(value)s' must be str or None."),
     }
@@ -53,7 +48,7 @@ class ChileanRUTField(CharField):
 
         if not utils.validate_rut(value):
             raise ValidationError(
-                self.error_messages["invalid_rut"],
+                self.error_messages["invalid"],
                 code="invalid",
                 params={"value": value},
             )

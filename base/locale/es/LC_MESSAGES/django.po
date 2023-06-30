@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-19 15:56-0400\n"
-"PO-Revision-Date: 2022-05-06 08:35-0400\n"
-"Last-Translator: Magnet D3PT Team <d3pt@magnet.cl>\n"
+"POT-Creation-Date: 2023-06-30 17:09-0400\n"
+"PO-Revision-Date: 2023-06-30 17:09-0400\n"
+"Last-Translator: Nicolás Stuardo <nicolas.stuardo@magnet.cl>\n"
 "Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: fields/base.py
 #, python-format
@@ -23,48 +24,39 @@ msgstr "RUT chileno (hasta %(max_length)s)"
 
 #: fields/base.py
 #, python-format
-msgid ""
-"'%(value)s' value has an invalid format. It must be in XX.XXX.XXX-Y format "
-"or XXXXXXXXY format."
-msgstr ""
-"El valor '%(value)s' no tiene un formato válido. El formato aceptado es XX."
-"XXX.XXX-Y o XXXXXXXXY."
-
-#: fields/base.py
-#, python-format
-msgid "'%(value)s' value has the correct format  but it is an invalid rut."
-msgstr "'%(value)s' cumple con el formato pero no es un RUT válido."
+msgid "'%(value)s' is an invalid RUT."
+msgstr "'%(value)s' no es un RUT válido."
 
 #: fields/base.py
 #, python-format
 msgid "'%(value)s' must be str or None."
 msgstr "'%(value)s' debe ser una cadena de texto o None."
 
-#: models.py
+#: models/base_model.py
 msgid "No"
 msgstr "No"
 
-#: models.py
+#: models/base_model.py
 msgid "Yes"
 msgstr "Sí"
 
-#: models.py
+#: models/base_model.py
 msgid "creation date"
 msgstr "fecha de creación"
 
-#: models.py
+#: models/base_model.py
 msgid "created at"
 msgstr "creado el"
 
-#: models.py
+#: models/base_model.py
 msgid "edition date"
 msgstr "fecha de edición"
 
-#: models.py
+#: models/base_model.py
 msgid "updated at"
 msgstr "actualizado el"
 
-#: models.py
+#: models/orderable_model.py
 msgid "display order"
 msgstr "orden de presentación"
 
