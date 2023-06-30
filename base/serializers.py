@@ -3,7 +3,6 @@
 All apps should use the BaseModel as parent for all models
 """
 
-
 import datetime
 import decimal
 import uuid
@@ -59,6 +58,13 @@ class StringFallbackJSONEncoder(JSONEncoder):
         return self.process_other(obj)
 
     def process_other(self, obj):
+        # dict-like classes that don't descend from `dict` are handled with duck typing
+        if hasattr(obj, "__getitem__"):
+            cls = list if isinstance(obj, (list, tuple)) else dict
+            try:
+                return cls(obj)
+            except ValueError:
+                return self.process_other(obj)
         try:
             return force_str(obj)
         except Exception:  # noqa: BLE

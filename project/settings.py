@@ -20,6 +20,8 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 from django.urls import reverse_lazy
 
+from celery.schedules import crontab
+
 
 def get_env_value(key, default, default_if_blank=False):
     try:
@@ -62,6 +64,9 @@ ENVIRONMENT_NAME = get_env_value(
 # WARNING: do not make your code depend on this value
 TEST = False
 
+# Please edit test_settings to define your ignored namespaces
+URLS_TEST_IGNORED_NAMESPACES = []
+
 ALLOWED_HOSTS = [
     os.environ.get("ALLOWED_HOST", ""),
     "localhost",
@@ -87,6 +92,7 @@ INSTALLED_APPS = [
     "users",
     # external
     "loginas",
+    "api_client",
     "webpack_loader",
     "django_celery_beat",
     "rest_framework",
@@ -190,10 +196,23 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+DATABASE_ROUTERS = ["api_client.db_router.ClientLogDbRouter"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": os.environ.get("PGDATABASE"),
+        "USER": os.environ.get("PGUSER"),
+        "PASSWORD": os.environ.get("PGPASSWORD"),
+        "HOST": os.environ.get("PGHOST", "127.0.0.1"),
+        "PORT": os.environ.get("PGPORT", "5432"),
+        "DISABLE_SERVER_SIDE_CURSORS": (
+            get_bool_from_env("POSTGRES_DISABLE_SERVER_SIDE_CURSORS", False)
+        ),
+    },
+    "logs": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": f"{os.environ.get('PGDATABASE')}-logs",
         "USER": os.environ.get("PGUSER"),
         "PASSWORD": os.environ.get("PGPASSWORD"),
         "HOST": os.environ.get("PGHOST", "127.0.0.1"),
@@ -350,6 +369,9 @@ LOGGING = {
             "format": "[{server_time}] {message}",
             "style": "{",
         },
+        "api_clients": {
+            "()": "project.logging.JsonFormatter",
+        },
         "celery_json": {
             "()": "project.logging.JsonCeleryFormatter",
             "datefmt": "%Y-%m-%dT%H:%M:%SZ",
@@ -382,6 +404,11 @@ LOGGING = {
             "filters": ["require_debug_false"],
             "class": "django.utils.log.AdminEmailHandler",
         },
+        "api_clients": {
+            "level": "ERROR",
+            "class": "logging.StreamHandler",
+            "formatter": "api_clients",
+        },
         "celery_app": {
             "level": "DEBUG" if DEBUG else "INFO",
             "class": "logging.StreamHandler",
@@ -403,6 +430,11 @@ LOGGING = {
         "django.server": {
             "handlers": ["django.server"],
             "level": "INFO",
+            "propagate": False,
+        },
+        "api_clients": {
+            "handlers": ["api_clients"],
+            "level": "ERROR",
             "propagate": False,
         },
         "celery.app.trace": {
@@ -512,6 +544,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "base.tasks.sample_scheduled_task",
         "schedule": timedelta(seconds=60),
     },
+    "monthly-api-logs-cleanup": {
+        "task": "api_client.tasks.client_log_cleanup",
+        "schedule": crontab(0, 0, day_of_month="1"),
+    },
 }
 """
 More examples:
@@ -541,3 +577,20 @@ MESSAGE_TAGS = {
     messages.DEBUG: "dark",
     messages.ERROR: "danger",
 }
+
+
+# Client settings
+API_CLIENT_MAX_TIMEOUT = int(
+    get_env_value(
+        "API_CLIENT_MAX_TIMEOUT",
+        60,
+        default_if_blank=True,
+    )
+)
+API_CLIENT_LOG_MAX_AGE_DAYS = int(
+    get_env_value(
+        "API_CLIENT_LOG_MAX_AGE_DAYS",
+        365,
+        default_if_blank=True,
+    )
+)

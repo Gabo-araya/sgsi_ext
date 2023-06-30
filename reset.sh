@@ -9,9 +9,12 @@ if [[ $DEBUG != "True" ]]; then
   exit 1
 fi
 
-psql \
-  -c "drop database if exists \"$PGDATABASE\";" \
-  -c "create database \"$PGDATABASE\";" \
+psql -e \
+  -c 'drop database if exists "'"$PGDATABASE"'";' \
+  -c 'drop database if exists "'"$PGDATABASE"'-logs";' \
+  -c 'create database "'"$PGDATABASE"'";' \
+  -c 'create database "'"$PGDATABASE"'-logs";' \
   postgres
 
 ./manage.py migrate # --yes-input
+./manage.py migrate --database logs

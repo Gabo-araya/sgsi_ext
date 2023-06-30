@@ -1,0 +1,10 @@
+{% load i18n %}
+{% autoescape off %}
+
+Error Report:
+
+Client: {{ client_code }}
+Request: {{ method }} {{ url }}
+Error: {{ error }}
+
+{% endautoescape %}

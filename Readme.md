@@ -307,6 +307,12 @@ The included navbar template can be found in `base/templates/includes/navbar.pug
 
 The included footer template can be found in `base/templates/includes/footer.pug`
 
+### API Client
+D3PT now includes an API client app to standardize the development of external
+integrations. An example integration is available in the `dummy_app` directory. 
+
+For additional documentation, see the `api_client/README.md` file.
+
 ### Development container configuration
 #### User and Group IDs
 Development containers created by `quickstart.sh` automatically use the host

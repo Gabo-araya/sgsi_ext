@@ -1,0 +1,20 @@
+{% load i18n %}
+{% autoescape off %}
+
+<h2>Error Report:</h2>
+<table>
+    <tr>
+        <td>Client</td>
+        <td>{{ client_code }}</td>
+    </tr>
+    <tr>
+        <td>Request</td>
+        <td>{{ method }} {{ url }}</td>
+    </tr>
+    <tr>
+        <td>Error</td>
+        <td>{{ error }}</td>
+    </tr>
+</table>
+
+{% endautoescape %}

@@ -65,6 +65,7 @@ prompt "\n\nWould you like to run migrations? [Y/n]" "Y"
 input_lower=${input,,}
 if [[ $input_lower == y ]]; then
   echo "docker compose exec -T django dj migrate" | newgrp docker
+  echo "docker-compose exec -T django dj migrate --database logs" | newgrp docker
 
   superuserexists_ret=0
   echo "docker compose exec -T django dj superuserexists" | newgrp docker \
