@@ -57,7 +57,7 @@ def format_rut(rut):
 
 def rut_verifying_digit(rut):
     """
-    Uses a mod11 algorithm to compute RUT"s check digit.
+    Uses a mod11 algorithm to compute RUT's check digit.
     Returns a value from 0 to 9 or k.
     """
 
@@ -71,9 +71,11 @@ def rut_verifying_digit(rut):
 def validate_rut(rut):
     rut = rut.strip().lower()
     rut = re.sub(RUT_FILTER_RE, "", rut)
-    aux = rut[:-1]
-    dv = rut[-1:]
 
+    if len(rut) < 2:  # noqa: PLR2004
+        return False
+
+    aux, dv = rut[:-1], rut[-1]
     res = rut_verifying_digit(aux)
 
     return res == dv
