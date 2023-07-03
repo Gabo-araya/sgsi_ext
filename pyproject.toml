@@ -64,6 +64,7 @@ required_plugins = "pytest-django"
 DJANGO_SETTINGS_MODULE = "project.test_settings"
 addopts = [
   "-v",
+  "--cov",
   "--tb=native",
   "--junit-xml=test-results/pytest.xml"
 ]
@@ -74,12 +75,21 @@ python_files = [
 ]
 junit_family = "xunit2"
 
+[tool.coverage.report]
+fail_under = 70
+sort = "-Cover"
+
 [tool.coverage.run]
 omit = [
   "*/management/*",
   "*/migrations/*",
   "*/test/*",
-  "*/tests.py"
+  "*/tests/*",
+  "*/tests.py",
+  "*/test_*.py",
+  "*/*_tests.py",
+  "project/test_settings.py",
+  "project/settings.py",
 ]
 
 [tool.ruff]
