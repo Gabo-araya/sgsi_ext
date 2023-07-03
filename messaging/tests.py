@@ -1,8 +1,7 @@
 from messaging.email_manager import send_emails
 
 
-def test_send_email(settings, mailoutbox):
-    settings.TEST = False
+def test_send_email(mailoutbox):
     context = {
         "value_a": 123,
         "value_b": "test",
