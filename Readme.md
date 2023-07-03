@@ -268,6 +268,19 @@ them in `parameters/definitions.py`. There is an example with a parameter called
 #### Users
 App that overrides the Django User with the class `User` that is easily modifiable.
 
+##### Login with ReCaptcha
+
+This app implements login with ReCaptcha after a configurable number of login
+attempts, after which a new recaptcha field is added to the login form.
+
+This feature consumes the following env variables:
+
+- `RECAPTCHA_PUBLIC_KEY`
+- `RECAPTCHA_PRIVATE_KEY`
+- `RECAPTCHA_LOGIN_ATTEMPTS`
+
+By default the login attempts are 20.
+
 ### Pug
 The template engine used is pypugjs, a python implementation of the
 [pugjs](https://pugjs.org/api/getting-started.html) template engine. This

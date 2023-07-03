@@ -5,7 +5,6 @@ Tests for the user app
 from http import HTTPStatus
 from urllib.parse import urlparse
 
-from django.test import override_settings
 from django.urls import reverse
 
 import pytest
