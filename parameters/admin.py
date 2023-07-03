@@ -3,13 +3,15 @@
 
 from django.contrib import admin
 
-from .definitions import ParameterDefinitionList
-from .models import Parameter
+from parameters.definitions import ParameterDefinitionList
+from parameters.forms import ParameterForm
+from parameters.models import Parameter
 
 
 @admin.register(Parameter)
 class ParameterAdmin(admin.ModelAdmin):
     list_display = ("name", "raw_value", "cache_seconds")
+    form = ParameterForm
 
     fields = (
         "name",
