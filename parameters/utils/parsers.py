@@ -288,8 +288,13 @@ def parse_ip_network_value(value):
 
 
 def parse_multiple_ip_network_value(value):
+    valid_values = (IPv4Range, IPv6Range, ipaddress.IPv4Network, ipaddress.IPv6Network)
     if value in EMPTY_VALUES:
         return None
+    if isinstance(value, (tuple, list)) and all(
+        isinstance(item, valid_values) for item in value
+    ):
+        return value
     values = value.strip().split("\n")
     networks = (parse_single_ip_network_value(_value) for _value in values)
     return [network for network in networks if network]

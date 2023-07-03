@@ -12,6 +12,8 @@ from base.utils import random_string
 
 # enums
 from parameters.definitions import ParameterDefinitionList
+from parameters.enums import ParameterKind
+from parameters.forms import ParameterForm
 from parameters.models import Parameter
 from parameters.utils.ip import IPv4Range
 from parameters.utils.ip import IPv6Range
@@ -24,6 +26,8 @@ from parameters.utils.parsers import parse_ip_network_value
 from parameters.utils.parsers import parse_ip_prefix_value
 from parameters.utils.parsers import parse_ip_range_value
 from parameters.utils.parsers import parse_json_value
+from parameters.utils.parsers import parse_multiple_hostname_value
+from parameters.utils.parsers import parse_multiple_ip_network_value
 from parameters.utils.parsers import parse_single_hostname_value
 from parameters.utils.parsers import parse_single_ip_network_value
 from parameters.utils.parsers import parse_str_value
@@ -218,35 +222,53 @@ class ParameterTestCase(BaseTestCase):
 
     def test_parse_hostname_value(self):
         for value in validators.EMPTY_VALUES:
-            self.assertIsNone(parse_hostname_value(value, multiple=False))
-            self.assertIsNone(parse_hostname_value(value, multiple=True))
+            self.assertIsNone(parse_hostname_value(value))
+            self.assertIsNone(parse_multiple_hostname_value(value))
 
         values_to_test = (
-            ("  ", False, None, does_not_raise()),
-            ("magnet.cl", False, "magnet.cl", does_not_raise()),
+            (
+                "  ",
+                parse_hostname_value,
+                None,
+                does_not_raise(),
+            ),
+            ("magnet.cl", parse_hostname_value, "magnet.cl", does_not_raise()),
             (
                 "magnet.cl\nwww.magnet.cl",
-                False,
+                parse_hostname_value,
                 None,
                 self.assertRaises(ValidationError),
             ),
-            ("256.1.562.6", False, None, self.assertRaises(ValidationError)),
-            ("   ", True, [], does_not_raise()),
-            ("magnet.cl", True, ["magnet.cl"], does_not_raise()),
+            (
+                "256.1.562.6",
+                parse_hostname_value,
+                None,
+                self.assertRaises(ValidationError),
+            ),
+            ("   ", parse_multiple_hostname_value, [], does_not_raise()),
+            (
+                "magnet.cl",
+                parse_multiple_hostname_value,
+                ["magnet.cl"],
+                does_not_raise(),
+            ),
             (
                 "magnet.cl\nwww.magnet.cl",
-                True,
+                parse_multiple_hostname_value,
                 ["magnet.cl", "www.magnet.cl"],
                 does_not_raise(),
             ),
-            ("256.1.562.6", True, None, self.assertRaises(ValidationError)),
+            (
+                "256.1.562.6",
+                parse_multiple_hostname_value,
+                None,
+                self.assertRaises(ValidationError),
+            ),
         )
 
-        for raw_value, multiple, expected_value, expectation in values_to_test:
+        for raw_value, parser, expected_value, expectation in values_to_test:
             with expectation:
-                self.assertEqual(
-                    parse_hostname_value(raw_value, multiple), expected_value
-                )
+                self.assertEqual(parser(raw_value), expected_value)
 
     def test_parse_ip_address_value(self):
         for value in validators.EMPTY_VALUES:
@@ -463,18 +485,46 @@ class ParameterTestCase(BaseTestCase):
             self.assertIsNone(parse_ip_network_value(value))
 
         values_to_test = (
-            ((expected_ipv4_range,), (expected_ipv4_range,), does_not_raise()),
-            ((expected_ipv6_range,), (expected_ipv6_range,), does_not_raise()),
-            ((expected_ipv4_prefix,), (expected_ipv4_prefix,), does_not_raise()),
-            ((expected_ipv6_prefix,), (expected_ipv6_prefix,), does_not_raise()),
-            ("10.26.40.1-10.26.40.16", [expected_ipv4_range], does_not_raise()),
+            (
+                (expected_ipv4_range,),
+                (expected_ipv4_range,),
+                does_not_raise(),
+            ),
+            (
+                (expected_ipv6_range,),
+                (expected_ipv6_range,),
+                does_not_raise(),
+            ),
+            (
+                (expected_ipv4_prefix,),
+                (expected_ipv4_prefix,),
+                does_not_raise(),
+            ),
+            (
+                (expected_ipv6_prefix,),
+                (expected_ipv6_prefix,),
+                does_not_raise(),
+            ),
+            (
+                "10.26.40.1-10.26.40.16",
+                [expected_ipv4_range],
+                does_not_raise(),
+            ),
             (
                 "2800:6D61:676E:6574::1-2800:6D61:676E:6574::2640",
                 [expected_ipv6_range],
                 does_not_raise(),
             ),
-            ("10.26.40.0/24", [expected_ipv4_prefix], does_not_raise()),
-            ("2800:6D61:676E:6574::/64", [expected_ipv6_prefix], does_not_raise()),
+            (
+                "10.26.40.0/24",
+                [expected_ipv4_prefix],
+                does_not_raise(),
+            ),
+            (
+                "2800:6D61:676E:6574::/64",
+                [expected_ipv6_prefix],
+                does_not_raise(),
+            ),
             (
                 (
                     "10.26.40.0/24\n"
@@ -501,5 +551,16 @@ class ParameterTestCase(BaseTestCase):
         for raw_value, expected_value, expectation in values_to_test:
             with expectation:
                 self.assertEqual(
-                    parse_ip_network_value(raw_value, True), expected_value
+                    parse_multiple_ip_network_value(raw_value), expected_value
                 )
+
+    def test_parameter_form(self):
+        for parameter_kind in ParameterKind:
+            parameter = self.mockup.create_parameter(kind=parameter_kind)
+            expected_widget = ParameterForm.WIDGETS.get(
+                parameter_kind, ParameterForm.DEFAULT_WIDGET
+            )
+            form = ParameterForm(instance=parameter)
+            self.assertIsInstance(
+                form.fields["raw_value"].widget, type(expected_widget)
+            )

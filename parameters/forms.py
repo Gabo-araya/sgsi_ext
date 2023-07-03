@@ -9,6 +9,22 @@ from .models import Parameter
 
 
 class ParameterForm(BaseModelForm):
+    DEFAULT_WIDGET = forms.Textarea()
+    WIDGETS: dict[ParameterKind, forms.Widget] = {
+        ParameterKind.INT: forms.NumberInput(),
+        ParameterKind.TIME: AdminTimeWidget(),
+        ParameterKind.DATE: AdminDateWidget(),
+        ParameterKind.JSON: forms.Textarea(),
+        ParameterKind.URL: forms.URLInput(),
+        ParameterKind.BOOL: forms.Select(
+            choices=(
+                ("True", "True"),
+                ("False", "False"),
+            )
+        ),
+        ParameterKind.STR: forms.Textarea(),
+    }
+
     class Meta:
         model = Parameter
         exclude = ()
@@ -18,17 +34,4 @@ class ParameterForm(BaseModelForm):
         self.fields["raw_value"].widget = self.get_widget(self.instance.kind)
 
     def get_widget(self, kind: ParameterKind) -> forms.Widget:
-        return {
-            ParameterKind.INT: forms.NumberInput(),
-            ParameterKind.TIME: AdminTimeWidget(),
-            ParameterKind.DATE: AdminDateWidget(),
-            ParameterKind.JSON: forms.Textarea(),
-            ParameterKind.URL: forms.URLInput(),
-            ParameterKind.BOOL: forms.Select(
-                choices=(
-                    ("True", "True"),
-                    ("False", "False"),
-                )
-            ),
-            ParameterKind.STR: forms.Textarea(),
-        }.get(kind, forms.Textarea())
+        return self.WIDGETS.get(kind, self.DEFAULT_WIDGET)
