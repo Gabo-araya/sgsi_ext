@@ -48,10 +48,6 @@ def send_emails(  # noqa: PLR0913
 
     msg.attach_alternative(html_content, "text/html")
 
-    # do not send emails if in testing
-    if settings.TEST:
-        return
-
     msg.send(fail_silently=fail_silently)
 
 
