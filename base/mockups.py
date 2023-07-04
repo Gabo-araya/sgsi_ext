@@ -45,6 +45,7 @@ class Mockup:
         return Commune.objects.create(**kwargs)
 
     def create_parameter(self, **kwargs):
+        self.set_required_string(kwargs, "name")
         return Parameter.objects.create(**kwargs)
 
     def create_region(self, **kwargs):

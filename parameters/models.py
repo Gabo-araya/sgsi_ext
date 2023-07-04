@@ -52,22 +52,16 @@ class Parameter(BaseModel):
     @classmethod
     def process_value(cls, kind, raw_value):
         mapping = {
-            Parameter.INT: parsers.parse_int_value,
-            Parameter.TIME: parsers.parse_time_value,
-            Parameter.DATE: parsers.parse_date_value,
-            Parameter.JSON: parsers.parse_json_value,
-            Parameter.URL: parsers.parse_url_value,
-            Parameter.HOSTNAME: parsers.parse_hostname_value,
-            Parameter.IP_NETWORK: parsers.parse_ip_network_value,
-            Parameter.HOSTNAME_LIST: lambda raw_value: parsers.parse_hostname_value(
-                raw_value,
-                multiple=True,
-            ),
-            Parameter.IP_NETWORK_LIST: lambda raw_value: parsers.parse_ip_network_value(
-                raw_value,
-                multiple=True,
-            ),
-            Parameter.BOOL: parsers.parse_bool_value,
+            ParameterKind.INT: parsers.parse_int_value,
+            ParameterKind.TIME: parsers.parse_time_value,
+            ParameterKind.DATE: parsers.parse_date_value,
+            ParameterKind.JSON: parsers.parse_json_value,
+            ParameterKind.URL: parsers.parse_url_value,
+            ParameterKind.HOSTNAME: parsers.parse_hostname_value,
+            ParameterKind.IP_NETWORK: parsers.parse_ip_network_value,
+            ParameterKind.HOSTNAME_LIST: parsers.parse_multiple_hostname_value,
+            ParameterKind.IP_NETWORK_LIST: parsers.parse_multiple_ip_network_value,
+            ParameterKind.BOOL: parsers.parse_bool_value,
         }
         function = mapping.get(kind, parsers.parse_str_value)
         return function(raw_value)

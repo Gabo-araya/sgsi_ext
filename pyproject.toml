@@ -90,6 +90,7 @@ omit = [
   "*/*_tests.py",
   "project/test_settings.py",
   "project/settings.py",
+  ".vscode-server"
 ]
 
 [tool.ruff]
