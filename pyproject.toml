@@ -93,6 +93,8 @@ omit = [
   "*/tests.py",
   "*/test_*.py",
   "*/*_tests.py",
+  "*/fixtures.py",
+  "dummy_app/*",
   "project/test_settings.py",
   "project/settings.py",
   ".vscode-server"
