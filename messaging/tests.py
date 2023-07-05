@@ -19,8 +19,7 @@ def test_send_email(mailoutbox):
     assert len(mailoutbox) > 0
 
 
-def test_send_email_no_context(settings, mailoutbox):
-    settings.TEST = False
+def test_send_email_no_context(mailoutbox):
     send_emails(
         ["test@example.com"],
         "test_email",
