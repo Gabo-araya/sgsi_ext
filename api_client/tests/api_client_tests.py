@@ -4,6 +4,9 @@ import pytest
 
 from api_client.services.client import config
 from api_client.services.client import errors
+from api_client.services.client.api_client.base import BaseApiClient
+from api_client.services.client.api_client.blocking import BlockingApiClient
+from api_client.services.client.api_client.non_blocking import NonBlockingApiClient
 from api_client.services.client.auth import BasicAuth
 
 PARAMETRIZED_GET_URL_TESTS = {
@@ -130,3 +133,24 @@ def test_deserialize_configuration():
     assert isinstance(config_obj.auth, BasicAuth)
     assert config_obj.auth.username == "magnet"
     assert config_obj.auth.password == "verysecretpleasedontsteal"  # noqa: S105
+
+
+@pytest.mark.parametrize(
+    ("base_client_klass", "expectation"),
+    (
+        (BlockingApiClient, pytest.raises(TypeError)),
+        (NonBlockingApiClient, pytest.raises(TypeError)),
+        (BaseApiClient, pytest.raises(TypeError)),
+    ),
+    ids=[
+        "blocking-api-client",
+        "non-blocking-api-client",
+        "base-api-client",
+    ],
+)
+def test_cant_use_base_client_models(base_client_klass, expectation):
+    with expectation:
+        api_config = config.ApiClientConfiguration(
+            scheme="http", host="example.com", code="test"
+        )
+        base_client_klass(api_config)

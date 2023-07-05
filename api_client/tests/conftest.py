@@ -1,3 +1,4 @@
+from datetime import timedelta
 from io import BytesIO
 from unittest.mock import patch
 
@@ -7,29 +8,56 @@ import requests
 from requests.structures import CaseInsensitiveDict
 from requests.utils import get_encoding_from_headers
 
+from api_client.enums import ClientCodes
 from api_client.models import ClientConfig
+from api_client.models import ClientLog
 from api_client.services.client import ApiClient
 from api_client.services.client import ApiClientConfiguration
 from api_client.services.client import JsonApiClient
+from base import utils
+
+
+@pytest.fixture
+def client_log_queryset():
+    today = utils.today()
+    yesterday = utils.today() - timedelta(days=1)
+    log_1 = ClientLog.objects.create()
+    log_1.created_at = today
+    log_1.save()
+    log_2 = ClientLog.objects.create()
+    log_2.created_at = yesterday
+    log_2.save()
+    return ClientLog.objects.all()
+
+
+@pytest.fixture
+def client_config() -> ClientConfig:
+    return ClientConfig.objects.create(client_code=ClientCodes.DUMMY_INTEGRATION)
 
 
 @pytest.fixture
 def test_apiclient() -> ApiClient:
     with patch("api_client.services.client.ApiClient.validate_configuration"):
-        config = ApiClientConfiguration(scheme="http", host="example.com", code="test")
+        config = ApiClientConfiguration(
+            scheme="http", host="example.com", code=ClientCodes.DUMMY_INTEGRATION
+        )
         return ApiClient(config)
 
 
 @pytest.fixture
 def test_apiclient_with_trailing_slash() -> ApiClient:
     with patch("api_client.services.client.ApiClient.validate_configuration"):
-        config = ApiClientConfiguration(scheme="http", host="example.com/", code="test")
+        config = ApiClientConfiguration(
+            scheme="http", host="example.com/", code=ClientCodes.DUMMY_INTEGRATION
+        )
         return ApiClient(config)
 
 
 @pytest.fixture
 def disabled_apiclient(test_apiclient, db) -> ApiClient:
-    ClientConfig.objects.create(client_code="test", enabled=False)
+    ClientConfig.objects.create(
+        client_code=ClientCodes.DUMMY_INTEGRATION, enabled=False
+    )
     return test_apiclient
 
 
