@@ -13,7 +13,6 @@ from base.utils import get_slug_fields
 
 EXCLUDED_NAMESPACES = [
     *settings.URLS_TEST_IGNORED_NAMESPACES,
-    "admin",
 ]
 
 
@@ -124,7 +123,7 @@ def reverse_urlpattern(
 
 
 @pytest.mark.slow
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db(transaction=True, databases=["default", "logs"])
 def test_responses(
     superuser_user, superuser_client, default_objects, default_parameter_values
 ):
@@ -165,7 +164,6 @@ def test_responses(
                 test_url_patterns(pattern.url_patterns, pattern.namespace)
 
     test_url_patterns(urlpatterns)
-
     for _, model_admin in admin.site._registry.items():
         patterns = model_admin.get_urls()
         test_url_patterns(patterns, namespace="admin")
