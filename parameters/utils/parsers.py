@@ -159,23 +159,21 @@ def parse_single_hostname_value(value):
     return value
 
 
-def parse_hostname_value(value, multiple=False):
-    """Validator for hostnames. A hostname can be either an IPv4, IPv6 or a name.
-
-    Multiple values are supported by setting `multiple=True`. In this case, the
-    return value will always be a list."""
+def parse_hostname_value(value):
+    """
+    Validator for hostnames. A hostname can be either an IPv4, IPv6 or a name.
+    """
     if value in EMPTY_VALUES:
         return None
+    return parse_single_hostname_value(str(value).strip())
 
-    if isinstance(value, (tuple, list)):
-        return value
 
-    value = str(value).strip()
-    if multiple:
-        values = value.split("\n")
-        hostnames = (parse_single_hostname_value(_value) for _value in values)
-        return [hostname for hostname in hostnames if hostname]
-    return parse_single_hostname_value(value)
+def parse_multiple_hostname_value(value):
+    if value in EMPTY_VALUES:
+        return None
+    values = str(value).strip().split("\n")
+    hostnames = (parse_single_hostname_value(_value) for _value in values)
+    return [hostname for hostname in hostnames if hostname]
 
 
 def parse_ip_address_value(value):
@@ -276,31 +274,30 @@ def parse_single_ip_network_value(value):
     return parse_ip_prefix_value(value)
 
 
-def parse_ip_network_value(value, multiple=False):
-    """Validator for ip prefix or range parameters. Both IPv6 and IPv4 addresses are
+def parse_ip_network_value(value):
+    """
+    Validator for ip prefix or range parameters. Both IPv6 and IPv4 addresses are
     supported.
-
-    Multiple values are supported by setting `multiple=True`. In this case, the
-    return value will always be a list."""
+    """
     valid_values = (IPv4Range, IPv6Range, ipaddress.IPv4Network, ipaddress.IPv6Network)
-
     if value in EMPTY_VALUES:
         return None
-
-    if multiple:
-        if isinstance(value, (tuple, list)) and all(
-            isinstance(item, valid_values) for item in value
-        ):
-            return value
-    elif isinstance(value, valid_values):
+    if isinstance(value, valid_values):
         return value
+    return parse_single_ip_network_value(value.strip())
 
-    value = value.strip()
-    if multiple:
-        values = value.split("\n")
-        networks = (parse_single_ip_network_value(_value) for _value in values)
-        return [network for network in networks if network]
-    return parse_single_ip_network_value(value)
+
+def parse_multiple_ip_network_value(value):
+    valid_values = (IPv4Range, IPv6Range, ipaddress.IPv4Network, ipaddress.IPv6Network)
+    if value in EMPTY_VALUES:
+        return None
+    if isinstance(value, (tuple, list)) and all(
+        isinstance(item, valid_values) for item in value
+    ):
+        return value
+    values = value.strip().split("\n")
+    networks = (parse_single_ip_network_value(_value) for _value in values)
+    return [network for network in networks if network]
 
 
 def parse_bool_value(value):

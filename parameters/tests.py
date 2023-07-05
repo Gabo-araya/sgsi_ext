@@ -3,12 +3,17 @@ import ipaddress
 
 from contextlib import contextmanager
 
+from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
+from django.contrib.admin.widgets import AdminTimeWidget
 from django.core.exceptions import ValidationError
 from django.core.validators import EMPTY_VALUES
 
 import pytest
 
 from parameters.definitions import ParameterDefinitionList
+from parameters.enums import ParameterKind
+from parameters.forms import ParameterForm
 from parameters.models import Parameter
 from parameters.utils.ip import IPv4Range
 from parameters.utils.ip import IPv6Range
@@ -21,6 +26,8 @@ from parameters.utils.parsers import parse_ip_network_value
 from parameters.utils.parsers import parse_ip_prefix_value
 from parameters.utils.parsers import parse_ip_range_value
 from parameters.utils.parsers import parse_json_value
+from parameters.utils.parsers import parse_multiple_hostname_value
+from parameters.utils.parsers import parse_multiple_ip_network_value
 from parameters.utils.parsers import parse_single_hostname_value
 from parameters.utils.parsers import parse_single_ip_network_value
 from parameters.utils.parsers import parse_str_value
@@ -51,6 +58,20 @@ EXPECTED_IPV6_RANGE_SAME = IPv6Range(
 )
 EXPECTED_IPV4_PREFIX = ipaddress.IPv4Network("10.26.40.0/24")
 EXPECTED_IPV6_PREFIX = ipaddress.IPv6Network("2800:6D61:676E:6574::/64")
+
+EXPECTED_PARAMETER_WIDGET = {
+    ParameterKind.INT: forms.NumberInput,
+    ParameterKind.TIME: AdminTimeWidget,
+    ParameterKind.DATE: AdminDateWidget,
+    ParameterKind.JSON: forms.Textarea,
+    ParameterKind.URL: forms.URLInput,
+    ParameterKind.HOSTNAME: forms.Textarea,
+    ParameterKind.IP_NETWORK: forms.Textarea,
+    ParameterKind.HOSTNAME_LIST: forms.Textarea,
+    ParameterKind.IP_NETWORK_LIST: forms.Textarea,
+    ParameterKind.BOOL: forms.Select,
+    ParameterKind.STR: forms.Textarea,
+}
 
 
 @contextmanager
@@ -350,40 +371,47 @@ def test_parse_single_hostname_value(raw_value, expected_value, expectation):
 
 
 @pytest.mark.parametrize(
-    ("raw_value", "multiple", "expected_value", "expectation"),
+    ("raw_value", "expected_value", "expectation"),
     (
-        *((empty_val, False, None, does_not_raise()) for empty_val in EMPTY_VALUES),
-        *((empty_val, True, None, does_not_raise()) for empty_val in EMPTY_VALUES),
-        ("  ", False, None, does_not_raise()),
-        ("magnet.cl", False, "magnet.cl", does_not_raise()),
-        ("magnet.cl\nwww.magnet.cl", False, None, pytest.raises(ValidationError)),
-        ("256.1.562.6", False, None, pytest.raises(ValidationError)),
-        ("   ", True, [], does_not_raise()),
-        ("magnet.cl", True, ["magnet.cl"], does_not_raise()),
-        (
-            "magnet.cl\nwww.magnet.cl",
-            True,
-            ["magnet.cl", "www.magnet.cl"],
-            does_not_raise(),
-        ),
-        ("256.1.562.6", True, None, pytest.raises(ValidationError)),
+        *((empty_val, None, does_not_raise()) for empty_val in EMPTY_VALUES),
+        ("  ", None, does_not_raise()),
+        ("magnet.cl", "magnet.cl", does_not_raise()),
+        ("magnet.cl\nwww.magnet.cl", None, pytest.raises(ValidationError)),
+        ("256.1.562.6", None, pytest.raises(ValidationError)),
     ),
     ids=[
         *(f"single-empty-{n}" for n, _ in enumerate(EMPTY_VALUES)),
-        *(f"multiple-empty-{n}" for n, _ in enumerate(EMPTY_VALUES)),
         "single-whitespace-empty",
         "single-single",
         "single-multiple",
         "single-invalid",
+    ],
+)
+def test_parse_hostname_value(raw_value, expected_value, expectation):
+    with expectation:
+        assert parse_hostname_value(raw_value) == expected_value
+
+
+@pytest.mark.parametrize(
+    ("raw_value", "expected_value", "expectation"),
+    (
+        *((empty_val, None, does_not_raise()) for empty_val in EMPTY_VALUES),
+        ("   ", [], does_not_raise()),
+        ("magnet.cl", ["magnet.cl"], does_not_raise()),
+        ("magnet.cl\nwww.magnet.cl", ["magnet.cl", "www.magnet.cl"], does_not_raise()),
+        ("256.1.562.6", None, pytest.raises(ValidationError)),
+    ),
+    ids=[
+        *(f"multiple-empty-{n}" for n, _ in enumerate(EMPTY_VALUES)),
         "multiple-whitespace-empty",
         "multiple-single",
         "multiple-multiple",
         "multiple-invalid",
     ],
 )
-def test_parse_hostname_value(raw_value, multiple, expected_value, expectation):
+def test_parse_multiple_hostname_value(raw_value, expected_value, expectation):
     with expectation:
-        assert parse_hostname_value(raw_value, multiple) == expected_value
+        assert parse_multiple_hostname_value(raw_value) == expected_value
 
 
 @pytest.mark.parametrize(
@@ -597,7 +625,7 @@ def test_parse_single_ip_network_value(raw_value, expected_value, expectation):
 )
 def test_parse_ip_network_value_single(raw_value, expected_value, expectation):
     with expectation:
-        assert parse_ip_network_value(raw_value, False) == expected_value
+        assert parse_ip_network_value(raw_value) == expected_value
 
 
 @pytest.mark.parametrize(
@@ -653,4 +681,14 @@ def test_parse_ip_network_value_single(raw_value, expected_value, expectation):
 )
 def test_parse_ip_network_value(raw_value, expected_value, expectation):
     with expectation:
-        assert parse_ip_network_value(raw_value, True) == expected_value
+        assert parse_multiple_ip_network_value(raw_value) == expected_value
+
+
+@pytest.mark.parametrize(
+    ("kind", "expected_widget_class"),
+    EXPECTED_PARAMETER_WIDGET.items(),
+)
+def test_parameter_form(db, kind, expected_widget_class):
+    parameter = Parameter.objects.create(name="test_parameter", kind=kind)
+    form = ParameterForm(instance=parameter)
+    assert isinstance(form.fields["raw_value"].widget, expected_widget_class)
