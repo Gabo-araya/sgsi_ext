@@ -1,7 +1,7 @@
 import datetime
 import ipaddress
 
-from contextlib import contextmanager
+from contextlib import nullcontext as does_not_raise
 
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
@@ -72,11 +72,6 @@ EXPECTED_PARAMETER_WIDGET = {
     ParameterKind.BOOL: forms.Select,
     ParameterKind.STR: forms.Textarea,
 }
-
-
-@contextmanager
-def does_not_raise():
-    yield
 
 
 def test_create_all_parameters(db):

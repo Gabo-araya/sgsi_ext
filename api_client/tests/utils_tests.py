@@ -1,14 +1,9 @@
-from contextlib import contextmanager
+from contextlib import nullcontext as does_not_raise
 
 import pytest
 
 from api_client.services.client.errors import InvalidCallbackError
 from api_client.services.client.utils import validate_callback
-
-
-@contextmanager
-def does_not_raise():
-    yield
 
 
 def callback_to_check(response, error):
