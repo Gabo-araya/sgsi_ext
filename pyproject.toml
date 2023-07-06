@@ -74,6 +74,9 @@ python_files = [
   "*_tests.py"
 ]
 junit_family = "xunit2"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
 
 [tool.coverage.report]
 fail_under = 70
@@ -139,6 +142,21 @@ max-complexity = 10
 
 [tool.ruff.per-file-ignores]
 "**/migrations/*.py" = ["E501", "N"]
+"**/tests.py" = [
+    "S101", # asserts allowed in tests...
+    "ARG", # Unused function args -> fixtures nevertheless are functionally relevant...
+    "FBT", # Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    "PLR0913", # Too many parameters
+    "PLR2004", # Magic value used in comparison, ...
+    "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+]
+"**/tests/**/*.py" = [
+    "S101",
+    "ARG",
+    "FBT",
+    "PLR2004",
+    "S311",
+]
 
 
 [tool.ruff.isort]

@@ -469,6 +469,7 @@ LOG_IGNORE_FIELDS = [
     "original_dict",
     "id",
     "date_joined",
+    "last_login",
 ]
 
 # Cache

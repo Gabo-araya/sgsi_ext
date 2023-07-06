@@ -36,7 +36,7 @@ def parse_str_value(value):
     if value in EMPTY_VALUES:
         return None
 
-    return value
+    return str(value).strip()
 
 
 def parse_int_value(value):

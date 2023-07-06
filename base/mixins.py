@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.contrib.admin.models import ADDITION
 from django.contrib.admin.models import CHANGE
 from django.contrib.admin.models import DELETION
@@ -28,6 +29,11 @@ class AuditMixin:
             object_repr=force_str(self)[:200],
             action_flag=action,
             change_message=json.dumps(message, cls=ModelEncoder),
+        )
+
+        # reset original dictionary as model has permanently changed
+        self.original_dict = self.to_dict(
+            exclude=settings.LOG_IGNORE_FIELDS, include_m2m=False
         )
 
     def _save_addition(self, user, message):
