@@ -8,7 +8,6 @@ from api_client.models import ClientConfig
 from api_client.models import ClientLog
 
 
-@pytest.mark.django_db(databases=["default"])
 def test_cant_add_client_config_in_admin_if_full(client_config):
     with patch("django.contrib.admin.ModelAdmin.has_add_permission") as mock_add_perm:
         mock_add_perm.return_value = True
@@ -16,15 +15,14 @@ def test_cant_add_client_config_in_admin_if_full(client_config):
         assert not admin_view.has_add_permission(None)
 
 
-@pytest.mark.django_db(databases=["default"])
-def test_client_config_admin_respects_has_add_permission():
+def test_client_config_admin_respects_has_add_permission(db):
     with patch("django.contrib.admin.ModelAdmin.has_add_permission") as mock_add_perm:
         mock_add_perm.return_value = True
         admin_view = ClientConfigAdmin(model=ClientConfig, admin_site="test")
         assert admin_view.has_add_permission(None)
 
 
-def test_cant_delte_client_config_in_admin():
+def test_cant_delete_client_config_in_admin():
     admin_view = ClientConfigAdmin(model=ClientConfig, admin_site="test")
     assert not admin_view.has_delete_permission(None)
 

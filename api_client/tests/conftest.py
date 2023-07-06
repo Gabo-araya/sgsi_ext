@@ -18,7 +18,7 @@ from base import utils
 
 
 @pytest.fixture
-def client_log_queryset():
+def client_log_queryset(db):
     today = utils.today()
     yesterday = utils.today() - timedelta(days=1)
     log_1 = ClientLog.objects.create()
@@ -31,7 +31,7 @@ def client_log_queryset():
 
 
 @pytest.fixture
-def client_config() -> ClientConfig:
+def client_config(db) -> ClientConfig:
     return ClientConfig.objects.create(client_code=ClientCodes.DUMMY_INTEGRATION)
 
 
