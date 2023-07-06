@@ -80,22 +80,21 @@ class Parameter(BaseModel):
 
     @classmethod
     def value_for(cls, name):
-        cache_key = cls.cache_key(name)
-
-        cached_parameter = cache.get(cache_key)
-
+        cached_parameter = cache.get(cls.cache_key(name))
         if cached_parameter:
-            raw_value, kind = json.loads(cached_parameter)
-            return cls.process_value(kind, raw_value)
+            return cls.process_cached_parameter(cached_parameter)
 
         try:
             parameter = Parameter.objects.get(name=name)
         except Parameter.DoesNotExist:
             parameter = Parameter.create_parameter(name)
-
         parameter.store_in_cache()
-
         return parameter.value
+
+    @classmethod
+    def process_cached_parameter(cls, cached_parameter):
+        raw_value, kind = json.loads(cached_parameter)
+        return cls.process_value(kind, raw_value)
 
     @classmethod
     def create_all_parameters(cls):

@@ -66,7 +66,9 @@ addopts = [
   "-v",
   "--cov",
   "--tb=native",
-  "--junit-xml=test-results/pytest.xml"
+  "--junit-xml=test-results/pytest.xml",
+  "--cov-report=html:test-results/pytest",
+  "--cov-report=term"
 ]
 python_files = [
   "tests.py",
@@ -91,6 +93,8 @@ omit = [
   "*/tests.py",
   "*/test_*.py",
   "*/*_tests.py",
+  "*/fixtures.py",
+  "dummy_app/*",
   "project/test_settings.py",
   "project/settings.py",
   ".vscode-server"

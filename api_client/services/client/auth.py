@@ -27,7 +27,6 @@ class SerializableAuthBase(AuthBase, metaclass=ABCMeta):
         necessary to initialize the client on the worker, so they need to be
         serializable.
         """
-        raise NotImplementedError
 
     @classmethod
     def from_serialized_args(cls, **kwargs):
