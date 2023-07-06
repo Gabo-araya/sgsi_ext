@@ -55,26 +55,22 @@ The `quickstart.sh` script includes the following actions:
 
 ### Running the project
 
-- Reboot your computer if quickstart prompted to do so (to run Docker without sudo)
-- Open this folder in VSCode
-- Click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
+1. Reboot your computer if quickstart prompted to do so (to run Docker without sudo)
+2. Open this folder in VSCode
+3. Click "Reopen in Container" when prompted (or press F1 and choose "Reopen in Container")
 
 <details>
 <summary>CLI alternative</summary>
 
-> Instead of running:
-> ```sh
-> code .
-> ```
-> and having to click to reopen in container every time, execute these steps once:
-> - Open VSCode
-> - Install the Dev Containers extension
-> - In the Command Palette (F1), run `Dev Containers: Install devcontainer CLI`
->
-> and then in place of `code .` , use this:
-> ```sh
-> devcontainer open
-> ```
+1. Open VSCode and make sure the `Dev Containers` extension is enabled.
+2. In the Command Palette (F1), run `Dev Containers: Install devcontainer CLI`.
+3. When asked to create a symlink to the `devcontainer` tool, click the "Create" button.
+
+Code will install the `devcontainer` tool on your PATH, meaning meaning you can now run
+```sh
+devcontainer open
+```
+to open the project.
 </details>
 
 Then in a VSCode terminal, run:
