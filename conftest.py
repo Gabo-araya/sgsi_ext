@@ -7,7 +7,4 @@ def faker_session_locale():
 
 
 # To make fixtures available to all test functions, add them here.
-pytest_plugins = [
-    "base.fixtures",
-    "users.fixtures",
-]
+pytest_plugins = ["base.fixtures", "users.fixtures", "parameters.fixtures"]

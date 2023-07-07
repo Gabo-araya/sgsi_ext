@@ -270,16 +270,15 @@ App that overrides the Django User with the class `User` that is easily modifiab
 
 ##### Login with ReCaptcha
 
-This app implements login with ReCaptcha after a configurable number of login
-attempts, after which a new recaptcha field is added to the login form.
+This app implements login with ReCaptcha depending on a Parameter.
 
 This feature consumes the following env variables:
 
 - `RECAPTCHA_PUBLIC_KEY`
 - `RECAPTCHA_PRIVATE_KEY`
-- `RECAPTCHA_LOGIN_ATTEMPTS`
 
-By default the login attempts are 20.
+It also consumes the `ACTIVATE_LOGIN_RECAPTCHA` Parameter, that can be toggled
+in the Parameter section of the admin page.
 
 ### Pug
 The template engine used is pypugjs, a python implementation of the
@@ -516,6 +515,7 @@ test models to tests. Fixtures can request additional fixtures if required.
 Here's an example fixture:
 
 ```python
+
 import pytest
 
 from django.contrib.auth.models import Group

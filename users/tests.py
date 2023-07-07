@@ -9,6 +9,8 @@ from django.urls import reverse
 
 import pytest
 
+from users.forms import AuthenticationForm
+from users.forms import CaptchaAuthenticationForm
 from users.forms import UserCreationForm
 from users.models import User
 
@@ -91,3 +93,18 @@ def test_user_creation_form_clean_password_mismatch(db):
     assert "password2" in errors
     password_error = errors["password2"]
     assert password_error.data[0].code == "password_mismatch"
+
+
+@pytest.mark.parametrize(
+    ("set_parameter", "expected"),
+    (
+        ("set_parameter_recaptcha_false_definition", AuthenticationForm),
+        ("set_parameter_recaptcha_true_definition", CaptchaAuthenticationForm),
+    ),
+)
+def test_user_login_form_show_correct_form(
+    set_parameter, expected, client, request, db
+):
+    request.getfixturevalue(set_parameter)
+    response = client.post(reverse("login"))
+    assert isinstance(response.context["form"], expected)

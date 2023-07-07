@@ -1,7 +1,6 @@
 """ The users app views"""
 
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -17,6 +16,7 @@ from django.views.generic.edit import CreateView
 
 # views
 from base.views.generic import BaseListView
+from parameters.models import Parameter
 
 # forms
 from users.forms import AuthenticationForm
@@ -45,9 +45,8 @@ class LoginView(auth_views.LoginView):
         return context
 
     def get_form_class(self):
-        session = self.request.session
-        session["login_try_count"] = session.get("login_try_count", 0) + 1
-        if session["login_try_count"] > settings.RECAPTCHA_LOGIN_ATTEMPTS:
+        parameter = Parameter.value_for("ACTIVATE_LOGIN_RECAPTCHA")
+        if parameter:
             return CaptchaAuthenticationForm
         return super().get_form_class()
 
