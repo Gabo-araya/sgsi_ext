@@ -460,6 +460,17 @@ contained in that folder.
 
 To create the compiled messages (.mo), simply run `./translate.sh -c`
 
+### reCAPTCHA
+
+To help secure the app from password bruteforce attempts, reCAPTCHA is always displayed if configured.
+
+In case of problems with the service, the CAPTCHA can be disabled by toggling the ACTIVATE_LOGIN_RECAPTCHA parameter.
+If you can't log in to the admin site, you can still do it over management commands:
+
+```shell
+./manage.py setparameter ACTIVATE_LOGIN_RECAPTCHA False
+```
+
 ### Tests
 
 pytest is the preferred tool to write tests. This tool has been chosen due to the
