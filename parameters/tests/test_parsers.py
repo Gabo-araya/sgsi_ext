@@ -2,21 +2,12 @@ import datetime
 import ipaddress
 
 from contextlib import nullcontext as does_not_raise
-from unittest.mock import patch
 
-from django import forms
-from django.contrib.admin.widgets import AdminDateWidget
-from django.contrib.admin.widgets import AdminTimeWidget
 from django.core.exceptions import ValidationError
 from django.core.validators import EMPTY_VALUES
 
 import pytest
 
-from parameters.admin import ParameterAdmin
-from parameters.definitions import ParameterDefinitionList
-from parameters.enums import ParameterKind
-from parameters.forms import ParameterForm
-from parameters.models import Parameter
 from parameters.utils.ip import IPv4Range
 from parameters.utils.ip import IPv6Range
 from parameters.utils.parsers import parse_bool_value
@@ -35,12 +26,16 @@ from parameters.utils.parsers import parse_single_ip_network_value
 from parameters.utils.parsers import parse_str_value
 from parameters.utils.parsers import parse_time_value
 from parameters.utils.parsers import parse_url_value
-from parameters.validators import validate_protocol
 
 EXPECTED_INT = 1
 EXPECTED_STR = "test"
 EXPECTED_DATE = datetime.date(2007, 1, 9)
 EXPECTED_TIME = datetime.time(9, 41)
+
+
+EXPECTED_IPV4_PREFIX = ipaddress.IPv4Network("10.26.40.0/24")
+EXPECTED_IPV6_PREFIX = ipaddress.IPv6Network("2800:6D61:676E:6574::/64")
+
 
 EXPECTED_IPV4_RANGE = IPv4Range(
     ipaddress.IPv4Address("10.26.40.1"),
@@ -58,123 +53,6 @@ EXPECTED_IPV6_RANGE_SAME = IPv6Range(
     ipaddress.IPv6Address("2800:6D61:676E:6574::1"),
     ipaddress.IPv6Address("2800:6D61:676E:6574::1"),
 )
-EXPECTED_IPV4_PREFIX = ipaddress.IPv4Network("10.26.40.0/24")
-EXPECTED_IPV6_PREFIX = ipaddress.IPv6Network("2800:6D61:676E:6574::/64")
-
-EXPECTED_PARAMETER_WIDGET = {
-    ParameterKind.INT: forms.NumberInput,
-    ParameterKind.TIME: AdminTimeWidget,
-    ParameterKind.DATE: AdminDateWidget,
-    ParameterKind.JSON: forms.Textarea,
-    ParameterKind.URL: forms.URLInput,
-    ParameterKind.HOSTNAME: forms.Textarea,
-    ParameterKind.IP_NETWORK: forms.Textarea,
-    ParameterKind.HOSTNAME_LIST: forms.Textarea,
-    ParameterKind.IP_NETWORK_LIST: forms.Textarea,
-    ParameterKind.BOOL: forms.Select,
-    ParameterKind.STR: forms.Textarea,
-}
-
-
-@pytest.mark.usefixtures("set_parameter_test_definition_with_validators")
-def test_run_validators(db):
-    Parameter.create_all_parameters()
-    parameter = Parameter.objects.first()
-    with does_not_raise():
-        parameter.clean()
-    parameter.value = "RAISE"
-    with pytest.raises(ValueError):
-        parameter.clean()
-
-
-@pytest.mark.usefixtures("set_parameter_test_definition")
-def test_process_cached_parameter(parameter_definition, db):
-    Parameter.value_for(parameter_definition.name)
-    assert parameter_definition.default == Parameter.value_for(
-        parameter_definition.name
-    )
-
-
-@pytest.mark.usefixtures("set_parameter_test_definition")
-def test_use_parameter_cache(parameter_definition, db):
-    with patch(
-        "parameters.models.Parameter.process_cached_parameter"
-    ) as mock_process_cached_parameter:
-        Parameter.value_for(parameter_definition.name)
-        assert mock_process_cached_parameter.call_count == 0
-        Parameter.value_for(parameter_definition.name)
-        assert mock_process_cached_parameter.call_count == 1
-
-
-@pytest.mark.usefixtures("set_parameter_test_definition")
-def test_parameter_value_for_creates_parameter_if_does_not_exist(
-    parameter_definition, db
-):
-    assert Parameter.objects.count() == 0
-    Parameter.value_for(parameter_definition.name)
-    assert Parameter.objects.count() == 1
-
-
-@pytest.mark.usefixtures("set_parameter_test_definition")
-def test_create_parameter(parameter_definition, db):
-    assert Parameter.objects.count() == 0
-    Parameter.create_parameter(parameter_definition.name)
-    assert Parameter.objects.count() == 1
-
-
-@pytest.mark.usefixtures("set_parameter_test_definition")
-def test_get_parameter_definition(parameter_definition):
-    definition = ParameterDefinitionList.get_definition(parameter_definition.name)
-    assert parameter_definition == definition
-    assert ParameterDefinitionList.get_definition("DOESNT_EXIST") is None
-
-
-def test_parameter_admin_create_all_parameters_in_get_changelist_instance(db):
-    with (
-        patch("django.contrib.admin.ModelAdmin.get_changelist_instance"),
-        patch(
-            "parameters.models.Parameter.create_all_parameters"
-        ) as mock_create_params,
-    ):
-        admin_view = ParameterAdmin(Parameter, None)
-        admin_view.get_changelist_instance(None)
-        assert mock_create_params.call_count == 1
-
-
-def test_parameter_admin_dont_re_create_all_parameters_in_get_changelist_instance(db):
-    Parameter.create_all_parameters()
-    with (
-        patch("django.contrib.admin.ModelAdmin.get_changelist_instance"),
-        patch(
-            "parameters.models.Parameter.create_all_parameters"
-        ) as mock_create_params,
-    ):
-        admin_view = ParameterAdmin(Parameter, None)
-        admin_view.get_changelist_instance(None)
-        assert mock_create_params.call_count == 0
-
-
-def test_parameter_admin_does_not_have_add_permission():
-    admin_view = ParameterAdmin(Parameter, None)
-    assert not admin_view.has_add_permission(None)
-
-
-def test_create_all_parameters(db):
-    Parameter.create_all_parameters()
-    assert len(ParameterDefinitionList.definitions) == Parameter.objects.count()
-
-
-@pytest.mark.parametrize(
-    ("value", "expectation"),
-    (
-        ("http", does_not_raise()),
-        ("https", does_not_raise()),
-        ("gopher", pytest.raises(ValidationError)),
-    ),
-)
-def test_validate_protocol(value, expectation):
-    with expectation:
-        validate_protocol(value)
 
 
 @pytest.mark.parametrize(
@@ -762,13 +640,3 @@ def test_parse_ip_network_value_single(raw_value, expected_value, expectation):
 def test_parse_ip_network_value(raw_value, expected_value, expectation):
     with expectation:
         assert parse_multiple_ip_network_value(raw_value) == expected_value
-
-
-@pytest.mark.parametrize(
-    ("kind", "expected_widget_class"),
-    EXPECTED_PARAMETER_WIDGET.items(),
-)
-def test_parameter_form(db, kind, expected_widget_class):
-    parameter = Parameter.objects.create(name="test_parameter", kind=kind)
-    form = ParameterForm(instance=parameter)
-    assert isinstance(form.fields["raw_value"].widget, expected_widget_class)

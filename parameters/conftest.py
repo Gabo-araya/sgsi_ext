@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from django.core.exceptions import ValidationError
 
 import pytest
 
@@ -9,7 +10,8 @@ from parameters.models import Parameter
 
 def validator(value):
     if value == "RAISE":
-        raise ValueError
+        msg = "Explicit raise"
+        raise ValidationError(msg)
 
 
 @pytest.fixture
