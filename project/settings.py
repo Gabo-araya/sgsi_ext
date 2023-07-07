@@ -98,6 +98,7 @@ INSTALLED_APPS = [
     "webpack_loader",
     "django_celery_beat",
     "rest_framework",
+    "captcha",
     # internal
     "parameters",
     "regions",

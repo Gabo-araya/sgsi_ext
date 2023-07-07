@@ -26,6 +26,12 @@ class ParameterDefinitionList:
             verbose_name=_("Default url protocol"),
             validators=(validate_protocol,),
         ),
+        ParameterDefinition(
+            name="ACTIVATE_LOGIN_RECAPTCHA",
+            default=False,
+            kind="bool",
+            verbose_name=_("Activate login recaptcha"),
+        ),
     ]
 
     choices = tuple((x.name, x.verbose_name) for x in definitions)

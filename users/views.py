@@ -16,9 +16,11 @@ from django.views.generic.edit import CreateView
 
 # views
 from base.views.generic import BaseListView
+from parameters.models import Parameter
 
 # forms
 from users.forms import AuthenticationForm
+from users.forms import CaptchaAuthenticationForm
 from users.forms import UserCreationForm
 from users.forms import UserForm
 from users.models import User
@@ -43,9 +45,9 @@ class LoginView(auth_views.LoginView):
         return context
 
     def get_form_class(self):
-        """
-        TODO Consider using captcha.
-        """
+        parameter = Parameter.value_for("ACTIVATE_LOGIN_RECAPTCHA")
+        if parameter:
+            return CaptchaAuthenticationForm
         return super().get_form_class()
 
 
