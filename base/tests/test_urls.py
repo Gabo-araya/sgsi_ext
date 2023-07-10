@@ -16,6 +16,10 @@ EXCLUDED_NAMESPACES = [
 ]
 
 
+class SkipUrl(Exception):  # noqa: N818
+    pass
+
+
 @pytest.fixture
 def default_parameter_values(default_objects):
     """Return a dictionary of parameter names to values."""
@@ -33,23 +37,20 @@ def default_parameter_values(default_objects):
     return default_params
 
 
-def get_url_using_param_names(
+def get_url_using_param_names(  # noqa: C901, PLR0912
     url_pattern,
     namespace,
     default_objects,
     default_parameter_values,
 ):
     """
-    Using the dictionary of parameters defined on self.default_params and
-    the list of objects defined on self.default_objects, construct urls
-    with valid parameters.
+    Using the dictionary of parameters defined on ``default_parameter_values`` and the
+    list of objects defined on ``default_objects``, construct urls with valid params.
 
-    This method assumes that nested urls name their parents ids as
-    {model}_id
+    This method assumes that nested urls name their parents ids as ``{model}_id``
 
     Thus something like the comments of a user should be in the format of
-
-    '/users/{user_id}/comments/'
+    ``/users/{user_id}/comments/``
     """
     param_converter_name = url_pattern.pattern.converters.items()
 
@@ -63,18 +64,21 @@ def get_url_using_param_names(
 
     for param_name, converter in param_converter_name:
         if param_name == "pk" and hasattr(callback, "view_class"):
-            model_name = underscore(url_pattern.callback.view_class.model.__name__)
-            params["pk"] = default_parameter_values[f"{model_name}_id"]
-            obj = default_objects[model_name]
-        elif isinstance(converter, SlugConverter) and hasattr(
-            callback,
-            "view_class",
-        ):
-            model_name = underscore(url_pattern.callback.view_class.model.__name__)
-            params[param_name] = default_parameter_values[
-                f"{model_name}_{param_name}_slug"
-            ]
-            obj = default_objects[model_name]
+            model_name = underscore(callback.view_class.model.__name__)
+            try:
+                params["pk"] = default_parameter_values[f"{model_name}_id"]
+                obj = default_objects[model_name]
+            except KeyError:
+                raise SkipUrl from KeyError
+        elif isinstance(converter, SlugConverter) and hasattr(callback, "view_class"):
+            model_name = underscore(callback.view_class.model.__name__)
+            try:
+                params[param_name] = default_parameter_values[
+                    f"{model_name}_{param_name}_slug"
+                ]
+                obj = default_objects[model_name]
+            except KeyError:
+                raise SkipUrl from KeyError
         else:
             try:
                 params[param_name] = default_parameter_values[param_name]
@@ -133,15 +137,21 @@ def test_responses(
 
     from project.urls import urlpatterns
 
-    def test_url_patterns(patterns, namespace=""):
+    skipped_patterns = []
+
+    def test_url_patterns(tested_patterns, namespace=None):
         if namespace in EXCLUDED_NAMESPACES:
             return
 
-        for pattern in patterns:
+        for pattern in tested_patterns:
             if hasattr(pattern, "name"):
-                url = reverse_urlpattern(
-                    pattern, namespace, default_objects, default_parameter_values
-                )
+                try:
+                    url = reverse_urlpattern(
+                        pattern, namespace, default_objects, default_parameter_values
+                    )
+                except SkipUrl:
+                    skipped_patterns.append(pattern)
+                    continue
 
                 if not url:
                     continue
@@ -167,3 +177,9 @@ def test_responses(
     for _, model_admin in admin.site._registry.items():
         patterns = model_admin.get_urls()
         test_url_patterns(patterns, namespace="admin")
+
+    assert not skipped_patterns, (
+        "Skipped URL patterns due to missing fixtures:\n"
+        + "\n".join(f"* {pattern.pattern.describe()}" for pattern in skipped_patterns)
+        + "\nAdd them to base.tests.conftest.default_objects."
+    )
