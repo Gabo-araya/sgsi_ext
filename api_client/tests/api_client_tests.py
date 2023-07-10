@@ -154,3 +154,11 @@ def test_cant_use_base_client_models(base_client_klass, expectation):
             scheme="http", host="example.com", code="test"
         )
         base_client_klass(api_config)
+
+
+@pytest.mark.django_db(databases=["default", "logs"])
+def test_client_log_str(client_log):
+    string = str(client_log)
+    assert client_log.client_code in string
+    assert client_log.method in string
+    assert client_log.url in string

@@ -29,7 +29,7 @@ class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
         if self.title is not None:
             return self.title
         verbose_name = self.model._meta.verbose_name
-        return _("Create %s") % verbose_name
+        return _("Create {}").format(verbose_name)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,9 +75,51 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
     next_url = None
     title = None
 
+    def get(self, request, *args, **kwargs):
+        self.parent_object = self.get_parent_object()
+        self.object = self.get_initial_object()
+        # Give a chance to declare further instance attributes
+        self.pre_get(request, *args, **kwargs)
+        return super(GenericBaseCreateView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.parent_object = self.get_parent_object()
+        self.object = self.get_initial_object()
+        # Give a chance to declare further instance attributes
+        self.pre_post(request, *args, **kwargs)
+        return super(GenericBaseCreateView, self).post(request, *args, **kwargs)
+
     def get_parent_object(self):
         parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
         return get_object_or_404(self.parent_model, pk=parent_pk)
+
+    def pre_get(self, request, *args, **kwargs):
+        """
+        Allows to perform several operations before the superclass get()
+        generates the response.
+        """
+
+    def pre_post(self, request, *args, **kwargs):
+        """
+        Allows to perform several operations before the superclass post()
+        generates the response.
+        """
+
+    def get_initial_object(self):
+        """Gets an object previously initialized with the parent object."""
+        parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
+        if self.is_generic_relation:
+            parent_content_type = ContentType.objects.get_for_model(self.parent_model)
+            obj = self.model(
+                object_id=parent_pk,
+                content_type=parent_content_type,
+            )
+        else:
+            parent_obj = self.parent_object
+            related_field_name = self.get_model_related_field_name()
+            obj = self.model(**{related_field_name: parent_obj})
+
+        return obj
 
     def get_model_related_field_name(self):
         """
@@ -101,41 +143,6 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
             f"{self.parent_model.__name__} was found in {self.model.__name__,}"
         )
         raise ImproperlyConfigured(msg)
-
-    def get_initial_object(self):
-        """Gets an object previously initialized with the parent object."""
-        parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
-        if self.is_generic_relation:
-            parent_content_type = ContentType.objects.get_for_model(self.parent_model)
-            obj = self.model(
-                object_id=parent_pk,
-                content_type=parent_content_type,
-            )
-        else:
-            parent_obj = self.parent_object
-            related_field_name = self.get_model_related_field_name()
-            obj = self.model(**{related_field_name: parent_obj})
-
-        return obj
-
-    def get_cancel_url(self):
-        if self.next_url:
-            return self.next_url
-
-        return self.parent_object.get_absolute_url()
-
-    def get_success_url(self):
-        next_url = self.request.POST.get("next")
-        if next_url:
-            return next_url
-
-        return super().get_success_url()
-
-    def get_title(self):
-        if self.title is not None:
-            return self.title
-        verbose_name = self.model._meta.verbose_name
-        return _("Create %s") % verbose_name
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -162,31 +169,24 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
             return parent_obj._meta.model_name
         return None
 
-    def get(self, request, *args, **kwargs):
-        self.parent_object = self.get_parent_object()
-        self.object = self.get_initial_object()
-        # Give a chance to declare further instance attributes
-        self.pre_get(request, *args, **kwargs)
-        return super(GenericBaseCreateView, self).get(request, *args, **kwargs)
+    def get_cancel_url(self):
+        if self.next_url:
+            return self.next_url
 
-    def post(self, request, *args, **kwargs):
-        self.parent_object = self.get_parent_object()
-        self.object = self.get_initial_object()
-        # Give a chance to declare further instance attributes
-        self.pre_post(request, *args, **kwargs)
-        return super(GenericBaseCreateView, self).post(request, *args, **kwargs)
+        return self.parent_object.get_absolute_url()
 
-    def pre_get(self, request, *args, **kwargs):
-        """
-        Allows to perform several operations before the superclass get()
-        generates the response.
-        """
+    def get_success_url(self):
+        next_url = self.request.POST.get("next")
+        if next_url:
+            return next_url
 
-    def pre_post(self, request, *args, **kwargs):
-        """
-        Allows to perform several operations before the superclass post()
-        generates the response.
-        """
+        return super().get_success_url()
+
+    def get_title(self):
+        if self.title is not None:
+            return self.title
+        verbose_name = self.model._meta.verbose_name
+        return _("Create {}").format(verbose_name)
 
 
 class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
@@ -211,7 +211,7 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        return _("Update %s") % str(self.object)
+        return _("Update {}").format(str(self.object))
 
     def get_cancel_url(self):
         if self.next_url:
@@ -258,7 +258,7 @@ class BaseDeleteView(LoginPermissionRequiredMixin, DeleteView):
     def get_title(self):
         if self.title is not None:
             return self.title
-        return _("Delete %s") % str(self.object)
+        return _("Delete {}").format(str(self.object))
 
     def get_success_url(self):
         next_url = self.request.POST.get("next")

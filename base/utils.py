@@ -3,10 +3,7 @@
 
 import datetime
 import os
-import random
 import re
-import string
-import unicodedata
 
 from itertools import cycle
 
@@ -80,31 +77,6 @@ def validate_rut(rut):
     res = rut_verifying_digit(aux)
 
     return res == dv
-
-
-def strip_accents(s):
-    return "".join(
-        c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn"
-    )
-
-
-def tz_datetime(*args, **kwargs):
-    """
-    Creates a datetime.datetime object but with the current timezone
-    """
-    tz = timezone.get_current_timezone()
-    naive_dt = timezone.datetime(*args, **kwargs)
-    return timezone.make_aware(naive_dt, tz)
-
-
-def random_string(length=6, chars=None, include_spaces=True):
-    if chars is None:
-        chars = string.ascii_uppercase + string.digits
-
-    if include_spaces:
-        chars += " "
-
-    return "".join(random.choice(chars) for x in range(length))  # noqa: S311
 
 
 def get_our_models():

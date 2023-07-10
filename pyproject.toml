@@ -82,7 +82,7 @@ markers = [
 ]
 
 [tool.coverage.report]
-fail_under = 70
+fail_under = 90
 sort = "-Cover"
 
 [tool.coverage.run]
@@ -98,6 +98,7 @@ omit = [
   "dummy_app/*",
   "project/test_settings.py",
   "project/settings.py",
+  "project/urls.py",
   ".vscode-server"
 ]
 

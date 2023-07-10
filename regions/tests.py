@@ -57,3 +57,11 @@ def test_search_communes_by_id(regular_user_client):
     )
 
     assert parsed_content == expected_communes
+
+
+def test_region_str(region):
+    assert str(region) == region.name
+
+
+def test_commune_str(commune):
+    assert str(commune) == commune.name

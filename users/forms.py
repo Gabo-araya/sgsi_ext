@@ -67,12 +67,13 @@ class AuthenticationForm(forms.Form):
         """
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
+        if not (email and password):
+            return self.cleaned_data
 
-        if email and password:
-            self.user_cache = authenticate(email=email, password=password)
-            if self.user_cache is None:
-                raise self.get_invalid_login_error()
-            self.confirm_login_allowed(self.user_cache)
+        self.user_cache = authenticate(email=email, password=password)
+        if self.user_cache is None:
+            raise self.get_invalid_login_error()
+        self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
 
@@ -152,18 +153,18 @@ class AdminAuthenticationForm(AuthenticationForm):
     def clean(self):
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
-        message = _(
+        if not (email and password):
+            return self.cleaned_data
+
+        msg = _(
             "Please enter the correct email and password for a staff "
             "account. Note that both fields may be case-sensitive.",
         )
-
-        if email and password:
-            self.user_cache = authenticate(email=email, password=password)
-            if self.user_cache is None:
-                raise ValidationError(message)
-            if not self.user_cache.is_active or not self.user_cache.is_staff:
-                raise ValidationError(message)
-
+        self.user_cache = authenticate(email=email, password=password)
+        if self.user_cache is None:
+            raise ValidationError(msg)
+        if not self.user_cache.is_active or not self.user_cache.is_staff:
+            raise ValidationError(msg)
         return self.cleaned_data
 
 
@@ -228,6 +229,7 @@ class UserCreationForm(BaseModelForm):
     def save(  # noqa: PLR0913
         self,
         verify_email_address=False,
+        commit=True,
         domain_override=None,
         subject_template_name="emails/user_new_subject.txt",
         email_template_name="emails/user_new.txt",
@@ -235,7 +237,6 @@ class UserCreationForm(BaseModelForm):
         token_generator=default_token_generator,
         from_email=None,
         request=None,
-        commit=True,
     ):
         """
         Generates a one-use only link for resetting password and sends to the
@@ -251,31 +252,51 @@ class UserCreationForm(BaseModelForm):
             user.save()
 
         if verify_email_address:
-            from django.core.mail import send_mail
-
-            if not domain_override:
-                current_site = get_current_site(request)
-                site_name = current_site.name
-                domain = current_site.domain
-
-            else:
-                site_name = domain = domain_override
-            c = {
-                "email": user.email,
-                "domain": domain,
-                "site_name": site_name,
-                "uid": int_to_base36(user.id),
-                "user": user,
-                "token": token_generator.make_token(user),
-                "protocol": use_https and "https" or "http",
-            }
-            subject = loader.render_to_string(subject_template_name, c)
-            # Email subject *must not* contain newlines
-            subject = "".join(subject.splitlines())
-            email = loader.render_to_string(email_template_name, c)
-            send_mail(subject, email, from_email, [user.email])
-
+            self.send_verify_email(
+                user,
+                domain_override,
+                subject_template_name,
+                email_template_name,
+                use_https,
+                token_generator,
+                from_email,
+                request,
+            )
         return user
+
+    @staticmethod
+    def send_verify_email(  # noqa: PLR0913
+        user,
+        domain_override=None,
+        subject_template_name="emails/user_new_subject.txt",
+        email_template_name="emails/user_new.txt",
+        use_https=False,
+        token_generator=default_token_generator,
+        from_email=None,
+        request=None,
+    ):
+        from django.core.mail import send_mail
+
+        if not domain_override:
+            current_site = get_current_site(request)
+            site_name = current_site.name
+            domain = current_site.domain
+        else:
+            site_name = domain = domain_override
+
+        context = {
+            "email": user.email,
+            "domain": domain,
+            "site_name": site_name,
+            "uid": int_to_base36(user.id),
+            "user": user,
+            "token": token_generator.make_token(user),
+            "protocol": use_https and "https" or "http",
+        }
+        subject = loader.render_to_string(subject_template_name, context)
+        subject = "".join(subject.splitlines())  # delete newlines
+        email = loader.render_to_string(email_template_name, context)
+        send_mail(subject, email, from_email, [user.email])
 
 
 class UserChangeForm(forms.ModelForm):
@@ -285,9 +306,16 @@ class UserChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        f = self.fields.get("user_permissions", None)
-        if f is not None:
-            f.queryset = f.queryset.select_related("content_type")
+        user_permissions = self.fields.get("user_permissions", None)
+        self.set_user_permissions_queryset(user_permissions)
+
+    @staticmethod
+    def set_user_permissions_queryset(user_permissions):
+        if user_permissions is None:
+            return
+        user_permissions.queryset = user_permissions.queryset.select_related(
+            "content_type"
+        )
 
 
 class UserForm(BaseModelForm):
