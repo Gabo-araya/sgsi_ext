@@ -9,6 +9,7 @@ import pytest
 
 from inflection import underscore
 
+from base.utils import get_our_models
 from base.utils import get_slug_fields
 
 EXCLUDED_NAMESPACES = [
@@ -181,5 +182,43 @@ def test_responses(
     assert not skipped_patterns, (
         "Skipped URL patterns due to missing fixtures:\n"
         + "\n".join(f"* {pattern.pattern.describe()}" for pattern in skipped_patterns)
+        + "\nAdd them to base.tests.conftest.default_objects."
+    )
+
+
+def test_all_fixtures_are_defined(default_objects):
+    models = tuple(get_our_models())
+    models_without_fixtures = []
+
+    def test_url_patterns(patterns):
+        for pat in patterns:
+            if hasattr(pat, "name"):
+                param_converter_name = pat.pattern.converters.items()
+                if not param_converter_name:
+                    continue
+
+                callback = pat.callback
+                for param_name, converter in param_converter_name:
+                    if hasattr(callback, "view_class") and (
+                        param_name == "pk" or isinstance(converter, SlugConverter)
+                    ):
+                        model_class = callback.view_class.model
+                        model_name = underscore(model_class.__name__)
+                        if model_class not in models:
+                            continue
+                        if model_name not in default_objects:
+                            models_without_fixtures.append(model_class)
+            else:
+                test_url_patterns(pat.url_patterns)
+
+    from project.urls import urlpatterns
+
+    test_url_patterns(urlpatterns)
+    assert not models_without_fixtures, (
+        "Found model(s) without defined test fixture(s): \n"
+        + "\n".join(
+            f"* {model._meta.app_label}.{model.__name__}"
+            for model in models_without_fixtures
+        )
         + "\nAdd them to base.tests.conftest.default_objects."
     )
