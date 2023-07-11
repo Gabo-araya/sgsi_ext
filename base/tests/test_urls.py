@@ -19,10 +19,6 @@ EXCLUDED_NAMESPACES = [
 ]
 
 
-class SkipUrl(Exception):  # noqa: N818
-    pass
-
-
 @pytest.fixture
 def default_objects(request) -> dict[str, Model]:
     """
@@ -62,7 +58,7 @@ def default_parameter_values(default_objects):
     return default_params
 
 
-def get_url_using_param_names(  # noqa: C901, PLR0912
+def get_url_using_param_names(
     url_pattern,
     namespace,
     default_objects,
@@ -90,20 +86,14 @@ def get_url_using_param_names(  # noqa: C901, PLR0912
     for param_name, converter in param_converter_name:
         if param_name == "pk" and hasattr(callback, "view_class"):
             model_name = underscore(callback.view_class.model.__name__)
-            try:
-                params["pk"] = default_parameter_values[f"{model_name}_id"]
-                obj = default_objects[model_name]
-            except KeyError:
-                raise SkipUrl from KeyError
+            params["pk"] = default_parameter_values[f"{model_name}_id"]
+            obj = default_objects[model_name]
         elif isinstance(converter, SlugConverter) and hasattr(callback, "view_class"):
             model_name = underscore(callback.view_class.model.__name__)
-            try:
-                params[param_name] = default_parameter_values[
-                    f"{model_name}_{param_name}_slug"
-                ]
-                obj = default_objects[model_name]
-            except KeyError:
-                raise SkipUrl from KeyError
+            params[param_name] = default_parameter_values[
+                f"{model_name}_{param_name}_slug"
+            ]
+            obj = default_objects[model_name]
         else:
             try:
                 params[param_name] = default_parameter_values[param_name]
@@ -162,21 +152,15 @@ def test_responses(
 
     from project.urls import urlpatterns
 
-    skipped_patterns = []
-
     def test_url_patterns(tested_patterns, namespace=None):
         if namespace in EXCLUDED_NAMESPACES:
             return
 
         for pattern in tested_patterns:
             if hasattr(pattern, "name"):
-                try:
-                    url = reverse_urlpattern(
-                        pattern, namespace, default_objects, default_parameter_values
-                    )
-                except SkipUrl:
-                    skipped_patterns.append(pattern)
-                    continue
+                url = reverse_urlpattern(
+                    pattern, namespace, default_objects, default_parameter_values
+                )
 
                 if not url:
                     continue
@@ -202,9 +186,3 @@ def test_responses(
     for _, model_admin in admin.site._registry.items():
         patterns = model_admin.get_urls()
         test_url_patterns(patterns, namespace="admin")
-
-    assert not skipped_patterns, (
-        "Skipped URL patterns due to missing fixtures:\n"
-        + "\n".join(f"* {pattern.pattern.describe()}" for pattern in skipped_patterns)
-        + "\nAdd them to base.tests.conftest.default_objects."
-    )
