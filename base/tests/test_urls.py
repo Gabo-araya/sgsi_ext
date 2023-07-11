@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from django.conf import settings
+from django.db.models import Model
 from django.urls import NoReverseMatch
 from django.urls import reverse
 from django.urls.converters import SlugConverter
@@ -9,6 +10,7 @@ import pytest
 
 from inflection import underscore
 
+from base.fixtures import MODEL_FIXTURE_CUSTOM_NAMES
 from base.utils import get_our_models
 from base.utils import get_slug_fields
 
@@ -19,6 +21,28 @@ EXCLUDED_NAMESPACES = [
 
 class SkipUrl(Exception):  # noqa: N818
     pass
+
+
+@pytest.fixture
+def default_objects(request) -> dict[str, Model]:
+    """
+    Return a dictionary of underscored model names to models.
+
+    By default, it attempts to automatically build this list by traversing the models
+    list and dynamically importing a fixture based on its name or a custom fixture
+    as defined on base.fixtures.MODEL_FIXTURE_CUSTOM_NAMES.
+    """
+
+    objects_dict = {}
+
+    for model_class in get_our_models():
+        model_name = underscore(model_class.__name__)
+        django_name = f"{model_class._meta.app_label}.{model_class.__name__}"
+        # Try using custom name first, then use default name
+        fixture_name = MODEL_FIXTURE_CUSTOM_NAMES.get(django_name, model_name)
+        objects_dict[model_name] = request.getfixturevalue(fixture_name)
+
+    return objects_dict
 
 
 @pytest.fixture
@@ -182,43 +206,5 @@ def test_responses(
     assert not skipped_patterns, (
         "Skipped URL patterns due to missing fixtures:\n"
         + "\n".join(f"* {pattern.pattern.describe()}" for pattern in skipped_patterns)
-        + "\nAdd them to base.tests.conftest.default_objects."
-    )
-
-
-def test_all_fixtures_are_defined(default_objects):
-    models = tuple(get_our_models())
-    models_without_fixtures = []
-
-    def test_url_patterns(patterns):
-        for pat in patterns:
-            if hasattr(pat, "name"):
-                param_converter_name = pat.pattern.converters.items()
-                if not param_converter_name:
-                    continue
-
-                callback = pat.callback
-                for param_name, converter in param_converter_name:
-                    if hasattr(callback, "view_class") and (
-                        param_name == "pk" or isinstance(converter, SlugConverter)
-                    ):
-                        model_class = callback.view_class.model
-                        model_name = underscore(model_class.__name__)
-                        if model_class not in models:
-                            continue
-                        if model_name not in default_objects:
-                            models_without_fixtures.append(model_class)
-            else:
-                test_url_patterns(pat.url_patterns)
-
-    from project.urls import urlpatterns
-
-    test_url_patterns(urlpatterns)
-    assert not models_without_fixtures, (
-        "Found model(s) without defined test fixture(s): \n"
-        + "\n".join(
-            f"* {model._meta.app_label}.{model.__name__}"
-            for model in models_without_fixtures
-        )
         + "\nAdd them to base.tests.conftest.default_objects."
     )
