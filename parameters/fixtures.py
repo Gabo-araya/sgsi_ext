@@ -4,7 +4,18 @@ import pytest
 
 from parameters.definitions import ParameterDefinition
 from parameters.definitions import ParameterDefinitionList
+from parameters.enums import ParameterKind
 from parameters.models import Parameter
+
+
+@pytest.fixture
+def test_parameter() -> Parameter:
+    return Parameter.objects.create(
+        name="TEST_PARAMETER",
+        raw_value="test",
+        kind=ParameterKind.STR,
+        cache_seconds=60,
+    )
 
 
 @pytest.fixture

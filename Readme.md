@@ -567,7 +567,7 @@ pytest_plugins = [
 For more information, see the pytest [section about fixtures](https://docs.pytest.org/en/7.3.x/explanation/fixtures.html#about-fixtures).
 
 ##### The `test_responses` test
-The hallmarks of DPT. This test checks the entire urlconf in search of broken views and
+The hallmark of DPT. This test checks the entire urlconf in search of broken views and
 as such, it requires an instance of every possible model to be present in the database.
 
 During the porting of this test to pytest, two major changes were performed:
@@ -575,9 +575,23 @@ During the porting of this test to pytest, two major changes were performed:
 - Mockup class was dropped in favor of fixtures.
 - The test runs on a clean database.
 
-Even when mockup class is no longer used, the test objects have to be somehow defined.
-You need to add to `base.tests.conftest.default_objects` each new model and its
-corresponding fixture, just like with the `Mockup` class.
+Even when mockup class is no longer used, test fixtures have to be somehow defined.
+The recommended way is to:
+1. Create a `fixtures.py` module on your app directory.
+2. Add the module path to the root's `conftest.py::pytest_plugins`
+3. In your fixtures module, define the required fixtures. The fixture should have the
+   same name as the model but underscored.
+
+In case you want to use custom names for a fixture, make sure to edit
+`base/fixtures.py` and define in `MODEL_FIXTURE_CUSTOM_NAMES` the relationship between
+the model name and the test fixture it should use, this way:
+
+```python
+MODEL_FIXTURE_CUSTOM_NAMES = {
+    "users.User": "regular_user",
+    "parameters.Parameter": "test_parameter",
+}
+```
 
 ### Celery and Celery beat
 

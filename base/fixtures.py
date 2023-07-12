@@ -8,6 +8,14 @@ if TYPE_CHECKING:
     from django.test.client import Client
 
 
+# If you defined fixtures for a model, but they use a non-standard name, please
+# add them to the following mapping. Keys follow the `app_label.model_name` scheme.
+MODEL_FIXTURE_CUSTOM_NAMES = {
+    "users.User": "regular_user",
+    "parameters.Parameter": "test_parameter",
+}
+
+
 @pytest.fixture
 def superuser_client(db, superuser_user) -> "Client":
     """A Django test client logged in as an admin user."""
