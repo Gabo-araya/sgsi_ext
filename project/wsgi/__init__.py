@@ -12,6 +12,9 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from project.wsgi.healthcheck import healthcheck
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 
 application = get_wsgi_application()
+application = healthcheck(application, "/_health/")
