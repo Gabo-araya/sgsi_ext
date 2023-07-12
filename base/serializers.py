@@ -81,18 +81,10 @@ class StringFallbackJSONEncoder(JSONEncoder):
         if is_aware(obj):
             msg = "JSON can't represent timezone-aware times."
             raise ValueError(msg)
-        iso = obj.isoformat()
-        if obj.microsecond:
-            return iso[:12]
-        return iso
+        return obj.isoformat(timespec="milliseconds")
 
     def process_date(self, obj):
         return obj.isoformat()
 
     def process_datetime(self, obj):
-        iso = obj.isoformat()
-        if obj.microsecond:
-            iso = iso[:23] + iso[26:]
-        if iso.endswith("+00:00"):
-            iso = iso[:-6] + "Z"
-        return iso
+        return obj.isoformat(timespec="milliseconds")

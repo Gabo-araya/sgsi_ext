@@ -2,6 +2,7 @@ import uuid
 
 from contextlib import nullcontext as does_not_raise
 from datetime import datetime
+from datetime import time
 from datetime import timedelta
 from decimal import Decimal
 from unittest.mock import MagicMock
@@ -92,11 +93,9 @@ def test_string_fall_back_json_encoder_default(obj, patch_str):
     ),
 )
 def test_string_fall_back_json_encoder_process_other(obj, expected):
-    with (
-        patch(
-            "base.serializers.JSONEncoder.default",
-            return_value="default",
-        )
+    with patch(
+        "base.serializers.JSONEncoder.default",
+        return_value="default",
     ):
         assert StringFallbackJSONEncoder().process_other(obj) == expected
 
@@ -121,20 +120,25 @@ def test_string_fall_back_json_encoder_process_timedelta():
     ("obj", "expected", "expectation"),
     (
         (
-            datetime.fromisoformat("2023-07-12T15:30:45.123456+03:00"),
+            time.fromisoformat("15:30:45.123456+03:00"),
             None,
             pytest.raises(ValueError),
         ),
         (
-            datetime.fromisoformat("2023-07-12T15:30:45.123456"),
-            "2023-07-12T1",
+            time.fromisoformat("15:30:45.123456"),
+            "15:30:45.123",
             does_not_raise(),
         ),
         (
-            datetime.fromisoformat("2023-07-12T15:30:45"),
-            "2023-07-12T15:30:45",
+            time.fromisoformat("15:30:45"),
+            "15:30:45.000",
             does_not_raise(),
         ),
+    ),
+    ids=(
+        "time-micros-with-tz",
+        "time-micros-without-tz",
+        "time-secs-without-tz",
     ),
 )
 def test_string_fall_back_json_encoder_process_time(obj, expected, expectation):
@@ -157,7 +161,7 @@ def test_string_fall_back_json_encoder_process_date():
         ),
         (
             datetime.fromisoformat("2023-07-12T15:30:45.123456+00:00"),
-            "2023-07-12T15:30:45.123Z",
+            "2023-07-12T15:30:45.123+00:00",
         ),
     ),
 )
