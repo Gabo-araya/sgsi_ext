@@ -1,2 +1,3 @@
 # When searching for TODOs with ripgrep, exclude startapp templates:
 *.*-tpl
+*.md
