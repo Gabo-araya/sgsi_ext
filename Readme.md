@@ -471,6 +471,14 @@ If you can't log in to the admin site, you can still do it over management comma
 ./manage.py setparameter ACTIVATE_LOGIN_RECAPTCHA False
 ```
 
+### Manually building an image
+Run ./build.sh to do a proper build of the image with correct build info.
+In staging environments, this might be faster than running Ansible to test minor
+changes.
+
+**WARNING: This procedure is not standard practice and does not substitute the
+official deployment method.**
+
 ### Tests
 
 pytest is the preferred tool to write tests. This tool has been chosen due to the

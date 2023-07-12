@@ -246,4 +246,11 @@ RUN ln -s /usr/src/app/manage.py /usr/local/bin/dj
 USER $WHO
 RUN django-admin compilemessages
 
+# Set git version and build time before finishing to reduce build time
+# when only minor changes are done
+ARG GIT_REF="<unknown>"
+ENV GIT_REF=$GIT_REF
+ARG BUILD_TIME="<unknown>"
+ENV BUILD_TIME=$BUILD_TIME
+
 CMD ["/usr/src/app/prod_cmd.sh"]

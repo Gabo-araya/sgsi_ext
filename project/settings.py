@@ -175,6 +175,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.tz",
                 "django.template.context_processors.i18n",
+                "base.context_processors.build_info",
             ],
             "loaders": [
                 (

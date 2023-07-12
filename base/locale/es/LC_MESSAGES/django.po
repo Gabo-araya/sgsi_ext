@@ -60,6 +60,16 @@ msgstr "actualizado el"
 msgid "display order"
 msgstr "orden de presentación"
 
+#: templates/admin/base.html
+#, python-format
+msgid "Version %(ref)s, built on %(build_time)s"
+msgstr "Versión %(ref)s, construida el %(build_time)s"
+
+#: templates/admin/base.html
+#, python-format
+msgid "Version %(commit)s"
+msgstr "Versión %(commit)s"
+
 #: templates/base.pug
 msgid "Close"
 msgstr "Cerrar"
@@ -151,3 +161,7 @@ msgstr "El objeto no puede ser eliminado."
 #: views/misc.py
 msgid "status"
 msgstr "estado"
+
+#~ msgctxt "build info"
+#~ msgid "<unknown>"
+#~ msgstr "<desconocido>"
