@@ -114,12 +114,15 @@
     - name: gather container build arguments
       block:
         - name: retrieve git commit hash
-          command: "git describe --tags --always --abbrev --dirty"
+          command:
+            cmd: "git describe --tags --always --abbrev --dirty"
+            chdir: "{{ project_name }}"
           register: git_ref
 
         - name: retrieve build time
           command: "date --iso-8601=seconds"
           register: build_time
+      tags: always
 
     - name: build and start containers
       # Note: "community.docker.docker_compose" requires docker-compose v1 and always disables BuildKit
