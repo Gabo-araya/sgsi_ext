@@ -43,6 +43,6 @@ def test_base_redirect_view_verbs(patch_verb_str, verb, do_action_call_count, rf
 def test_base_redirect_view_get_redirect_url(next_url, expected, rf):
     with patch("base.views.generic.edit.BaseUpdateRedirectView.get_object"):
         view = MockUpdateRedirectView()
-        view.object = MockModel()
+        view.object = MockModel
         view.request = rf.get(f"/?next={next_url}" if next_url else "/")
         assert view.get_redirect_url() == expected

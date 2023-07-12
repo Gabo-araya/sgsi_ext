@@ -1,27 +1,31 @@
+from unittest.mock import MagicMock
+
 from django.db import models
 
+parent_meta = MagicMock()
+parent_meta.verbose_name = "Mock Model"
+parent_meta.verbose_name_plural = "mock models"
+parent_meta.model_name = "mockmodel"
 
-class MockModel(models.Model):
-    class Meta:
-        verbose_name = "Mock Model"
-        verbose_name_plural = "mock models"
-
-    def __str__(self) -> str:
-        return "Object"
-
-    def get_absolute_url(self):
-        return "/mockmodel/1/"
+MockModel = MagicMock(spec=models.Model)
+MockModel._meta = parent_meta
+MockModel.__str__.return_value = "Object"
+MockModel.__name__ = "MockModel"
+MockModel.get_absolute_url = MagicMock(return_value="/mockmodel/1/")
 
 
-class MockChildModel(models.Model):
-    parent = models.ForeignKey(MockModel, on_delete=models.CASCADE)
+foreign_field_mock = MagicMock(spec=models.ForeignKey)
+foreign_field_mock.related_model = MockModel
+foreign_field_mock.name = "parent"
 
-    class Meta:
-        verbose_name = "Mock Child Model"
-        verbose_name_plural = "mock child models"
+child_meta = MagicMock()
+child_meta.verbose_name = "Mock Child Model"
+child_meta.verbose_name_plural = "mock child models"
+child_meta.get_fields.return_value = [foreign_field_mock]
+child_meta.model_name = "mockchildmodel"
 
-    def __str__(self) -> str:
-        return "Child Object"
-
-    def get_absolute_url(self):
-        return "/mockchildmodel/1/"
+MockChildModel = MagicMock(spec=models.Model)
+MockChildModel._meta = child_meta
+MockChildModel.__str__.return_value = "Child Object"
+MockChildModel.__name__ = "MockChildModel"
+MockChildModel.get_absolute_url = MagicMock(return_value="/mockchildmodel/1/")

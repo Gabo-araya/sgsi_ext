@@ -40,7 +40,7 @@ def test_base_update_view(  # noqa: PLR0913
     ):
         view = MockUpdateView()
         view.title = title
-        view.object = MockModel()
+        view.object = MockModel
         view.request = rf.get(f"/?next={next_url}" if next_url else "/")
         context_data = view.get_context_data()
         assert context_data["title"] == expected_title

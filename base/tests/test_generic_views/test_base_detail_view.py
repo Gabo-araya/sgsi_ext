@@ -8,7 +8,7 @@ class MockDetailView(BaseDetailView):
 
 def test_base_detail_view():
     view = MockDetailView()
-    view.object = MockModel()
+    view.object = MockModel
     context_data = view.get_context_data()
     assert context_data["title"] == "Mock Model: Object"
     assert context_data["opts"] == MockModel._meta

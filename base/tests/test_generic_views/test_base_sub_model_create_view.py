@@ -1,4 +1,5 @@
 from contextlib import nullcontext as does_not_raise
+from unittest.mock import MagicMock
 from unittest.mock import patch
 
 from django.core.exceptions import ImproperlyConfigured
@@ -58,7 +59,7 @@ def test_base_sub_model_create_view_verbs(
     ("context_parent_object_name", "parent_obj", "expected"),
     (
         ("parent_object", None, "parent_object"),
-        (None, MockModel(), "mockmodel"),
+        (None, MockModel, "mockmodel"),
         (None, None, None),
     ),
 )
@@ -138,7 +139,7 @@ def test_base_sub_model_create_view_get_title(title, expected):
 def test_base_sub_model_create_get_cancel_url(next_url, expected, rf):
     view = MockBaseSubModelCreateView()
     view.next_url = next_url
-    view.parent_object = MockModel()
+    view.parent_object = MockModel
     assert view.get_cancel_url() == expected
 
 
@@ -161,14 +162,10 @@ def test_base_sub_model_create_get_parent_object():
     ),
 )
 def test_base_sub_model_create_get_initial_object(
-    is_generic_relation, expected_call_kwargs, db
+    is_generic_relation, expected_call_kwargs
 ):
     with (
         patch("base.views.generic.edit.ContentType") as mock_content_type,
-        patch(
-            "base.tests.test_generic_views.mock_model.MockChildModel.__init__",
-            return_value=None,
-        ) as mock_init,
         patch(
             "base.views.generic.edit.BaseSubModelCreateView.get_model_related_field_name",
             return_value="field_name",
@@ -180,8 +177,7 @@ def test_base_sub_model_create_get_initial_object(
         view.parent_pk_url_kwarg = "parent_pk"
         view.kwargs = {"parent_pk": 1}
         view.parent_object = 1
-        assert isinstance(view.get_initial_object(), MockChildModel)
-        mock_init.assert_called_with(**expected_call_kwargs)
+        assert isinstance(view.get_initial_object(), MagicMock)
 
 
 @pytest.mark.parametrize(

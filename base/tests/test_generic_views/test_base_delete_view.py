@@ -39,7 +39,7 @@ def test_base_delete_view(  # noqa: PLR0913
         patch("django.views.generic.DeleteView.get_context_data", return_value={}),
     ):
         view = MockDeleteView()
-        view.object = MockModel()
+        view.object = MockModel
         view.title = title
         view.request = rf.get(f"/?next={next_url}" if next_url else "/")
         context_data = view.get_context_data()
