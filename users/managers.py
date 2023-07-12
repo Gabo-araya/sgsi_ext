@@ -2,28 +2,9 @@
 
 
 from django.contrib.auth.models import BaseUserManager
-from django.db.models import Q
-
-# base
-from base.managers import BaseQuerySet
 
 
-class UserQuerySet(BaseQuerySet):
-    def search(self, query):
-
-        queryset = self
-
-        for term in query.split(" "):
-            queryset = queryset.filter(
-                Q(first_name__unaccent__icontains=term)
-                | Q(last_name__unaccent__icontains=term)
-                | Q(email__icontains=term),
-            )
-
-        return queryset
-
-
-class CustomUserManager(BaseUserManager):
+class UserManager(BaseUserManager):
     def _create_user(self, email, first_name, last_name, password, **extra_fields):
         """
         Creates and saves a User with the given username, email and password.
@@ -76,6 +57,3 @@ class CustomUserManager(BaseUserManager):
 
     def get_or_none(self, **fields):
         return self.get_queryset().get_or_none(**fields)
-
-
-UserManager = CustomUserManager.from_queryset(UserQuerySet)

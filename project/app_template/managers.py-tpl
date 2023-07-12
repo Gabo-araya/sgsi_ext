@@ -1,6 +1,6 @@
-from base.managers import BaseQuerySet
+from django.db import models
 
 
-class {{model_name}}QuerySet(BaseQuerySet):
+class {{model_name}}QuerySet(models.QuerySet):
     def search(self, query):
         ...

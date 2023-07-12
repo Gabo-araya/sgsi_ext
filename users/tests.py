@@ -150,8 +150,7 @@ def test_user_create_form_save(verify_email, verify_email_calls, commit, commit_
         (True, "override.com"),
     ),
 )
-def test_user_create_form_send_verify_email(override, domain):
-    user = MagicMock()
+def test_user_create_form_send_verify_email(override, domain, regular_user):
     current_site = MagicMock()
     current_site.name = "test"
     current_site.domain = "test.com"
@@ -165,7 +164,7 @@ def test_user_create_form_send_verify_email(override, domain):
         ),
         patch("users.forms.int_to_base36", return_value="test_int"),
     ):
-        UserCreationForm.send_verify_email(user, domain_override=domain)
+        UserCreationForm.send_verify_email(regular_user, domain_override=domain)
         assert get_current_site_mock.call_count == int(not override)
         assert send_mail_mock.call_count == 1
 
@@ -195,12 +194,11 @@ def test_user_change_form_set_user_permissions_queryset():
     ),
 )
 def test_admin_authentication_form_clean(
-    email, password, is_active, is_staff, auth_result, expectation
+    email, password, is_active, is_staff, auth_result, expectation, regular_user
 ):
-    user_mock = MagicMock()
-    user_mock.is_active = is_active
-    user_mock.is_staff = is_staff
-    auth_result = user_mock if auth_result else None
+    regular_user.is_active = is_active
+    regular_user.is_staff = is_staff
+    auth_result = regular_user if auth_result else None
     with (
         expectation,
         patch("users.forms.authenticate", return_value=auth_result),
@@ -230,12 +228,10 @@ def test_authentication_form_get_user():
 
 
 @pytest.mark.parametrize("has_user_cache", (True, False))
-def test_authentication_form_get_user_id(has_user_cache):
-    user_cache = MagicMock()
-    user_cache.id = "test"
+def test_authentication_form_get_user_id(has_user_cache, regular_user):
     form = AuthenticationForm()
-    form.user_cache = user_cache if has_user_cache else None
-    expected = "test" if has_user_cache else None
+    form.user_cache = regular_user if has_user_cache else None
+    expected = regular_user.id if has_user_cache else None
     assert form.get_user_id() == expected
 
 
@@ -255,18 +251,19 @@ def test_authentication_form_full_clean():
 
 
 @pytest.mark.parametrize(
-    ("is_acitve", "expectation"),
+    ("is_active", "expectation"),
     (
         (True, does_not_raise()),
         (False, pytest.raises(ValidationError)),
     ),
 )
-def test_authentication_form_confirm_login_allowed(is_acitve, expectation):
+def test_authentication_form_confirm_login_allowed(
+    is_active, expectation, regular_user
+):
     with expectation:
-        user = MagicMock()
-        user.is_active = is_acitve
+        regular_user.is_active = is_active
         form = AuthenticationForm()
-        form.confirm_login_allowed(user)
+        form.confirm_login_allowed(regular_user)
 
 
 @pytest.mark.parametrize(
