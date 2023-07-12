@@ -2,9 +2,6 @@
 Custom Fields
 """
 
-
-import re
-
 from django.core.exceptions import ValidationError
 from django.db.models import CharField
 from django.db.models import FileField
@@ -26,13 +23,8 @@ class ChileanRUTField(CharField):
 
     description = _("Chilean RUT (up to %(max_length)s)")
     default_error_messages = {
-        "invalid_format": _(
-            "'%(value)s' value has an invalid format. "
-            "It must be in XX.XXX.XXX-Y format or "
-            "XXXXXXXXY format.",
-        ),
-        "invalid_rut": _(
-            "'%(value)s' value has the correct format but it is an invalid rut.",
+        "invalid": _(
+            "'%(value)s' is an invalid RUT.",
         ),
         "invalid_type": _("'%(value)s' must be str or None."),
     }
@@ -43,42 +35,25 @@ class ChileanRUTField(CharField):
         super().__init__(*args, **kwargs)
 
     def to_python(self, value):
-        if value is None:
-            return value
-        if not isinstance(value, str):
+        if not (isinstance(value, str) or value is None):
             raise ValidationError(
                 self.error_messages["invalid_type"],
                 code="invalid",
                 params={"value": value},
             )
-        value = self._format_rut(value)
-        if not value or value is None:
-            return value
-        if not utils.validate_rut(value):
-            raise ValidationError(
-                self.error_messages["invalid_rut"],
-                code="invalid",
-                params={"value": value},
-            )
-        return value
 
-    def _format_rut(self, value):
-        value = value.strip()
-        full_format = re.compile(r"[1-9]\d{0,2}(\.\d{3})*-[\dkK]")
-        incomplete_format = re.compile(r"[1-9](\d)*[\dkK]")
+        value = str(value).strip()
         if not value:
             return value
-        if re.fullmatch(full_format, value):
-            value = value[:-1] + value[-1].upper()
-        elif re.fullmatch(incomplete_format, value):
-            value = utils.format_rut(value)
-            value = value[:-1] + value[-1].upper()
-        else:
+
+        if not utils.validate_rut(value):
             raise ValidationError(
-                self.error_messages["invalid_format"],
+                self.error_messages["invalid"],
                 code="invalid",
                 params={"value": value},
             )
+
+        value = utils.format_rut(value)
         return value
 
 
