@@ -13,8 +13,9 @@ def test_all_models_have_fixtures(request):
 
     for model_class in get_our_models():
         fixture_name = get_fixture_name_for_model(model_class)
-        fixture = request.getfixturevalue(fixture_name)
-        if not fixture:
+        try:
+            fixture = request.getfixturevalue(fixture_name)
+        except pytest.FixtureLookupError:
             models_without_fixtures.append((model_class, fixture_name))
             continue
         assert isinstance(fixture, model_class), (
