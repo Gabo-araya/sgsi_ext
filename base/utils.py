@@ -1,7 +1,6 @@
 """ Small methods for generic use """
 
 
-import datetime
 import os
 import re
 
@@ -14,7 +13,6 @@ from django.utils import numberformat
 from django.utils import timezone
 
 # others libraries
-import pytz
 
 RUT_FILTER_RE = re.compile("[^0-9kK]")
 
@@ -95,31 +93,6 @@ def can_loginas(request, target_user):
         and not target_user.is_superuser
         and target_user.is_active  # users not active cannot log in
     )
-
-
-def date_to_datetime(date):
-    tz = timezone.get_default_timezone()
-
-    try:
-        r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time()),
-            tz,
-        )
-    except pytz.NonExistentTimeError:
-        r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time())
-            + datetime.timedelta(hours=1),
-            tz,
-        )
-
-    except pytz.AmbiguousTimeError:
-        r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time())
-            - datetime.timedelta(hours=1),
-            tz,
-        )
-
-    return r_datetime
 
 
 def get_slug_fields(model):

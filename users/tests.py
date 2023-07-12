@@ -111,6 +111,7 @@ def test_user_login_form_show_correct_form(
     response = client.post(reverse("login"))
     assert isinstance(response.context["form"], expected)
 
+
 @pytest.mark.parametrize(
     ("verify_email", "verify_email_calls", "commit", "commit_calls"),
     (

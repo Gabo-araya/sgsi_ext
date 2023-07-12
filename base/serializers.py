@@ -13,6 +13,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.files import FieldFile
 from django.utils.duration import duration_iso_string
+from django.utils.encoding import DjangoUnicodeDecodeError
 from django.utils.encoding import force_str
 from django.utils.functional import Promise
 from django.utils.timezone import is_aware
@@ -59,7 +60,7 @@ class StringFallbackJSONEncoder(JSONEncoder):
 
     def process_other(self, obj):
         # dict-like classes that don't descend from `dict` are handled with duck typing
-        if hasattr(obj, "__getitem__"):
+        if hasattr(obj, "__getitem__") and not isinstance(obj, bytes):
             cls = list if isinstance(obj, (list, tuple)) else dict
             try:
                 return cls(obj)
@@ -67,7 +68,7 @@ class StringFallbackJSONEncoder(JSONEncoder):
                 return self.process_other(obj)
         try:
             return force_str(obj)
-        except Exception:  # noqa: BLE
+        except DjangoUnicodeDecodeError:
             return super().default(obj)
 
     def process_decimal_uuid_or_promise(self, obj):

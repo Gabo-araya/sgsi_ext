@@ -1,3 +1,5 @@
+from django.contrib.auth.models import AnonymousUser
+
 import pytest
 
 from users.models import User
@@ -65,3 +67,8 @@ def regular_user2(db):
         last_name="Doe",
         password="thisismagnet2ndbestkeptsecret",  # noqa: S106
     )
+
+
+@pytest.fixture
+def anonymous_user(db):
+    return AnonymousUser()
