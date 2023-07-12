@@ -36,23 +36,26 @@ class ReadinessCheckMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         if request.method == "GET" and request.path == "/_ready/":
-            try:
-                # django
-                from django.db import connections
-
-                for name in connections:
-                    cursor = connections[name].cursor()
-                    cursor.execute("SELECT 1;")
-                    if cursor.fetchone() is None:
-                        return HttpResponseServerError(
-                            "Got invalid response from DB", content_type="text/plain"
-                        )
-            except Exception as e:
-                health_logger.exception("Failure connecting to database", exc_info=e)
-                return HttpResponseServerError(
-                    "Failure connecting to the DB", content_type="text/plain"
-                )
-
-            return HttpResponse()
-
+            return self.perform_readiness_check()
         return self.get_response(request)
+
+    def perform_readiness_check(self):
+        try:
+            return self.check_connections()
+        except Exception as e:
+            health_logger.exception("Failure connecting to database", exc_info=e)
+            return HttpResponseServerError(
+                "Failure connecting to the DB", content_type="text/plain"
+            )
+
+    def check_connections(self):
+        from django.db import connections
+
+        for name in connections:
+            cursor = connections[name].cursor()
+            cursor.execute("SELECT 1;")
+            if cursor.fetchone() is None:
+                return HttpResponseServerError(
+                    "Got invalid response from DB", content_type="text/plain"
+                )
+        return HttpResponse()
