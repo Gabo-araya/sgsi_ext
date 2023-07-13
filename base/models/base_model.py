@@ -5,8 +5,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-# base
-from base.managers import BaseQuerySet
 from base.mixins import AuditMixin
 from base.serializers import ModelEncoder
 from base.utils import build_absolute_url_wo_req
@@ -31,8 +29,6 @@ class BaseModel(AuditMixin, models.Model):
 
     # field used to store a dictionary with the instance original fields
     original_dict = None
-
-    objects = BaseQuerySet.as_manager()
 
     class Meta:
         abstract = True

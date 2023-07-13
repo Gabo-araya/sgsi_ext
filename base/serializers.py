@@ -13,6 +13,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.files import FieldFile
 from django.utils.duration import duration_iso_string
+from django.utils.encoding import DjangoUnicodeDecodeError
 from django.utils.encoding import force_str
 from django.utils.functional import Promise
 from django.utils.timezone import is_aware
@@ -43,7 +44,7 @@ class ModelEncoder(DjangoJSONEncoder):
 class StringFallbackJSONEncoder(JSONEncoder):
     """JSON Serializer that falls back to force_str."""
 
-    def default(self, obj):
+    def default(self, obj):  # noqa: PLR0911
         # See "Date Time String Format" in the ECMA-262 specification.
         if isinstance(obj, datetime.datetime):
             return self.process_datetime(obj)
@@ -55,11 +56,13 @@ class StringFallbackJSONEncoder(JSONEncoder):
             return self.process_timedelta(obj)
         if isinstance(obj, (decimal.Decimal, uuid.UUID, Promise)):
             return self.process_decimal_uuid_or_promise(obj)
+        if isinstance(obj, set):
+            return self.process_set(obj)
         return self.process_other(obj)
 
     def process_other(self, obj):
         # dict-like classes that don't descend from `dict` are handled with duck typing
-        if hasattr(obj, "__getitem__"):
+        if hasattr(obj, "__getitem__") and not isinstance(obj, bytes):
             cls = list if isinstance(obj, (list, tuple)) else dict
             try:
                 return cls(obj)
@@ -67,11 +70,15 @@ class StringFallbackJSONEncoder(JSONEncoder):
                 return self.process_other(obj)
         try:
             return force_str(obj)
-        except Exception:  # noqa: BLE
+        except DjangoUnicodeDecodeError:
             return super().default(obj)
 
     def process_decimal_uuid_or_promise(self, obj):
         return str(obj)
+
+    def process_set(self, obj):
+        # Handle as tuple
+        return tuple(obj)
 
     def process_timedelta(self, obj):
         return duration_iso_string(obj)
@@ -80,18 +87,10 @@ class StringFallbackJSONEncoder(JSONEncoder):
         if is_aware(obj):
             msg = "JSON can't represent timezone-aware times."
             raise ValueError(msg)
-        iso = obj.isoformat()
-        if obj.microsecond:
-            return iso[:12]
-        return iso
+        return obj.isoformat(timespec="milliseconds")
 
     def process_date(self, obj):
         return obj.isoformat()
 
     def process_datetime(self, obj):
-        iso = obj.isoformat()
-        if obj.microsecond:
-            iso = iso[:23] + iso[26:]
-        if iso.endswith("+00:00"):
-            iso = iso[:-6] + "Z"
-        return iso
+        return obj.isoformat(timespec="milliseconds")

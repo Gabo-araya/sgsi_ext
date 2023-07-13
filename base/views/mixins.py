@@ -1,7 +1,6 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
-from django.http import HttpResponseForbidden
 
 
 class LoginPermissionRequiredMixin(PermissionRequiredMixin):
@@ -32,12 +31,8 @@ class LoginPermissionRequiredMixin(PermissionRequiredMixin):
 class SuperuserRestrictedMixin:
     """Restricts a view to superusers only. Optionally hide it with 404."""
 
-    hide_with_404 = False
-
     def dispatch(self, request, *args, **kwargs):
         user = request.user
         if not (user.is_authenticated and user.is_superuser):
-            if self.hide_with_404:
-                raise Http404
-            raise HttpResponseForbidden
+            raise Http404
         return super().dispatch(request, *args, **kwargs)

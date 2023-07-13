@@ -14,6 +14,11 @@ class OrderableModel(BaseModel):
         abstract = True
         ordering = ("display_order",)
 
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self._set_display_order()
+        super().save(*args, **kwargs)
+
     def _set_display_order(self):
         """
         When adding a new object, set display_order field
@@ -33,8 +38,3 @@ class OrderableModel(BaseModel):
             obj.display_order = order
             obj.save()
             order += 1
-
-    def save(self, *args, **kwargs):
-        if self.pk is None:
-            self._set_display_order()
-        super().save(*args, **kwargs)

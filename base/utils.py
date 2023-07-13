@@ -1,12 +1,8 @@
 """ Small methods for generic use """
 
 
-import datetime
 import os
-import random
 import re
-import string
-import unicodedata
 
 from itertools import cycle
 
@@ -17,7 +13,6 @@ from django.utils import numberformat
 from django.utils import timezone
 
 # others libraries
-import pytz
 
 RUT_FILTER_RE = re.compile("[^0-9kK]")
 
@@ -81,31 +76,6 @@ def validate_rut(rut):
     return res == dv
 
 
-def strip_accents(s):
-    return "".join(
-        c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn"
-    )
-
-
-def tz_datetime(*args, **kwargs):
-    """
-    Creates a datetime.datetime object but with the current timezone
-    """
-    tz = timezone.get_current_timezone()
-    naive_dt = timezone.datetime(*args, **kwargs)
-    return timezone.make_aware(naive_dt, tz)
-
-
-def random_string(length=6, chars=None, include_spaces=True):
-    if chars is None:
-        chars = string.ascii_uppercase + string.digits
-
-    if include_spaces:
-        chars += " "
-
-    return "".join(random.choice(chars) for x in range(length))  # noqa: S311
-
-
 def get_our_models():
     for model in apps.get_models():
         app_label = model._meta.app_label
@@ -122,31 +92,6 @@ def can_loginas(request, target_user):
         and not target_user.is_superuser
         and target_user.is_active  # users not active cannot log in
     )
-
-
-def date_to_datetime(date):
-    tz = timezone.get_default_timezone()
-
-    try:
-        r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time()),
-            tz,
-        )
-    except pytz.NonExistentTimeError:
-        r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time())
-            + datetime.timedelta(hours=1),
-            tz,
-        )
-
-    except pytz.AmbiguousTimeError:
-        r_datetime = timezone.make_aware(
-            datetime.datetime.combine(date, datetime.datetime.min.time())
-            - datetime.timedelta(hours=1),
-            tz,
-        )
-
-    return r_datetime
 
 
 def get_slug_fields(model):

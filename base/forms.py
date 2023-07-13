@@ -17,35 +17,37 @@ class BaseFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for _, field in self.fields.items():
-            attrs = field.widget.attrs
-            if "class" not in attrs:
-                attrs["class"] = ""
+            widget = field.widget
+            if "class" not in widget.attrs:
+                widget.attrs["class"] = ""
 
             match field.widget:
                 case forms.widgets.DateInput():
-                    attrs["class"] += " form-control"
+                    widget.attrs["class"] += " form-control"
                     field.widget.input_type = "date"
                     field.widget.format = "%Y-%m-%d"
 
                 case forms.widgets.DateTimeInput():
-                    attrs["class"] += " form-control"
+                    widget.attrs["class"] += " form-control"
                     field.widget.input_type = "datetime-local"
                     field.widget.format = "%Y-%m-%d %H:%M:%S"
 
                 case forms.widgets.TimeInput():
-                    attrs["class"] += " form-control"
+                    widget.attrs["class"] += " form-control"
                     field.widget.input_type = "time"
                     field.widget.format = "%H:%M:%S"
 
                 case forms.widgets.FileInput():
-                    attrs["class"] += " form-control is-invalid"
+                    widget.attrs["class"] += " form-control is-invalid"
 
                 case forms.widgets.CheckboxInput():
-                    attrs["class"] += " form-check-input"
-                    attrs["role"] = "switch"
+                    widget.attrs["class"] += " form-check-input"
+                    widget.attrs["role"] = "switch"
 
                 case _:
-                    attrs["class"] += " form-control"
+                    widget.attrs["class"] += " form-control"
+
+            widget.attrs["class"] = widget.attrs["class"].strip()
 
     def hide_field(self, field_name):
         self.fields[field_name].widget = HiddenInput()
