@@ -1,5 +1,6 @@
 import uuid
 
+from collections.abc import MutableMapping
 from contextlib import nullcontext as does_not_raise
 from datetime import datetime
 from datetime import time
@@ -17,6 +18,31 @@ import pytest
 from base.models import BaseModel
 from base.serializers import ModelEncoder
 from base.serializers import StringFallbackJSONEncoder
+
+
+class DictLike(MutableMapping):
+    """
+    Mapping that works like a dict.
+    Necessary to test all the StringFallbackJSONEncoder cases.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__.update(*args, **kwargs)
+
+    def __setitem__(self, key, value):
+        self.__dict__[key] = value
+
+    def __getitem__(self, key):
+        return self.__dict__[key]
+
+    def __delitem__(self, key):
+        del self.__dict__[key]
+
+    def __iter__(self):
+        return iter(self.__dict__)
+
+    def __len__(self):
+        return len(self.__dict__)
 
 
 @pytest.mark.parametrize(
@@ -86,17 +112,16 @@ def test_string_fall_back_json_encoder_default(obj, patch_str):
 
 
 @pytest.mark.parametrize(
-    ("obj", "expected"),
+    ("obj", "expected", "expectation"),
     (
-        ({"a": 1}, {"a": 1}),
-        (b"\x80\x81\x82", "default"),
+        ({"a": 1}, {"a": 1}, does_not_raise()),  # dictionary
+        (DictLike({"a": 1}), {"a": 1}, does_not_raise()),  # mutablemapping
+        (b"\x61\x62\x63", "abc", does_not_raise()),  # text encoded as bytes
+        (b"\xd0\xa0\xfe", None, pytest.raises(TypeError)),  # non-text bytes
     ),
 )
-def test_string_fall_back_json_encoder_process_other(obj, expected):
-    with patch(
-        "base.serializers.JSONEncoder.default",
-        return_value="default",
-    ):
+def test_string_fall_back_json_encoder_process_other(obj, expected, expectation):
+    with expectation:
         assert StringFallbackJSONEncoder().process_other(obj) == expected
 
 
