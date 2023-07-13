@@ -99,6 +99,7 @@ omit = [
   "project/test_settings.py",
   "project/settings.py",
   "project/urls.py",
+  "project/logging.py",
   ".vscode-server"
 ]
 
