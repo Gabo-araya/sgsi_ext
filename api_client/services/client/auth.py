@@ -67,6 +67,9 @@ class BearerAuth(SerializableAuthBase):
         self.auth_type = auth_type
 
     def __eq__(self, other):
+        if not isinstance(other, BearerAuth):
+            msg = f"Cannot compare with {other.__class__.__name__}"
+            raise TypeError(msg)
         return all(
             [
                 self.auth_header == getattr(other, "auth_header", None),
