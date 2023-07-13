@@ -15,7 +15,8 @@ class BaseRange:
 
     def __contains__(self, other):
         if not isinstance(other, self._address_class):
-            msg = f"Only {(self._address_class,):s} addresses can be checked"
+            class_name = self._address_class.__name__
+            msg = f"Only {class_name} addresses can be checked"
             raise TypeError(msg)
         return self.start <= other <= self.end
 
