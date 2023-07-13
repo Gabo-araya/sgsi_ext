@@ -44,7 +44,7 @@ class ModelEncoder(DjangoJSONEncoder):
 class StringFallbackJSONEncoder(JSONEncoder):
     """JSON Serializer that falls back to force_str."""
 
-    def default(self, obj):
+    def default(self, obj):  # noqa: PLR0911
         # See "Date Time String Format" in the ECMA-262 specification.
         if isinstance(obj, datetime.datetime):
             return self.process_datetime(obj)
@@ -56,6 +56,8 @@ class StringFallbackJSONEncoder(JSONEncoder):
             return self.process_timedelta(obj)
         if isinstance(obj, (decimal.Decimal, uuid.UUID, Promise)):
             return self.process_decimal_uuid_or_promise(obj)
+        if isinstance(obj, set):
+            return self.process_set(obj)
         return self.process_other(obj)
 
     def process_other(self, obj):
@@ -73,6 +75,10 @@ class StringFallbackJSONEncoder(JSONEncoder):
 
     def process_decimal_uuid_or_promise(self, obj):
         return str(obj)
+
+    def process_set(self, obj):
+        # Handle as tuple
+        return tuple(obj)
 
     def process_timedelta(self, obj):
         return duration_iso_string(obj)

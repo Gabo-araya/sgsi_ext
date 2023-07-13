@@ -103,6 +103,10 @@ def test_model_encoder(spec, expected):
             Promise(),
             "base.serializers.StringFallbackJSONEncoder.process_decimal_uuid_or_promise",
         ),
+        (
+            {1, 2, 3},
+            "base.serializers.StringFallbackJSONEncoder.process_set",
+        ),
     ),
 )
 def test_string_fall_back_json_encoder_default(obj, patch_str):
@@ -134,6 +138,11 @@ def test_string_fall_back_json_encoder_process_other(obj, expected, expectation)
 )
 def test_string_fall_back_json_encoder_process_decimal_uuid_or_promise(obj, expected):
     assert StringFallbackJSONEncoder().process_decimal_uuid_or_promise(obj) == expected
+
+
+def test_string_fall_back_json_encoder_process_set():
+    obj = {1, 2, 3}
+    assert StringFallbackJSONEncoder().process_set(obj) == (1, 2, 3)
 
 
 def test_string_fall_back_json_encoder_process_timedelta():
