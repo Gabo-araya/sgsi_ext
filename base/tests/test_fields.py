@@ -1,10 +1,17 @@
 from contextlib import nullcontext as does_not_raise
+from datetime import date
+from unittest.mock import patch
 
 from django.core.exceptions import ValidationError
 
 import pytest
 
 from base.fields import ChileanRUTField
+from base.fields.functions import file_path
+
+
+class TestModel:
+    pass
 
 
 @pytest.mark.parametrize(
@@ -26,3 +33,13 @@ def test_clean_rut(raw_value, expected_value, expectation):
     field = ChileanRUTField(blank=True)
     with expectation:
         assert field.clean(raw_value, None) == expected_value
+
+
+def test_file_path():
+    with patch(
+        "base.fields.functions.utils.today", return_value=date(2007, 1, 9)
+    ), patch("base.fields.functions.uuid.uuid4", return_value="uuid"):
+        assert (
+            file_path(TestModel(), "testfile.txt")
+            == "TestModel/2007/01/09/uuid/testfile.txt"
+        )
