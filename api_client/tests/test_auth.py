@@ -28,6 +28,13 @@ def test_bearer_auth_equality_comparison(params1, params2, not_equal):
         assert auth1 == auth2
 
 
+def test_bearer_auth_equality_comparison_mismatch_types():
+    with pytest.raises(TypeError):
+        auth1 = BearerAuth("token")
+        auth2 = "token"
+        assert auth1 == auth2
+
+
 @pytest.mark.parametrize(
     ("auth_params", "expected_header", "expected_value"),
     (

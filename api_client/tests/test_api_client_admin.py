@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock
 from unittest.mock import patch
 
 import pytest
@@ -40,3 +41,33 @@ def test_cant_delete_client_config_in_admin():
 def test_client_log_admin_permissions(permission_func, expected_result):
     admin_view = ClientLogAdmin(model=ClientLog, admin_site="test")
     assert expected_result == getattr(admin_view, permission_func)(None)
+
+
+@pytest.mark.parametrize(
+    ("func_name", "obj", "expected"),
+    (
+        (
+            "request_headers_pretty",
+            MagicMock(request_headers={"a": 1, "b": 2}),
+            "<pre>a: 1\nb: 2</pre>",
+        ),
+        (
+            "response_headers_pretty",
+            MagicMock(response_headers={"a": 1, "b": 2}),
+            "<pre>a: 1\nb: 2</pre>",
+        ),
+        (
+            "request_content_pretty",
+            MagicMock(request_content={"a": 1, "b": 2}),
+            "<pre>{&#x27;a&#x27;: 1, &#x27;b&#x27;: 2}</pre>",
+        ),
+        (
+            "response_content_pretty",
+            MagicMock(response_content={"a": 1, "b": 2}),
+            "<pre>{&#x27;a&#x27;: 1, &#x27;b&#x27;: 2}</pre>",
+        ),
+    ),
+)
+def test_request_pretty(func_name, obj, expected):
+    admin_view = ClientLogAdmin(model=ClientLog, admin_site="test")
+    assert getattr(admin_view, func_name)(obj) == expected

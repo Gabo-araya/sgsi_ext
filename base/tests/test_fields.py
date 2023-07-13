@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 
 import pytest
 
+from base.fields import BaseFileField
 from base.fields import ChileanRUTField
 from base.fields.functions import file_path
 
@@ -17,6 +18,8 @@ class TestModel:
 @pytest.mark.parametrize(
     ("raw_value", "expected_value", "expectation"),
     (
+        (None, "", pytest.raises(ValidationError)),
+        (1, "", pytest.raises(ValidationError)),
         ("", "", does_not_raise()),
         ("1", None, pytest.raises(ValidationError)),
         ("19", "1-9", does_not_raise()),
@@ -43,3 +46,10 @@ def test_file_path():
             file_path(TestModel(), "testfile.txt")
             == "TestModel/2007/01/09/uuid/testfile.txt"
         )
+
+
+def test_base_file_field():
+    field = BaseFileField(upload_to=file_path)
+    assert field.upload_to == file_path
+    field = BaseFileField()
+    assert field.upload_to == file_path
