@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.contrib.admin.apps import AdminConfig
 from django.db.models.signals import post_delete
 from django.db.models.signals import post_save
 
@@ -26,3 +27,7 @@ class BaseConfig(AppConfig):
                 sender=subclass,
                 dispatch_uid=subclass.__name__.lower() + "_post_delete",
             )
+
+
+class BaseAdminConfig(AdminConfig):
+    default_site = "base.admin.BaseAdminSite"

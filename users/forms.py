@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from django.contrib.auth import password_validation
@@ -146,37 +147,43 @@ class CaptchaAuthenticationForm(AuthenticationForm):
         self.fields["captcha"].widget.input_type = "hidden"
 
 
-class AdminAuthenticationForm(AuthenticationForm):
+class AdminCaptchaAuthenticationForm(AdminAuthenticationForm):
     """
-    A custom authentication form used in the admin app.
-
+    A custom authentication form used in the admin app, with reCAPTCHA.
     """
 
     error_messages = {
+        **AdminAuthenticationForm.error_messages,
         "required": _("Please log in again, because your session has expired."),
+        "invalid_login": _(
+            "Please enter the correct %(username)s and password for a staff "
+            "account. Note that both fields may be case-sensitive."
+        ),
     }
-    this_is_the_login_form = forms.BooleanField(
-        widget=forms.HiddenInput,
-        initial=1,
-        error_messages=error_messages,
+    required_css_class = "required"
+
+    captcha = ReCaptchaField(
+        widget=ReCaptchaV3,
+        error_messages={
+            "captcha_invalid": _("Error verifying reCAPTCHA, please try again."),
+            "captcha_error": _("Error verifying reCAPTCHA, please try again."),
+            "required": _("Error verifying reCAPTCHA, please try again."),
+        },
     )
 
-    def clean(self):
-        email = self.cleaned_data.get("email")
-        password = self.cleaned_data.get("password")
-        if not (email and password):
-            return self.cleaned_data
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        # define captcha widget as hidden to avoid unwanted labels
+        self.fields["captcha"].widget.input_type = "hidden"
 
-        msg = _(
-            "Please enter the correct email and password for a staff "
-            "account. Note that both fields may be case-sensitive.",
-        )
-        self.user_cache = authenticate(email=email, password=password)
-        if self.user_cache is None:
-            raise ValidationError(msg)
-        if not self.user_cache.is_active or not self.user_cache.is_staff:
-            raise ValidationError(msg)
-        return self.cleaned_data
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if not user.is_staff:
+            raise ValidationError(
+                self.error_messages["invalid_login"],
+                code="invalid_login",
+                params={"username": self.username_field.verbose_name},
+            )
 
 
 class UserCreationForm(BaseModelForm):

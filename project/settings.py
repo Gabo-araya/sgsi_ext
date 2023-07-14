@@ -87,7 +87,7 @@ SITE_ID = 1
 INSTALLED_APPS = [
     # This app first so it correctly overrides runserver command from staticfiles:
     "base.apps.BaseConfig",
-    "django.contrib.admin",
+    "base.apps.BaseAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
