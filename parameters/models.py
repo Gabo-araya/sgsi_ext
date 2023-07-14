@@ -118,8 +118,8 @@ class Parameter(BaseModel):
         )
 
     def save(self, *args, **kwargs):
-        self.store_in_cache()
         super().save(*args, **kwargs)
+        self.store_in_cache()
 
     def store_in_cache(self):
         cache_key = Parameter.cache_key(self.name)

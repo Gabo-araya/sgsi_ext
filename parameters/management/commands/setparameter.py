@@ -29,7 +29,6 @@ class Command(BaseCommand):
             parameter.value = param_value
             parameter.full_clean()
             parameter.save()
-            parameter.store_in_cache()
             self.stdout.write("Parameter changed successfully!")
         except Parameter.DoesNotExist:
             self.stderr.write(f"Parameter {param_name} does not exist!")
