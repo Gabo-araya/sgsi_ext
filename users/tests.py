@@ -1,14 +1,18 @@
 from contextlib import nullcontext as does_not_raise
 from http import HTTPStatus
+from importlib import import_module
 from unittest.mock import MagicMock
 from unittest.mock import patch
 from urllib.parse import urlparse
 
+from django.contrib.auth import login
+from django.contrib.sessions.models import Session
 from django.forms import ValidationError
 from django.urls import reverse
 
 import pytest
 
+from users.admin import force_logout
 from users.forms import AdminAuthenticationForm
 from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
@@ -22,6 +26,17 @@ def duplicated_user(db):
     return User.objects.create_user(
         first_name="Alex", last_name="Smith", email="dupetest@example.com"
     )
+
+
+@pytest.fixture
+def setup_session(settings, db):
+    def _setup_session(request):
+        engine = import_module(settings.SESSION_ENGINE)
+        session_store = engine.SessionStore
+        session_key = request.COOKIES.get(settings.SESSION_COOKIE_NAME)
+        request.session = session_store(session_key)
+
+    return _setup_session
 
 
 def test_lower_case_emails(regular_user):
@@ -301,3 +316,21 @@ def test_send_recover_password_email(regular_user):
     with patch("users.models.email_manager.send_emails") as send_emails:
         regular_user.send_recover_password_email()
         send_emails.assert_called_once()
+
+
+def test_user_admin_force_logout(rf, setup_session, regular_user, superuser_user):
+    # authenticate user to create a session
+    login_request = rf.post("login")
+    setup_session(login_request)
+
+    login(login_request, regular_user)
+    login_request.session.save()
+    session_key = login_request.session.session_key
+
+    logout_request = rf.post("force_logout")
+    logout_request.user = regular_user
+
+    with patch("users.admin.messages"):
+        force_logout(None, logout_request, User.objects.all())
+
+    assert not Session.objects.filter(session_key=session_key).exists()

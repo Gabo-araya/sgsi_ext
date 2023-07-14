@@ -1,7 +1,32 @@
+from typing import NamedTuple
+
 from django import template
 from django.utils.http import urlencode
 
 register = template.Library()
+
+
+class OrderingParameter(NamedTuple):
+    field: str
+    reverse: bool = False
+
+    def __invert__(self):
+        return OrderingParameter(self.field, not self.reverse)
+
+    def __str__(self):
+        return f"-{self.field}" if self.reverse else self.field
+
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return str(self) == other
+        if not isinstance(other, OrderingParameter):
+            msg = f"Cannot compare with {type(other).__name}"
+            raise TypeError(msg)
+        return self.field == other.field and self.reverse == other.reverse
+
+    @classmethod
+    def from_str(cls, value):
+        return cls(value.lstrip("-"), value.startswith("-"))
 
 
 @register.simple_tag
@@ -21,28 +46,19 @@ def get_order_by_querystring(ordering, current_order=None, remove=False):
     if not current_order:
         return urlencode(params, doseq=True)
 
-    reversed_current_order = f"-{current_order}"
-
+    ordering = [OrderingParameter.from_str(order) for order in ordering]
+    current_order = OrderingParameter.from_str(current_order)
     ordering_params = []
 
     for order in ordering:
-        if order == current_order:
+        value = order
+        if value.field == current_order.field:
             if remove:
                 continue
-            ordering_params.append(reversed_current_order)
-        elif order == reversed_current_order:
-            if remove:
-                continue
-            ordering_params.append(current_order)
-        else:
-            ordering_params.append(order)
+            value = ~value
+        ordering_params.append(value)
 
-    # remove ordering parameters if not declared either as "current_order" or
-    # "reversed_current_order"
-    if (
-        not (current_order in ordering or reversed_current_order in ordering)
-        and not remove
-    ):
+    if current_order.field not in (o.field for o in ordering):
         ordering_params.append(current_order)
 
     params = {"o": ordering_params}

@@ -1,6 +1,9 @@
+from unittest.mock import DEFAULT
+from unittest.mock import Mock
 from unittest.mock import patch
 
 import pytest
+import requests
 
 from api_client.services.client import config
 from api_client.services.client import errors
@@ -8,6 +11,7 @@ from api_client.services.client.api_client.base import BaseApiClient
 from api_client.services.client.api_client.blocking import BlockingApiClient
 from api_client.services.client.api_client.non_blocking import NonBlockingApiClient
 from api_client.services.client.auth import BasicAuth
+from api_client.services.client.tasks import run_nonblocking_request
 
 PARAMETRIZED_GET_URL_TESTS = {
     "empty": ("", None, "http://example.com/"),
@@ -162,3 +166,166 @@ def test_client_log_str(client_log):
     assert client_log.client_code in string
     assert client_log.method in string
     assert client_log.url in string
+
+
+@pytest.mark.parametrize(
+    "method",
+    ("get", "post", "put", "patch", "delete"),
+)
+def test_blocking_requests(test_apiclient, setup_mock_response, method):
+    with (
+        patch("requests.Session") as mock_session,
+        patch("api_client.services.client.ApiClient.log_exception"),
+        patch("api_client.models.ClientLog.objects"),
+        patch.multiple(
+            "api_client.models.ClientConfig.objects",
+            is_disabled=Mock(return_value=False),
+            get_total_retries=Mock(return_value=3),
+        ),
+    ):
+        setup_mock_response(
+            mock_session().send,
+            200,
+            "application/json",
+            b'{"status": "ok"}',
+        )
+
+        method_to_call = getattr(test_apiclient, f"{method}_blocking")
+        response, error = method_to_call("endpoint")
+        assert response.status_code == 200
+        assert response.content == b'{"status": "ok"}'
+        assert error is None
+
+
+def test_blocking_requests_error(test_apiclient, setup_mock_response):
+    def parse_that_fails(response):
+        msg = "something happened"
+        raise requests.RequestException(msg, response=response)
+
+    with (
+        patch("requests.Session") as mock_session,
+        patch.multiple(
+            "api_client.services.client.ApiClient",
+            log_exception=DEFAULT,
+            parse_response=Mock(wraps=parse_that_fails),
+        ),
+        patch("api_client.models.ClientLog.objects"),
+        patch.multiple(
+            "api_client.models.ClientConfig.objects",
+            is_disabled=Mock(return_value=False),
+            get_total_retries=Mock(return_value=3),
+        ),
+    ):
+        setup_mock_response(
+            mock_session().send,
+            400,
+            "application/json",
+            b'{"status": "something happened"}',
+        )
+
+        response, error = test_apiclient.get_blocking("endpoint")
+        assert response == test_apiclient.empty_response
+        assert error is not None
+        assert error.response.status_code == 400
+        assert error.response.content == b'{"status": "something happened"}'
+
+
+def nonblocking_response_handler(response, error):
+    assert response.status_code == 200
+    assert response.content == b'{"status": "ok"}'
+
+
+def expect_no_errors(response, error):
+    msg = "No errors were expected"
+    raise AssertionError(msg)
+
+
+@pytest.mark.parametrize(
+    "method",
+    ("get", "post", "put", "patch", "delete"),
+)
+def test_non_blocking_requests(test_apiclient, setup_mock_response, method):
+    with (
+        patch("requests.Session") as mock_session,
+        patch(
+            "api_client.services.client.api_client.non_blocking.run_nonblocking_request"
+        ) as mock_run,
+        patch("api_client.services.client.ApiClient.log_exception"),
+        patch("api_client.models.ClientLog.objects"),
+        patch.multiple(
+            "api_client.models.ClientConfig.objects",
+            is_disabled=Mock(return_value=False),
+            get_total_retries=Mock(return_value=3),
+        ),
+    ):
+        setup_mock_response(
+            mock_session().send,
+            200,
+            "application/json",
+            b'{"status": "ok"}',
+        )
+
+        mock_delay = mock_run.delay
+        method_to_call = getattr(test_apiclient, method)
+        method_to_call(
+            "endpoint",
+            on_success=nonblocking_response_handler,
+            on_error=expect_no_errors,
+        )
+        mock_delay.assert_called()
+        # Call runner manually to avoid celery issues
+        call = mock_delay.mock_calls[0]
+        run_nonblocking_request(*call.args, **call.kwargs)
+
+
+def nonblocking_error_response_handler(response, error):
+    msg = "No response was expected"
+    raise AssertionError(msg)
+
+
+def expect_errors(response, error):
+    assert response == BaseApiClient.empty_response
+    assert error is not None
+    assert error.response.status_code == 400
+    assert error.response.content == b'{"status": "something happened"}'
+
+
+def test_non_blocking_requests_error(test_apiclient, setup_mock_response):
+    def parse_that_fails(response):
+        msg = "something happened"
+        raise requests.RequestException(msg, response=response)
+
+    with (
+        patch("requests.Session") as mock_session,
+        patch(
+            "api_client.services.client.api_client.non_blocking.run_nonblocking_request"
+        ) as mock_run,
+        patch.multiple(
+            "api_client.services.client.ApiClient",
+            log_exception=DEFAULT,
+            parse_response=Mock(wraps=parse_that_fails),
+        ),
+        patch("api_client.models.ClientLog.objects"),
+        patch.multiple(
+            "api_client.models.ClientConfig.objects",
+            is_disabled=Mock(return_value=False),
+            get_total_retries=Mock(return_value=3),
+        ),
+    ):
+        setup_mock_response(
+            mock_session().send,
+            400,
+            "application/json",
+            b'{"status": "something happened"}',
+        )
+
+        mock_delay = mock_run.delay
+        test_apiclient.get(
+            "endpoint",
+            on_success=nonblocking_error_response_handler,
+            on_error=expect_errors,
+        )
+        mock_delay.assert_called()
+        # Call runner manually to avoid celery issues
+        call = mock_delay.mock_calls[0]
+        run_nonblocking_request(*call.args, **call.kwargs)

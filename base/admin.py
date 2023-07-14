@@ -7,6 +7,7 @@ from django.urls import NoReverseMatch
 from django.urls import reverse
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 
@@ -84,6 +85,7 @@ class LogEntryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+    @admin.display(ordering="object_repr", description=_("object"))
     def object_link(self, obj):
         if obj.action_flag == DELETION:
             link = obj.object_repr
@@ -102,14 +104,5 @@ class LogEntryAdmin(admin.ModelAdmin):
                 link = obj.object_repr
         return link
 
-    object_link.admin_order_field = "object_repr"
-    object_link.short_description = "object"
-    object_link.allow_tags = True
-
-    def queryset(self, request):
-        return super().queryset(request).prefetch_related("content_type")
-
-    def action_description(self, obj):
-        return action_names[obj.action_flag]
-
-    action_description.short_description = "Action"
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("content_type")

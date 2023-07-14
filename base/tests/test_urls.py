@@ -1,3 +1,5 @@
+import datetime
+
 from http import HTTPStatus
 
 from django.conf import settings
@@ -7,6 +9,7 @@ from django.urls import reverse
 from django.urls.converters import SlugConverter
 
 import pytest
+import pytz
 
 from inflection import underscore
 
@@ -39,6 +42,29 @@ def default_objects(request) -> dict[str, Model]:
         objects_dict[model_name] = request.getfixturevalue(fixture_name)
 
     return objects_dict
+
+
+@pytest.fixture
+def extra_objects(request) -> dict[str, Model]:
+    """
+    Same as default_objects but allows to define extra objects for external apps.
+    """
+
+    from django.contrib.admin.models import CHANGE
+    from django.contrib.admin.models import LogEntry
+    from django.contrib.contenttypes.models import ContentType
+
+    user = request.getfixturevalue("staff_user")
+
+    return {
+        "log_entry": LogEntry.objects.create(
+            user_id=user.pk,
+            action_time=datetime.datetime(2007, 1, 9, 9, 41, tzinfo=pytz.UTC),
+            content_type=ContentType.objects.get_by_natural_key("users", "user"),
+            object_id=user.pk,
+            action_flag=CHANGE,
+        )
+    }
 
 
 @pytest.fixture
@@ -144,7 +170,11 @@ def reverse_urlpattern(
 @pytest.mark.slow
 @pytest.mark.django_db(transaction=True, databases=["default", "logs"])
 def test_responses(
-    superuser_user, superuser_client, default_objects, default_parameter_values
+    superuser_user,
+    superuser_client,
+    default_objects,
+    extra_objects,
+    default_parameter_values,
 ):
     """Test all URLs."""
 
