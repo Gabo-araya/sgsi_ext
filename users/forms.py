@@ -10,6 +10,7 @@ from django.utils.http import int_to_base36
 from django.utils.translation import gettext_lazy as _
 
 from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
 
 from base.forms import BaseModelForm
 from users.models import User
@@ -130,9 +131,12 @@ class AuthenticationForm(forms.Form):
 
 
 class CaptchaAuthenticationForm(AuthenticationForm):
-    captcha = ReCaptchaField(
-        label=_("¿Are you Human?"),
-    )
+    captcha = ReCaptchaField(widget=ReCaptchaV3)
+
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        # define captcha widget as hidden to avoid unwanted labels
+        self.fields["captcha"].widget.input_type = "hidden"
 
 
 class AdminAuthenticationForm(AuthenticationForm):
