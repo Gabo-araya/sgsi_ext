@@ -38,8 +38,7 @@ def test_readiness_check_middleware_process_request(
         ) as perform_readiness_check_mock,
     ):
         request = rf.generic(method, path)
-        middleware = ReadinessCheckMiddleware()
-        middleware.get_response = MagicMock()
+        middleware = ReadinessCheckMiddleware(MagicMock())
         middleware.process_request(request)
         assert perform_readiness_check_mock.call_count == expected_check_calls
         assert middleware.get_response.call_count == expected_get_response_calls
@@ -62,7 +61,7 @@ def test_readiness_check_middleware_perform_readiness_request(
             return_value="check_connections_return_value",
         )
     ):
-        middleware = ReadinessCheckMiddleware()
+        middleware = ReadinessCheckMiddleware(MagicMock())
         assert isinstance(middleware.perform_readiness_check(), expected_class_type)
 
 
@@ -84,5 +83,5 @@ def test_readiness_check_middleware_check_connections(
             }
         ),
     ):
-        middleware = ReadinessCheckMiddleware()
+        middleware = ReadinessCheckMiddleware(MagicMock())
         assert isinstance(middleware.check_connections(), expected_check)
