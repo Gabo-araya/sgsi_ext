@@ -1,0 +1,9 @@
+- load i18n
+
+if not url
+  {% url url_name as url %}
+
+li
+  form(action="{{ url }}", method="POST", style="display: inline")
+    {% csrf_token %}
+    button.dropdown-item(type="submit") {% trans text|capfirst %}

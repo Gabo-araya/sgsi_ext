@@ -99,11 +99,11 @@ class UserAdmin(DjangoUserAdmin):
     )
     ordering = ("email",)
 
+    @admin.display(description=_("change password"))
     def change_password_link(self, obj):
         return format_html(f'<a href="{obj.id}/password/">{_("change password")}</a>')
 
     change_password_link.allow_tags = True
-    change_password_link.short_description = _("change password")
 
     def has_logout_permission(self, request):
         return request.user.is_superuser

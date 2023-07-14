@@ -51,7 +51,7 @@ def test_base_delete_view(  # noqa: PLR0913
 
 
 def test_base_delete_view_delete_action(rf):
-    with (patch("django.views.generic.DeleteView.delete", return_value="TEST"),):
+    with patch("django.views.generic.edit.DeletionMixin.delete", return_value="TEST"):
         view = MockDeleteView()
         view.object = MockModel()
         assert view.delete(rf.get("/")) == "TEST"
@@ -60,7 +60,7 @@ def test_base_delete_view_delete_action(rf):
 def test_base_delete_view_delete_action_handle_protected_error(rf):
     with (
         patch(
-            "django.views.generic.DeleteView.delete",
+            "django.views.generic.edit.DeletionMixin.delete",
             return_value="TEST",
             side_effect=ProtectedError("Error", ""),
         ),
