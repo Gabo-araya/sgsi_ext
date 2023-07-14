@@ -131,7 +131,14 @@ class AuthenticationForm(forms.Form):
 
 
 class CaptchaAuthenticationForm(AuthenticationForm):
-    captcha = ReCaptchaField(widget=ReCaptchaV3)
+    captcha = ReCaptchaField(
+        widget=ReCaptchaV3,
+        error_messages={
+            "captcha_invalid": _("Error verifying reCAPTCHA, please try again."),
+            "captcha_error": _("Error verifying reCAPTCHA, please try again."),
+            "required": _("Error verifying reCAPTCHA, please try again."),
+        },
+    )
 
     def __init__(self, request=None, *args, **kwargs):
         super().__init__(request, *args, **kwargs)

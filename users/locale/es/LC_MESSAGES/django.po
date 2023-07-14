@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-03 10:50-0400\n"
-"PO-Revision-Date: 2023-05-03 10:33-0400\n"
+"POT-Creation-Date: 2023-07-14 17:24-0400\n"
+"PO-Revision-Date: 2023-07-14 17:24-0400\n"
 "Last-Translator: Nicolás Stuardo <nicolas.stuardo@magnet.cl>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/django/language/"
 "es/)\n"
@@ -22,47 +22,52 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: admin.py:19
+#: admin.py
 msgid "Log out from all devices"
 msgstr "Cerrar sesión en todos los dispositivos"
 
-#: admin.py:32
-msgid "{:d} user(s) where logged out."
-msgstr "Se cerró la sesión de {:d} usuarios."
+#: admin.py
+#, python-brace-format
+msgid "{logged_out_count:d} user(s) where logged out."
+msgstr "Se cerró la sesión de {logged_out_count:d} usuarios."
 
-#: admin.py:34
+#: admin.py
 msgid "No active sessions were found for the selected users."
 msgstr "No se encontraron sesiones activas para los usuarios seleccionados."
 
-#: admin.py:62
+#: admin.py
 msgid "Personal info"
 msgstr "Información personal"
 
-#: admin.py:64
+#: admin.py
 msgid "Permissions"
 msgstr "Permisos"
 
-#: admin.py:75
+#: admin.py
 msgid "Important dates"
 msgstr "Fechas importantes"
 
-#: admin.py:98
+#: admin.py
 msgid "change password"
 msgstr "cambiar contraseña"
 
-#: apps.py:6 models.py:84
+#: apps.py models.py
 msgid "users"
 msgstr "usuarios"
 
-#: forms.py:22 forms.py:25
+#: forms.py
+msgid "Error verifying reCAPTCHA, please try again."
+msgstr "Falló la validación de reCAPTCHA. Por favor inténtalo nuevamente."
+
+#: forms.py
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: forms.py:29 forms.py:32
+#: forms.py
 msgid "Password"
 msgstr "Contraseña"
 
-#: forms.py:38
+#: forms.py
 msgid ""
 "Please enter a correct email and password. Note that both fields may be case-"
 "sensitive."
@@ -70,7 +75,7 @@ msgstr ""
 "Por favor, introduce un correo electrónico con su contraseña correcta. "
 "Observa que ambos campos pueden ser sensibles a mayúsculas."
 
-#: forms.py:42
+#: forms.py
 msgid ""
 "Your Web browser doesn't appear to have cookies enabled. Cookies are "
 "required for logging in."
@@ -78,15 +83,15 @@ msgstr ""
 "Su navegador no parece tener las cookies habilitadas. Las cookies se "
 "necesitan para poder ingresar."
 
-#: forms.py:45
+#: forms.py
 msgid "This account is inactive."
 msgstr "Esta cuenta está inactiva."
 
-#: forms.py:136
+#: forms.py
 msgid "Please log in again, because your session has expired."
 msgstr "Por favor ingresa nuevamente, porque tu sesión a expirado."
 
-#: forms.py:148
+#: forms.py
 msgid ""
 "Please enter the correct email and password for a staff account. Note that "
 "both fields may be case-sensitive."
@@ -94,58 +99,56 @@ msgstr ""
 "Por favor, introduce un correo electrónico con su contraseña correcta. "
 "Observa que ambos campos pueden ser sensibles a mayúsculas."
 
-#: forms.py:169
+#: forms.py
 msgid "A user with that email already exists."
 msgstr "Ya existe un usuario con este correo electrónico."
 
-#: forms.py:170
+#: forms.py
 msgid "The two password fields didn't match."
 msgstr "Las dos contraseñas no coinciden."
 
-#: forms.py:174 models.py:47
+#: forms.py models.py
 msgid "first name"
 msgstr "nombre propio"
 
-#: forms.py:177 models.py:52
+#: forms.py models.py
 msgid "last name"
 msgstr "apellidos"
 
-#: forms.py:180 templates/registration/password_change_form.pug:36
-#: templates/registration/password_change_form.pug:39
-#: templates/registration/password_reset_confirm.pug:21
-#: templates/registration/password_reset_confirm.pug:24
+#: forms.py templates/registration/password_change_form.pug
+#: templates/registration/password_reset_confirm.pug
 msgid "New password"
 msgstr "Contraseña nueva"
 
-#: forms.py:186
+#: forms.py
 msgid "Password confirmation"
 msgstr "Contraseña (confirmación)"
 
-#: forms.py:189
+#: forms.py
 msgid "Enter the same password as before, for verification."
 msgstr "Introduzca la misma contraseña que antes, para verificación."
 
-#: models.py:29
+#: models.py
 msgid "Users"
 msgstr "Usuarios"
 
-#: models.py:41
+#: models.py
 msgid "email address"
 msgstr "dirección de correo electrónico"
 
-#: models.py:57
+#: models.py
 msgid "staff status"
 msgstr "es staff"
 
-#: models.py:59
+#: models.py
 msgid "Designates whether the user can log into this admin site."
 msgstr "Indica si el usuario puede entrar en este sitio de administración."
 
-#: models.py:62
+#: models.py
 msgid "active"
 msgstr "activo"
 
-#: models.py:65
+#: models.py
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
@@ -153,19 +156,19 @@ msgstr ""
 "Indica si el usuario puede ser tratado como activo. Desmarque esta opción en "
 "lugar de borrar la cuenta."
 
-#: models.py:71
+#: models.py
 msgid "date joined"
 msgstr "fecha de alta"
 
-#: models.py:73
+#: models.py
 msgid "The date this user was created in the database"
 msgstr "La fecha en la que este usuario fue creado en la base de datos"
 
-#: models.py:83
+#: models.py
 msgid "user"
 msgstr "usuario"
 
-#: templates/admin/users/user/add_form.html:6
+#: templates/admin/users/user/add_form.html
 msgid ""
 "First, enter an email and password. Then, you'll be able to edit more user "
 "options."
@@ -173,11 +176,11 @@ msgstr ""
 "Primero, ingresa un correo electrónico y contraseña. Después, podrás editar "
 "más opciones del usuario."
 
-#: templates/admin/users/user/add_form.html:8
+#: templates/admin/users/user/add_form.html
 msgid "Enter an email and password."
 msgstr "Introduce un correo electrónico y contraseña."
 
-#: templates/emails/password_reset.html:2 templates/emails/password_reset.txt:2
+#: templates/emails/password_reset.html templates/emails/password_reset.txt
 #, python-format
 msgid ""
 "You're receiving this e-mail because you requested a password reset for your "
@@ -186,22 +189,22 @@ msgstr ""
 "Estás recibiendo este correo porque solicitaste el restablecer la contraseña "
 "para tu cuenta de usuario en %(site_name)s."
 
-#: templates/emails/password_reset.html:4 templates/emails/password_reset.txt:4
+#: templates/emails/password_reset.html templates/emails/password_reset.txt
 msgid "Please go to the following page and choose a new password:"
 msgstr "Por favor ve a la siguiente página y escoge una nueva contraseña:"
 
-#: templates/emails/password_reset.html:9 templates/emails/password_reset.txt:9
-#: templates/emails/user_new.txt:9
+#: templates/emails/password_reset.html templates/emails/password_reset.txt
+#: templates/emails/user_new.txt
 msgid "Thanks for using our site!"
 msgstr "¡Gracias por utilizar nuestro sitio!"
 
-#: templates/emails/password_reset.html:11
-#: templates/emails/password_reset.txt:11 templates/emails/user_new.txt:11
+#: templates/emails/password_reset.html templates/emails/password_reset.txt
+#: templates/emails/user_new.txt
 #, python-format
 msgid "The %(site_name)s team"
 msgstr "El equipo de %(site_name)s"
 
-#: templates/emails/user_new.txt:2
+#: templates/emails/user_new.txt
 #, python-format
 msgid ""
 "You're receiving this e-mail because you registered a new account at "
@@ -210,44 +213,44 @@ msgstr ""
 "Estas recibiendo este correo porque registraste una nueva cuenta en "
 "%(site_name)s."
 
-#: templates/emails/user_new.txt:4
+#: templates/emails/user_new.txt
 msgid "Please go to the following page to confirm your email address:"
 msgstr ""
 "Por favor, ve a la siguiente página para confirmar tu correo electrónico:"
 
-#: templates/emails/user_new_subject.txt:2
+#: templates/emails/user_new_subject.txt
 #, python-format
 msgid "Welcome to %(site_name)s"
 msgstr "Bienvenido a %(site_name)s"
 
-#: templates/registration/login.pug:42
-#: templates/registration/password_reset_complete.pug:7
+#: templates/registration/login.pug
+#: templates/registration/password_reset_complete.pug
 msgid "Log in"
 msgstr "Ingresar"
 
-#: templates/registration/login.pug:46
+#: templates/registration/login.pug
 msgid "Forgotten your password?"
 msgstr "¿Olvidaste tu contraseña?"
 
-#: templates/registration/login.pug:49
+#: templates/registration/login.pug
 msgid "New? Register here."
 msgstr "¿Eres nuevo? Regístrate aquí."
 
-#: templates/registration/password_change_done.pug:5
+#: templates/registration/password_change_done.pug
 msgid "Password change"
 msgstr "Cambiar Contraseña"
 
-#: templates/registration/password_change_done.pug:9
+#: templates/registration/password_change_done.pug
 msgid "Your password was changed."
 msgstr "Tu contraseña fue cambiada."
 
-#: templates/registration/password_change_form.pug:12
+#: templates/registration/password_change_form.pug
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] "Por favor corrija el siguiente error."
 msgstr[1] "Por favor corrija los siguientes errores."
 
-#: templates/registration/password_change_form.pug:15
+#: templates/registration/password_change_form.pug
 msgid ""
 "Please enter your old password, for security's sake, and then enter your new "
 "password twice so we can verify you typed it in correctly."
@@ -255,32 +258,29 @@ msgstr ""
 "Por favor ingresa tu nueva contraseña dos veces para que podamos verificar "
 "que la escribiste correctamente."
 
-#: templates/registration/password_change_form.pug:25
-#: templates/registration/password_change_form.pug:28
+#: templates/registration/password_change_form.pug
 msgid "Old password"
 msgstr "Contraseña antigua"
 
-#: templates/registration/password_change_form.pug:51
-#: templates/registration/password_change_form.pug:54
-#: templates/registration/password_reset_confirm.pug:37
-#: templates/registration/password_reset_confirm.pug:40
+#: templates/registration/password_change_form.pug
+#: templates/registration/password_reset_confirm.pug
 msgid "Password (again)"
 msgstr "Contraseña (nuevamente)"
 
-#: templates/registration/password_change_form.pug:63
-#: templates/registration/password_reset_confirm.pug:52
+#: templates/registration/password_change_form.pug
+#: templates/registration/password_reset_confirm.pug
 msgid "Change my password"
 msgstr "Cambiar mi contraseña"
 
-#: templates/registration/password_reset_complete.pug:6
+#: templates/registration/password_reset_complete.pug
 msgid "Your password has been set.  You may go ahead and log in now."
 msgstr "Tu contraseña ha sido establecida. Puedes ingresar a la página ahora."
 
-#: templates/registration/password_reset_confirm.pug:6
+#: templates/registration/password_reset_confirm.pug
 msgid "Password reset confirmation"
 msgstr "Confirmación establecimiento contraseña"
 
-#: templates/registration/password_reset_confirm.pug:12
+#: templates/registration/password_reset_confirm.pug
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
@@ -288,7 +288,7 @@ msgstr ""
 "Por favor ingresa tu nueva contraseña dos veces para que podamos verificar "
 "que la escribiste correctamente."
 
-#: templates/registration/password_reset_confirm.pug:55
+#: templates/registration/password_reset_confirm.pug
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
@@ -296,11 +296,11 @@ msgstr ""
 "El link para restablecer tu contraseña es inválido, posiblemente ya ha sido "
 "usado. Por favor solicita un nuevo restablecimiento de contraseña."
 
-#: templates/registration/password_reset_done.pug:5
+#: templates/registration/password_reset_done.pug
 msgid "Password reset"
 msgstr "Restablecer contraseña"
 
-#: templates/registration/password_reset_done.pug:9
+#: templates/registration/password_reset_done.pug
 msgid ""
 "We've emailed you instructions for setting your password, if an account "
 "exists with the email you entered. You should receive them shortly."
@@ -308,7 +308,7 @@ msgstr ""
 "Si existe una cuenta para la dirección que ha proporcionado, le hemos "
 "enviado instrucciones para establecer su contraseña."
 
-#: templates/registration/password_reset_done.pug:11
+#: templates/registration/password_reset_done.pug
 msgid ""
 "If you don't receive an email, please make sure you've entered the address "
 "you registered with, and check your spam folder."
@@ -317,7 +317,7 @@ msgstr ""
 "dirección con la que se haya registrado, y compruebe su carpeta de correo no "
 "deseado."
 
-#: templates/registration/password_reset_form.pug:6
+#: templates/registration/password_reset_form.pug
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
@@ -325,53 +325,53 @@ msgstr ""
 "¿Olvidaste tu contraseña?, ingresa abajo tu dirección de correo electrónico, "
 "y te enviaremos las instrucciones para establecer una nueva."
 
-#: templates/registration/password_reset_form.pug:13
+#: templates/registration/password_reset_form.pug
 msgid "E-mail address"
 msgstr "Dirección de correo electrónico"
 
-#: templates/registration/password_reset_form.pug:28
+#: templates/registration/password_reset_form.pug
 msgid "Reset my password"
 msgstr "Reestablecer mi contraseña"
 
-#: templates/users/create.pug:6
+#: templates/users/create.pug
 msgid "Create new account"
 msgstr "Crea una nueva cuenta"
 
-#: templates/users/list.pug:8
+#: templates/users/list.pug
 msgid "Add user"
 msgstr "Agregar usuario"
 
-#: templates/users/list.pug:17
+#: templates/users/list.pug
 msgid "Search by name or email"
 msgstr "Buscar por nombre o correo electrónico"
 
-#: views.py:32
+#: views.py
 msgid "Login"
 msgstr "Ingreso"
 
-#: views.py:90
+#: views.py
 msgid "Registration"
 msgstr "Registro"
 
-#: views.py:104
+#: views.py
 msgid "An email has been sent to you. Please check it to verify your email."
 msgstr ""
 "Se te ha enviado un correo electrónico. Por favor revísalo para verificar tu "
 "correo electrónico."
 
-#: views.py:121
+#: views.py
 msgid "Your data has been successfully saved."
 msgstr "Tus datos han sido guardados exitósamente."
 
-#: views.py:137
+#: views.py
 msgid "My profile"
 msgstr "Mi perfil"
 
-#: views.py:171
+#: views.py
 msgid "Your email address has been verified."
 msgstr "Tu dirección correo electrónico ha sido verificada."
 
-#: views.py:174
+#: views.py
 msgid "Invalid verification link"
 msgstr "Link de verificación inválido"
 
