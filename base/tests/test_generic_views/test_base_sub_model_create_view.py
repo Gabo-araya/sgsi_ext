@@ -123,7 +123,7 @@ def test_base_sub_model_create_view_get_success_url(next_url, expected, rf):
         (None, "Create Mock Child Model"),
     ),
 )
-def test_base_sub_model_create_view_get_title(title, expected):
+def test_base_sub_model_create_view_get_title(title, expected, no_translations):
     view = MockBaseSubModelCreateView()
     view.title = title
     assert view.get_title() == expected
@@ -136,7 +136,7 @@ def test_base_sub_model_create_view_get_title(title, expected):
         (None, "/mockmodel/1/"),
     ),
 )
-def test_base_sub_model_create_get_cancel_url(next_url, expected, rf):
+def test_base_sub_model_create_get_cancel_url(next_url, expected, no_translations, rf):
     view = MockBaseSubModelCreateView()
     view.next_url = next_url
     view.parent_object = MockModel

@@ -32,6 +32,7 @@ def test_base_create_view(  # noqa: PLR0913
     expected_next_url,
     expected_cancel_url,
     expected_success_url,
+    no_translations,
     rf,
 ):
     with (

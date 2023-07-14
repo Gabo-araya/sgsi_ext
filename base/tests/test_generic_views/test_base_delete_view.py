@@ -32,6 +32,7 @@ def test_base_delete_view(  # noqa: PLR0913
     next_url,
     expected_next_url,
     expected_success_url,
+    no_translations,
     rf,
 ):
     with (
