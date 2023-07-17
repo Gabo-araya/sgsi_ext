@@ -176,15 +176,6 @@ class AdminCaptchaAuthenticationForm(AdminAuthenticationForm):
         # define captcha widget as hidden to avoid unwanted labels
         self.fields["captcha"].widget.input_type = "hidden"
 
-    def confirm_login_allowed(self, user):
-        super().confirm_login_allowed(user)
-        if not user.is_staff:
-            raise ValidationError(
-                self.error_messages["invalid_login"],
-                code="invalid_login",
-                params={"username": self.username_field.verbose_name},
-            )
-
 
 class UserCreationForm(BaseModelForm):
     """

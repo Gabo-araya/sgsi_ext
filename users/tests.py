@@ -13,7 +13,6 @@ from django.urls import reverse
 import pytest
 
 from users.admin import force_logout
-from users.forms import AdminAuthenticationForm
 from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserChangeForm
@@ -191,39 +190,6 @@ def test_user_change_form_set_user_permissions_queryset():
     form = UserChangeForm()
     form.set_user_permissions_queryset(user_permission_patch)
     assert user_permission_patch.queryset == "test"
-
-
-@pytest.mark.parametrize(
-    ("email", "password", "is_active", "is_staff", "auth_result", "expectation"),
-    (
-        ("test", "test", False, False, None, pytest.raises(ValidationError)),
-        ("test", "test", True, True, None, pytest.raises(ValidationError)),
-        ("test", "test", False, False, True, pytest.raises(ValidationError)),
-        ("test", "test", True, False, True, pytest.raises(ValidationError)),
-        ("test", "test", False, True, True, pytest.raises(ValidationError)),
-        ("test", "test", True, True, True, does_not_raise()),
-        ("test", "test", True, True, True, does_not_raise()),
-        (None, "test", True, True, True, does_not_raise()),
-        ("test", None, True, True, True, does_not_raise()),
-        (None, None, False, False, None, does_not_raise()),
-    ),
-)
-def test_admin_authentication_form_clean(
-    email, password, is_active, is_staff, auth_result, expectation, regular_user
-):
-    regular_user.is_active = is_active
-    regular_user.is_staff = is_staff
-    auth_result = regular_user if auth_result else None
-    with (
-        expectation,
-        patch("users.forms.authenticate", return_value=auth_result),
-    ):
-        form = AdminAuthenticationForm()
-        form.cleaned_data = {
-            "email": email,
-            "password": password,
-        }
-        form.clean()
 
 
 def test_authentication_form_get_invalid_login_error():
