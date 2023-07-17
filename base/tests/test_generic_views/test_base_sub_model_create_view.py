@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 from unittest.mock import patch
 
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import translation
 
 import pytest
 
@@ -123,10 +124,11 @@ def test_base_sub_model_create_view_get_success_url(next_url, expected, rf):
         (None, "Create Mock Child Model"),
     ),
 )
-def test_base_sub_model_create_view_get_title(title, expected, no_translations):
-    view = MockBaseSubModelCreateView()
-    view.title = title
-    assert view.get_title() == expected
+def test_base_sub_model_create_view_get_title(title, expected):
+    with translation.override("en"):
+        view = MockBaseSubModelCreateView()
+        view.title = title
+        assert view.get_title() == expected
 
 
 @pytest.mark.parametrize(
@@ -136,11 +138,12 @@ def test_base_sub_model_create_view_get_title(title, expected, no_translations):
         (None, "/mockmodel/1/"),
     ),
 )
-def test_base_sub_model_create_get_cancel_url(next_url, expected, no_translations, rf):
-    view = MockBaseSubModelCreateView()
-    view.next_url = next_url
-    view.parent_object = MockModel
-    assert view.get_cancel_url() == expected
+def test_base_sub_model_create_get_cancel_url(next_url, expected, rf):
+    with translation.override("en"):
+        view = MockBaseSubModelCreateView()
+        view.next_url = next_url
+        view.parent_object = MockModel
+        assert view.get_cancel_url() == expected
 
 
 def test_base_sub_model_create_get_parent_object():

@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from django.db.models import ProtectedError
+from django.utils import translation
 
 import pytest
 
@@ -32,12 +33,12 @@ def test_base_delete_view(  # noqa: PLR0913
     next_url,
     expected_next_url,
     expected_success_url,
-    no_translations,
     rf,
 ):
     with (
         patch("base.views.generic.edit.reverse", return_value="mockmodel_list"),
         patch("django.views.generic.DeleteView.get_context_data", return_value={}),
+        translation.override("en"),
     ):
         view = MockDeleteView()
         view.object = MockModel

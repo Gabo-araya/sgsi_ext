@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+from django.utils import translation
+
 import pytest
 
 from base.tests.test_generic_views.mock_model import MockModel
@@ -32,12 +34,12 @@ def test_base_update_view(  # noqa: PLR0913
     expected_next_url,
     expected_cancel_url,
     expected_success_url,
-    no_translations,
     rf,
 ):
     with (
         patch("base.views.generic.edit.reverse", return_value="mockmodel_list"),
         patch("django.views.generic.UpdateView.get_context_data", return_value={}),
+        translation.override("en"),
     ):
         view = MockUpdateView()
         view.title = title
