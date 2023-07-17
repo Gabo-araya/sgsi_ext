@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 
@@ -12,7 +13,7 @@ class BaseAdminSite(admin.AdminSite):
     by the default site...
     """
 
-    @never_cache
+    @method_decorator(never_cache)
     def login(self, request, extra_context=None):
         """
         Display the login form for the given HttpRequest. Uses reCAPTCHA depending
