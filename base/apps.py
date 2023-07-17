@@ -30,4 +30,4 @@ class BaseConfig(AppConfig):
 
 
 class BaseAdminConfig(AdminConfig):
-    default_site = "base.admin.BaseAdminSite"
+    default_site = "base.admin_site.BaseAdminSite"
