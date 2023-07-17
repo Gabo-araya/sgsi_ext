@@ -13,6 +13,7 @@ from django.urls import reverse
 import pytest
 
 from users.admin import force_logout
+from users.forms import AdminCaptchaAuthenticationForm
 from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserChangeForm
@@ -270,6 +271,16 @@ def test_authentication_form_clean(email, password, auth_result, expectation):
         form.cleaned_data = {"email": email, "password": password}
         form.clean()
         assert confirm_login_allowed_mock.call_count == int(bool(auth_result))
+
+
+def test_captcha_authentication_form_does_not_render_captcha_label():
+    form = CaptchaAuthenticationForm()
+    assert form["captcha"].is_hidden
+
+
+def test_admin_captcha_authentication_form_does_not_render_captcha_label():
+    form = AdminCaptchaAuthenticationForm()
+    assert form["captcha"].is_hidden
 
 
 def test_user_send_example_email(regular_user):
