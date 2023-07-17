@@ -40,11 +40,23 @@ def recaptcha_true_parameter_definition() -> ParameterDefinition:
 
 @pytest.fixture
 def set_parameter_recaptcha_false_definition(recaptcha_false_parameter_definition):
+    # save original definition list
+    original_definitions = ParameterDefinitionList.definitions
+
     cache.delete(Parameter.cache_key(recaptcha_false_parameter_definition.name))
     ParameterDefinitionList.definitions = [recaptcha_false_parameter_definition]
+    yield ParameterDefinitionList.definitions
+
+    ParameterDefinitionList.definitions = original_definitions
 
 
 @pytest.fixture
 def set_parameter_recaptcha_true_definition(recaptcha_true_parameter_definition):
+    # save original definition list
+    original_definitions = ParameterDefinitionList.definitions
+
     cache.delete(Parameter.cache_key(recaptcha_true_parameter_definition.name))
     ParameterDefinitionList.definitions = [recaptcha_true_parameter_definition]
+    yield ParameterDefinitionList.definitions
+
+    ParameterDefinitionList.definitions = original_definitions
