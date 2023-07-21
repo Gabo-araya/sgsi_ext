@@ -4,7 +4,6 @@
 return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 RPS1='${return_code}'
 
-source /usr/src/app/docker/zsh_shared/virtualenv_name.zsh
 local reverse_color="\e[${color[reverse]}m"
 
 if [[ "$ENVIRONMENT_NAME" == "production" ]]; then
@@ -16,7 +15,7 @@ else
   local rev=
 fi
 
-local proj_env_name="$(echo -n "%{$bg[bg-black]%}%{$fg[magenta]%}%{$rev%}$(virtualenv_name)-$envname%{$reset_color%}")"
+local proj_env_name="$(echo -n "%{$bg[bg-black]%}%{$fg[magenta]%}%{$rev%}$PROJECT_NAME-$envname%{$reset_color%}")"
 
 # Compacted $PWD
 local pwd="%{$fg[blue]%}%c%{$reset_color%}"

@@ -254,5 +254,7 @@ ARG GIT_REF="<unknown>"
 ENV GIT_REF=$GIT_REF
 ARG BUILD_TIME="<unknown>"
 ENV BUILD_TIME=$BUILD_TIME
+ARG PROJECT_NAME="<unknown>"
+ENV PROJECT_NAME=$PROJECT_NAME
 
 CMD ["/usr/src/app/prod_cmd.sh"]
