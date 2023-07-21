@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-05 12:25-0400\n"
-"PO-Revision-Date: 2022-05-05 12:25-0400\n"
-"Last-Translator: Magnet D3PT Team <d3pt@magnet.cl>\n"
+"POT-Creation-Date: 2023-07-21 15:59-0400\n"
+"PO-Revision-Date: 2023-07-21 15:59-0400\n"
+"Last-Translator: Nicolás Stuardo <nicolas.stuardo@magnet.cl>\n"
 "Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: apps.py
 msgid "parameters"
@@ -27,6 +28,10 @@ msgstr "Protocolo de URL por defecto"
 #: enums.py
 msgid "integer"
 msgstr "entero"
+
+#: enums.py
+msgid "float"
+msgstr "flotante"
 
 #: enums.py
 msgid "time"
@@ -89,6 +94,10 @@ msgid "Enter a whole number."
 msgstr "Ingrese un número entero"
 
 #: utils/parsers.py
+msgid "Enter a number"
+msgstr "Ingrese un número"
+
+#: utils/parsers.py
 msgid "Enter a valid value."
 msgstr "Ingrese un valor válido"
 
@@ -129,16 +138,16 @@ msgid "Enter a valid address range."
 msgstr "Ingrese un rango de direcciones válido."
 
 #: utils/parsers.py
+msgid "Unknown address family."
+msgstr "Clase de direcciones desconocida."
+
+#: utils/parsers.py
 msgid "Both values must belong to the same address family."
 msgstr "Ambos valores deben corresponder a la misma familia de direcciones."
 
 #: utils/parsers.py
 msgid "Lower address must be put first."
 msgstr "La dirección menor debe indicarse primero."
-
-#: utils/parsers.py
-msgid "Unknown address family."
-msgstr "Clase de direcciones desconocida."
 
 #: utils/parsers.py
 msgid ""

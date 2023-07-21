@@ -12,6 +12,7 @@ from parameters.utils.ip import IPv4Range
 from parameters.utils.ip import IPv6Range
 from parameters.utils.parsers import parse_bool_value
 from parameters.utils.parsers import parse_date_value
+from parameters.utils.parsers import parse_float_value
 from parameters.utils.parsers import parse_hostname_value
 from parameters.utils.parsers import parse_int_value
 from parameters.utils.parsers import parse_ip_address_value
@@ -100,6 +101,38 @@ def test_parse_str_value(raw_value, expected_value):
 def test_parse_int_value(raw_value, expected_value, expectation):
     with expectation:
         assert parse_int_value(raw_value) == expected_value
+
+
+@pytest.mark.parametrize(
+    ("raw_value", "expected_value", "expectation"),
+    (
+        *((empty_val, None, does_not_raise()) for empty_val in EMPTY_VALUES),
+        ("   ", None, does_not_raise()),
+        (" 1 ", 1.0, does_not_raise()),
+        (" 1.0 ", 1.0, does_not_raise()),
+        (" -1 ", -1.0, does_not_raise()),
+        (" -1.0 ", -1.0, does_not_raise()),
+        ("nan", None, pytest.raises(ValidationError)),
+        ("inf", None, pytest.raises(ValidationError)),
+        ("-inf", None, pytest.raises(ValidationError)),
+        ("x", None, pytest.raises(ValidationError)),
+    ),
+    ids=[
+        *(f"empty-{n}" for n, _ in enumerate(EMPTY_VALUES)),
+        "whitespace",
+        "space-int-space",
+        "space-float-space",
+        "space-minus-int-space",
+        "space-minus-float-space",
+        "nan",
+        "inf",
+        "minus-inf",
+        "non-float-string",
+    ],
+)
+def test_parse_float_value(raw_value, expected_value, expectation):
+    with expectation:
+        assert parse_float_value(raw_value) == expected_value
 
 
 @pytest.mark.parametrize(

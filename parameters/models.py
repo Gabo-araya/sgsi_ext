@@ -53,6 +53,7 @@ class Parameter(BaseModel):
     def process_value(cls, kind, raw_value):
         mapping = {
             ParameterKind.INT: parsers.parse_int_value,
+            ParameterKind.FLOAT: parsers.parse_float_value,
             ParameterKind.TIME: parsers.parse_time_value,
             ParameterKind.DATE: parsers.parse_date_value,
             ParameterKind.JSON: parsers.parse_json_value,
@@ -129,3 +130,6 @@ class Parameter(BaseModel):
             json.dumps([self.raw_value, self.kind]),
             self.cache_seconds,  # the time in seconds to store the value
         )
+
+    def __str__(self):
+        return self.name

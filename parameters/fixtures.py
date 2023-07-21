@@ -9,7 +9,7 @@ from parameters.models import Parameter
 
 
 @pytest.fixture
-def test_parameter() -> Parameter:
+def test_parameter(db) -> Parameter:
     return Parameter.objects.create(
         name="TEST_PARAMETER",
         raw_value="test",
