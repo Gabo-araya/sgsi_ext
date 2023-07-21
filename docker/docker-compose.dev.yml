@@ -25,7 +25,6 @@ services:
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array).
     volumes:
-      - ./project/media/:/usr/src/app/project/media/
       - ./:/usr/src/app/
 
       # Uncomment the next line to use Docker from inside the container.
@@ -57,7 +56,6 @@ services:
   #   depends_on:
   #     - redis
   #   volumes:
-  #     - ./project/media/:/usr/src/app/project/media/
   #     - ./:/usr/src/app/
   #   command:
   #     - celery
