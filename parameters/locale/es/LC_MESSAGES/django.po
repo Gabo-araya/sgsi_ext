@@ -25,6 +25,14 @@ msgstr "parámetros"
 msgid "Default url protocol"
 msgstr "Protocolo de URL por defecto"
 
+#: definitions.py
+msgid "Activate login recaptcha"
+msgstr "Activar reCAPTCHA para inicio de sesión"
+
+#: definitions.py
+msgid "reCAPTCHA v3 minimum required score"
+msgstr "Puntuación mínima requerida para reCAPTCHA v3"
+
 #: enums.py
 msgid "integer"
 msgstr "entero"

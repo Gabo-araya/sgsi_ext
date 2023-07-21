@@ -283,6 +283,13 @@ def test_admin_captcha_authentication_form_does_not_render_captcha_label():
     assert form["captcha"].is_hidden
 
 
+def test_captcha_authentication_form_sets_score_for_v3_widget(settings):
+    settings.RECAPTCHA_WIDGET = "captcha.widgets.ReCaptchaV3"
+    with patch("users.forms.Parameter.value_for", return_value=0.9):
+        form = CaptchaAuthenticationForm()
+        assert form.fields["captcha"].widget.attrs["required_score"] == 0.9
+
+
 def test_user_send_example_email(regular_user):
     with patch("users.models.email_manager.send_example_email") as send_example_email:
         regular_user.send_example_email()

@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
@@ -8,13 +9,42 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.template import loader
 from django.utils.http import int_to_base36
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV3
 
 from base.forms import BaseModelForm
+from parameters.models import Parameter
 from users.models import User
+
+
+class CaptchaWidgetConfigurationMixin:
+    def _configure_recaptcha_widget(self, field_name):
+        """Configures the captcha field widget in accordance to app settings."""
+        widget_class_name = getattr(
+            settings, "RECAPTCHA_WIDGET", "captcha.widgets.ReCaptchaV3"
+        )
+        widget_class = import_string(widget_class_name)
+
+        captcha_field = self.fields[field_name]
+        widget = widget_class()
+
+        if captcha_field.localize:
+            widget.is_localized = True
+        widget.is_required = captcha_field.required
+        # define captcha widget as hidden to avoid unwanted labels
+        widget.input_type = "hidden"
+        # Update widget attrs with data-sitekey.
+        widget.attrs["data-sitekey"] = captcha_field.public_key
+        # Set required score from parameters, v3 only
+        if issubclass(widget_class, ReCaptchaV3):
+            widget.attrs["required_score"] = Parameter.value_for(
+                "RECAPTCHA_V3_REQUIRED_SCORE"
+            )
+
+        captcha_field.widget = widget
 
 
 class AuthenticationForm(forms.Form):
@@ -131,9 +161,8 @@ class AuthenticationForm(forms.Form):
         )
 
 
-class CaptchaAuthenticationForm(AuthenticationForm):
+class CaptchaAuthenticationForm(CaptchaWidgetConfigurationMixin, AuthenticationForm):
     captcha = ReCaptchaField(
-        widget=ReCaptchaV3,
         error_messages={
             "captcha_invalid": _("Error verifying reCAPTCHA, please try again."),
             "captcha_error": _("Error verifying reCAPTCHA, please try again."),
@@ -143,11 +172,12 @@ class CaptchaAuthenticationForm(AuthenticationForm):
 
     def __init__(self, request=None, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
-        # define captcha widget as hidden to avoid unwanted labels
-        self.fields["captcha"].widget.input_type = "hidden"
+        self._configure_recaptcha_widget("captcha")
 
 
-class AdminCaptchaAuthenticationForm(AdminAuthenticationForm):
+class AdminCaptchaAuthenticationForm(
+    CaptchaWidgetConfigurationMixin, AdminAuthenticationForm
+):
     """
     A custom authentication form used in the admin app, with reCAPTCHA.
     """
@@ -163,7 +193,6 @@ class AdminCaptchaAuthenticationForm(AdminAuthenticationForm):
     required_css_class = "required"
 
     captcha = ReCaptchaField(
-        widget=ReCaptchaV3,
         error_messages={
             "captcha_invalid": _("Error verifying reCAPTCHA, please try again."),
             "captcha_error": _("Error verifying reCAPTCHA, please try again."),
@@ -173,8 +202,7 @@ class AdminCaptchaAuthenticationForm(AdminAuthenticationForm):
 
     def __init__(self, request=None, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
-        # define captcha widget as hidden to avoid unwanted labels
-        self.fields["captcha"].widget.input_type = "hidden"
+        self._configure_recaptcha_widget("captcha")
 
 
 class UserCreationForm(BaseModelForm):

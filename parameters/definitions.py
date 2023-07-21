@@ -1,5 +1,7 @@
 import collections
 
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
 from parameters.validators import validate_protocol
@@ -31,6 +33,13 @@ class ParameterDefinitionList:
             default=False,
             kind="bool",
             verbose_name=_("Activate login recaptcha"),
+        ),
+        ParameterDefinition(
+            name="RECAPTCHA_V3_REQUIRED_SCORE",
+            default=0.65,
+            kind="float",
+            verbose_name=_("reCAPTCHA v3 minimum required score"),
+            validators=(MinValueValidator(0), MaxValueValidator(1)),
         ),
     ]
 

@@ -336,9 +336,7 @@ GOOGLE_ANALYTICS_CODE = os.environ.get("GOOGLE_ANALYTICS_CODE", "")
 # recaptcha
 RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY", "")
 RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY", "")
-RECAPTCHA_V3_REQUIRED_SCORE = float(
-    os.environ.get("RECAPTCHA_V3_REQUIRED_SCORE", "0.65")
-)
+RECAPTCHA_WIDGET = os.environ.get("RECAPTCHA_WIDGET", "captcha.widgets.ReCaptchaV3")
 
 # loginas
 CAN_LOGIN_AS = "base.utils.can_loginas"
