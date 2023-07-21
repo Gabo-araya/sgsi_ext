@@ -118,10 +118,12 @@
             cmd: "git describe --tags --always --abbrev --dirty"
             chdir: "{{ project_name }}"
           register: git_ref
+          changed_when: false
 
         - name: retrieve build time
           command: "date --iso-8601=seconds"
           register: build_time
+          changed_when: false
       tags: always
 
     - name: build and start containers
