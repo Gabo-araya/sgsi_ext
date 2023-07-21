@@ -80,5 +80,5 @@ fi
 ansible-playbook --limit "$target" $tags playbooks/deploy.yml
 
 if [[ "$(basename "$0")" != "update.sh" ]]; then
-  ansible-ssh "$target" -t "$(yq -r .project_name group_vars/all.yml)/ansible/scripts/offer_superuser.sh"
+  ansible-ssh "$target" -t "$(get_project_name)/ansible/scripts/offer_superuser.sh"
 fi

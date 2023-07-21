@@ -14,8 +14,7 @@ env_file="deploy.$sv_name.env"
 
 cp "docker/.env.example" "$env_file"
 
-project_name=$(yq -r .project_name ansible/group_vars/all.yml)
-postgres_db=$project_name-$sv_name
+postgres_db=$(get_project_name)-$sv_name
 # shellcheck disable=SC2016
 virtual_env=/home/'${WHO}'/$(realpath --relative-to="$HOME" "$(poetry env info --path)")
 

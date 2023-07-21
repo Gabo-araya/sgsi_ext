@@ -29,7 +29,7 @@ if [ ! -f "$local_dump_path" ]; then
   # Next alternative is `scp`, but it's uncomfortable to build parameters with `ansible-ssh`...
   # So use ssh as scp, showing progress with `pv`.
 
-  remote_dump_path="$(yq -r .project_name group_vars/all.yml)/db_dumps/$dump_name"
+  remote_dump_path="$(get_project_name)/db_dumps/$dump_name"
 
   ansible-ssh "$target" "pv -f \"$remote_dump_path\"" > $LOCAL_DUMPS_PATH/__tmp__.dump
   # Download to temp file to avoid storing a partial file with the same name,
