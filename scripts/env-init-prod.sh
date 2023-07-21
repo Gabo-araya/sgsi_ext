@@ -15,8 +15,9 @@ env_file="deploy.$sv_name.env"
 cp "docker/.env.example" "$env_file"
 
 postgres_db=$(get_project_name)-$sv_name
-# shellcheck disable=SC2016
-virtual_env=/home/'${WHO}'/$(realpath --relative-to="$HOME" "$(poetry env info --path)")
+
+# There's no virtualenv in production images. Packages are directly inside /usr/local/lib/python3.*/site-packages/
+virtual_env=/dev/null
 
 prompt '\nEnvironment name? ("production" to disable ribbon)' "$sv_name"
 environment_name=$input
