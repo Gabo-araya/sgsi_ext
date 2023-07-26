@@ -13,7 +13,7 @@ ln -s /usr/src/app/docker/zsh_dev/custom/ $HOME/.oh-my-zsh/custom/project
 
 # Theme:
 ln -s /usr/src/app/docker/zsh_dev/robbyrussell-poetryenv.zsh-theme $HOME/.oh-my-zsh/custom/themes/
-sed -i 's/ZSH_THEME=".*"/ZSH_THEME="robbyrussell-poetryenv"/' $HOME/.zshrc
+sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="robbyrussell-poetryenv"/' $HOME/.zshrc
 
 # History:
 # Use history file inside separate folder, because while the file is being updated,

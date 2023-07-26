@@ -1,0 +1,20 @@
+- name: load ENVIRONMENT_NAME
+  shell:
+    cmd: source {{ project_name }}/.env && echo $ENVIRONMENT_NAME
+    executable: /bin/bash
+  changed_when: false
+  register: dpt_env_name
+
+- name: create theme file
+  template:
+    src: templates/dieter-dpt.zsh-theme.j2
+    dest: ~/.oh-my-zsh/custom/themes/dieter-dpt.zsh-theme
+    force: no   # Preserve customizations
+  vars:
+    environment_name: "{{ dpt_env_name.stdout }}"
+
+- name: change dieter to dieter-dpt theme
+  replace:
+    path: ~/.zshrc
+    regexp: ^ZSH_THEME="dieter"$
+    replace: ZSH_THEME="dieter-dpt"
