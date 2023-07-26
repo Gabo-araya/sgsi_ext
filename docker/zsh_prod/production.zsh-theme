@@ -4,10 +4,9 @@
 return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 RPS1='${return_code}'
 
-local reverse_color="\e[${color[reverse]}m"
-
 if [[ "$ENVIRONMENT_NAME" == "production" ]]; then
   local envname="PRODUCTION"
+  local reverse_color="\e[${color[reverse]}m"
   local rev=$reverse_color
   # Reverse is required to get true black.  https://github.com/zsh-users/zsh/blob/41eb200d66e4bea7bc5798888a1755cdf5daa3b0/Functions/Misc/colors#L68
 else
