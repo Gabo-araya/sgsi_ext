@@ -35,7 +35,7 @@
         "eamodio.gitlens",
         "donjayamanne.githistory",
         "charliermarsh.ruff",
-        "bungcip.better-toml"
+        "tamasfe.even-better-toml"
       ]
     }
   },
