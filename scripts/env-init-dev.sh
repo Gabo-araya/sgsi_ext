@@ -77,5 +77,8 @@ fi
   perl -pi -e "s|\{\{do_spaces_region\}\}|$do_spaces_region|g" $env_file
   perl -pi -e "s|\{\{xff_trusted_proxy_depth\}\}|$xff_trusted_proxy_depth|g" $env_file
 
+  # Set dummy git commit
+  echo "GIT_REF=development" >> $env_file
+
   echo "Created $env_file file"
 fi
