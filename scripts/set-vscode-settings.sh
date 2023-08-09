@@ -8,7 +8,7 @@ env_file='.env'
 
 # VIRTUAL_ENV must be unset for poetry to generate the path itself
 virtual_env=$(echo "docker compose run --rm -T django env --unset=VIRTUAL_ENV poetry env info --path" | newgrp docker)
-perl -pi -e "s|{{virtual_env}}|$virtual_env|g" $env_file
+perl -pi -e "s|\{\{virtual_env\}\}|$virtual_env|g" $env_file
 
 mkdir -p .vscode
 if [[ ! -f .vscode/settings.json ]]; then
