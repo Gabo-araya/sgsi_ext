@@ -16,9 +16,6 @@ cp "docker/.env.example" "$env_file"
 
 postgres_db=$(get_project_name)-$sv_name
 
-# There's no virtualenv in production images. Packages are directly inside /usr/local/lib/python3.*/site-packages/
-virtual_env=/dev/null
-
 prompt '\nEnvironment name? ("production" to disable ribbon)' "$sv_name"
 environment_name=$input
 # Please accept the default to use the same name in inventory and $ENVIRONMENT_NAME to avoid confusion
@@ -120,7 +117,6 @@ perl -pi -e "s|\{\{who\}\}|$who|g" $env_file
 perl -pi -e "s|\{\{host_uid\}\}|$host_uid|g" $env_file
 perl -pi -e "s|\{\{host_gid\}\}|$host_gid|g" $env_file
 perl -pi -e "s|\{\{tz\}\}|$tz|g" $env_file
-perl -pi -e "s|\{\{virtual_env\}\}|$virtual_env|g" $env_file
 perl -pi -e "s|\{\{postgres_host\}\}|$postgres_host|g" $env_file
 perl -pi -e "s|\{\{postgres_port\}\}|$postgres_port|g" $env_file
 perl -pi -e "s|\{\{postgres_user\}\}|$postgres_user|g" $env_file
@@ -139,3 +135,10 @@ perl -pi -e "s|\{\{aws_secret_access_key\}\}|$aws_secret_access_key|g" $env_file
 perl -pi -e "s|\{\{bucket_name\}\}|$bucket_name|g" $env_file
 perl -pi -e "s|\{\{do_spaces_region\}\}|$do_spaces_region|g" $env_file
 perl -pi -e "s|\{\{xff_trusted_proxy_depth\}\}|$xff_trusted_proxy_depth|g" $env_file
+
+# Delete unused dev env vars:
+sed -i '/^DEV_PATH=/d' $env_file
+
+# Instead of deleting, replace this one with hardcoded project-name:
+perl -pi -e "s|^DEV_VIRTUAL_ENV=.*$|PROJECT_NAME=$(get_project_name)|" $env_file
+# "PROJECT_NAME" is for production only. In development just call "get_project_name".
