@@ -1,3 +1,5 @@
+// stylelint-disable selector-class-pattern
+
 /*
  * Content:
  *
@@ -6,7 +8,6 @@
  * Base
  * Inner
  * Input
- * Placeholder
  * Heading
  * Item
  * Button
@@ -21,56 +22,6 @@
 
 @use "sass:color";
 @use "sass:map";
-
-
-// Placeholders
-// ============================================================================
-
-%choices-dropdown {
-  position: absolute;
-  top: 100%;
-  z-index: 1;
-  width: 100%;
-  margin-top: -1px;
-  overflow: hidden;
-  word-break: break-all;
-  visibility: hidden;
-  background-color: $white;
-  border: 1px solid $form-select-border-color;
-  will-change: visibility;
-
-  @include border-radius();
-
-  &.is-active {
-    visibility: visible;
-  }
-
-  .is-flipped & {
-    top: auto;
-    bottom: 100%;
-    margin-top: 0;
-    margin-bottom: -1px;
-  }
-
-  .#{$choices-selector}__list {
-    position: relative;
-    max-height: 300px;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
-  }
-
-  .#{$choices-selector}__item {
-    position: relative;
-    padding: 10px;
-  }
-
-  .#{$choices-selector}__item--selectable {
-    &.is-highlighted {
-      background-color: color.mix(#000, #fff, 5%);
-    }
-  }
-}
 
 
 // Base
@@ -139,6 +90,7 @@
   }
 
   .is-disabled & {
+    color: $form-select-disabled-color;
     user-select: none;
     background-color: $form-select-disabled-bg;
     border-color: $form-select-disabled-border-color;
@@ -154,7 +106,6 @@
     $focus-box-shadow: 0 0 $input-btn-focus-blur $input-focus-width color.change($color, $alpha: $input-btn-focus-color-opacity) !default;
 
     .is-#{$state} & {
-      color: $color;
       border-color: $border-color;
 
       @if $enable-validation-icons {
@@ -272,10 +223,6 @@
 
 .#{$choices-selector}__list {
   display: block;
-
-  &[aria-expanded] {
-    @extend %choices-dropdown;
-  }
 }
 
 .#{$choices-selector}__list--single {
@@ -299,7 +246,7 @@
     word-break: break-all;
     vertical-align: middle;
     background-color: $component-active-bg;
-    border: 1px solid $component-active-bg;
+    border: $border-width solid $component-active-bg;
 
     @include font-size($badge-font-size);
     @include border-radius($badge-border-radius);
@@ -307,13 +254,59 @@
     .is-disabled & {
       color: $form-select-disabled-color;
       background-color: $form-select-disabled-bg;
-      border-color: $form-select-border-color;
+      border-color: $form-select-disabled-color;
     }
   }
 }
 
-.#{$choices-selector}__list--dropdown {
-  @extend %choices-dropdown;
+.#{$choices-selector}__list--dropdown[aria-expanded] {
+  position: absolute;
+  top: 100%;
+  z-index: $zindex-dropdown;
+  width: 100%;
+  margin-top: -1px;
+  overflow: hidden;
+  word-break: break-all;
+  visibility: hidden;
+  background-color: $white;
+  border: $border-width solid $form-select-border-color;
+  will-change: visibility;
+
+  @include border-radius();
+
+  &.is-active {
+    visibility: visible;
+  }
+
+  .is-flipped & {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: -1px;
+  }
+
+  .#{$choices-selector}__list {
+    position: relative;
+    max-height: 300px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+  }
+
+  .#{$choices-selector}__item {
+    position: relative;
+    padding: $form-select-padding-y $form-select-padding-x;
+
+    &.choices__item--disabled {
+      color: var(--#{$prefix}secondary-color);
+    }
+  }
+
+  .#{$choices-selector}__item--selectable {
+    &.is-highlighted {
+      background-color: color.mix(#000, #fff, 5%);
+    }
+  }
 }
 
 
@@ -372,12 +365,12 @@
 
   .#{$choices-selector}__button {
     display: inline-block;
-    width: 8px;
+    width: rem(8px);
     padding: 0;
     margin-left: spacer(1);
     line-height: 1;
     background-image: escape-svg(str-replace($btn-close-bg, #{$btn-close-color}, #{$component-active-color}));
-    background-size: 8px;
+    background-size: rem(8px);
 
     @include border-radius();
 
