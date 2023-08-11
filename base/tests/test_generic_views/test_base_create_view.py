@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+from django.utils import translation
+
 import pytest
 
 from base.tests.test_generic_views.mock_model import MockModel
@@ -41,6 +43,7 @@ def test_base_create_view(  # noqa: PLR0913
             "django.views.generic.CreateView.get_success_url",
             return_value="success_url",
         ),
+        translation.override("en"),
     ):
         view = MockCreateView()
         view.title = title
