@@ -138,7 +138,7 @@ def test_base_sub_model_create_view_get_title(title, expected):
         (None, "/mockmodel/1/"),
     ),
 )
-def test_base_sub_model_create_get_cancel_url(next_url, expected, rf):
+def test_base_sub_model_create_get_cancel_url(next_url, expected):
     with translation.override("en"):
         view = MockBaseSubModelCreateView()
         view.next_url = next_url
