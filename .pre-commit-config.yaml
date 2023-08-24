@@ -36,3 +36,22 @@ repos:
         always_run: true
         stages:
           - push
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+        name: trim trailing whitespace
+        types_or:
+          - pug
+          - markdown
+        stages:
+          - commit
+
+      - id: end-of-file-fixer
+        name: end files with a single newline
+        types_or:
+          - pug
+          - markdown
+        stages:
+          - commit
