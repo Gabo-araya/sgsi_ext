@@ -1,7 +1,7 @@
 ## Deploy
 
 The target server has to:
-- be running Ubuntu 20.04
+- be running Ubuntu 20.04 or 22.04
 - have Docker installed
 - be present in `inventory.yml`
 
