@@ -47,6 +47,16 @@ if settings.DEBUG:
 
         urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
+elif settings.LOCAL_PROD_TESTING:
+    # For simplicity, use the development server to serve static and media,
+    # even with DEBUG=False.
+
+    # "static(...)" is a no-op when DEBUG is False. So work around that guard:
+    settings.DEBUG = True
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    settings.DEBUG = False
+
 
 # custom error views
 handler400 = "base.views.misc.bad_request_view"
