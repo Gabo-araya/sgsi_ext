@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.209.6/containers/docker-existing-docker-compose
 {
-  "name": "Magnet's DPT3 container",
+  "name": "project-name-placeholder",
 
   // For easy CLI usage, we are using the default docker-compose.override.yml to customize,
   // instead of custom files. So this is empty.
