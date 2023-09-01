@@ -40,6 +40,7 @@ ARG PIP_NO_CACHE_DIR=off
 ARG WHO=magnet
 ARG HOST_UID=2640
 ARG HOST_GID=2640
+ARG NODE_MAJOR=18
 
 # Dev tools
 RUN \
@@ -47,21 +48,24 @@ RUN \
     # for Django translations:
     gettext \
     # commit inside container:
-      git \
-      # actually non-slim version already includes git, but sadly not all it's recommended packages
-      # (specifically "less"), so include them explicitly:
-      ca-certificates patch less ssh-client \
+    git \
+    # actually non-slim version already includes git, but sadly not all it's recommended packages
+    # (specifically "less"), so include them explicitly:
+    ca-certificates patch less ssh-client \
+    # required for node setup
+    curl gnupg  \
     # parse ansible outputs:
     jq \
   && rm -rf /var/lib/apt/lists/*
 
 # Node
 RUN \
-  curl -fsSL https://deb.nodesource.com/setup_18.x \
-    # Skip ridiculous delay
-    | sed '/sleep 20/d' \
-    | bash - \
-  && apt-get install -y nodejs \
+  mkdir -p /etc/apt/keyrings \
+  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+    | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
+    | tee /etc/apt/sources.list.d/nodesource.list \
+  && apt-get update && apt-get install -y nodejs \
   # Update npm:
   && mkdir "$NPM_CACHE_DIR" \
   && npm install --global --cache "$NPM_CACHE_DIR" npm \
