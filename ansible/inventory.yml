@@ -6,6 +6,8 @@ all:
     #   Avoid putting 'production' on production sites in case emails use the site name.
     #   site_name: "DPT Playground"
     #   branch: dev
+    #   docker_mountpoint: /
 
   vars:
+    minimum_free_space: 2048
     ansible_user: magnet
