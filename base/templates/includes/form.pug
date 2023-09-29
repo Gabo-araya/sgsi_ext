@@ -5,6 +5,6 @@ if not form.next
   - for fieldset in form.fieldsets
     fieldset(class="{{ fieldset.classes }}", data-index="{{forloop.counter0}}")
       {% include "includes/fieldset.pug"%}
-- else 
+- else
   - for field in form
     {% include "includes/field.pug"%}
