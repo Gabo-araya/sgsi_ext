@@ -12,11 +12,6 @@ export default defineConfig({
   server: {
     host: 'localhost',
     port: 3000,
-
-    /////////TODO: enable on WSL?
-    // see warning in https://vitejs.dev/config/server-options.html#server-watch
-    //watch: { usePolling: true },
-    // alternative: CHOKIDAR_USEPOLLING env var
   },
   resolve: {
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'], // default
