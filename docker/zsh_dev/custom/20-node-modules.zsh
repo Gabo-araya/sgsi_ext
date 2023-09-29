@@ -13,17 +13,10 @@ _node_modules_present() {
   [[ -d node_modules ]]
 }
 
-_built_assets_present() {
-  # If the javascript of a project is already done and frozen, you can run "npm run build"
-  # and then it's no longer necessary to run "npm start", and also "npm install".
-  [[ -s webpack-stats.json ]] && ! grep -q localhost: webpack-stats.json
-}
-
-if _in_project_path && ! _node_modules_present && ! _built_assets_present; then
+if _in_project_path && ! _node_modules_present; then
   echo "$fg[green]Installing node_modules$reset_color"
   npm install
 fi
 
 unfunction _in_project_path
 unfunction _node_modules_present
-unfunction _built_assets_present

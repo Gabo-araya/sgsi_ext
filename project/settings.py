@@ -518,18 +518,6 @@ else:
         },
     }
 
-# https://github.com/django-webpack/django-webpack-loader#configuring-the-settings-file
-WEBPACK_LOADER = {#####################################
-    "DEFAULT": {
-        "CACHE": False,
-        "BUNDLE_DIR_NAME": "bundles/",
-        "STATS_FILE": BASE_DIR / "webpack-stats.json",
-        "POLL_INTERVAL": 0.1,
-        "TIMEOUT": 1,  # 1 second timeout for webpack compilation
-        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
-    },
-}
-
 # HTTPS
 # https://docs.djangoproject.com/en/3.2/ref/settings/#secure-proxy-ssl-header
 

@@ -18,7 +18,7 @@ This template is based on Django 3.2.x, which is supported up to 2024. Some intr
 * ASGI and asynchronous views support
 * `pymemcache` support
 
-### TypeScript and WebPack 5 support
+### TypeScript and Vite
 [TODO]
 
 ## Getting started
@@ -298,7 +298,7 @@ All view templates should extend base.pug, this renders the layout with a navbar
     `title` variable.
  2. stylesheets: A place to put stylesheets for the given template. By default
     is empty. Be careful to use this block, it should only be used when the
-    webpack-compiled styles are not enough for some reason.
+    vite-compiled styles are not enough for some reason.
  3. breadcrumbs: A place to put breadcrumb elements after the `home` element
     and before the element that contains the `title`.
  4. content_title: The place to put the `h1` tag. By default contains a `h1`
@@ -306,9 +306,9 @@ All view templates should extend base.pug, this renders the layout with a navbar
  5. options: A place to put buttons beside the `h1` tag.
  6. content: The main content of the page. **This should always be defined in
     the template**
- 7. javascripts: A place to put javascripts for the given template. By default
+ 7. legacy_javascripts: A place to put javascripts for the given template. By default
     is empty. Be careful to use this block, it should only be used when the
-    webpack-compiled javascripts are not enough for some reason.
+    vite-compiled javascripts are not enough for some reason.
 
 All these blocks are optional **except content** since they have default implementations.
 
@@ -436,6 +436,8 @@ Mockup is now a class field, meaning you need to replace your existing
 `self.create_*` calls to `self.mockup.create_*`.
 
 ### Javascript debugging
+
+#########################TODO
 
 In development, webpack is configured to produce simple sourcemaps, because nice sourcemaps take too long to generate in large projects.
 

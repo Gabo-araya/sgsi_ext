@@ -188,7 +188,7 @@ RUN npm ci --omit="" --no-audit \
   && rm -rf "$NPM_CACHE_DIR"/*
 
 COPY --chown=$HOST_UID:$HOST_GID assets ./assets/
-COPY webpack.* tsconfig.json .eslint* .stylelint* ./
+COPY vite.config.ts tsconfig.json .eslint* .stylelint* ./
 RUN npm run build
 
 
@@ -196,7 +196,6 @@ FROM dev-base as test
 
 COPY . ./
 COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
-COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 
 
 FROM python:3.10-slim-bullseye AS production
@@ -240,7 +239,6 @@ RUN mkdir -p /usr/src/app/media /usr/src/app/static && chown -R $HOST_UID:$HOST_
 COPY --from=prod-py-builder /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
 COPY --from=prod-py-builder /usr/local/bin/ /usr/local/bin/
 COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
-COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 
 COPY --chown=$HOST_UID:$HOST_GID . ./
 COPY --chown=$HOST_UID:$HOST_GID ./docker/django/prod_cmd.sh ./
