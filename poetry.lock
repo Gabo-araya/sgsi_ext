@@ -880,18 +880,6 @@ Django = ">=1.11"
 dev = ["black", "flake8"]
 
 [[package]]
-name = "django-webpack-loader"
-version = "2.0.1"
-description = "Transparently use webpack with django"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-webpack-loader-2.0.1.tar.gz", hash = "sha256:0e8dfb2fcdb39dbfd01be7603c060132a4664f483811ce3c75f2d3c0d39ab762"},
-    {file = "django_webpack_loader-2.0.1-py2.py3-none-any.whl", hash = "sha256:2704c5b0e699a9a3a70aa21b75825d8637cd0df8134c3308b5c2976ecc20b5f7"},
-]
-
-[[package]]
 name = "django-xff"
 version = "1.4.0"
 description = "Django X-Forwarded-For Properly"
@@ -2109,4 +2097,4 @@ tests = ["coverage", "flake8", "wheel"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "4bdb08fe69aed9ac3499f328ac1ed70e88df9b470e05184ab6cd56f0381d6b28"
+content-hash = "6fd25f1a4617d275a5b3e817b4ecca556b4431eb2e194ff0aa19bb695d19d9ab"

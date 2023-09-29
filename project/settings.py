@@ -100,7 +100,7 @@ INSTALLED_APPS = [
     # external
     "loginas",
     "api_client",
-    "webpack_loader",
+    "django_vite",
     "django_celery_beat",
     "rest_framework",
     "captcha",
@@ -293,14 +293,18 @@ EMAIL_SENDER_NAME = get_env_value(
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID", None)
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 
+
+# https://github.com/MrBin99/django-vite
+
+DJANGO_VITE_DEV_MODE = DEBUG
+DJANGO_VITE_ASSETS_PATH = BASE_DIR / "assets" / "bundles"
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 if not DEBUG:
-    STATICFILES_DIRS = [
-        # Webpack bundles
-        ("bundles", BASE_DIR / "assets/bundles"),
-    ]
+    STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
 if AWS_STORAGE_BUCKET_NAME:
@@ -515,8 +519,7 @@ else:
     }
 
 # https://github.com/django-webpack/django-webpack-loader#configuring-the-settings-file
-
-WEBPACK_LOADER = {
+WEBPACK_LOADER = {#####################################
     "DEFAULT": {
         "CACHE": False,
         "BUNDLE_DIR_NAME": "bundles/",

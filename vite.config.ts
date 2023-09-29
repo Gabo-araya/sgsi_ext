@@ -1,19 +1,22 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
+import react from '@vitejs/plugin-react';
 
-const { resolve } = require('path');
-
+// eslint-disable-next-line import/no-default-export
 export default defineConfig({
-  plugins: [],
-  root: resolve('./static/src'),
+  plugins: [
+    react(),
+  ],
+  root: resolve('./assets/ts/'),
   base: '/static/',
   server: {
     host: 'localhost',
     port: 3000,
-    open: false,
-    watch: {
-      usePolling: true,
-      disableGlobbing: false,
-    },
+
+    /////////TODO: enable on WSL?
+    // see warning in https://vitejs.dev/config/server-options.html#server-watch
+    //watch: { usePolling: true },
+    // alternative: CHOKIDAR_USEPOLLING env var
   },
   resolve: {
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'], // default
@@ -26,10 +29,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve('./assets/ts/index.ts'),
-      },
-      output: {
-        chunkFileNames: undefined,
+        status: resolve('./assets/ts/status.ts'),
       },
     },
   },
-})
+});

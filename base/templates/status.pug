@@ -1,9 +1,9 @@
 extends base.pug
 
-- load render_bundle from webpack_loader
+- load django_vite
 
-block javascripts
-  {% render_bundle "status" "js" %}
+block vite_assets
+  {% vite_asset 'status.ts' %}
 
 block content
   table.table.table-bordered.table-hover.status
