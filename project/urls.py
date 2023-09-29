@@ -33,6 +33,7 @@ urlpatterns = [
     path("accounts/", include("users.urls")),
     path("debug/", include(debug_patterns)),
     path("regions/", include("regions.urls")),
+    path("status/", misc_views.StatusView.as_view(), name="status"),
     path("api/v1/", include("dummy_app.urls")),
     path("", misc_views.index, name="home"),
 ]
