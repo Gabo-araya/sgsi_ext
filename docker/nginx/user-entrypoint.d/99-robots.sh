@@ -14,7 +14,9 @@ else
   export ROBOTS_FILE=robots-prod.txt
 fi
 
-DEFINED_ENVS="\$ADD_ROBOTS_HEADER \$ROBOTS_FILE"
 CONF_FILE=/etc/nginx/conf.d/app.conf
-envsubst "$DEFINED_ENVS" < "$CONF_FILE" > "$CONF_FILE.new"
+HARDENING_FILE=/etc/nginx/user_conf.d/z.hardening.conf
+envsubst "\$ROBOTS_FILE" < "$CONF_FILE" > "$CONF_FILE.new"
+envsubst "\$ADD_ROBOTS_HEADER" < "$HARDENING_FILE" > "$HARDENING_FILE.new"
 mv "$CONF_FILE.new" "$CONF_FILE"
+mv "$HARDENING_FILE.new" "$HARDENING_FILE"
