@@ -19,7 +19,6 @@
 
 - name: prune dangling Docker images
   command: docker image prune -f
-  when: disk_free.failed
   register: image_prune
 
 - name: prune Docker build cache
