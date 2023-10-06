@@ -3,9 +3,19 @@
   gather_facts: no
   tasks:
 
-    - name: stop django
-      # 'ERROR:  database "..." is being accessed by other users'
-      command: docker compose stop django celery
+    - name: stop services
+      # Django should be stopped to prevent 'ERROR:  database "..." is being accessed by other users'.
+      # This applies to gunicorn and celery containers.
+      #
+      # Also stop nginx to prevent this failure:
+      # - gunicorn container starts with ip 172.29.0.3
+      # - celery   container starts with ip 172.29.0.4
+      # - nginx container starts, and it resolves the "django" hostname to 172.29.0.3
+      # - Then gunicorn and celery container are stopped (to run pg_restore)
+      # - Then they are started again, but with swapped ips (gunicorn at 172.29.0.4, celery at 172.29.0.3)
+      # - nginx tries to upstream requests to 172.29.0.3:8000, which fail
+      # - The site is down with "502 Bad Gateway" until nginx is restarted so it upstreams requests to 172.29.0.4:8000
+      command: docker compose stop django celery nginx
       args:
         chdir: "{{ project_name }}"
       changed_when: true  # Unfortunately "Stopping"/"Stopped" are always printed
@@ -38,9 +48,9 @@
         # From magnet-entrypoint.sh:
         host_is_remote_test: '[[ "$PGHOST" != "localhost" && "$PGHOST" != "postgres" ]]'
 
-    - name: start django
+    - name: start services
       # The entrypoint will run migrations
-      command: docker compose start django celery
+      command: docker compose start django celery nginx
       args:
         chdir: "{{ project_name }}"
       changed_when: true

@@ -318,7 +318,7 @@ The included footer template can be found in `base/templates/includes/footer.pug
 
 ### API Client
 D3PT now includes an API client app to standardize the development of external
-integrations. An example integration is available in the `dummy_app` directory. 
+integrations. An example integration is available in the `dummy_app` directory.
 
 For additional documentation, see the `api_client/README.md` file.
 
@@ -521,7 +521,7 @@ def test_endpoint_role_access_control(user_role, expected_response, client):
     user = User.objects.create_user(first_name="Test", last_name="User", role=user_role)
     client.force_login(user)
     response = client.get("/api/protected-endpoint")
-    
+
     assert response.status_code == expected_response
 ```
 
@@ -547,7 +547,7 @@ def regular_user(db) -> User:  # request the db fixture so the database is avail
 
 @pytest.fixture
 def regular_group(db) -> Group:
-    return Group.objects.create(name="Regular users") 
+    return Group.objects.create(name="Regular users")
 
 # Fixture that requires the `regular_user` fixture, `db` is implicitly required
 # It will return a group with a user.

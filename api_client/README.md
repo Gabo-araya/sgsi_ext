@@ -57,7 +57,7 @@ def do_something():
     ...
 ```
 
-The `dummy_app` directory provides an example usage of the API client. 
+The `dummy_app` directory provides an example usage of the API client.
 
 ## Classes
 
