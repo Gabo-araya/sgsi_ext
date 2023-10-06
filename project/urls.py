@@ -52,10 +52,11 @@ elif settings.LOCAL_PROD_TESTING:
     # even with DEBUG=False.
 
     # "static(...)" is a no-op when DEBUG is False. So work around that guard:
+    original_debug = settings.DEBUG
     settings.DEBUG = True
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    settings.DEBUG = False
+    settings.DEBUG = original_debug
 
 
 # custom error views
