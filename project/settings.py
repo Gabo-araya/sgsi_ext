@@ -45,6 +45,9 @@ def get_bool_from_env(name, default_value):
     return default_value
 
 
+SILENCED_SYSTEM_CHECKS = []
+
+
 # Build paths inside the project like this: BASE_DIR / "subdir".
 PROJECT_DIR = Path(__file__).resolve().parent
 BASE_DIR = PROJECT_DIR.parent
@@ -540,11 +543,11 @@ XFF_TRUSTED_PROXY_DEPTH = int(
 # Allow "curl localhost:8000" to succeed without X-Forwarded-For:
 XFF_STRICT = False
 
-# HSTS added by Django. This is redundant because nginx adds it as well,
-# but it silences deploy check warnings.
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# Set HSTS with nginx instead of django.
+# Even if we set it with django, we still need to silence one warning
+# (SECURE_HSTS_INCLUDE_SUBDOMAINS).
+SECURE_HSTS_SECONDS = 0
+SILENCED_SYSTEM_CHECKS.append("security.W004")
 
 # Use this to know if the site is hosted with https or not.
 # Has no real effect as requests are redirected by nginx (or another proxy)
