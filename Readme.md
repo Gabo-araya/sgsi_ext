@@ -435,20 +435,6 @@ creating the objects.
 Mockup is now a class field, meaning you need to replace your existing
 `self.create_*` calls to `self.mockup.create_*`.
 
-### Javascript debugging
-
-#########################TODO
-
-In development, webpack is configured to produce simple sourcemaps, because nice sourcemaps take too long to generate in large projects.
-
-The downside is that for example when debugging in the browser the `render()` of a React component, it looks like this:
-
-![ugly code](.readme_images/js_cheap-eval-source-map.png)
-
-You can change, in `webpack.dev.js`, the `devtool` option so it looks like this:
-
-![original code](.readme_images/js_eval-source-map.png)
-
 ### Translations
 
 Django comes with a [translation framework](https://docs.djangoproject.com/en/3.2/topics/i18n/translation/).
