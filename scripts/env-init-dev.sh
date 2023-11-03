@@ -43,6 +43,8 @@ fi
   environment_name=Development
   enable_debug_toolbar=True
   enable_django_extensions=True
+  disable_boot_migrate=0
+  disable_boot_collectstatic=0
   aws_access_key_id=
   aws_secret_access_key=
   bucket_name=
@@ -71,6 +73,8 @@ fi
   perl -pi -e "s|\{\{environment_name\}\}|$environment_name|g" $env_file
   perl -pi -e "s|\{\{enable_debug_toolbar\}\}|$enable_debug_toolbar|g" $env_file
   perl -pi -e "s|\{\{enable_django_extensions\}\}|$enable_django_extensions|g" $env_file
+  perl -pi -e "s|\{\{disable_boot_migrate\}\}|$disable_boot_migrate|g" $env_file
+  perl -pi -e "s|\{\{disable_boot_collectstatic\}\}|$disable_boot_collectstatic|g" $env_file
   perl -pi -e "s|\{\{aws_access_key_id\}\}|$aws_access_key_id|g" $env_file
   perl -pi -e "s|\{\{aws_secret_access_key\}\}|$aws_secret_access_key|g" $env_file
   perl -pi -e "s|\{\{bucket_name\}\}|$bucket_name|g" $env_file

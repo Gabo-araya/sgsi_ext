@@ -192,6 +192,30 @@
       changed_when: true
       when: setsitename_result is changed
 
+    - name: run migrations
+      command: docker compose exec django dj migrate --noinput
+      args:
+        chdir: "{{ project_name }}"
+      register: migration_results
+      tags: always
+
+    - name: show migration results
+      debug:
+        msg: "{{ migration_results.stdout }}\n{{ migration_results.stderr }}"
+      tags: always
+
+    - name: run collectstatic
+      command: docker compose exec django dj collectstatic --noinput
+      args:
+        chdir: "{{ project_name }}"
+      register: collectstatic_results
+      tags: always
+
+    - name: show collectstatic results
+      debug:
+        msg: "{{ collectstatic_results.stdout }}\n{{ collectstatic_results.stderr }}"
+      tags: always
+
     - name: make a test request to https://{{ server_domain }}
       uri:
         url: https://{{ server_domain }}

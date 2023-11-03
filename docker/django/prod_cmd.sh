@@ -10,12 +10,15 @@ title_print "wait for database"
 #   - Compile https://github.com/postgres/postgres/blob/master/src/bin/scripts/pg_isready.c
 while ! pg_isready; do sleep 2; done
 
-title_print "migrate"
-dj migrate --no-input
-# improvement: add option to disable automatic migrations, and script to help in manual migrations
+if [ "${DISABLE_BOOT_MIGRATE:-0}" -eq 0 ]; then
+  title_print "migrate"
+  dj migrate --no-input
+fi
 
-title_print "collectstatic"
-dj collectstatic --noinput
+if [ "${DISABLE_BOOT_COLLECTSTATIC:-0}" -eq 0 ]; then
+  title_print "collectstatic"
+  dj collectstatic --noinput
+fi
 
 title_print "gunicorn"
 gunicorn project.wsgi:application --config docker/django/gunicorn_conf.py
