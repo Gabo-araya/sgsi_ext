@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block options %}
+<a class="btn btn-sm btn-outline-secondary" href="{% url 'user_edit' %}">Editar</a>
+{% endblock %}
+
+{% block content %}
+<div class="detail">
+  <div class="row">
+    <div class="col-md-7">
+      <table class="table table-striped table-hover table-bordered table-sm">
+        <tr>
+          <th>Nombre</th>
+          <td>{{user.first_name}}</td>
+        </tr>
+        <tr>
+          <th>Apellido</th>
+          <td>{{user.last_name}}</td>
+        </tr>
+        <tr>
+          <th>Correo Electrónico</th>
+          <td>{{user.email}}</td>
+        </tr>
+    </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
