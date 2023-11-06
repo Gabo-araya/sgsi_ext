@@ -91,7 +91,6 @@ docker/docker-compose.*.yml
 **/.idea/
 
 /assets/bundles/
-**/webpack-stats.json
 
 **/.vscode/
 /docker-compose.override.yml

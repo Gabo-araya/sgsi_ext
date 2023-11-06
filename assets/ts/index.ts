@@ -1,3 +1,9 @@
+// https://github.com/MrBin99/django-vite#assets
+// Should not be required in other entrypoints like `status.ts`
+// as long as `base.pug` is used and it loads this asset.
+// The polyfill applies to `window.document` so importing it only here is enough.
+import 'vite/modulepreload-polyfill';
+
 // Importing Bootstrap forces the load of the type definition for the window.bootstrap global.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Bootstrap from 'bootstrap';

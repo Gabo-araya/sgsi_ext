@@ -1,7 +1,6 @@
 doctype 5
 
-- load render_bundle from webpack_loader
-- load i18n static environment_badge
+- load i18n static django_vite environment_badge
 
 html(lang="{{ request.LANGUAGE_CODE|default:'es' }}")
   head
@@ -83,11 +82,11 @@ html(lang="{{ request.LANGUAGE_CODE|default:'es' }}")
     // Fonts
     script(defer, src="https://kit.fontawesome.com/0f7c5bee93.js")
 
-    // External libraries styles
-
-    // Own styles
-    {% render_bundle "main" "css" %}
-    block stylesheets
+    // Bundles
+    {% vite_hmr_client %}
+    {% vite_react_refresh %}
+    {% vite_asset 'index.ts' %}
+    block vite_assets
 
   body
     {% env_badge %}
@@ -136,6 +135,4 @@ html(lang="{{ request.LANGUAGE_CODE|default:'es' }}")
 
     include includes/footer.pug
 
-    // Own scripts
-    {% render_bundle "main" "js" %}
-    block javascripts
+    block legacy_javascripts
