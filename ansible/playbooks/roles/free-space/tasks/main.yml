@@ -20,13 +20,13 @@
 - name: prune dangling Docker images
   command: docker image prune -f
   register: image_prune
-  changed_when: '"Total reclaimed space: 0B" not in builder_prune.stdout'
+  changed_when: '"Total reclaimed space: 0B" not in image_prune.stdout'
 
 - name: prune Docker build cache
   command: docker builder prune -f
   when: disk_free.failed
   register: builder_prune
-  changed_when: '"Total:  0B" not in image_prune.stdout'
+  changed_when: '"Total:  0B" not in builder_prune.stdout'
 
 - name: display image cache prune output
   debug:
