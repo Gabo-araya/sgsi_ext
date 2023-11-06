@@ -165,7 +165,7 @@ ROOT_URLCONF = "project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -176,20 +176,6 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.template.context_processors.i18n",
                 "base.context_processors.build_info",
-            ],
-            "loaders": [
-                (
-                    "pypugjs.ext.django.Loader",
-                    (
-                        "django.template.loaders.filesystem.Loader",
-                        "django.template.loaders.app_directories.Loader",
-                    ),
-                ),
-                # set to avoid W006 warning from django-debug-toolbar
-                "django.template.loaders.app_directories.Loader",
-            ],
-            "builtins": [
-                "pypugjs.ext.django.templatetags",
             ],
         },
     },
