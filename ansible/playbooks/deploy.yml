@@ -94,17 +94,10 @@
       become: yes
       when: docker_daemon.changed
 
-    - name: make free space by pruning dangling images
-      command: docker image prune --force
-      register: prune
-      changed_when: "'Total reclaimed space: 0B' not in prune.stdout"
-      tags: update
-
-    - name: show freed space
-      debug:
-        msg: "{{ prune.stdout }}"
-      changed_when: prune.changed   # Just to match previous task color
-      tags: update
+    - name: check disk space and prune images
+      import_role:
+        name: free-space
+      tags: always
 
     - name: check if nginx will take a long time to start
       stat:

@@ -1,0 +1,39 @@
+- name: collect mount facts
+  setup:
+    filter: "mounts"
+  register: collected_facts
+
+- set_fact:
+    available_mounts: "{{ collected_facts.ansible_facts.ansible_mounts }}"
+
+- name: ensure there is enough space
+  assert:
+    that:
+      - (available_mounts|json_query(query)|first) >= (minimum_free_space * 2**20)
+    success_msg: "System has enough space to keep caches."
+    fail_msg: "Not enough space available, will try to prune."
+  vars:
+    query: "[?mount=='{{ docker_mountpoint }}'].size_available"
+  register: disk_free
+  ignore_errors: yes
+
+- name: prune dangling Docker images
+  command: docker image prune -f
+  register: image_prune
+  changed_when: '"Total reclaimed space: 0B" not in builder_prune.stdout'
+
+- name: prune Docker build cache
+  command: docker builder prune -f
+  when: disk_free.failed
+  register: builder_prune
+  changed_when: '"Total:  0B" not in image_prune.stdout'
+
+- name: display image cache prune output
+  debug:
+    msg: "{{ image_prune.stdout }}"
+  when: image_prune.changed
+
+- name: display build cache prune output
+  debug:
+    msg: "{{ builder_prune.stdout }}"
+  when: builder_prune.changed
