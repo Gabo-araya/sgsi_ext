@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 
 from importlib import import_module
@@ -18,7 +19,7 @@ class AppTemplateCommand(TemplateCommand):
     rewrite_template_suffixes = (
         # Allow shipping invalid .py files without byte-compilation.
         (".py-tpl", ".py"),
-        (".pug-tpl", ".pug"),
+        (".html-tpl", ".html"),
     )
 
     def add_arguments(self, parser):
@@ -45,7 +46,7 @@ class AppTemplateCommand(TemplateCommand):
             "-e",
             dest="extensions",
             action="append",
-            default=["py", "pug"],
+            default=["py"],
             help='The file extension(s) to render (default: "py"). '
             "Separate multiple extensions with commas, or use "
             "-e multiple times.",
@@ -105,8 +106,20 @@ class Command(AppTemplateCommand):
         templates_dir = f"{app_name}/templates/{app_name}/"
 
         for root, _dirs, files in os.walk(templates_dir):
-            for pug_file in files:
+            for html_file in files:
+                html_file_path = f"{root}{snake_case_model_name}_{html_file}"
                 shutil.move(
-                    f"{root}{pug_file}",
-                    f"{root}{snake_case_model_name}_{pug_file}",
+                    f"{root}{html_file}",
+                    html_file_path,
                 )
+
+                # custom parser to replace variables on html templates
+                with open(html_file_path) as file:
+                    file_content = file.read()
+                for var, value in options.items():
+                    template_var = f"{{{{{var}}}}}"
+                    file_content = re.sub(
+                        re.escape(template_var), str(value), file_content
+                    )
+                with open(html_file_path, "w") as file:
+                    file.write(file_content)
