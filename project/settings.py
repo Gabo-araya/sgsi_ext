@@ -55,8 +55,10 @@ BASE_DIR = PROJECT_DIR.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# SECURITY WARNING: don"t run with debug turned on in production!
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = get_bool_from_env("DEBUG", False)
+# Also don't turn this on in a server, use the proper deployment instead!
+LOCAL_PROD_TESTING = get_bool_from_env("LOCAL_PROD_TESTING", False)
 
 ENVIRONMENT_NAME = get_env_value(
     "ENVIRONMENT_NAME",
@@ -354,6 +356,8 @@ LOGOUT_REDIRECT_URL = reverse_lazy("home")
 LOGIN_REDIRECT_URL = reverse_lazy("home")
 
 # logging
+debug_logs = DEBUG or LOCAL_PROD_TESTING
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -411,7 +415,7 @@ LOGGING = {
         "default": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
-            "formatter": "verbose" if DEBUG else "json",
+            "formatter": "verbose" if debug_logs else "json",
         },
         "app_logger": {
             "level": "INFO",
@@ -421,7 +425,7 @@ LOGGING = {
         "django.server": {
             "level": "INFO",
             "class": "logging.StreamHandler",
-            "formatter": "django.server" if DEBUG else "json",
+            "formatter": "django.server" if debug_logs else "json",
         },
         "mail_admins": {
             "level": "ERROR",
@@ -431,17 +435,17 @@ LOGGING = {
         "api_clients": {
             "level": "ERROR",
             "class": "logging.StreamHandler",
-            "formatter": "verbose" if DEBUG else "json",
+            "formatter": "verbose" if debug_logs else "json",
         },
         "celery_app": {
-            "level": "DEBUG" if DEBUG else "INFO",
+            "level": "DEBUG" if debug_logs else "INFO",
             "class": "logging.StreamHandler",
-            "formatter": "verbose" if DEBUG else "celery_json",
+            "formatter": "verbose" if debug_logs else "celery_json",
         },
         "celery_task": {
-            "level": "DEBUG" if DEBUG else "INFO",
+            "level": "DEBUG" if debug_logs else "INFO",
             "class": "logging.StreamHandler",
-            "formatter": "verbose" if DEBUG else "celery_task_json",
+            "formatter": "verbose" if debug_logs else "celery_task_json",
         },
     },
     "loggers": {
@@ -468,12 +472,12 @@ LOGGING = {
         },
         "celery.app.trace": {
             "handlers": ["celery_app"],
-            "level": "DEBUG" if DEBUG else "INFO",
+            "level": "DEBUG" if debug_logs else "INFO",
             "propagate": False,
         },
         "celery.task": {
             "handlers": ["celery_task"],
-            "level": "DEBUG" if DEBUG else "INFO",
+            "level": "DEBUG" if debug_logs else "INFO",
             "propagate": False,
         },
     },
@@ -552,11 +556,11 @@ SILENCED_SYSTEM_CHECKS.append("security.W004")
 # Use this to know if the site is hosted with https or not.
 # Has no real effect as requests are redirected by nginx (or another proxy)
 # before django.
-SECURE_SSL_REDIRECT = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG and not LOCAL_PROD_TESTING
 
 # Disable "Secure" cookies to enable access from LAN over http
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = SECURE_SSL_REDIRECT
+CSRF_COOKIE_SECURE = SECURE_SSL_REDIRECT
 
 # Celery settings
 CELERY_TIMEZONE = TIME_ZONE

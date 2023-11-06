@@ -265,3 +265,17 @@ $ dce nginx nginx -T | grep \\.cl
 We ran into this very strange error (already lost the exact string) when nginx failed as in the "connection refused" case above, but there's some weird proxy managed by infrastructure providers, outside of the VM we control.
 
 In this case, try curl with "--connect-to [...]:localhost", or "nginx -T", as described above, as a shortcut to diagnosing with `nc` or Wireshark.
+
+## Locally testing the production mode
+
+### Reasoning
+
+Normally we would do this by replicating in our development computers the configuration done in servers (symlink `docker-compose.override.yml` to `docker-compose.prod.yml`, set `DEBUG=False` in .env, and run `docker compose up` so that nginx runs locally), but nginx is hardcoded to obtain a letsencrypt certificate for a live domain, so it fails.
+
+So the `LOCAL_PROD_TESTING` env var was added, to serve files without nginx, and to keep some `DEBUG` settings while `DEBUG=False`.
+
+### Use
+
+```sh
+npm run build && dj collectstatic --noinput && DEBUG=False LOCAL_PROD_TESTING=True dj runserver_plus
+```
