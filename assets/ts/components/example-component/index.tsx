@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { JsonPropsType } from '../../component-loader';
 
 /**
- * See /base/views/misc.py and /base/templates/index.pug
+ * See /base/views/misc.py and /base/templates/index.html
  * to learn where this come from!
  */
 interface ExampleComponentProps {

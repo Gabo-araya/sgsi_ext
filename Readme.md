@@ -156,7 +156,7 @@ is optional. The template contains the following:
  - A `managers.py` file with a single QuerySet for the model
  - A `forms.py` file with a single Form for the model
  - An `admin.py` file with a single Admin for the model
- - A `templates` folder with templates in .pug format for all CRUD views.
+ - A `templates` folder with templates in HTML format for all CRUD views.
 
 ### Changes to .env file while developing
 If you change your .env file, you'll need to rebuild your container for the setting to take effect.
@@ -280,19 +280,8 @@ This feature consumes the following env variables:
 It also consumes the `ACTIVATE_LOGIN_RECAPTCHA` Parameter, that can be toggled
 in the Parameter section of the admin page.
 
-### Pug
-The template engine used is pypugjs, a python implementation of the
-[pugjs](https://pugjs.org/api/getting-started.html) template engine. This
-converts the pug files into the default templates used in Django, so you can
-use both systems on the same template.
-For example, [variable interpolation in pug](https://pugjs.org/language/interpolation.html)
-with `#{}`, or using django method with `{{ }}`..
-
-Comments are done with  `//-`. If you require HTML comments (visible to final
-users on the page's source code) use`//`.
-
-#### Base template: base.pug
-All view templates should extend base.pug, this renders the layout with a navbar and the footer. This templates has the following blocks:
+#### Base template: base.html
+All view templates should extend base.html, this renders the layout with a navbar and the footer. This templates has the following blocks:
 
  1. title: Set the content of the title meta tag. By default is set to the
     `title` variable.
@@ -312,9 +301,9 @@ All view templates should extend base.pug, this renders the layout with a navbar
 
 All these blocks are optional **except content** since they have default implementations.
 
-The included navbar template can be found in `base/templates/includes/navbar.pug`
+The included navbar template can be found in `base/templates/includes/navbar.html`
 
-The included footer template can be found in `base/templates/includes/footer.pug`
+The included footer template can be found in `base/templates/includes/footer.html`
 
 ### API Client
 D3PT now includes an API client app to standardize the development of external
