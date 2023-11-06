@@ -5,5 +5,5 @@
 {% endif %}
 
 <li>
-  <a class="dropdown-item {% if request.path == url %}active{% endif %}" href="{{ url }}" aria-current="true">{% trans text|capfirst %}</a>
+  <a class="dropdown-item{% if request.path == url %} active{% endif %}" href="{{ url }}" aria-current="true">{% trans text|capfirst %}</a>
 </li>

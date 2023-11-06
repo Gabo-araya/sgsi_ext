@@ -1,5 +1,5 @@
 {% if not form.next %}
-<input type='hidden'  name='next'  value='{{ next|default:'' }}'></input>
+<input type='hidden' name='next' value='{{ next|default:'' }}'></input>
 {% endif %}
 {% csrf_token %}
 {% if form.fieldsets %}
