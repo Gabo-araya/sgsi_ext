@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% load django_vite %}
+
+{% block vite_assets %}
+  {% vite_asset 'status.ts' %}
+{% endblock %}
+
+{% block content %}
+  <table class="table table-bordered table-hover status">
+    <tbody>
+
+      <tr>
+        <th>Google Analytics</th>
+        <td>
+          {% if settings.GOOGLE_ANALYTICS_CODE %}
+            <i class="fa fa-check text-success"></i>
+            Ready ({{settings.GOOGLE_ANALYTICS_CODE}})
+          {% else %}
+            <i class="fa fa-times text-danger"></i>
+            Not set
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>Facebook Pixel</th>
+        <td>
+          {% if settings.FACEBOOK_PIXEL_CODE %}
+            <i class="fa fa-check text-success"></i>
+            Ready ({{settings.FACEBOOK_PIXEL_CODE}})
+          {% else %}
+            <i class="fa fa-times text-danger"></i>
+            Not set
+          {% endif %}
+        </td>
+      </tr>
+
+      <tr>
+        <th>RECAPTCHA</th>
+        {% if settings.RECAPTCHA_PUBLIC_KEY %}
+          <td>
+            <i class="fa fa-check text-success"></i>
+            Ready ({{settings.RECAPTCHA_PUBLIC_KEY}})
+          </td>
+        {% else %}
+          <td class="table-danger">
+            <i class="fa fa-times text-danger"></i>
+            Not set
+            <a href="https://www.google.com/recaptcha/admin"  target="_blank">Get one</a>
+          </td>
+        {% endif %}
+      </tr>
+
+      <tr>
+        <th>Favicon</th>
+        <td>
+          <div class="favicon-not-ok d-none">
+            <i class="fa fa-times text-danger"></i>
+            Favicon missing
+          </div>
+          <div class="favicon-ok d-none">
+            <i class="fa fa-check text-success"></i>
+            Ready
+            <span class="favicon-href"></span>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Facebook: og:image</th>
+        <td>
+          <div class="ogImage-not-ok d-none">
+            <i class="fa fa-times text-danger"></i>
+            Facebook image missing
+          </div>
+          <div class="ogImage-warning d-none">
+            <i class="fa fa-exclamation text-danger"></i>
+            Check Facebook sharing image sizes
+            <a href="https://developers.facebook.com/docs/sharing/best-practices#images">Please refer to this link.</a>
+          </div>
+          <div class="ogImage-ok d-none">
+            <i class="fa fa-check text-success"></i>
+            Ready
+            <span class="ogImage-content"></span>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <th>DEBUG</th>
+        {% if settings.DEBUG %}
+          <td class="table-danger">
+            <i class="fa fa-times text-danger"></i>
+            {{ settings.DEBUG }}
+          </td>
+        {% else %}
+          <td>
+            <i class="fa fa-check text-success"></i>
+            {{ settings.DEBUG }}
+          </td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
+{% endblock %}

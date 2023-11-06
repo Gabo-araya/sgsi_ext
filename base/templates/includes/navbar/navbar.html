@@ -1,0 +1,44 @@
+{% load i18n %}
+
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" aria-label="{% trans 'Main navigation' %}">
+    <div class="container-fluid">
+      <!--Brand-->
+      <a class="navbar-brand" href="{% url 'home' %}"> Project <i class="fa fa-spinner fa-spin page-loading-icon"></i></a>
+      <!--Menu toggler-->
+      <button class="navbar-toggler" type="button" aria-label="{% trans 'Toggle main navigation' %}" aria-controls="navbarCollapse" aria-expanded="false" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!--Menu-->
+      <div id="navbarCollapse" class="collapse navbar-collapse">
+        {% with navbar_link_template="includes/navbar/navbar_link.html" dropdown_link_template="includes/dropdown/dropdown_link.html" dropdown_button_link_template="includes/dropdown/dropdown_button_link.html"%}
+        <ul class="navbar-nav me-auto">
+          {% if user.is_authenticated %}
+            {% if user.is_staff %}
+              {% include navbar_link_template with text="Administration" url_name="admin:index" %}
+            {% endif %}
+            {% include navbar_link_template with text="status" url_name="status" %}
+            {% include navbar_link_template with text="users" url_name="user_list" %}
+          {% endif %}
+        </ul>
+
+        <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a id="dropdownLoggedIn" class="nav-link dropdown-toggle" href="#" role="button" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">{% trans "Logged in as" %} {{ user.email }}</a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownLoggedIn">
+                {% include dropdown_link_template with text="My profile" url_name="user_profile" %}
+                {% include dropdown_link_template with text="Change password" url_name="password_change" %}
+                {% include dropdown_button_link_template with text="Logout" url_name=request.session.loginas_from_user|yesno:"loginas-logout,logout" %}
+              </ul>
+            </li>
+          {% else %}
+            {% include navbar_link_template with text="login" url_name="login" %}
+          {% endif %}
+        </ul>
+        {% endwith %}
+      </div>
+    </div>
+  </nav>
+</header>
