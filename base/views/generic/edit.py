@@ -14,6 +14,7 @@ from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 from django.views.generic.detail import BaseDetailView as GenericBaseDetailView
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.detail import SingleObjectTemplateResponseMixin
 from django.views.generic.edit import BaseCreateView as GenericBaseCreateView
 from django.views.generic.edit import BaseUpdateView as GenericBaseUpdateView
 from django.views.generic.edit import DeletionMixin
@@ -240,8 +241,13 @@ class BaseUpdateView(LoginPermissionRequiredMixin, UpdateView):
         return super(GenericBaseUpdateView, self).post(request, *args, **kwargs)
 
 
+# NOTE: we could use DeleteView as well, but it may break existing applications.
 class BaseDeleteView(
-    LoginPermissionRequiredMixin, DeletionMixin, FormMixin, GenericBaseDetailView
+    LoginPermissionRequiredMixin,
+    SingleObjectTemplateResponseMixin,
+    DeletionMixin,
+    FormMixin,
+    GenericBaseDetailView,
 ):
     form_class = Form
     login_required = True
