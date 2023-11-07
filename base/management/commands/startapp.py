@@ -87,6 +87,7 @@ class Command(AppTemplateCommand):
         options["plural_model_name"] = camelize(
             pluralize(options["plural_model_verbose_name"]),
         )
+        options["app_name"] = app_name
 
         self.validate_name(app_name, "app")
 
