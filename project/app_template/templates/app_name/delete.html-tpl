@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url '{{lower_case_model_name}}_list' %}">
+      {{ opts.verbose_name_plural|capfirst }}
+    </a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{{ object.get_absolute_url }}">
+      {{ object }}
+    </a>
+  </li>
+{% endblock %}
+
+
+{% block content %}
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="alert alert-danger">
+      {% blocktrans %}Are you sure you want to delete "{{ object }}"?{% endblocktrans %}
+    </div>
+    <div class="text-end">
+      <div class="btn-group">
+        <input class="btn btn-danger" type="submit" value="{% trans 'Confirm' %}"></input>
+        <a class="btn btn-outline-secondary" href="{{ object.get_absolute_url }}">
+          {% trans 'Cancel' %}
+        </a>
+      </div>
+    </div>
+  </form>
+{% endblock %}

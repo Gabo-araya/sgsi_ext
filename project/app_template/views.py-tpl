@@ -10,31 +10,31 @@ from .models import {{model_name}}
 
 class {{model_name}}ListView(BaseListView):
     model = {{model_name}}
-    template_name = "{{app_name}}/{{snake_case_model_name}}_list.pug"
+    template_name = "{{app_name}}/{{snake_case_model_name}}_list.html"
     permission_required = "{{app_name}}.view_{{model_name.lower}}"
 
 
 class {{model_name}}CreateView(BaseCreateView):
     model = {{model_name}}
     form_class = {{model_name}}Form
-    template_name = "{{app_name}}/{{snake_case_model_name}}_create.pug"
+    template_name = "{{app_name}}/{{snake_case_model_name}}_create.html"
     permission_required = "{{app_name}}.add_{{model_name.lower}}"
 
 
 class {{model_name}}DetailView(BaseDetailView):
     model = {{model_name}}
-    template_name = "{{app_name}}/{{snake_case_model_name}}_detail.pug"
+    template_name = "{{app_name}}/{{snake_case_model_name}}_detail.html"
     permission_required = "{{app_name}}.view_{{model_name.lower}}"
 
 
 class {{model_name}}UpdateView(BaseUpdateView):
     model = {{model_name}}
     form_class = {{model_name}}Form
-    template_name = "{{app_name}}/{{snake_case_model_name}}_update.pug"
+    template_name = "{{app_name}}/{{snake_case_model_name}}_update.html"
     permission_required = "{{app_name}}.change_{{model_name.lower}}"
 
 
 class {{model_name}}DeleteView(BaseDeleteView):
     model = {{model_name}}
     permission_required = "{{app_name}}.delete_{{model_name.lower}}"
-    template_name = "{{app_name}}/{{snake_case_model_name}}_delete.pug"
+    template_name = "{{app_name}}/{{snake_case_model_name}}_delete.html"

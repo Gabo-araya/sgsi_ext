@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content_title %}
+<h1>{{ title }}</h1>
+{% endblock %}
+
+{% block content %}
+  {{ content }}
+
+  {% block content_header %}
+  {% if form.errors %}
+    {% for error in form.non_field_errors %}
+    <p class="alert alert-danger">{{ error }}</p>
+    {% endfor %}
+  {% endif %}
+  {% endblock %}
+
+  <form class="model-form" method="post" enctype="multipart/form-data" role="form" action="{{ action }}">
+    {% block top_fields %}
+    {% endblock %}
+    {% block form_fields %}
+    {% include "includes/form.html" %}
+    {% endblock %}
+    {% block bottom_fields %}
+    {% endblock %}
+
+    {{ formset.management_form }}
+
+    {% if formset %}
+    {% for form in formset %}
+    <div>
+      {% include "includes/form.html" with form=form %}
+      <hr>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if not hide_buttons %}
+    <div class="row">
+      <div class="col-sm-6 text-end">
+        <div class="btn-group">
+          <button class="btn btn-primary" name="submit" type="submit" value="{% block submit_button_value %}1{% endblock %}">
+          {% block submit_button_text %} {% trans "Save" %}{% endblock %}
+          </button>
+          <a class="btn btn-danger js-cancel-btn" href="{% block cancel_button_url %}{{ cancel_url }}{% endblock %}">
+          {% block cancel_button_text %}{% trans "Cancel" %}{% endblock %}
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </form>
+  {% block content_footer %}
+  {% endblock %}
+{% endblock %}

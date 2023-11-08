@@ -28,7 +28,6 @@ django-storages = "1.13.2"
 django-redis = "5.3.0"
 djangorestframework-camel-case = "1.4.2"
 inflection = "0.5.1"
-pypugjs = "5.9.12"
 # calver packages that must be updated always
 pytz = ">=2022.2"
 django-xff = "1.4.0"
@@ -55,7 +54,7 @@ black = "22.12.0"
 optional = true
 
 [tool.poetry.group.deploy-tools.dependencies]
-ansible-core = "2.13"
+ansible-core = "2.15.5"
 yq = "2.14.0"
 
 [build-system]
