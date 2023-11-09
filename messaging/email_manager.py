@@ -29,10 +29,7 @@ def send_emails(  # noqa: PLR0913
     html_content = html_template.render(context)
 
     if from_email is None:
-        from_email = "{} <{}>".format(
-            settings.EMAIL_SENDER_NAME,
-            settings.DEFAULT_FROM_EMAIL,
-        )
+        from_email = f"{settings.EMAIL_SENDER_NAME} <{settings.DEFAULT_FROM_EMAIL}>"
 
     msg = EmailMultiAlternatives(
         subject=subject,

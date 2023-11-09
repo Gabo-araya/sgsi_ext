@@ -191,9 +191,7 @@ class UserListView(BaseListView):
         if q:
             queryset = queryset.search(q)
 
-        queryset = queryset.prefetch_related("groups")
-
-        return queryset
+        return queryset.prefetch_related("groups")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

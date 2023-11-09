@@ -331,8 +331,7 @@ class BlockingApiClient(BaseApiClient):
 
     def get_session(self) -> requests.Session:
         session = requests.Session()
-        session = self.set_session_retries(session)
-        return session
+        return self.set_session_retries(session)
 
     def set_session_retries(self, session: requests.Session) -> requests.Session:
         total_retries = self.get_total_retries()

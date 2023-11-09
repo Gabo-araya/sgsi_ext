@@ -195,11 +195,8 @@ def test_responses(
                 if not url:
                     continue
 
-                try:
-                    superuser_client.force_login(superuser_user)
-                    response = superuser_client.get(url)
-                except Exception:
-                    raise
+                superuser_client.force_login(superuser_user)
+                response = superuser_client.get(url)
 
                 msg = f'url "{url}" ({pattern.name}) returned {response.status_code}'
                 assert response.status_code in (

@@ -4,11 +4,7 @@ from ipaddress import IPv6Address
 
 class BaseRange:
     def __repr__(self):
-        return "{!s}({!r}, {!r})".format(
-            self.__class__.__name__,
-            str(self.start),
-            str(self.end),
-        )
+        return f"{self.__class__.__name__!s}({str(self.start)!r}, {str(self.end)!r})"
 
     def __str__(self):
         return f"{self.start:s}-{self.end:s}"
