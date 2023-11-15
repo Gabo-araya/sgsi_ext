@@ -1,4 +1,6 @@
 from django import forms
+from django.conf import settings
+from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from django.contrib.auth import password_validation
@@ -7,12 +9,42 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.template import loader
 from django.utils.http import int_to_base36
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
 from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
 
 from base.forms import BaseModelForm
+from parameters.models import Parameter
 from users.models import User
+
+
+class CaptchaWidgetConfigurationMixin:
+    def _configure_recaptcha_widget(self, field_name):
+        """Configures the captcha field widget in accordance to app settings."""
+        widget_class_name = getattr(
+            settings, "RECAPTCHA_WIDGET", "captcha.widgets.ReCaptchaV3"
+        )
+        widget_class = import_string(widget_class_name)
+
+        captcha_field = self.fields[field_name]
+        widget = widget_class()
+
+        if captcha_field.localize:
+            widget.is_localized = True
+        widget.is_required = captcha_field.required
+        # define captcha widget as hidden to avoid unwanted labels
+        widget.input_type = "hidden"
+        # Update widget attrs with data-sitekey.
+        widget.attrs["data-sitekey"] = captcha_field.public_key
+        # Set required score from parameters, v3 only
+        if issubclass(widget_class, ReCaptchaV3):
+            widget.attrs["required_score"] = Parameter.value_for(
+                "RECAPTCHA_V3_REQUIRED_SCORE"
+            )
+
+        captcha_field.widget = widget
 
 
 class AuthenticationForm(forms.Form):
@@ -129,43 +161,48 @@ class AuthenticationForm(forms.Form):
         )
 
 
-class CaptchaAuthenticationForm(AuthenticationForm):
+class CaptchaAuthenticationForm(CaptchaWidgetConfigurationMixin, AuthenticationForm):
     captcha = ReCaptchaField(
-        label=_("¿Are you Human?"),
+        error_messages={
+            "captcha_invalid": _("Error verifying reCAPTCHA, please try again."),
+            "captcha_error": _("Error verifying reCAPTCHA, please try again."),
+            "required": _("Error verifying reCAPTCHA, please try again."),
+        },
     )
 
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        self._configure_recaptcha_widget("captcha")
 
-class AdminAuthenticationForm(AuthenticationForm):
+
+class AdminCaptchaAuthenticationForm(
+    CaptchaWidgetConfigurationMixin, AdminAuthenticationForm
+):
     """
-    A custom authentication form used in the admin app.
-
+    A custom authentication form used in the admin app, with reCAPTCHA.
     """
 
     error_messages = {
+        **AdminAuthenticationForm.error_messages,
         "required": _("Please log in again, because your session has expired."),
+        "invalid_login": _(
+            "Please enter the correct %(username)s and password for a staff "
+            "account. Note that both fields may be case-sensitive."
+        ),
     }
-    this_is_the_login_form = forms.BooleanField(
-        widget=forms.HiddenInput,
-        initial=1,
-        error_messages=error_messages,
+    required_css_class = "required"
+
+    captcha = ReCaptchaField(
+        error_messages={
+            "captcha_invalid": _("Error verifying reCAPTCHA, please try again."),
+            "captcha_error": _("Error verifying reCAPTCHA, please try again."),
+            "required": _("Error verifying reCAPTCHA, please try again."),
+        },
     )
 
-    def clean(self):
-        email = self.cleaned_data.get("email")
-        password = self.cleaned_data.get("password")
-        if not (email and password):
-            return self.cleaned_data
-
-        msg = _(
-            "Please enter the correct email and password for a staff "
-            "account. Note that both fields may be case-sensitive.",
-        )
-        self.user_cache = authenticate(email=email, password=password)
-        if self.user_cache is None:
-            raise ValidationError(msg)
-        if not self.user_cache.is_active or not self.user_cache.is_staff:
-            raise ValidationError(msg)
-        return self.cleaned_data
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        self._configure_recaptcha_widget("captcha")
 
 
 class UserCreationForm(BaseModelForm):

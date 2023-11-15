@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-30 17:09-0400\n"
-"PO-Revision-Date: 2023-06-30 17:09-0400\n"
+"POT-Creation-Date: 2023-07-17 10:15-0400\n"
+"PO-Revision-Date: 2023-07-14 18:25-0400\n"
 "Last-Translator: Nicolás Stuardo <nicolas.stuardo@magnet.cl>\n"
 "Language-Team: Magnet D3PT Team <d3pt@magnet.cl>\n"
 "Language: es\n"
@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
+
+#: admin.py
+msgid "object"
+msgstr "objeto"
+
+#: admin_site.py templates/admin/login.html
+msgid "Log in"
+msgstr "Iniciar sesión"
 
 #: fields/base.py
 #, python-format
@@ -67,8 +75,29 @@ msgstr "Versión %(ref)s, construida el %(build_time)s"
 
 #: templates/admin/base.html
 #, python-format
-msgid "Version %(commit)s"
-msgstr "Versión %(commit)s"
+msgid "Version %(ref)s"
+msgstr "Versión %(ref)s"
+
+#: templates/admin/login.html
+msgid "Please correct the error below."
+msgstr "Por favor corrija el siguiente error."
+
+#: templates/admin/login.html
+msgid "Please correct the errors below."
+msgstr "Por favor, corrija los siguientes errores."
+
+#: templates/admin/login.html
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this "
+"page. Would you like to login to a different account?"
+msgstr ""
+"Se ha autenticado como %(username)s, pero no está autorizado a acceder a\n"
+"esta página. ¿Desea autenticarse con una cuenta diferente?"
+
+#: templates/admin/login.html
+msgid "Forgotten your password or username?"
+msgstr "¿Ha olvidado la contraseña o el nombre de usuario?"
 
 #: templates/base.pug
 msgid "Close"
@@ -140,19 +169,16 @@ msgid "total"
 msgstr "total"
 
 #: views/generic/edit.py
-#, python-format
-msgid "Create %s"
-msgstr "Crear %s"
+msgid "Create {}"
+msgstr "Crear {}"
 
 #: views/generic/edit.py
-#, python-format
-msgid "Update %s"
-msgstr "Actualizar %s"
+msgid "Update {}"
+msgstr "Actualizar {}"
 
 #: views/generic/edit.py
-#, python-format
-msgid "Delete %s"
-msgstr "Eliminar %s"
+msgid "Delete {}"
+msgstr "Eliminar {}"
 
 #: views/generic/edit.py
 msgid "This object cannot be deleted."

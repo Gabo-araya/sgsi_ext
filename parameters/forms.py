@@ -12,6 +12,7 @@ class ParameterForm(BaseModelForm):
     DEFAULT_WIDGET = forms.Textarea()
     WIDGETS: dict[ParameterKind, forms.Widget] = {
         ParameterKind.INT: forms.NumberInput(),
+        ParameterKind.FLOAT: forms.NumberInput(),
         ParameterKind.TIME: AdminTimeWidget(),
         ParameterKind.DATE: AdminDateWidget(),
         ParameterKind.JSON: forms.Textarea(),

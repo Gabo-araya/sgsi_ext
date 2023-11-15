@@ -1,6 +1,7 @@
 import datetime
 import ipaddress
 import json
+import math
 import re
 
 from django.conf import settings
@@ -53,6 +54,27 @@ def parse_int_value(value):
     except (ValueError, TypeError) as error:
         raise ValidationError(_("Enter a whole number."), code="invalid") from error
     return value
+
+
+def parse_float_value(value):
+    if value in EMPTY_VALUES:
+        return None
+
+    value = str(value).strip()
+    if value in EMPTY_VALUES:
+        return None
+    try:
+        number = float(value)
+        if math.isfinite(number):
+            return number
+
+        raise ValidationError(  # noqa: TRY301
+            _("Enter a number"), code="invalid", params={"value": value}
+        )
+    except (TypeError, ValueError) as error:
+        raise ValidationError(
+            _("Enter a number"), code="invalid", params={"value": value}
+        ) from error
 
 
 def base_parse_temporal_value(value, input_formats, strptime):

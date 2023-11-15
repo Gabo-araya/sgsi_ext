@@ -87,7 +87,7 @@ SITE_ID = 1
 INSTALLED_APPS = [
     # This app first so it correctly overrides runserver command from staticfiles:
     "base.apps.BaseConfig",
-    "django.contrib.admin",
+    "base.apps.BaseAdminConfig",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -336,6 +336,7 @@ GOOGLE_ANALYTICS_CODE = os.environ.get("GOOGLE_ANALYTICS_CODE", "")
 # recaptcha
 RECAPTCHA_PUBLIC_KEY = os.environ.get("RECAPTCHA_PUBLIC_KEY", "")
 RECAPTCHA_PRIVATE_KEY = os.environ.get("RECAPTCHA_PRIVATE_KEY", "")
+RECAPTCHA_WIDGET = os.environ.get("RECAPTCHA_WIDGET", "captcha.widgets.ReCaptchaV3")
 
 # loginas
 CAN_LOGIN_AS = "base.utils.can_loginas"

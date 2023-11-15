@@ -6,6 +6,7 @@ class ParameterKind(TextChoices):
     """Represents the available choices of parameter kinds"""
 
     INT = ("int", _("integer"))
+    FLOAT = ("float", _("float"))
     TIME = ("time", _("time"))
     DATE = ("date", _("date"))
     JSON = ("json", _("json"))

@@ -48,6 +48,10 @@ def test_get_parameter_definition(parameter_definition):
     assert ParameterDefinitionList.get_definition("DOESNT_EXIST") is None
 
 
+def test_get_parameter_str(test_parameter):
+    assert str(test_parameter) == "TEST_PARAMETER"
+
+
 def test_create_all_parameters(db):
     Parameter.create_all_parameters()
     assert len(ParameterDefinitionList.definitions) == Parameter.objects.count()

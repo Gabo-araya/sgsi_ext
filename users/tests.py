@@ -13,7 +13,7 @@ from django.urls import reverse
 import pytest
 
 from users.admin import force_logout
-from users.forms import AdminAuthenticationForm
+from users.forms import AdminCaptchaAuthenticationForm
 from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserChangeForm
@@ -193,39 +193,6 @@ def test_user_change_form_set_user_permissions_queryset():
     assert user_permission_patch.queryset == "test"
 
 
-@pytest.mark.parametrize(
-    ("email", "password", "is_active", "is_staff", "auth_result", "expectation"),
-    (
-        ("test", "test", False, False, None, pytest.raises(ValidationError)),
-        ("test", "test", True, True, None, pytest.raises(ValidationError)),
-        ("test", "test", False, False, True, pytest.raises(ValidationError)),
-        ("test", "test", True, False, True, pytest.raises(ValidationError)),
-        ("test", "test", False, True, True, pytest.raises(ValidationError)),
-        ("test", "test", True, True, True, does_not_raise()),
-        ("test", "test", True, True, True, does_not_raise()),
-        (None, "test", True, True, True, does_not_raise()),
-        ("test", None, True, True, True, does_not_raise()),
-        (None, None, False, False, None, does_not_raise()),
-    ),
-)
-def test_admin_authentication_form_clean(
-    email, password, is_active, is_staff, auth_result, expectation, regular_user
-):
-    regular_user.is_active = is_active
-    regular_user.is_staff = is_staff
-    auth_result = regular_user if auth_result else None
-    with (
-        expectation,
-        patch("users.forms.authenticate", return_value=auth_result),
-    ):
-        form = AdminAuthenticationForm()
-        form.cleaned_data = {
-            "email": email,
-            "password": password,
-        }
-        form.clean()
-
-
 def test_authentication_form_get_invalid_login_error():
     form = AuthenticationForm()
     form.error_messages = {"invalid_login": "Invalid email or password"}
@@ -304,6 +271,23 @@ def test_authentication_form_clean(email, password, auth_result, expectation):
         form.cleaned_data = {"email": email, "password": password}
         form.clean()
         assert confirm_login_allowed_mock.call_count == int(bool(auth_result))
+
+
+def test_captcha_authentication_form_does_not_render_captcha_label():
+    form = CaptchaAuthenticationForm()
+    assert form["captcha"].is_hidden
+
+
+def test_admin_captcha_authentication_form_does_not_render_captcha_label():
+    form = AdminCaptchaAuthenticationForm()
+    assert form["captcha"].is_hidden
+
+
+def test_captcha_authentication_form_sets_score_for_v3_widget(settings):
+    settings.RECAPTCHA_WIDGET = "captcha.widgets.ReCaptchaV3"
+    with patch("users.forms.Parameter.value_for", return_value=0.9):
+        form = CaptchaAuthenticationForm()
+        assert form.fields["captcha"].widget.attrs["required_score"] == 0.9
 
 
 def test_user_send_example_email(regular_user):

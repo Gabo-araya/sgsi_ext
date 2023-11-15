@@ -54,6 +54,7 @@ class Migration(migrations.Migration):
                     models.CharField(
                         choices=[
                             ("int", "integer"),
+                            ("float", "float"),
                             ("time", "time"),
                             ("date", "date"),
                             ("json", "json"),
