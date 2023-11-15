@@ -45,7 +45,7 @@ class LoginView(auth_views.LoginView):
         return context
 
     def get_form_class(self):
-        parameter = Parameter.value_for("ACTIVATE_LOGIN_RECAPTCHA")
+        parameter = Parameter.value_for("ENABLE_LOGIN_RECAPTCHA")
         if parameter:
             return CaptchaAuthenticationForm
         return super().get_form_class()

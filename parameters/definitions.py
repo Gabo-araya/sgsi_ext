@@ -29,10 +29,10 @@ class ParameterDefinitionList:
             validators=(validate_protocol,),
         ),
         ParameterDefinition(
-            name="ACTIVATE_LOGIN_RECAPTCHA",
+            name="ENABLE_LOGIN_RECAPTCHA",
             default=False,
             kind="bool",
-            verbose_name=_("Activate login recaptcha"),
+            verbose_name=_("Enable login recaptcha"),
         ),
         ParameterDefinition(
             name="RECAPTCHA_V3_REQUIRED_SCORE",

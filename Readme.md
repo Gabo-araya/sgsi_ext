@@ -277,7 +277,7 @@ This feature consumes the following env variables:
 - `RECAPTCHA_PUBLIC_KEY`
 - `RECAPTCHA_PRIVATE_KEY`
 
-It also consumes the `ACTIVATE_LOGIN_RECAPTCHA` Parameter, that can be toggled
+It also consumes the `ENABLE_LOGIN_RECAPTCHA` Parameter, that can be toggled
 in the Parameter section of the admin page.
 
 #### Base template: base.html
@@ -441,11 +441,11 @@ To create the compiled messages (.mo), simply run `./translate.sh -c`
 
 To help secure the app from password bruteforce attempts, reCAPTCHA is always displayed if configured.
 
-In case of problems with the service, the CAPTCHA can be disabled by toggling the ACTIVATE_LOGIN_RECAPTCHA parameter.
+In case of problems with the service, the CAPTCHA can be disabled by toggling the ENABLE_LOGIN_RECAPTCHA parameter.
 If you can't log in to the admin site, you can still do it over management commands:
 
 ```shell
-./manage.py setparameter ACTIVATE_LOGIN_RECAPTCHA False
+./manage.py setparameter ENABLE_LOGIN_RECAPTCHA False
 ```
 
 #### Using reCAPTCHA v2 or v3
@@ -460,7 +460,7 @@ Don't forget to set the appropiate keys as environment variables.
 
 #### ReCAPTCHA v3 minimum score
 The `RECAPTCHA_V3_REQUIRED_SCORE` parameter the minimum score required to pass the check.
-If not set, the default is 0.65. You can set a float value from 0 (allow all) to 1 (reject all). 
+If not set, the default is 0.65. You can set a float value from 0 (allow all) to 1 (reject all).
 
 
 ### Manually building an image

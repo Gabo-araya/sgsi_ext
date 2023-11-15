@@ -26,8 +26,8 @@ msgid "Default url protocol"
 msgstr "Protocolo de URL por defecto"
 
 #: definitions.py
-msgid "Activate login recaptcha"
-msgstr "Activar reCAPTCHA para inicio de sesión"
+msgid "Enable login recaptcha"
+msgstr "Habilitar reCAPTCHA para el inicio de sesión"
 
 #: definitions.py
 msgid "reCAPTCHA v3 minimum required score"

@@ -56,7 +56,7 @@ class BaseAdminSite(admin.AdminSite):
         from parameters.models import Parameter
         from users.forms import AdminCaptchaAuthenticationForm
 
-        parameter = Parameter.value_for("ACTIVATE_LOGIN_RECAPTCHA")
+        parameter = Parameter.value_for("ENABLE_LOGIN_RECAPTCHA")
         if parameter:
             return AdminCaptchaAuthenticationForm
         return self.login_form or AdminAuthenticationForm

@@ -21,7 +21,7 @@ def test_parameter(db) -> Parameter:
 @pytest.fixture
 def recaptcha_false_parameter_definition() -> ParameterDefinition:
     return ParameterDefinition(
-        name="ACTIVATE_LOGIN_RECAPTCHA",
+        name="ENABLE_LOGIN_RECAPTCHA",
         default=False,
         kind="bool",
         verbose_name="Activate login recaptcha",
@@ -31,7 +31,7 @@ def recaptcha_false_parameter_definition() -> ParameterDefinition:
 @pytest.fixture
 def recaptcha_true_parameter_definition() -> ParameterDefinition:
     return ParameterDefinition(
-        name="ACTIVATE_LOGIN_RECAPTCHA",
+        name="ENABLE_LOGIN_RECAPTCHA",
         default=True,
         kind="bool",
         verbose_name="Activate login recaptcha",
