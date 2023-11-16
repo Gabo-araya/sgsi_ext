@@ -14,7 +14,7 @@ def print_to_dos():
         # We write this string in this way because if we write it plainly, it will
         # detect itself.
         pattern = f"{'T'}ODO|{'F'}IXME"
-        subprocess.run(
+        subprocess.run(  # noqa: PLW1510
             (  # noqa: S603
                 *common_args,
                 "--ignore-file=project/.todoignore",
@@ -22,9 +22,16 @@ def print_to_dos():
                 ".",
             ),
         )
-        subprocess.run((*common_args, "--glob=*.env*", pattern, "."))  # noqa: S603
+        subprocess.run(  # noqa: PLW1510
+            (  # noqa: S603
+                *common_args,
+                "--glob=*.env*",
+                pattern,
+                ".",
+            ),
+        )
         # Run twice because of unoverridable precedences
         # (See https://github.com/BurntSushi/ripgrep/issues/1734#issuecomment-730769439)
-    except Exception:  # noqa: BLE
+    except Exception:  # noqa: BLE001
         # Continue instead of breaking runserver
         print(traceback.format_exc())  # noqa: T201

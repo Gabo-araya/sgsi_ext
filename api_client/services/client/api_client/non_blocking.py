@@ -19,7 +19,7 @@ class NonBlockingApiClient(BaseApiClient):
             raise TypeError(msg)
         return super().__new__(cls)
 
-    def get(
+    def get(  # noqa: PLR0913
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
@@ -255,7 +255,7 @@ class NonBlockingApiClient(BaseApiClient):
             on_error=on_error,
         )
 
-    def delete(
+    def delete(  # noqa: PLR0913
         self,
         endpoint: str,
         path_params: dict[str, str | int] | None = None,
@@ -292,7 +292,7 @@ class NonBlockingApiClient(BaseApiClient):
             on_error=on_error,
         )
 
-    def request(
+    def request(  # noqa: PLR0913
         self,
         method: Method,
         endpoint: str,

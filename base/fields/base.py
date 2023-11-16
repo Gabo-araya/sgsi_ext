@@ -53,8 +53,7 @@ class ChileanRUTField(CharField):
                 params={"value": value},
             )
 
-        value = utils.format_rut(value)
-        return value
+        return utils.format_rut(value)
 
 
 class BaseFileField(FileField):

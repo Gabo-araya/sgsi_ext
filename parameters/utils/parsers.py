@@ -68,7 +68,7 @@ def parse_float_value(value):
         if math.isfinite(number):
             return number
 
-        raise ValidationError(  # noqa: TRY301
+        raise ValidationError(
             _("Enter a number"), code="invalid", params={"value": value}
         )
     except (TypeError, ValueError) as error:

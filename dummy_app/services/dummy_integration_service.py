@@ -38,7 +38,7 @@ def handle_dummies_deletion(response, error):
 
 
 def handle_error(response: requests.Response, error):
-    print(f"Something happened: {str(error)}")  # noqa: T201
+    print(f"Something happened: {error!s}")  # noqa: T201
 
 
 class DummyIntegrationService:

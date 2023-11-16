@@ -33,4 +33,4 @@ class Command(BaseCommand):
         except Parameter.DoesNotExist:
             self.stderr.write(f"Parameter {param_name} does not exist!")
         except ValidationError as e:
-            self.stderr.write(f"Incorrect value for parameter: {str(e)}")
+            self.stderr.write(f"Incorrect value for parameter: {e!s}")

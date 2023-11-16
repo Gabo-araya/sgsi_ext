@@ -144,7 +144,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
 
         msg = (
             "No model_parent_fk_field declared and no field relating to "
-            f"{self.parent_model.__name__} was found in {self.model.__name__,}"
+            f"{self.parent_model.__name__} was found in {self.model.__name__}"
         )
         raise ImproperlyConfigured(msg)
 
