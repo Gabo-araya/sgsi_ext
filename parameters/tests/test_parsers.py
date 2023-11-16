@@ -338,7 +338,7 @@ def test_parse_json_value(raw_value, expected_value, expectation):
         ("  ", "", does_not_raise()),
         ("magnet.cl", "magnet.cl", does_not_raise()),
         ("www.magnet.cl", "www.magnet.cl", does_not_raise()),
-        ("d3pt.dev.magnet.cl", "d3pt.dev.magnet.cl", does_not_raise()),
+        ("dpt.dev.magnet.cl", "dpt.dev.magnet.cl", does_not_raise()),
         ("8.8.8.8", "8.8.8.8", does_not_raise()),
         ("[::1]", "[::1]", does_not_raise()),
         ("ñandú.cl", "ñandú.cl", does_not_raise()),

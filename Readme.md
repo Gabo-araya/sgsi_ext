@@ -5,7 +5,7 @@ This is the recommended way for starting a new project.
 
 ## Changes from the previous version
 ### Development containers
-D3PT provides a consistent development experience between platforms by placing the Python environment in a reproducible Docker container that closely matches production.
+DPT provides a consistent development experience between platforms by placing the Python environment in a reproducible Docker container that closely matches production.
 No matter you're using a Mac, Windows or Linux host, the development environment will always be the same.
 
 This change takes advantage of the VS Code development environments feature, and it has been tested on such.
@@ -26,8 +26,8 @@ This template is based on Django 3.2.x, which is supported up to 2024. Some intr
 Create a new repository for your django project and clone your repository into
 your computer.
 
-Add the django3-project-template bitbucket repo as a remote repository:
-* `git remote add template git@bitbucket.org:magnet-cl/django3-project-template.git`
+Add the magnet-dpt bitbucket repo as a remote repository:
+* `git remote add template git@bitbucket.org:magnet-cl/magnet-dpt.git`
 
 Pull the code from the project template:
 * `git pull template main`
@@ -306,7 +306,7 @@ The included navbar template can be found in `base/templates/includes/navbar.htm
 The included footer template can be found in `base/templates/includes/footer.html`
 
 ### API Client
-D3PT now includes an API client app to standardize the development of external
+DPT includes an API client app to standardize the development of external
 integrations. An example integration is available in the `dummy_app` directory.
 
 For additional documentation, see the `api_client/README.md` file.
