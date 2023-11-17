@@ -27,7 +27,7 @@ fi
 assert_fs_supports_exec_permission
 
 if [[ "$OSTYPE" == darwin* ]]; then
-    message="WARNING: Django 3 Project Template has not been thoroughly tested on
+    message="WARNING: Django Project Template has not been thoroughly tested on
 macOS systems. Expect things to break while running on this configuration.
 You have been warned."
     color_print "$yellow" "$message"

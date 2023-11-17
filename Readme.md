@@ -1,6 +1,6 @@
-# Django 3 Project Template™
+# Django Project Template™
 
-Django 3 Project Template™ provides a common starting point for Django projects, it provides known and tested approaches for the most common features found on Magnet projects.
+Django Project Template™ provides a common starting point for Django projects, it provides known and tested approaches for the most common features found on Magnet projects.
 This is the recommended way for starting a new project.
 
 ## Changes from the previous version
@@ -10,8 +10,8 @@ No matter you're using a Mac, Windows or Linux host, the development environment
 
 This change takes advantage of the VS Code development environments feature, and it has been tested on such.
 
-### Django 3.2 LTS
-This template is based on Django 3.2.x, which is supported up to 2024. Some introduced features are:
+### Django 4.2 LTS
+This template is based on Django 4.2.x, which is supported up to 2024. Some introduced features are:
 * Automatic AppConfig discovery
 * Indexes now support expressions and DB functions
 * Built-in enumeration types
@@ -208,29 +208,29 @@ required permission (if permission_required is set).
 #### Classes
 #### BaseTemplateView
 Renders a given template. Inherits from
-[TemplateView](https://docs.djangoproject.com/en/3.2/ref/class-based-views/base/#templateview).
+[TemplateView](https://docs.djangoproject.com/en/4.2/ref/class-based-views/base/#templateview).
 
 #### BaseDetailView
 Renders a given object. Inherits from
-[DetailView](https://docs.djangoproject.com/en/3.2/ref/class-based-views/generic-display/#detailview).
+[DetailView](https://docs.djangoproject.com/en/4.2/ref/class-based-views/generic-display/#detailview).
 
 #### BaseListView
 Renders a list of objects. Inherits from
-[ListView](https://docs.djangoproject.com/en/3.2/ref/class-based-views/generic-display/#listview).
+[ListView](https://docs.djangoproject.com/en/4.2/ref/class-based-views/generic-display/#listview).
 
 #### BaseCreateView
-Renders a form to create a single object for a given model. Inherits from [CreateView](https://docs.djangoproject.com/en/3.2/ref/class-based-views/generic-editing/#createview).
+Renders a form to create a single object for a given model. Inherits from [CreateView](https://docs.djangoproject.com/en/4.2/ref/class-based-views/generic-editing/#createview).
 
 
 #### BaseUpdateView
-Renders a form to update a single object of a given model. Inherits from  [UpdateView](https://docs.djangoproject.com/en/3.2/ref/class-based-views/generic-editing/#updateview).
+Renders a form to update a single object of a given model. Inherits from  [UpdateView](https://docs.djangoproject.com/en/4.2/ref/class-based-views/generic-editing/#updateview).
 
 #### BaseDeleteView
-Renders a form to delete a single object of a given model. Inherits from [DeleteView](https://docs.djangoproject.com/en/3.2/ref/class-based-views/generic-editing/#deleteview).
+Renders a form to delete a single object of a given model. Inherits from [DeleteView](https://docs.djangoproject.com/en/4.2/ref/class-based-views/generic-editing/#deleteview).
 
 #### BaseRedirectView
 Redirects to a given url. Inherits from
-[RedirectView](https://docs.djangoproject.com/en/3.2/ref/class-based-views/base/#redirectview).
+[RedirectView](https://docs.djangoproject.com/en/4.2/ref/class-based-views/base/#redirectview).
 
 #### BaseUpdateRedirectView
 Redirects to a given url after calling the method `do_action`. Useful when
@@ -243,11 +243,11 @@ activated or if the site has google analytics.
 
 #### FormsetCreateView
 View to create an object and a list of child objects with a form and a
-[formset](https://docs.djangoproject.com/en/3.2/topics/forms/formsets/).
+[formset](https://docs.djangoproject.com/en/4.2/topics/forms/formsets/).
 
 #### FormsetUpdateView
 View to update an object and a list of child objects with a form and a
-[formset](https://docs.djangoproject.com/en/3.2/topics/forms/formsets/).
+[formset](https://docs.djangoproject.com/en/4.2/topics/forms/formsets/).
 
 ### Custom apps
 #### Regions
@@ -426,7 +426,7 @@ Mockup is now a class field, meaning you need to replace your existing
 
 ### Translations
 
-Django comes with a [translation framework](https://docs.djangoproject.com/en/3.2/topics/i18n/translation/).
+Django comes with a [translation framework](https://docs.djangoproject.com/en/4.2/topics/i18n/translation/).
 The script `translate.sh` is a utility app that creates the .po objects of a
 list of apps. If you need to expand that list, edit the last part of
 `translate.sh`.
