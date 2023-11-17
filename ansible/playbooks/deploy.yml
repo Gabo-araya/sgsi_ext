@@ -30,6 +30,9 @@
       when: create_dotenv
 
     - import_role:
+        name: zsh_theme
+
+    - import_role:
         name: git-clonepull
       tags: update
 
