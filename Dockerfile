@@ -125,7 +125,6 @@ RUN \
     procps \
   && rm -rf /var/lib/apt/lists/*
 
-COPY docker/zsh_shared docker/zsh_shared/
 COPY docker/zsh_dev docker/zsh_dev/
 
 RUN \
@@ -209,7 +208,6 @@ RUN groupadd --gid $HOST_GID $WHO \
 
 WORKDIR /usr/src/app
 
-COPY docker/zsh_shared docker/zsh_shared/
 COPY docker/zsh_prod docker/zsh_prod/
 
 # System dependencies

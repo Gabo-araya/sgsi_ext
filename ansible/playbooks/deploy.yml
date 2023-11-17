@@ -128,7 +128,9 @@
         build_cmd: docker compose build {{ build_args }} {{ nocache_arg }} {{ pull_arg }}
         up_cmd: docker compose up -d --remove-orphans {{ recreate_arg }}
 
-        build_args: "--build-arg GIT_REF={{ git_ref.stdout }} --build-arg BUILD_TIME={{ build_time.stdout }}"
+        build_args: >-
+          --build-arg GIT_REF={{ git_ref.stdout }}
+          --build-arg BUILD_TIME={{ build_time.stdout }}
         nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
         pull_arg:    "{{ '--pull'     if env_cache_ignore == '1' else '' }}"
         recreate_arg: "{{ '--force-recreate' if env_recreate == '1' else '' }}"

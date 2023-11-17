@@ -8,6 +8,9 @@ yellow="\033[0;33m"
 red="\033[0;31m"
 default="\033[0m"
 
+# shellcheck disable=SC2128
+REPO_ROOT=$(realpath "$(dirname "$BASH_SOURCE")/..")
+
 function color_print() {
   local color=$1
   local message=$2
@@ -71,4 +74,10 @@ function has_compose_plugin() {
   docker compose version &>/dev/null
   # Either prints "Docker Compose version v2.x" and returns with 0,
   # or prints "docker: 'compose' is not a docker command." and returns with 1.
+}
+
+get_project_name() {
+  should_be_inside_container  # "yq" is guaranteed in the container only.
+
+  yq -r .project_name "$REPO_ROOT/ansible/group_vars/all.yml"
 }

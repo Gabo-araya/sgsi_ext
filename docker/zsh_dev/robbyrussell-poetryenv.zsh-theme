@@ -1,4 +1,4 @@
-source /usr/src/app/docker/zsh_shared/virtualenv_name.zsh
+source /usr/src/app/docker/zsh_dev/virtualenv_name.zsh
 
 PROMPT='%F{blue}($(virtualenv_name)) %f'
 PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"

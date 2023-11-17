@@ -21,7 +21,7 @@ fi
 
 color_print "$cyan" "Transfering $dump_name ..."
 
-dumps_path="$(yq -r .project_name group_vars/all.yml)/db_dumps"
+dumps_path="$(get_project_name)/db_dumps"
 
 # Improvement: direct copy:
 
