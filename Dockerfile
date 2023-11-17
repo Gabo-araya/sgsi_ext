@@ -194,10 +194,16 @@ RUN npm run build
 
 FROM dev-base as test
 
+USER root
+
 COPY . ./
 COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
 COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 
+RUN mkdir -p ./project/media ./project/static
+RUN chown $HOST_UID:$HOST_GID /usr/src/app/project/static /usr/src/app/project/media
+
+USER $WHO
 
 FROM python:3.10-slim-bullseye AS production
 
