@@ -95,7 +95,7 @@ COPY --chown=$HOST_UID:$HOST_GID scripts/ ./scripts/
 
 # Install Poetry dev-dependencies
 COPY --chown=$HOST_UID:$HOST_GID pyproject.toml poetry.lock ./
-RUN poetry install --with dev
+RUN poetry install --with dev --no-root
 
 
 FROM dev-base as development
@@ -143,7 +143,7 @@ USER $WHO
 # Install ansible + collections and link `dj`.
 COPY --chown=$HOST_UID:$HOST_GID requirements.yml ./
 RUN \
-  poetry install --with=deploy-tools \
+  poetry install --with=deploy-tools --no-root \
   && poetry run ansible-galaxy collection install -r requirements.yml \
   # "dj" alias available from anywhere.
   && ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
