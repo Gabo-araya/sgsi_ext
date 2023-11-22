@@ -26,10 +26,12 @@ fi
 # the case, abort this script.
 assert_fs_supports_exec_permission
 
+# This solution is linux-based. macOS users are free to use and play with it but warn them
+# to avoid unnecessary support requests.
 if [[ "$OSTYPE" == darwin* ]]; then
     message="WARNING: Django Project Template has not been thoroughly tested on
 macOS systems. Expect things to break while running on this configuration.
-You have been warned."
+There is NO official support for this platform."
     color_print "$yellow" "$message"
 fi
 
