@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import ReactDOM from 'react-dom/client';
 import { camelizeObject } from './utils/casing';
+import { DjangoContextProvider } from './contexts/django-context';
 
 export type JsonPropsType = { jsonObject: unknown };
 
@@ -53,10 +54,16 @@ export class ComponentLoader {
             jsonObject = camelizeObject(JSON.parse(json));
           }
         }
+
+        const componentToRender = jsonObject
+          ? React.createElement<JsonPropsType>(component, { jsonObject })
+          : React.createElement(component as () => ReactElement);
+
         root.render(
-          jsonObject
-            ? React.createElement<JsonPropsType>(component, { jsonObject })
-            : React.createElement(component as () => ReactElement)
+          React.createElement(
+            React.StrictMode, null, React.createElement(
+              DjangoContextProvider, null, componentToRender)
+          )
         );
       });
     });
