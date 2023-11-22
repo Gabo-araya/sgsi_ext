@@ -21,6 +21,38 @@ This template is based on Django 4.2.x, which is supported up to 2024. Some intr
 ### TypeScript and Vite
 [TODO]
 
+### React
+React is installed in this template and can be used to implement custom components.
+
+#### Component auto-loader
+An auto-loader is provided, that creates a new React root and mounts components in the container you want. To register a component to be mounted in a container, register it in `assets/ts/index.ts`:
+
+```typescript
+import { YourReactComponent } from ...;
+
+...
+ComponentLoader.registerComponent('#selectorId .or-class-name', YourReactComponent);
+```
+
+#### Props for auto-loaded components
+If the container you defined includes a data attribute `data-props-source-id="some-id"`, a json with that id will be searched in the body, parsed as json, and passed as props to your component. These jsons are generated in the templates with a `{{props_data|json_script:'some-id'}}` tag.
+
+You can view an example in `assets/ts/components/example-component` for react, and `base/templates/index.html` for the backend side.
+
+#### Django context for React
+Additionally, components are mounted inside a DjangoContext.Provider, which provides global values from the backend. These values can be accessed from any react component that is mounted with the auto-loader, like this:
+
+```typescript
+  import { DjangoContext } from '../../contexts/django-context';
+
+  ...
+  const djangoContext = useContext(DjangoContext);
+  return <p>{djangoContext?.user.id}</p>
+```
+In this example, the current user id of the logged user in Django is shown in React.
+
+The contents of this global context can be extended in the `react_context` context processor in `base/context_processors.py`
+
 ## Getting started
 ### Get the code
 Create a new repository for your django project and clone your repository into
