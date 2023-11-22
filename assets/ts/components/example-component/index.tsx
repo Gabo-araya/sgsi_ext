@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { JsonPropsType } from '../../component-loader';
+import { DjangoContext } from '../../contexts/django-context';
 
 /**
  * See /base/views/misc.py and /base/templates/index.html
@@ -20,6 +21,7 @@ interface ExampleComponentProps {
 export function ExampleComponent(props: JsonPropsType) {
   const { backendParameter1, backendParameter2 } = props.jsonObject as ExampleComponentProps;
   const [count, setCount] = useState(0);
+  const djangoContext = useContext(DjangoContext);
 
   return (
     <div className="example-component d-inline-block p-3 shadow-sm border rounded">
@@ -28,6 +30,13 @@ export function ExampleComponent(props: JsonPropsType) {
         {' '}
         <span className="badge bg-success">{ backendParameter1 }</span>
       </p>
+      {djangoContext?.user && (
+        <p>
+          The current user is
+          {' '}
+          <span className="fw-bold">{djangoContext.user.email}</span>
+        </p>
+      )}
       <button type="button" className="btn btn-primary" onClick={() => setCount(count + 1)}>
         { backendParameter2 }
         {' '}
