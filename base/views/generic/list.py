@@ -5,9 +5,10 @@ from django.views.generic import ListView
 from base.view_utils import clean_query_string
 
 from ..mixins import LoginPermissionRequiredMixin
+from ..mixins import ReactContextMixin
 
 
-class BaseListView(LoginPermissionRequiredMixin, ListView):
+class BaseListView(LoginPermissionRequiredMixin, ReactContextMixin, ListView):
     login_required = True
     permission_required = ()
     paginate_by = 25
@@ -22,6 +23,7 @@ class BaseListView(LoginPermissionRequiredMixin, ListView):
         context["q"] = self.request.GET.get("q")
         context["title"] = self.get_title()
         context["ordering"] = self.request.GET.getlist("o")
+        self.add_react_context(context)
         return context
 
     def get_title(self):

@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.defaults import bad_request
@@ -11,13 +10,19 @@ from django.views.defaults import server_error
 from base.views.generic import BaseTemplateView
 
 
-def index(request):
+class HomeView(BaseTemplateView):
     """view that renders a default home"""
-    example_data = {
-        "backend_parameter_1": "data from backend",
-        "backend_parameter_2": "Press me!",
-    }
-    return render(request, "index.html", {"example_data": example_data})
+
+    template_name = "index.html"
+    title = _("welcome").title()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["example_data"] = {
+            "backend_parameter_1": "data from backend",
+            "backend_parameter_2": "Press me!",
+        }
+        return context
 
 
 def bad_request_view(request, exception, template=None):

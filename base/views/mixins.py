@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
+from django.templatetags.static import static
 
 
 class LoginPermissionRequiredMixin(PermissionRequiredMixin):
@@ -36,3 +37,21 @@ class SuperuserRestrictedMixin:
         if not (user.is_authenticated and user.is_superuser):
             raise Http404
         return super().dispatch(request, *args, **kwargs)
+
+
+class ReactContextMixin:
+    """Adds the context required by react components."""
+
+    def add_react_context(self, context):
+        context["react_context"] = {"static_path": static("")}
+
+        user = self.request.user
+        if user and not user.is_anonymous:
+            context["react_context"]["user"] = {
+                "id": user.id,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+            }
+        else:
+            context["react_context"]["user"] = None

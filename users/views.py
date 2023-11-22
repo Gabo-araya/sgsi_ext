@@ -16,6 +16,7 @@ from django.views.generic.edit import CreateView
 
 # views
 from base.views.generic import BaseListView
+from base.views.mixins import ReactContextMixin
 from parameters.models import Parameter
 
 # forms
@@ -26,7 +27,7 @@ from users.forms import UserForm
 from users.models import User
 
 
-class LoginView(auth_views.LoginView):
+class LoginView(auth_views.LoginView, ReactContextMixin):
     """view that renders the login"""
 
     template_name = "registration/login.html"
@@ -41,6 +42,7 @@ class LoginView(auth_views.LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.title
+        self.add_react_context(context)
 
         return context
 
@@ -86,7 +88,7 @@ class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = "registration/password_reset_complete.html"
 
 
-class UserCreateView(CreateView):
+class UserCreateView(CreateView, ReactContextMixin):
     template_name = "users/create.html"
     form_class = UserCreationForm  # TODO Consider using captcha
     title = _("Registration")
@@ -94,6 +96,7 @@ class UserCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.title
+        self.add_react_context(context)
 
         return context
 
