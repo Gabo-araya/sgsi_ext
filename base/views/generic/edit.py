@@ -21,10 +21,9 @@ from django.views.generic.edit import DeletionMixin
 from django.views.generic.edit import FormMixin
 
 from ..mixins import LoginPermissionRequiredMixin
-from ..mixins import ReactContextMixin
 
 
-class BaseCreateView(LoginPermissionRequiredMixin, ReactContextMixin, CreateView):
+class BaseCreateView(LoginPermissionRequiredMixin, CreateView):
     login_required = True
     permission_required = ()
     next_url = None
@@ -46,7 +45,6 @@ class BaseCreateView(LoginPermissionRequiredMixin, ReactContextMixin, CreateView
         context["opts"] = self.model._meta
         context["title"] = self.get_title()
         context["cancel_url"] = self.get_cancel_url()
-        self.add_react_context(context)
 
         return context
 

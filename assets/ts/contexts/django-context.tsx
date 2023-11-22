@@ -42,8 +42,8 @@ export const DjangoContext = createContext<DjangoContextType>(undefined);
 /**
  * Loads the django context from a json serialized in the page body.
  * This context is rendered in /base/templates/base.html and is provided
- * by the ReactContextMixin in /base/views/mixins.py.
- * To use this context provider, a view using that mixin is required.
+ * by the context processor "react_context" in /base/context_processors.py.
+ * To use this context provider, a template printing that context is required.
  */
 export function DjangoContextProvider(props: { children: ReactNode }) {
   const contextJson: string | undefined = document.querySelector(djangoContextSelector)?.innerHTML;

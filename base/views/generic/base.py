@@ -3,10 +3,9 @@ from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
 from ..mixins import LoginPermissionRequiredMixin
-from ..mixins import ReactContextMixin
 
 
-class BaseTemplateView(LoginPermissionRequiredMixin, ReactContextMixin, TemplateView):
+class BaseTemplateView(LoginPermissionRequiredMixin, TemplateView):
     login_required = True
     permission_required = ()
     title = None
@@ -22,7 +21,6 @@ class BaseTemplateView(LoginPermissionRequiredMixin, ReactContextMixin, Template
         context = super().get_context_data(**kwargs)
 
         context["title"] = self.get_title()
-        self.add_react_context(context)
 
         return context
 

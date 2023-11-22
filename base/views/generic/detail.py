@@ -1,10 +1,9 @@
 from django.views.generic import DetailView
 
 from ..mixins import LoginPermissionRequiredMixin
-from ..mixins import ReactContextMixin
 
 
-class BaseDetailView(LoginPermissionRequiredMixin, ReactContextMixin, DetailView):
+class BaseDetailView(LoginPermissionRequiredMixin, DetailView):
     login_required = True
     permission_required = ()
 
@@ -17,6 +16,5 @@ class BaseDetailView(LoginPermissionRequiredMixin, ReactContextMixin, DetailView
 
         context["opts"] = self.model._meta
         context["title"] = self.get_title()
-        self.add_react_context(context)
 
         return context

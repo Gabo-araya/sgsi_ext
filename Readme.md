@@ -51,7 +51,7 @@ Additionally, components are mounted inside a DjangoContext.Provider, which prov
 ```
 In this example, the current user id of the logged user in Django is shown in React.
 
-The contents of this global context can be extended in the ReactContextMixin in `base/views/mixins.py`
+The contents of this global context can be extended in the `react_context` context processor in `base/context_processors.py`
 
 ## Getting started
 ### Get the code

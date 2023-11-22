@@ -35,7 +35,7 @@ urlpatterns = [
     path("regions/", include("regions.urls")),
     path("status/", misc_views.StatusView.as_view(), name="status"),
     path("api/v1/", include("dummy_app.urls")),
-    path("", misc_views.HomeView.as_view(), name="home"),
+    path("", misc_views.index, name="home"),
 ]
 
 if settings.DEBUG:
