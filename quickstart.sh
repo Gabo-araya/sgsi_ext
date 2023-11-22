@@ -58,6 +58,12 @@ scripts/add-aliases.sh
 
 echo "docker compose build" | newgrp docker
 
+# Check this project has been properly set up.
+echo "docker compose run --rm -T django env --unset=VIRTUAL_ENV scripts/check-project-name.sh" | newgrp docker
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
 scripts/set-vscode-settings.sh
 
 # Finally create and start the containers:
