@@ -19,12 +19,7 @@ if [[ -n "${SKIP_PROJECT_NAME_CHECK-}" ]]; then
 fi
 
 # poetry
-if ! command -v poetry >> /dev/null; then
-  color_print $red "Poetry not found."
-  return 1
-fi
-
-poetry_project_name=$(poetry version | awk \{'print $1'\})
+poetry_project_name=$(grep "name" pyproject.toml | cut -d "=" -f 2 | tr -d "'\" ")
 if [ "$poetry_project_name" == "$placeholder_name" ]; then
   color_print $red "Found \"$poetry_project_name\" as the Poetry project name.
 This project name should not be used for real projects.
@@ -33,12 +28,7 @@ Please update your pyproject.toml file and try again."
 fi
 
 # node
-if ! command -v npm >> /dev/null; then
-  color_print $red "npm not found."
-  return 1
-fi
-
-node_project_name=$(npm run env | grep "npm_package_name" | cut -d "=" -f 2)
+node_project_name=$(grep "name" package.json | cut -d ":" -f 2 | tr -d '", ')
 if [ "$node_project_name" == "$placeholder_name" ]; then
   color_print $red "Found \"$node_project_name\" as the npm project name.
 This project name should not be used for real projects.

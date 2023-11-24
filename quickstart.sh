@@ -35,6 +35,11 @@ There is NO official support for this platform."
     color_print "$yellow" "$message"
 fi
 
+# Check this project has been properly set up.
+if ! scripts/check-project-name.sh; then
+  exit 1
+fi
+
 # Stop this project's postgres so port is free:
 has_compose_plugin && [ -f .env ] && \
   echo "docker compose stop postgres || true" | newgrp docker
@@ -57,12 +62,6 @@ fi
 scripts/add-aliases.sh
 
 echo "docker compose build" | newgrp docker
-
-# Check this project has been properly set up.
-echo "docker compose run --rm -T django env --unset=VIRTUAL_ENV scripts/check-project-name.sh" | newgrp docker
-if [ $? -ne 0 ]; then
-  exit 1
-fi
 
 scripts/set-vscode-settings.sh
 
