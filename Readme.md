@@ -11,7 +11,7 @@ No matter you're using a Mac, Windows or Linux host, the development environment
 This change takes advantage of the VS Code development environments feature, and it has been tested on such.
 
 ### Django 4.2 LTS
-This template is based on Django 4.2.x, which is supported up to 2024. Some introduced features are:
+This template is based on Django 4.2.x, which is supported up to mid-2026. Some introduced features are:
 * Automatic AppConfig discovery
 * Indexes now support expressions and DB functions
 * Built-in enumeration types
