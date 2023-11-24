@@ -36,7 +36,6 @@
         "donjayamanne.githistory",
         "charliermarsh.ruff",
         "tamasfe.even-better-toml",
-        "ms-python.black-formatter"
       ]
     }
   },
