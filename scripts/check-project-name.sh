@@ -9,7 +9,8 @@ source scripts/utils.sh
 # - Jenkins PROJECT_REPONAME
 
 failure=0
-placeholder_name="project-name-placeholder"
+# obfuscate so sed or perl can't mess with the check
+placeholder_name=$(echo "70726f6a6563742d6e616d652d706c616365686f6c646572" | xxd -r -p)
 
 # Safeguard for DPT development
 if [[ -n "${SKIP_PROJECT_NAME_CHECK-}" ]]; then
