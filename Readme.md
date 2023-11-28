@@ -4,64 +4,93 @@ Django Project Template™ provides a common starting point for Django projects,
 This is the recommended way for starting a new project.
 
 ## Changes from the previous version
-### Development containers
-DPT provides a consistent development experience between platforms by placing the Python environment in a reproducible Docker container that closely matches production.
-No matter you're using a Mac, Windows or Linux host, the development environment will always be the same.
-
-This change takes advantage of the VS Code development environments feature, and it has been tested on such.
 
 ### Django 4.2 LTS
+
 This template is based on Django 4.2.x, which is supported up to mid-2026. Some introduced features are:
-* Automatic AppConfig discovery
-* Indexes now support expressions and DB functions
-* Built-in enumeration types
-* ASGI and asynchronous views support
-* `pymemcache` support
+
+* psycopg 3 support
+* Comments on columns and tables
+* Constraint validation
+* Migrations are automatically formatted using Black if present
+* In-memory file storage, useful for tests
+* Custom file storages
+* Native Redis caching
+* Template-based form rendering
+* Updated admin site with system font stack and dark/light theme support
+* Hardened password hashing
+* Support for prefetching sliced QuerySets
+* Asynchronous support for ORM and view handlers.
+
+Some deprecations are, but not limit to:
+* `pytz` in favor of standard `zoneinfo`
+* Database support for:
+  * MariaDB <= 10.3
+  * MySQL <= 5.7
+  * PostgreSQL <= 11
+* Support for `MemcachedCache` backend
+* `index_together` option in favor of `indexes`
+* Passing encoded JSON string literals to JSONField
+* `BaseUserManager.make_random_password()`. Use `secrets` instead
+* `DEFAULT_FILE_STORAGE` and `STATICFILES_STORAGE`. Use `STORAGES["default"]` and `STORAGES["staticfiles"]` instead
+* Log out via GET, use POST instead
+* DeleteView now uses FormMixin to handle POST requests. Any custom deletion logic in delete() handlers should be moved to form_valid(), or a shared helper method, if required.
+
+Future changes are:
+* Setting update_fields in Model.save() may now be required
 
 ### TypeScript and Vite
+
 [TODO]
 
 ### React
+
 React is installed in this template and can be used to implement custom components.
 
-#### Component auto-loader
-An auto-loader is provided, that creates a new React root and mounts components in the container you want. To register a component to be mounted in a container, register it in `assets/ts/index.ts`:
+#### Component autoloader
+
+An autoloader is provided, that creates a new React root and mounts components in the container you want. To register a component to be mounted in a container, register it in `assets/ts/index.ts`:
 
 ```typescript
 import { YourReactComponent } from ...;
-
 ...
 ComponentLoader.registerComponent('#selectorId .or-class-name', YourReactComponent);
 ```
 
 #### Props for auto-loaded components
+
 If the container you defined includes a data attribute `data-props-source-id="some-id"`, a json with that id will be searched in the body, parsed as json, and passed as props to your component. These jsons are generated in the templates with a `{{props_data|json_script:'some-id'}}` tag.
 
 You can view an example in `assets/ts/components/example-component` for react, and `base/templates/index.html` for the backend side.
 
 #### Django context for React
-Additionally, components are mounted inside a DjangoContext.Provider, which provides global values from the backend. These values can be accessed from any react component that is mounted with the auto-loader, like this:
 
-```typescript
-  import { DjangoContext } from '../../contexts/django-context';
+Additionally, components are mounted inside a DjangoContext.Provider, which provides global values from the backend. These values can be accessed from any react component that is mounted with the autoloader, like this:
 
-  ...
-  const djangoContext = useContext(DjangoContext);
-  return <p>{djangoContext?.user.id}</p>
+```typescript jsx
+import {DjangoContext} from '../../contexts/django-context';
+...
+const djangoContext = useContext(DjangoContext);
+return <p>{djangoContext?.user.id}</p>
 ```
+
 In this example, the current user id of the logged user in Django is shown in React.
 
 The contents of this global context can be extended in the `react_context` context processor in `base/context_processors.py`
 
 ## Getting started
+
 ### Get the code
+
 Create a new repository for your django project and clone your repository into
 your computer.
 
 Add the magnet-dpt bitbucket repo as a remote repository:
+
 * `git remote add template git@bitbucket.org:magnet-cl/magnet-dpt.git`
 
 Pull the code from the project template:
+
 * `git pull template main`
 
 Search and replace all occurrences of `project-name-placeholder` to your desired project name
@@ -69,6 +98,7 @@ Search and replace all occurrences of `project-name-placeholder` to your desired
 Configure `git_repo` in `ansible/group_vars/all.yaml`
 
 Push to your own repo:
+
 * `git push origin master`
 
 Now you have your own django project in your repository.
@@ -76,6 +106,7 @@ Now you have your own django project in your repository.
 Remove the `LICENSE` if your new project does not have an MIT license.
 
 ### Quickstart
+
 The `quickstart.sh` script includes the following actions:
 
 * Create a local .env file if not present.
@@ -99,20 +130,26 @@ The `quickstart.sh` script includes the following actions:
 3. When asked to create a symlink to the `devcontainer` tool, click the "Create" button.
 
 Code will install the `devcontainer` tool on your PATH, meaning meaning you can now run
+
 ```sh
 devcontainer open
 ```
+
 to open the project.
 </details>
 
 Then in a VSCode terminal, run:
+
 ```sh
 npm start
 ```
+
 and in another terminal, run:
+
 ```sh
 djs
 ```
+
 and access the site at http://localhost:8000
 
 #### "Without" VSCode
@@ -120,6 +157,7 @@ and access the site at http://localhost:8000
 Note: commands written here with [oh-my-zsh aliases](https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/docker-compose/docker-compose.plugin.zsh).
 
 In a terminal in this folder,
+
 - Start the containers with `dcupd` (faster), or rebuilding with `dcupb -d` (slower but may be required)
 - Spawn a container shell with `dce django zsh`
 - If it printed _vscode env not loaded_, then you are missing [some features provided by VSCode](https://code.visualstudio.com/docs/remote/containers#_sharing-git-credentials-with-your-container) and may have problems using Git. To fix this:
@@ -131,6 +169,7 @@ In a terminal in this folder,
 #### Resetting to initial state
 
 If you are used to work with docker-compose, you may try to reset your project to an initial state with `docker compose down -v`. However we are not using volumes, just bind mounts. So use instead:
+
 ```sh
 docker compose down
 rm -rf docker/volumes/
@@ -139,7 +178,9 @@ git restore docker/volumes/
 
 #### Troubleshooting
 
-##### Very strange errors occur when running `git commit`
+## Troubleshooting
+
+### Very strange errors occur when running `git commit`
 
 Because there's a hook which uses pre-commit, lint-staged and other tools, if they are not properly installed then the commit will be prevented.
 
@@ -149,16 +190,19 @@ _Command not found: pre-commit_<br>
 _SyntaxError: The requested module 'supports-color' does not provide an export named 'default'_
 
 and they all end with:
+
 ```
 husky - pre-commit hook exited with code 1 (error)
 ```
+
 To fix this:
 
 1. Ensure that if you have local changes to:
-    - package.json
-    - package-lock.json
-    - pyproject.toml
-    - poetry.lock
+
+- package.json
+- package-lock.json
+- pyproject.toml
+- poetry.lock
 
     then they are reasonable. (For example the version of lint-staged hasn't been changed by mistake)
 
@@ -167,9 +211,11 @@ To fix this:
 ##### `zsh: command not found: dj`
 
 If for some reason the virtualenv is deleted, `poetry install` won't recreate the `dj` symlink, it has to be manually created again with:
+
 ```sh
 ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
 ```
+
 Or just recreate the container (as the symlink is included in the image).
 
 ### Start a new django application
