@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
+from django.core.management.base import CommandError
 
+from parameters.definitions import ParameterDefinitionList
 from parameters.models import Parameter
 
 
@@ -24,6 +26,9 @@ class Command(BaseCommand):
         # Ensure all parameters exist
         Parameter.create_all_parameters()
 
+        if ParameterDefinitionList.get_definition(param_name) is None:
+            msg = f"Parameter {param_name} does not exist!"
+            raise CommandError(msg)
         try:
             parameter = Parameter.objects.get(name=param_name)
             parameter.value = param_value
