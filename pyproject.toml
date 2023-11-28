@@ -162,6 +162,7 @@ max-complexity = 10
     "S101",
     "ARG",
     "FBT",
+    "PLR0913",
     "PLR2004",
     "S311",
 ]
