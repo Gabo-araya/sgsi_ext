@@ -200,9 +200,6 @@ In this example, the current user id of the logged user in Django is shown in Re
 
 The contents of this global context can be extended in the `react_context` context processor in `base/context_processors.py`
 
-### Documentation
-Previous information found on this file can be now found in the `docs/` directory.
-
 ## Troubleshooting
 
 ### Very strange errors occur when running `git commit`
@@ -242,3 +239,7 @@ ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
 ```
 
 Or just recreate the container (as the symlink is included in the image).
+
+
+## Further documentation
+Previous information found on this file can be now found in the `docs/` directory.
