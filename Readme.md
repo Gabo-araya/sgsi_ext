@@ -3,84 +3,6 @@
 Django Project Template™ provides a common starting point for Django projects, it provides known and tested approaches for the most common features found on Magnet projects.
 This is the recommended way for starting a new project.
 
-## Changes from the previous version
-
-### Django 4.2 LTS
-
-This template is based on Django 4.2.x, which is supported up to mid-2026. Some introduced features are:
-
-* psycopg 3 support
-* Comments on columns and tables
-* Constraint validation
-* Migrations are automatically formatted using Black if present
-* In-memory file storage, useful for tests
-* Custom file storages
-* Native Redis caching
-* Template-based form rendering
-* Updated admin site with system font stack and dark/light theme support
-* Hardened password hashing
-* Support for prefetching sliced QuerySets
-* Asynchronous support for ORM and view handlers.
-
-Some deprecations are, but not limit to:
-* `pytz` in favor of standard `zoneinfo`
-* Database support for:
-  * MariaDB <= 10.3
-  * MySQL <= 5.7
-  * PostgreSQL <= 11
-* Support for `MemcachedCache` backend
-* `index_together` option in favor of `indexes`
-* Passing encoded JSON string literals to JSONField
-* `BaseUserManager.make_random_password()`. Use `secrets` instead
-* `DEFAULT_FILE_STORAGE` and `STATICFILES_STORAGE`. Use `STORAGES["default"]` and `STORAGES["staticfiles"]` instead
-* Log out via GET, use POST instead
-* DeleteView now uses FormMixin to handle POST requests. Any custom deletion logic in delete() handlers should be moved to form_valid(), or a shared helper method, if required.
-
-Future changes are:
-* Setting update_fields in Model.save() may now be required
-
-### TypeScript and Vite
-
-[TODO]
-
-### React
-
-React is installed in this template and can be used to implement custom components.
-
-#### Component autoloader
-
-An autoloader is provided, that creates a new React root and mounts components in the container you want. To register a component to be mounted in a container, register it in `assets/ts/index.ts`:
-
-```typescript
-import { YourReactComponent } from ...;
-...
-ComponentLoader.registerComponent('#selectorId .or-class-name', YourReactComponent);
-```
-
-#### Props for auto-loaded components
-
-If the container you defined includes a data attribute `data-props-source-id="some-id"`, a json with that id will be searched in the body, parsed as json, and passed as props to your component. These jsons are generated in the templates with a `{{props_data|json_script:'some-id'}}` tag.
-
-You can view an example in `assets/ts/components/example-component` for react, and `base/templates/index.html` for the backend side.
-
-#### Django context for React
-
-Additionally, components are mounted inside a DjangoContext.Provider, which provides global values from the backend. These values can be accessed from any react component that is mounted with the autoloader, like this:
-
-```typescript jsx
-import {DjangoContext} from '../../contexts/django-context';
-...
-const djangoContext = useContext(DjangoContext);
-return <p>{djangoContext?.user.id}</p>
-```
-
-In this example, the current user id of the logged user in Django is shown in React.
-
-The contents of this global context can be extended in the `react_context` context processor in `base/context_processors.py`
-
-### Documentation
-Previous information found on this file can be now found in the `docs/` directory.
-
 ## Getting started
 
 ### Get the code
@@ -202,6 +124,84 @@ The app template assumes your app name is a plural, the `model_name` parameter i
 If you change your .env file, you'll need to rebuild your container for the setting to take effect. You can do this by running the `Remote-Containers: Rebuild Container` command in the Command Palette (`F1`) when you are connected to the container.
 
 This takes time, you can press the `(show log)` button to view the progress.
+
+## Changes from the previous version
+
+### Django 4.2 LTS
+
+This template is based on Django 4.2.x, which is supported up to mid-2026. Some introduced features are:
+
+* psycopg 3 support
+* Comments on columns and tables
+* Constraint validation
+* Migrations are automatically formatted using Black if present
+* In-memory file storage, useful for tests
+* Custom file storages
+* Native Redis caching
+* Template-based form rendering
+* Updated admin site with system font stack and dark/light theme support
+* Hardened password hashing
+* Support for prefetching sliced QuerySets
+* Asynchronous support for ORM and view handlers.
+
+Some deprecations are, but not limit to:
+* `pytz` in favor of standard `zoneinfo`
+* Database support for:
+  * MariaDB <= 10.3
+  * MySQL <= 5.7
+  * PostgreSQL <= 11
+* Support for `MemcachedCache` backend
+* `index_together` option in favor of `indexes`
+* Passing encoded JSON string literals to JSONField
+* `BaseUserManager.make_random_password()`. Use `secrets` instead
+* `DEFAULT_FILE_STORAGE` and `STATICFILES_STORAGE`. Use `STORAGES["default"]` and `STORAGES["staticfiles"]` instead
+* Log out via GET, use POST instead
+* DeleteView now uses FormMixin to handle POST requests. Any custom deletion logic in delete() handlers should be moved to form_valid(), or a shared helper method, if required.
+
+Future changes are:
+* Setting update_fields in Model.save() may now be required
+
+### TypeScript and Vite
+
+[TODO]
+
+### React
+
+React is installed in this template and can be used to implement custom components.
+
+#### Component autoloader
+
+An autoloader is provided, that creates a new React root and mounts components in the container you want. To register a component to be mounted in a container, register it in `assets/ts/index.ts`:
+
+```typescript
+import { YourReactComponent } from ...;
+...
+ComponentLoader.registerComponent('#selectorId .or-class-name', YourReactComponent);
+```
+
+#### Props for auto-loaded components
+
+If the container you defined includes a data attribute `data-props-source-id="some-id"`, a json with that id will be searched in the body, parsed as json, and passed as props to your component. These jsons are generated in the templates with a `{{props_data|json_script:'some-id'}}` tag.
+
+You can view an example in `assets/ts/components/example-component` for react, and `base/templates/index.html` for the backend side.
+
+#### Django context for React
+
+Additionally, components are mounted inside a DjangoContext.Provider, which provides global values from the backend. These values can be accessed from any react component that is mounted with the autoloader, like this:
+
+```typescript jsx
+import {DjangoContext} from '../../contexts/django-context';
+...
+const djangoContext = useContext(DjangoContext);
+return <p>{djangoContext?.user.id}</p>
+```
+
+In this example, the current user id of the logged user in Django is shown in React.
+
+The contents of this global context can be extended in the `react_context` context processor in `base/context_processors.py`
+
+### Documentation
+Previous information found on this file can be now found in the `docs/` directory.
 
 ## Troubleshooting
 
