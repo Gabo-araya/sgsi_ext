@@ -282,19 +282,21 @@ AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 
 
 # https://github.com/MrBin99/django-vite
-
-DJANGO_VITE_DEV_MODE = DEBUG
-DJANGO_VITE_ASSETS_PATH = BASE_DIR / "assets" / "bundles"
-
+DJANGO_VITE_ASSETS_PREFIX = BASE_DIR / "assets" / "bundles"
 DJANGO_VITE_MANIFEST_FILE = os.environ.get("VITE_MANIFEST", "manifest.json")
-DJANGO_VITE_MANIFEST_PATH = DJANGO_VITE_ASSETS_PATH / DJANGO_VITE_MANIFEST_FILE
 
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+        "manifest_path": DJANGO_VITE_ASSETS_PREFIX / DJANGO_VITE_MANIFEST_FILE,
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 if not DEBUG:
-    STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
+    STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PREFIX]
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
 if AWS_STORAGE_BUCKET_NAME:
