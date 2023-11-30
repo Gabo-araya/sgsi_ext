@@ -34,8 +34,6 @@ class CaptchaWidgetConfigurationMixin:
         if captcha_field.localize:
             widget.is_localized = True
         widget.is_required = captcha_field.required
-        # define captcha widget as hidden to avoid unwanted labels
-        widget.input_type = "hidden"
         # Update widget attrs with data-sitekey.
         widget.attrs["data-sitekey"] = captcha_field.public_key
         # Set required score from parameters, v3 only
