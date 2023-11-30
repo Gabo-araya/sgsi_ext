@@ -188,7 +188,9 @@ RUN npm ci --omit="" --no-audit \
 
 COPY --chown=$HOST_UID:$HOST_GID assets ./assets/
 COPY vite.config.ts tsconfig.json .eslint* .stylelint* ./
-RUN npm run build
+
+ARG VITE_MANIFEST="manifest.json"
+RUN VITE_MANIFEST=$VITE_MANIFEST npm run build
 
 
 FROM dev-base as test
@@ -252,5 +254,8 @@ ARG GIT_REF="<unknown>"
 ENV GIT_REF=$GIT_REF
 ARG BUILD_TIME="<unknown>"
 ENV BUILD_TIME=$BUILD_TIME
+
+ARG VITE_MANIFEST="manifest.json"
+ENV VITE_MANIFEST=$VITE_MANIFEST
 
 CMD ["/usr/src/app/prod_cmd.sh"]

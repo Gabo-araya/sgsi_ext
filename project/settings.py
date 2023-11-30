@@ -286,6 +286,9 @@ AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY", None)
 DJANGO_VITE_DEV_MODE = DEBUG
 DJANGO_VITE_ASSETS_PATH = BASE_DIR / "assets" / "bundles"
 
+DJANGO_VITE_MANIFEST_FILE = os.environ.get("VITE_MANIFEST", "manifest.json")
+DJANGO_VITE_MANIFEST_PATH = DJANGO_VITE_ASSETS_PATH / DJANGO_VITE_MANIFEST_FILE
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -296,7 +299,7 @@ if not DEBUG:
 AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME", None)
 if AWS_STORAGE_BUCKET_NAME:
     # Store static and media in S3 or DigitalOcean spaces.
-    AWS_DEFAULT_ACL = None
+    AWS_DEFAULT_ACL = "public-read"
     AWS_S3_SIGNATURE_VERSION = "s3v4"
 
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
