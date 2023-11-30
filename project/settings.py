@@ -96,7 +96,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.postgres",
     # required apps
-    "users",
+    "users.apps.UsersConfig",
     # external
     "loginas",
     "api_client",
@@ -105,8 +105,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "captcha",
     # internal
-    "parameters",
-    "regions",
+    "parameters.apps.ParametersConfig",
+    "regions.apps.RegionsConfig",
 ]
 
 MIDDLEWARE = [
