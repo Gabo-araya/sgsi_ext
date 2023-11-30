@@ -284,7 +284,7 @@ def test_admin_captcha_authentication_form_does_not_render_captcha_label():
 
 
 def test_captcha_authentication_form_sets_score_for_v3_widget(settings):
-    settings.RECAPTCHA_WIDGET = "captcha.widgets.ReCaptchaV3"
+    settings.RECAPTCHA_WIDGET = "django_recaptcha.widgets.ReCaptchaV3"
     with patch("users.forms.Parameter.value_for", return_value=0.9):
         form = CaptchaAuthenticationForm()
         assert form.fields["captcha"].widget.attrs["required_score"] == 0.9

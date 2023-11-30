@@ -484,9 +484,9 @@ If you can't log in to the admin site, you can still do it over management comma
 By default, both admin and login views use reCAPTCHA v3. You can choose to use reCAPTCHA v2 by changing the
 `RECAPTCHA_WIDGET` environment variable to one of the following values:
 
-* captcha.widgets.ReCaptchaV3
-* captcha.widgets.ReCaptchaV2Invisible
-* captcha.widgets.ReCaptchaV2Checkbox
+* django_recaptcha.widgets.ReCaptchaV3
+* django_recaptcha.widgets.ReCaptchaV2Invisible
+* django_recaptcha.widgets.ReCaptchaV2Checkbox
 
 Don't forget to set the appropiate keys as environment variables.
 

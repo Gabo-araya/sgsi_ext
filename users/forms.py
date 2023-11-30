@@ -24,7 +24,7 @@ class CaptchaWidgetConfigurationMixin:
     def _configure_recaptcha_widget(self, field_name):
         """Configures the captcha field widget in accordance to app settings."""
         widget_class_name = getattr(
-            settings, "RECAPTCHA_WIDGET", "captcha.widgets.ReCaptchaV3"
+            settings, "RECAPTCHA_WIDGET", "django_recaptcha.widgets.ReCaptchaV3"
         )
         widget_class = import_string(widget_class_name)
 
