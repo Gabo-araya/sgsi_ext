@@ -12,8 +12,8 @@ from django.utils.http import int_to_base36
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
-from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV3
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV3
 
 from base.forms import BaseModelForm
 from parameters.models import Parameter

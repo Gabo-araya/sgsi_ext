@@ -103,7 +103,7 @@ INSTALLED_APPS = [
     "django_vite",
     "django_celery_beat",
     "rest_framework",
-    "captcha",
+    "django_recaptcha",
     # internal
     "parameters.apps.ParametersConfig",
     "regions.apps.RegionsConfig",
