@@ -60,7 +60,7 @@ def test_login_required_mixin_is_login_required(login_required, expectation):
         ),
     ),
 )
-def test_login_required_mixin_dispatch(  # noqa: PLR0913
+def test_login_required_mixin_dispatch(
     user, login_required, output_patch, expected, rf, request
 ):
     with patch(output_patch, return_value=expected):

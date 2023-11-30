@@ -27,7 +27,7 @@ class MockUpdateView(BaseUpdateView):
     ),
     ids=("title_and_next_url", "no_title_and_no_next_url"),
 )
-def test_base_update_view(  # noqa: PLR0913
+def test_base_update_view(
     title,
     expected_title,
     next_url,

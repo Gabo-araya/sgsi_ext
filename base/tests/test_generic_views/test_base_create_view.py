@@ -27,7 +27,7 @@ class MockCreateView(BaseCreateView):
     ),
     ids=("title_and_next_url", "no_title_and_no_next_url"),
 )
-def test_base_create_view(  # noqa: PLR0913
+def test_base_create_view(
     title,
     expected_title,
     next_url,
