@@ -12,8 +12,8 @@ from django.utils.http import int_to_base36
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
-from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV3
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV3
 
 from base.forms import BaseModelForm
 from parameters.models import Parameter
@@ -24,7 +24,7 @@ class CaptchaWidgetConfigurationMixin:
     def _configure_recaptcha_widget(self, field_name):
         """Configures the captcha field widget in accordance to app settings."""
         widget_class_name = getattr(
-            settings, "RECAPTCHA_WIDGET", "captcha.widgets.ReCaptchaV3"
+            settings, "RECAPTCHA_WIDGET", "django_recaptcha.widgets.ReCaptchaV3"
         )
         widget_class = import_string(widget_class_name)
 
@@ -34,8 +34,6 @@ class CaptchaWidgetConfigurationMixin:
         if captcha_field.localize:
             widget.is_localized = True
         widget.is_required = captcha_field.required
-        # define captcha widget as hidden to avoid unwanted labels
-        widget.input_type = "hidden"
         # Update widget attrs with data-sitekey.
         widget.attrs["data-sitekey"] = captcha_field.public_key
         # Set required score from parameters, v3 only
