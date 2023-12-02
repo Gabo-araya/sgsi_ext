@@ -26,8 +26,8 @@ This template is based on Django 3.2.x, which is supported up to 2024. Some intr
 Create a new repository for your django project and clone your repository into
 your computer.
 
-Add the django3-project-template bitbucket repo as a remote repository:
-* `git remote add template git@bitbucket.org:magnet-cl/django3-project-template.git`
+Add the magnet-dpt bitbucket repo as a remote repository:
+* `git remote add template git@bitbucket.org:magnet-cl/magnet-dpt.git`
 
 Pull the code from the project template:
 * `git pull template main`
