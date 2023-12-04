@@ -33,7 +33,7 @@ pytz = ">=2022.2"
 django-xff = "1.4.0"
 requests = "2.30.0"
 django-recaptcha = "^4.0.0"
-django-vite = "3.0.0"
+django-vite = "~3.0.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.1.5"
