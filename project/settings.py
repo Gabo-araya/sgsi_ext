@@ -289,6 +289,7 @@ DJANGO_VITE = {
     "default": {
         "dev_mode": DEBUG,
         "manifest_path": DJANGO_VITE_ASSETS_PREFIX / DJANGO_VITE_MANIFEST_FILE,
+        "dev_server_port": 3000,
     }
 }
 
