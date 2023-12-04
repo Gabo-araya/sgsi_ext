@@ -9,7 +9,7 @@ license = "MIT"
 python = "~3.10"
 # semver packages
 django = "~4.2"
-psycopg2 = "2.9.6"
+psycopg = "3.1.14"
 celery = { version = "~5.2", extras = ["redis"] }
 gunicorn = "~20.1.0"
 django-celery-beat = "~2.5.0"
