@@ -1,25 +1,23 @@
-<!DOCTYPE 5>
-
+<!DOCTYPE html>
 {% load i18n static django_vite environment_badge %}
-
 <html lang="{{ request.LANGUAGE_CODE|default:'es' }}">
   <head>
-    {% if google_analytics_code %}
-      <!-- Global site tag (gtag.js) - Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_code }}"></script>
-      <script>window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag("js", new Date());
-        gtag("config", "{{ google_analytics_code }}");
-      </script>
-    {% endif %}
-
     <meta charset="utf-8">
     <title>{% block title %}{% if title %}{{ title }} - {% endif %}{% endblock %} Project</title>
-    <meta name="viewport" content="width=device-width" initial-scale="1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="https://magnet.cl">
     <meta name="keywords" content="">
+
+    {% if google_analytics_code %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_code }}"></script>
+    <script>window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "{{ google_analytics_code }}");
+    </script>
+    {% endif %}
 
     <!-- Schema.org for Google-->
     <meta itemprop="name" content="">
@@ -56,8 +54,8 @@
     <meta name="og:type" content="website">
     <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="">
-    <meta property="og:url", content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-    <meta property="og:locale", content="{{ request.LANGUAGE_CODE }}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <meta property="og:locale" content="{{ request.LANGUAGE_CODE }}">
 
     <!-- Fonts-->
     <script defer src="https://kit.fontawesome.com/0f7c5bee93.js"></script>
