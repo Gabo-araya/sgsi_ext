@@ -109,11 +109,16 @@
 
     - name: gather container build arguments
       block:
-        - name: retrieve git commit hash
+        - name: retrieve last commit described version
           command:
             cmd: "git describe --tags --always --abbrev --dirty"
             chdir: "{{ project_name }}"
           register: git_ref
+          changed_when: false
+
+        - name: retrieve last commit described version (short)
+          command: "git describe --always --dirty"
+          register: git_ref_short
           changed_when: false
 
         - name: retrieve build time
@@ -134,6 +139,7 @@
         build_args: >-
           --build-arg GIT_REF={{ git_ref.stdout }}
           --build-arg BUILD_TIME={{ build_time.stdout }}
+          --build-arg VITE_MANIFEST={{ git_ref_short.stdout }}
         nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
         pull_arg:    "{{ '--pull'     if env_cache_ignore == '1' else '' }}"
         recreate_arg: "{{ '--force-recreate' if env_recreate == '1' else '' }}"

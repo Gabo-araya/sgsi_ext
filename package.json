@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "vite serve",
-    "build": "vite build",
+    "build": "vite build --manifest \"${VITE_MANIFEST:-manifest.json}\"",
     "prepare": "[ \"$NODE_ENV\" = production ] && exit 0; husky install",
     "lint": "eslint '**/*.ts' && stylelint '**/*.{css,scss}'",
     "lint:fix": "eslint '**/*.ts' --fix && stylelint '**/*.{css,scss}' --fix",
