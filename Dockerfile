@@ -194,10 +194,16 @@ RUN npm run build
 
 FROM dev-base as test
 
+USER root
+
 COPY . ./
 COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
 COPY --from=prod-js-builder /usr/src/app/webpack-stats.json ./
 
+RUN mkdir -p ./project/media ./project/static
+RUN chown $HOST_UID:$HOST_GID /usr/src/app/project/static /usr/src/app/project/media
+
+USER $WHO
 
 FROM python:3.10-slim-bullseye AS production
 
@@ -235,7 +241,7 @@ RUN \
   && apt-get remove -y curl gpg \
   && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /usr/src/app/media /usr/src/app/static && chown -R $HOST_UID:$HOST_GID /usr/src/app/
+RUN mkdir -p ./project/media ./project/static && chown $HOST_UID:$HOST_GID ./project/static ./project/media
 
 COPY --from=prod-py-builder /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
 COPY --from=prod-py-builder /usr/local/bin/ /usr/local/bin/
