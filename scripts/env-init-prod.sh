@@ -109,6 +109,10 @@ who=magnet
 host_uid=2640
 host_gid=2640
 
+# Disable boot migrate and collectstatic, ansible handles it
+disable_boot_migrate=1
+disable_boot_collectstatic=1
+
 # By default we use servers in UTC
 tz=Etc/UTC
 
@@ -130,6 +134,8 @@ perl -pi -e "s|\{\{celery_result_backend\}\}|$celery_result_backend|g" $env_file
 perl -pi -e "s|\{\{environment_name\}\}|$environment_name|g" $env_file
 perl -pi -e "s|\{\{enable_debug_toolbar\}\}|False|g" $env_file
 perl -pi -e "s|\{\{enable_django_extensions\}\}|False|g" $env_file
+perl -pi -e "s|\{\{disable_boot_migrate\}\}|$disable_boot_migrate|g" $env_file
+perl -pi -e "s|\{\{disable_boot_collectstatic\}\}|$disable_boot_collectstatic|g" $env_file
 perl -pi -e "s|\{\{aws_access_key_id\}\}|$aws_access_key_id|g" $env_file
 perl -pi -e "s|\{\{aws_secret_access_key\}\}|$aws_secret_access_key|g" $env_file
 perl -pi -e "s|\{\{bucket_name\}\}|$bucket_name|g" $env_file
