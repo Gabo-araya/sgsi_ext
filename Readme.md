@@ -221,10 +221,9 @@ logic of how a new object is arranged.
 
 ### Forms
 #### BaseModelForm
-Every Form has to inherit from this class. It enables fieldset support and
-changes the style of inputs. For example, date fields will contain a class
-that is picked up by the datepicker javascript library and render a datepicker
-input.
+Every Form has to inherit from this class because it allows a correct integration with
+bootstrap and JS components. For example, date fields will contain a class that is
+picked up by the datepicker javascript library and render a datepicker input.
 
 If you are handling Chilean RUTs, you can install [Django Local Flavor](https://github.com/django/django-localflavor).
 
