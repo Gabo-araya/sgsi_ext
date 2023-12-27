@@ -15,7 +15,7 @@ placeholder_name=$(echo "70726f6a6563742d6e616d652d706c616365686f6c646572" | xxd
 # Safeguard for DPT development
 if [[ -n "${SKIP_PROJECT_NAME_CHECK-}" ]]; then
   color_print $yellow "Skipping project name check."
-  return 0
+  exit 0
 fi
 
 # poetry
