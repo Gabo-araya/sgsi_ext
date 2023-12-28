@@ -117,7 +117,9 @@
           changed_when: false
 
         - name: retrieve last commit described version (short)
-          command: "git describe --always --dirty"
+          command:
+            cmd: "git describe --always --dirty"
+            chdir: "{{ project_name }}"
           register: git_ref_short
           changed_when: false
 
