@@ -1,5 +1,6 @@
 from io import StringIO
 
+from django.core.management import CommandError
 from django.core.management import call_command
 
 import pytest
@@ -27,5 +28,6 @@ def test_setparameter_fails_with_invalid_value(db):
 @pytest.mark.usefixtures("set_parameter_test_definition_with_validators")
 def test_setparameter_fails_with_invalid_parameter(db):
     err = StringIO()
-    call_command("setparameter", "NOT_EXISTS", "value", stderr=err)
-    assert "does not exist" in err.getvalue()
+    with pytest.raises(CommandError) as cm:
+        call_command("setparameter", "NOT_EXISTS", "value", stderr=err)
+        assert "does not exist" in cm.value
