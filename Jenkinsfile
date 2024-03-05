@@ -5,7 +5,7 @@ pipeline {
     disableConcurrentBuilds()
   }
   environment {
-    PROJECT_REPONAME = 'project-name-placeholder'
+    PROJECT_REPONAME = 'magnet-sgsi'
     SHORT_COMMIT = "${GIT_COMMIT[0..7]}"
     DOCKER_BUILDKIT = '1'
     COMPOSE_DOCKER_CLI_BUILD = '1'

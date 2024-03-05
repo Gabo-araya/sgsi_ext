@@ -22,7 +22,7 @@ def setup_celery_logging(loglevel=None, **kwargs):
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 
 
-app = Celery("project-name-placeholder")
+app = Celery("magnet-sgsi")
 
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()

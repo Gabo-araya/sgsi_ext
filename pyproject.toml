@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "project-name-placeholder"
+name = "magnet-sgsi"
 version = "2023.04"
 description = "The project template for Django 4.2. This project aims to provide a common starting point for Magnet projects."
 authors = ["Magnet DPT Team <dpt@magnet.cl>"]

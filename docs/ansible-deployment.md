@@ -139,26 +139,26 @@ Logs are stored in the `celery` container log when running on production. They a
 
 The simple way is to remove containers and delete files:
 ```sh
-cd project-name-placeholder
+cd magnet-sgsi
 docker compose down
 cd ..
-sudo rm -rf project-name-placeholder
+sudo rm -rf magnet-sgsi
 ```
 
 However if you want to re-deploy (for example to try changes in a playground server), it will take long to generate new DH params for nginx, and even worse, you may run into letsencrypt's [rate limits](https://letsencrypt.org/docs/rate-limits/) which could affect all *.magnet.cl.
 
 So, to backup nginx's volume and use it for the newly deployed instance:
 ```sh
-cd project-name-placeholder
+cd magnet-sgsi
 docker compose down
 cd ..
-sudo mv project-name-placeholder/docker/volumes/nginx_secrets .
-sudo rm -rf project-name-placeholder
+sudo mv magnet-sgsi/docker/volumes/nginx_secrets .
+sudo rm -rf magnet-sgsi
 
 # Now from your local computer, deploy with "ansible/deploy.sh target".
 # When the script asks for env vars, the git repository has already been cloned,
 # so before entering env vars, run:
-sudo mv nginx_secrets project-name-placeholder/docker/volumes/
+sudo mv nginx_secrets magnet-sgsi/docker/volumes/
 # and then continue with env vars and deploy.
 ```
 
