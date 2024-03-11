@@ -139,26 +139,26 @@ Logs are stored in the `celery` container log when running on production. They a
 
 The simple way is to remove containers and delete files:
 ```sh
-cd magnet-sgsi
+cd project-name-placeholder
 docker compose down
 cd ..
-sudo rm -rf magnet-sgsi
+sudo rm -rf project-name-placeholder
 ```
 
 However if you want to re-deploy (for example to try changes in a playground server), it will take long to generate new DH params for nginx, and even worse, you may run into letsencrypt's [rate limits](https://letsencrypt.org/docs/rate-limits/) which could affect all *.magnet.cl.
 
 So, to backup nginx's volume and use it for the newly deployed instance:
 ```sh
-cd magnet-sgsi
+cd project-name-placeholder
 docker compose down
 cd ..
-sudo mv magnet-sgsi/docker/volumes/nginx_secrets .
-sudo rm -rf magnet-sgsi
+sudo mv project-name-placeholder/docker/volumes/nginx_secrets .
+sudo rm -rf project-name-placeholder
 
 # Now from your local computer, deploy with "ansible/deploy.sh target".
 # When the script asks for env vars, the git repository has already been cloned,
 # so before entering env vars, run:
-sudo mv nginx_secrets magnet-sgsi/docker/volumes/
+sudo mv nginx_secrets project-name-placeholder/docker/volumes/
 # and then continue with env vars and deploy.
 ```
 
@@ -253,7 +253,7 @@ $ curl -vL http://dj3-dev.do.magnet.cl/
 
 It's probably the built-in conf that is working, but our app conf is not active.
 
-Check if `dcl nginx` contains: "Important file(s) for 'app.conf' are missing or empty, disabling...", which means that certificate or dhparams files were not found. In this case, check `SERVER_DOMAIN` in `docker/nginx.env`, and the paths for `ssl_certificate` in `app.conf.template`.
+Check if `dcl nginx` contains: "Important file(s) for 'server.conf' are missing or empty, disabling...", which means that certificate or dhparams files were not found. In this case, check `SERVER_DOMAIN` in `docker/nginx.env`, and the paths for `ssl_certificate` in `server.conf.template`.
 
 As a sanity check, you can confirm that the domain name is present in the configuration printed by nginx:
 ```

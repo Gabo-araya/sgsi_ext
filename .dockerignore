@@ -55,6 +55,7 @@ docker/docker-compose.*.yml
 
 **/.scrapy
 
+docs/
 **/docs/_build/
 
 **/target/

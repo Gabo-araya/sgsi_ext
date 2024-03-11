@@ -41,9 +41,14 @@ services:
     # security_opt:
     #   - seccomp:unconfined
 
-
   postgres:
     <<: *base-dev-app
+
+  plantuml-server:
+    <<: *base-dev-app
+    image: plantuml/plantuml-server:jetty
+    environment:
+      - BASE_URL=plantuml
 
   # redis:
   #   <<: *base-dev-app
