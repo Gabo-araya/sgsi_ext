@@ -62,6 +62,10 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# obsidian
+.obsidian
+.obsidian.vimrc
+
 # PyBuilder
 target/
 

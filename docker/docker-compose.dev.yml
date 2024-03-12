@@ -40,31 +40,41 @@ services:
     #   - SYS_PTRACE
     # security_opt:
     #   - seccomp:unconfined
+    profiles:
+      - django
 
   postgres:
     <<: *base-dev-app
+    profiles:
+      - postgres
 
   plantuml-server:
     <<: *base-dev-app
     image: plantuml/plantuml-server:jetty
     environment:
       - BASE_URL=plantuml
+    profiles:
+      - plantuml
 
-  # redis:
-  #   <<: *base-dev-app
-  #   image: redis:5-alpine
-  #   volumes:
-  #     - ./docker/volumes/redis-data/:/data/
+  redis:
+    <<: *base-dev-app
+    image: redis:5-alpine
+    volumes:
+      - ./docker/volumes/redis-data/:/data/
+    profiles:
+      - redis
 
-  # celery:
-  #   <<: [*base-django-app, *base-dev-app]
-  #   depends_on:
-  #     - redis
-  #   volumes:
-  #     - ./:/usr/src/app/
-  #   command:
-  #     - celery
-  #     - --app=project.celeryconf:app
-  #     - worker
-  #     - --loglevel=info
-  #     - --beat
+  celery:
+    <<: [*base-django-app, *base-dev-app]
+    depends_on:
+      - redis
+    volumes:
+      - ./:/usr/src/app/
+    command:
+      - celery
+      - --app=project.celeryconf:app
+      - worker
+      - --loglevel=info
+      - --beat
+    profiles:
+      - celery
