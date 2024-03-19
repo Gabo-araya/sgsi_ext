@@ -73,7 +73,6 @@ class Users.User {
 
 Documents.Control --* Documents.Document
 Documents.Control -* Documents.ControlCategory
-Documents.Control --* Documents.ComplianceLevel
 Documents.Control --* Documents.ControlGuidingText
 Documents.DocumentVersion -up-* Documents.Document
 Documents.DocumentVersion --* Documents.DocumentVersionReadByUser

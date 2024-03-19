@@ -107,6 +107,7 @@ INSTALLED_APPS = [
     # internal
     "parameters.apps.ParametersConfig",
     "regions.apps.RegionsConfig",
+    "documents.apps.DocumentsConfig",
 ]
 
 MIDDLEWARE = [

@@ -38,6 +38,7 @@
         "eamodio.gitlens",
         "donjayamanne.githistory",
         "charliermarsh.ruff",
+        "ms-python.black-formatter",
         "tamasfe.even-better-toml",
         "jebbs.plantuml"
       ]
