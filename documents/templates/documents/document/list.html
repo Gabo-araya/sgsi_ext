@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.documents.add_document %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'document_create' %}">
+      {% trans "Add document" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block content %}
+  {% include "documents/includes/document_table.html" %}
+  {% include "includes/pagination.html" %}
+{% endblock content %}

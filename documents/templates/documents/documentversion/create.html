@@ -1,0 +1,7 @@
+{% extends "form.html" %}
+{% load i18n %}
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'documentversion_list' document.id %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+{% endblock breadcrumbs %}

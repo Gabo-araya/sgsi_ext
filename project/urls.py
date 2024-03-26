@@ -36,6 +36,7 @@ urlpatterns = [
     path("status/", misc_views.StatusView.as_view(), name="status"),
     path("api/v1/", include("dummy_app.urls")),
     path("", misc_views.index, name="home"),
+    path("", include("documents.urls")),
 ]
 
 if settings.DEBUG:

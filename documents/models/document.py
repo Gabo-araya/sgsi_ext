@@ -16,5 +16,13 @@ class Document(BaseModel):
     def __str__(self):
         return self.title
 
+    @property
+    def last_version(self):
+        return self.versions.order_by("-version").first()
+
+    @property
+    def last_approved_version(self):
+        return self.versions.approved().order_by("-version").first()
+
     def get_absolute_url(self):
         return reverse("document_detail", args=(self.pk,))

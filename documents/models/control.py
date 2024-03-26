@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
 from documents.models.control_category import ControlCategory
+from documents.models.document import Document
 
 
 class Control(BaseModel):
@@ -12,9 +13,19 @@ class Control(BaseModel):
         verbose_name=_("category"),
         related_name="controls",
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
     title = models.CharField(verbose_name=_("title"), max_length=255)
     description = models.TextField(verbose_name=_("description"), blank=True)
+    document = models.ForeignKey(
+        Document,
+        verbose_name=_("document"),
+        related_name="controls",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         verbose_name = _("control")

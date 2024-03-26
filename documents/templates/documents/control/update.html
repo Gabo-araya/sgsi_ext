@@ -1,0 +1,12 @@
+{% extends "form.html" %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'control_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+  </li>
+{% endblock breadcrumbs %}

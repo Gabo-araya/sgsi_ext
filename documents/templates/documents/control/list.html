@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.documents.add_control %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'control_create' %}">
+      {% trans "Add control" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block content %}
+  {% include "documents/includes/control_table.html" %}
+  {% include "includes/pagination.html" %}
+{% endblock content %}

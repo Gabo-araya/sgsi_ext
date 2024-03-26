@@ -6,7 +6,7 @@ from base.models.base_model import BaseModel
 
 
 class ControlCategory(BaseModel):
-    name = models.CharField(verbose_name=_("name"), max_length=255)
+    name = models.CharField(verbose_name=_("name"), max_length=255, unique=True)
 
     class Meta:
         verbose_name = _("control category")

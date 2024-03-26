@@ -4,17 +4,12 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'document_list' %}">
-      {{ opts.verbose_name_plural|capfirst }}
-    </a>
+    <a href="{% url 'control_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{{ object.get_absolute_url }}">
-      {{ object }}
-    </a>
+    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
   </li>
-{% endblock %}
-
+{% endblock breadcrumbs %}
 
 {% block content %}
   <form action="" method="post">
@@ -24,11 +19,10 @@
     </div>
     <div class="text-end">
       <div class="btn-group">
-        <input class="btn btn-danger" type="submit" value="{% trans 'Confirm' %}"></input>
-        <a class="btn btn-outline-secondary" href="{{ object.get_absolute_url }}">
-          {% trans 'Cancel' %}
-        </a>
+        <input class="btn btn-danger" type="submit" value='{% trans "Confirm" %}' />
+        <a class="btn btn-outline-secondary"
+           href="{{ object.get_absolute_url }}">{% trans "Cancel" %}</a>
       </div>
     </div>
   </form>
-{% endblock %}
+{% endblock content %}

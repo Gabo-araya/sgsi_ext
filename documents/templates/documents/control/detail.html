@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.documents.change_control %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'control_update' control.id %}">
+      {% trans "Update control" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% endif %}
+  {% if perms.documents.delete_control %}
+    <a class="btn btn-sm btn-danger"
+       href="{% url 'control_delete' control.id %}">
+      {% trans "Delete control" %}
+      <i class="fa fa-times"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'control_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      <tr>
+        <th>{% trans "category"|capfirst %}</th>
+        <td>
+          {% with control.category as category %}<a href="{{ category.get_absolute_url }}">{{ category }}</a>{% endwith %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "title"|capfirst %}</th>
+        <td>{{ control.title }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "description"|capfirst %}</th>
+        <td>{{ control.description }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "document"|capfirst %}</th>
+        <td>
+          {% if not control.document %}
+            -
+          {% else %}
+            <a href="{{ control.document.get_absolute_url }}">{{ control.document }}</a>
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock content %}

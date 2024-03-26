@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block options %}
+  {% if perms.documents.add_documentversion %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'documentversion_create' document.id %}">
+      {% trans "Add version" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'document_list' %}">{% trans "Documents" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'document_detail' document.id %}">{{ document }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  {% include "documents/includes/documentversion_table.html" with object_list=object_list %}
+  {% include "includes/pagination.html" %}
+{% endblock content %}
