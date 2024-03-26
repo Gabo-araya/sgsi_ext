@@ -1,13 +1,9 @@
 {% load i18n %}
 
-{% if fieldset.legend %}
-<legend>{{ fieldset.legend }}</legend>
-{% endif %}
+{% if fieldset.legend %}<legend>{{ fieldset.legend }}</legend>{% endif %}
 
-{% if fieldset.description %}
-<p class="description">{{ fieldset.description }}</p>
-{% endif %}
+{% if fieldset.description %}<p class="description">{{ fieldset.description }}</p>{% endif %}
 
 {% for field in fieldset %}
-{% include 'includes/field.html' %}
+  {% include "includes/field.html" %}
 {% endfor %}

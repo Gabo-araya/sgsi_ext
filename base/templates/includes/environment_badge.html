@@ -1,11 +1,11 @@
 {% load i18n %}
 
 {% if app_environment == "debug" %}
-<div class="environment-badge debug">
-  <span class="visually-hidden">{% trans "Current environment" %}: </span>Debug
-</div>
+  <div class="environment-badge debug">
+    <span class="visually-hidden">{% trans "Current environment" %}:</span>Debug
+  </div>
 {% else %}
-<div class="environment-badge alternate">
-  <span class="visually-hidden">{% trans "Current environment" %}: </span>{{ app_environment }}
-</div>
+  <div class="environment-badge alternate">
+    <span class="visually-hidden">{% trans "Current environment" %}:</span>{{ app_environment }}
+  </div>
 {% endif %}

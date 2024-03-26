@@ -2,59 +2,69 @@
 {% load i18n static %}
 
 {% block title %}
-{{ title }}
-{% endblock %}
+  {{ title }}
+{% endblock title %}
 
 {% block content_title %}
-<h1>{{ title }}</h1>
-{% endblock %}
+  <h1>{{ title }}</h1>
+{% endblock content_title %}
 
 {% block content %}
   {{ content }}
 
   {% block content_header %}
-  {% if form.errors %}
-    {% for error in form.non_field_errors %}
-    <p class="alert alert-danger">{{ error }}</p>
-    {% endfor %}
-  {% endif %}
-  {% endblock %}
+    {% if form.errors %}
+      {% for error in form.non_field_errors %}<p class="alert alert-danger">{{ error }}</p>{% endfor %}
+    {% endif %}
+  {% endblock content_header %}
 
-  <form class="model-form" method="post" enctype="multipart/form-data" role="form" action="{{ action }}">
+  <form class="model-form"
+        method="post"
+        enctype="multipart/form-data"
+        role="form"
+        action="{{ action }}">
     {% block top_fields %}
-    {% endblock %}
+    {% endblock top_fields %}
     {% block form_fields %}
-    {% include "includes/form.html" %}
-    {% endblock %}
+      {% include "includes/form.html" %}
+    {% endblock form_fields %}
     {% block bottom_fields %}
-    {% endblock %}
+    {% endblock bottom_fields %}
 
     {{ formset.management_form }}
 
     {% if formset %}
-    {% for form in formset %}
-    <div>
-      {% include "includes/form.html" with form=form %}
-      <hr>
-    </div>
-    {% endfor %}
+      {% for form in formset %}
+        <div>
+          {% include "includes/form.html" with form=form %}
+          <hr>
+        </div>
+      {% endfor %}
     {% endif %}
 
     {% if not hide_buttons %}
-    <div class="row">
-      <div class="col-sm-6 text-end">
-        <div class="btn-group">
-          <button class="btn btn-primary" name="submit" type="submit" value="{% block submit_button_value %}1{% endblock %}">
-          {% block submit_button_text %} {% trans "Save" %}{% endblock %}
-          </button>
-          <a class="btn btn-danger js-cancel-btn" href="{% block cancel_button_url %}{{ cancel_url }}{% endblock %}">
-          {% block cancel_button_text %}{% trans "Cancel" %}{% endblock %}
-          </a>
+      <div class="row">
+        <div class="col-sm-6 text-end">
+          <div class="btn-group">
+            <button class="btn btn-primary"
+                    name="submit"
+                    type="submit"
+                    value="{% block submit_button_value %}1{% endblock submit_button_value %}">
+              {% block submit_button_text %}
+                {% trans "Save" %}
+              {% endblock submit_button_text %}
+            </button>
+            <a class="btn btn-danger js-cancel-btn"
+               href="{% block cancel_button_url %}{{ cancel_url }}{% endblock cancel_button_url %}">
+              {% block cancel_button_text %}
+                {% trans "Cancel" %}
+              {% endblock cancel_button_text %}
+            </a>
+          </div>
         </div>
       </div>
-    </div>
     {% endif %}
   </form>
   {% block content_footer %}
-  {% endblock %}
-{% endblock %}
+  {% endblock content_footer %}
+{% endblock content %}

@@ -38,7 +38,7 @@ class BaseFormMixin:
                     field.widget.format = "%H:%M:%S"
 
                 case forms.widgets.FileInput():
-                    widget.attrs["class"] += " form-control is-invalid"
+                    widget.attrs["class"] += " form-control"
 
                 case forms.widgets.CheckboxInput():
                     widget.attrs["class"] += " form-check-input"

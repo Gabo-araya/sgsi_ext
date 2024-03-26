@@ -23,7 +23,13 @@
         "python.terminal.activateEnvironment": false,
         // Connect to the plantuml server
         "plantuml.render": "PlantUMLServer",
-        "plantuml.server": "http://localhost:8080/plantuml"
+        "plantuml.server": "http://localhost:8080/plantuml",
+        "[django-html]": {
+          "editor.defaultFormatter": "monosans.djlint"
+        },
+        "emmet.includeLanguages": {
+          "django-html": "html"
+        }
       },
       // improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
       "extensions": [
@@ -40,7 +46,11 @@
         "charliermarsh.ruff",
         "ms-python.black-formatter",
         "tamasfe.even-better-toml",
-        "jebbs.plantuml"
+        "jebbs.plantuml",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "bibhasdn.django-html",
+        "monosans.djlint"
       ]
     }
   },

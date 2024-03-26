@@ -5,7 +5,9 @@
 {% endif %}
 
 <li>
-  <form action="{{ url }}"  method="POST"  style="display: inline">
+  {# djlint:off H021 #}
+  <form action="{{ url }}"  method="post"  style="display: inline">
+    {# djlint:on #}
     {% csrf_token %}
     <button class="dropdown-item" type="submit">{% trans text|capfirst %}</button>
   </form>

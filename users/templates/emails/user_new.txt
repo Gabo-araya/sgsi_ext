@@ -4,7 +4,7 @@
 {% trans "Please go to the following page to confirm your email address:" %}
 {% block reset_link %}
 {{ protocol }}://{{ domain }}{% url 'user_new_confirm' uidb36=uid token=token %}
-{% endblock %}
+{% endblock reset_link %}
 
 {% trans "Thanks for using our site!" %}
 

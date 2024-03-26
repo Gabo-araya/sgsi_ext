@@ -54,7 +54,7 @@ services:
     environment:
       - BASE_URL=plantuml
     profiles:
-      - plantuml
+      - plantuml-server
 
   redis:
     <<: *base-dev-app

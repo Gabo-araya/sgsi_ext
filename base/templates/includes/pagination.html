@@ -2,30 +2,34 @@
 
 <div class="row">
   <div class="col-sm-9 col-sm-offset-2">
-    <nav aria-label="{% trans 'pagination' %}">
+    <nav aria-label='{% trans "pagination" %}'>
       <ul class="pagination justify-content-center">
 
         {% if page_obj.has_previous %}
           <li class="page-item">
-            <a class="page-link" href="?p={{ page_obj.previous_page_number }}&{% get_order_by_querystring ordering=ordering %}&{{clean_query_string}}">«</a>
+            <a class="page-link"
+               href="?p={{ page_obj.previous_page_number }}&{% get_order_by_querystring ordering=ordering %}&{{ clean_query_string }}">«</a>
           </li>
         {% endif %}
 
         {% for page in page_obj.paginator.page_range %}
-        {% if page == page_obj.number %}
-          <li class="page-item active">
-            <a class="page-link" href="?p={{ page }}&{% get_order_by_querystring ordering=ordering %}&{{clean_query_string}}">{{ page }}</a>
-          </li>
-        {% elif page < page_obj.number|add:5 and page > page_obj.number|add:-5 %}
-          <li class="page-item">
-            <a class="page-link" href="?p={{ page }}&{% get_order_by_querystring ordering=ordering %}&{{clean_query_string}}">{{ page }}</a>
-          </li>
-        {% endif %}
+          {% if page == page_obj.number %}
+            <li class="page-item active">
+              <a class="page-link"
+                 href="?p={{ page }}&{% get_order_by_querystring ordering=ordering %}&{{ clean_query_string }}">{{ page }}</a>
+            </li>
+          {% elif page < page_obj.number|add:5 and page > page_obj.number|add:-5 %}
+            <li class="page-item">
+              <a class="page-link"
+                 href="?p={{ page }}&{% get_order_by_querystring ordering=ordering %}&{{ clean_query_string }}">{{ page }}</a>
+            </li>
+          {% endif %}
         {% endfor %}
 
         {% if page_obj.has_next %}
           <li class="page-item">
-            <a class="page-link" href="?p={{ page_obj.next_page_number }}&{% get_order_by_querystring ordering=ordering %}&{{clean_query_string}}">»</a>
+            <a class="page-link"
+               href="?p={{ page_obj.next_page_number }}&{% get_order_by_querystring ordering=ordering %}&{{ clean_query_string }}">»</a>
           </li>
         {% endif %}
       </ul>
@@ -33,8 +37,10 @@
   </div>
   <div class="col-sm-3">
     <div class="text-muted text-end">
-      <div>{% blocktrans with start_index=page_obj.start_index end_index=page_obj.end_index %}Showing results from {{start_index}} to {{end_index}}{% endblocktrans %}</div>
-      <div>{% trans 'total'|capfirst %}: {{ paginator.count }}</div>
+      <div>
+        {% blocktrans with start_index=page_obj.start_index end_index=page_obj.end_index %}Showing results from {{start_index}} to {{end_index}}{% endblocktrans %}
+      </div>
+      <div>{% trans "total"|capfirst %}: {{ paginator.count }}</div>
     </div>
   </div>
 </div>

@@ -3,8 +3,8 @@
 {% load django_vite %}
 
 {% block vite_assets %}
-  {% vite_asset 'status.ts' %}
-{% endblock %}
+  {% vite_asset "status.ts" %}
+{% endblock vite_assets %}
 
 {% block content %}
   <table class="table table-bordered table-hover status">
@@ -15,7 +15,7 @@
         <td>
           {% if settings.GOOGLE_ANALYTICS_CODE %}
             <i class="fa fa-check text-success"></i>
-            Ready ({{settings.GOOGLE_ANALYTICS_CODE}})
+            Ready ({{ settings.GOOGLE_ANALYTICS_CODE }})
           {% else %}
             <i class="fa fa-times text-danger"></i>
             Not set
@@ -27,7 +27,7 @@
         <td>
           {% if settings.FACEBOOK_PIXEL_CODE %}
             <i class="fa fa-check text-success"></i>
-            Ready ({{settings.FACEBOOK_PIXEL_CODE}})
+            Ready ({{ settings.FACEBOOK_PIXEL_CODE }})
           {% else %}
             <i class="fa fa-times text-danger"></i>
             Not set
@@ -40,7 +40,7 @@
         {% if settings.RECAPTCHA_PUBLIC_KEY %}
           <td>
             <i class="fa fa-check text-success"></i>
-            Ready ({{settings.RECAPTCHA_PUBLIC_KEY}})
+            Ready ({{ settings.RECAPTCHA_PUBLIC_KEY }})
           </td>
         {% else %}
           <td class="table-danger">
@@ -102,4 +102,4 @@
       </tr>
     </tbody>
   </table>
-{% endblock %}
+{% endblock content %}

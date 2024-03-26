@@ -29,6 +29,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
+    "prettier": "^3.2.5",
+    "prettier-plugin-django": "^0.5.9",
     "stylelint": "^14.16.1",
     "stylelint-config-recommended-scss": "^6.0.0",
     "stylelint-config-standard": "^25.0.0",

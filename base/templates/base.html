@@ -3,20 +3,25 @@
 <html lang="{{ request.LANGUAGE_CODE|default:'es' }}">
   <head>
     <meta charset="utf-8">
-    <title>{% block title %}{% if title %}{{ title }} - {% endif %}{% endblock %} Project</title>
+    <title>
+      {% block title %}
+        {% if title %}{{ title }} -{% endif %}
+      {% endblock title %}
+    SGSI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="https://magnet.cl">
     <meta name="keywords" content="">
 
     {% if google_analytics_code %}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_code }}"></script>
-    <script>window.dataLayer = window.dataLayer || [];
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async
+              src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_code }}"></script>
+      <script>window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag("js", new Date());
       gtag("config", "{{ google_analytics_code }}");
-    </script>
+      </script>
     {% endif %}
 
     <!-- Schema.org for Google-->
@@ -50,11 +55,12 @@
     <meta name="twitter:creator" content="@">
 
     <!-- Open Graph general (Facebook, Pinterest & Google+)-->
-    <meta name="og:site_name" content="Project">
+    <meta name="og:site_name" content="SGSI">
     <meta name="og:type" content="website">
     <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="">
-    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <meta property="og:url"
+          content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     <meta property="og:locale" content="{{ request.LANGUAGE_CODE }}">
 
     <!-- Fonts-->
@@ -63,7 +69,7 @@
     <!-- Bundles-->
     {% vite_hmr_client %}
     {% vite_react_refresh %}
-    {% vite_asset 'index.ts' %}
+    {% vite_asset "index.ts" %}
     {% block vite_assets %}
     {% endblock vite_assets %}
 
@@ -79,9 +85,13 @@
       {% if messages %}
         <div class="main-alert fixed-notification">
           {% for message in messages %}
-            <div class="alert alert-dismissible fade show alert-{{ message.level_tag }}" role="alert">
+            <div class="alert alert-dismissible fade show alert-{{ message.level_tag }}"
+                 role="alert">
               {{ message }}
-              <button class="btn-close" type="button" aria-label="{% trans 'Close' %}" data-bs-dismiss="alert"></button>
+              <button class="btn-close"
+                      type="button"
+                      aria-label='{% trans "Close" %}'
+                      data-bs-dismiss="alert"></button>
             </div>
           {% endfor in messages %}
         </div>
@@ -92,48 +102,42 @@
           <ol class="breadcrumb">
             {% if request.path == "/" %}
               <li class="breadcrumb-item active" aria-current="page">
-                <a href="{% url 'home' %}">
-                {% trans "Home" %}
-                </a>
+                <a href="{% url 'home' %}">{% trans "Home" %}</a>
               </li>
             {% else %}
               <li class="breadcrumb-item">
-                <a href="{% url 'home' %}">
-                {% trans "Home" %}
-                </a>
+                <a href="{% url 'home' %}">{% trans "Home" %}</a>
               </li>
             {% endif %}
 
             {% block breadcrumbs %}
-            {% endblock %}
+            {% endblock breadcrumbs %}
 
-            {% if title %}
-              <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
-            {% endif %}
+            {% if title %}<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>{% endif %}
           </ol>
         </nav>
 
       </div>
       <div class="container">
         {% block content_title %}
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-          <h1 class="display-4">{{ title }}</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group">
-              {% block options %}
-              {% endblock %}
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="display-4">{{ title }}</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group">
+                {% block options %}
+                {% endblock options %}
+              </div>
             </div>
           </div>
-        </div>
-        {% endblock %}
+        {% endblock content_title %}
         {% block content %}
-        {% endblock %}
+        {% endblock content %}
       </div>
     </main>
 
-    {% include "includes/footer.html" %}
+    <!-- {% include "includes/footer.html" %} -->
 
     {% block legacy_javascripts %}
-    {% endblock %}
+    {% endblock legacy_javascripts %}
   </body>
 </html>

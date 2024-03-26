@@ -23,7 +23,7 @@ There are a few downsides:
 
 1. A PlantUML server is needed to easily see and edit the diagrams
 2. It's really hard to make client-facing diagrams
-3. Diagrams require some level of technical knowledge to be understood. 
+3. Diagrams require some level of technical knowledge to be understood.
 
 As for the first downside we have added a plantuml server to the docker compose configuration which runs in http://localhost:8080/plantuml, we also added the PlantUML extension for VSCode, now if you open the Markdown preview of any documentation file you will see a hot-reloaded compilation of the diagram.
 

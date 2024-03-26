@@ -8,28 +8,29 @@
       <div class="{% if field.field.is_checkbox %} form-check {% endif %} {% if not field.field.is_radio_button %}mb-3{% endif %}">
         {% if field.field.is_checkbox or field.field.is_radio_button %}
           {{ field }}
-          <label class="form-check-label" for="id_{{ field.name }}">
-          {{ field.label }}
-          </label>
+          <label class="form-check-label" for="id_{{ field.name }}">{{ field.label }}</label>
         {% else %}
           <label for="id_{{ field.name }}">
-          {{ field.label }} {% if not field.field.required %}({% trans "optional" %}){% endif %}
+            {{ field.label }}
+            {% if not field.field.required %}
+              ({% trans "optional" %})
+            {% endif %}
           </label>
           {{ field }}
         {% endif %}
         {% if field.errors %}
-        <span class="invalid-feedback d-block" for="id_{{ field.name }}">
-        {% for error in field.errors %}
-        {{ error }}
-        {% endfor %}
-        </span>
+          <span class="invalid-feedback d-block" for="id_{{ field.name }}">
+            {% for error in field.errors %}{{ error }}{% endfor %}
+          </span>
         {% endif %}
       </div>
     </div>
     {% if field.help_text %}
       <div class="col-sm-6">
         <div class="mb-3">
-          <div><label>&nbsp;</label></div>
+          <div>
+            <label>&nbsp;</label>
+          </div>
           <small class="form-text" id="{{ field.name }}_help">{{ field.help_text|safe }}</small>
         </div>
       </div>
