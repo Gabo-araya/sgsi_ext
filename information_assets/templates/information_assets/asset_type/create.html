@@ -4,6 +4,6 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url '{{ lower_case_model_name }}_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    <a href="{% url 'assettype_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
   </li>
 {% endblock breadcrumbs %}

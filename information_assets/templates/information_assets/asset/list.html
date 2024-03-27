@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.information_assets.add_asset %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'asset_create' %}">
+      {% trans "Add asset" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block content %}
+  {% include "information_assets/includes/asset_table.html" %}
+  {% include "includes/pagination.html" %}
+{% endblock content %}

@@ -3,13 +3,14 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.{{app_name}}.add_{{lower_case_model_name}} %}
-    <a class="btn btn-sm btn-outline-secondary" href="{% url '{{lower_case_model_name}}_create' %}">
-      {% trans 'Add {{model_verbose_name}}' %}
+  {% if perms.{{ app_name }}.add_{{ lower_case_model_name }} %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url '{{ lower_case_model_name }}_create' %}">
+      {% trans "Add {{ model_verbose_name }}" %}
       <i class="fa fa-plus"></i>
     </a>
   {% endif %}
-{% endblock %}
+{% endblock options %}
 
 {% block content %}
 
@@ -17,36 +18,35 @@
     <thead>
       <tr>
         <th>Id</th>
-        <th>{% trans 'name'|capfirst %}</th>
-        {% if perms.{{app_name}}.change_{{lower_case_model_name}} or perms.{{app_name}}.delete_{{lower_case_model_name}}%}
+        <th>{% trans "name"|capfirst %}</th>
+        {% if perms.{{ app_name }}.change_{{ lower_case_model_name }} or perms.{{ app_name }}.delete_{{ lower_case_model_name }}%}
           <th>Id</th>
         {% endif %}
-      </th>
+      </tr>
     </thead>
     <tbody>
-      {% for {{snake_case_model_name}} in object_list %}
+      {% for {{ snake_case_model_name }}
+        in object_list %}
         <tr>
           <td>
-            <a href="{{ {{snake_case_model_name}}.get_absolute_url }}">
-              {{ {{snake_case_model_name}}.id }}
-            </a>
+            <a href="{{ {{ snake_case_model_name }}.get_absolute_url }}">{{ {{ snake_case_model_name }}.id }}</a>
           </td>
           <td>
-            <a href="{{ {{snake_case_model_name}}.get_absolute_url }}">
-              {{ {{snake_case_model_name}} }}
-            </a>
+            <a href="{{ {{ snake_case_model_name }}.get_absolute_url }}">{{ {{ snake_case_model_name }} }}</a>
           </td>
-          {% if perms.{{app_name}}.change_{{lower_case_model_name}} or perms.{{app_name}}.delete_{{lower_case_model_name}} %}
+          {% if perms.{{ app_name }}.change_{{ lower_case_model_name }} or perms.{{ app_name }}.delete_{{ lower_case_model_name }} %}
             <td class="text-end">
-              {% if perms.{{app_name}}.change_{{lower_case_model_name}} %}
-                <a class="btn btn-sm btn-outline-secondary" href="{% url '{{lower_case_model_name}}_update' {{snake_case_model_name}}.id %}">
-                  {% trans 'Update {{model_verbose_name}}' %}
+              {% if perms.{{ app_name }}.change_{{ lower_case_model_name }} %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{% url '{{ lower_case_model_name }}_update' {{ snake_case_model_name }}.id %}">
+                  {% trans "Update {{ model_verbose_name }}" %}
                   <i class="fa fa-edit"></i>
                 </a>
               {% endif %}
-              {% if perms.{{app_name}}.delete_{{lower_case_model_name}} %}
-                <a class="btn btn-sm btn-danger" href="{% url '{{lower_case_model_name}}_delete' {{snake_case_model_name}}.id %}">
-                  {% trans 'Delete {{model_verbose_name}}' %}
+              {% if perms.{{ app_name }}.delete_{{ lower_case_model_name }} %}
+                <a class="btn btn-sm btn-danger"
+                   href="{% url '{{ lower_case_model_name }}_delete' {{ snake_case_model_name }}.id %}">
+                  {% trans "Delete {{ model_verbose_name }}" %}
                   <i class="fa fa-times"></i>
                 </a>
               {% endif %}
@@ -57,5 +57,5 @@
     </tbody>
   </table>
 
-  {% include 'includes/pagination.html' %}
-{% endblock %}
+  {% include "includes/pagination.html" %}
+{% endblock content %}

@@ -37,6 +37,7 @@ urlpatterns = [
     path("api/v1/", include("dummy_app.urls")),
     path("", misc_views.index, name="home"),
     path("", include("documents.urls")),
+    path("", include("information_assets.urls")),
 ]
 
 if settings.DEBUG:

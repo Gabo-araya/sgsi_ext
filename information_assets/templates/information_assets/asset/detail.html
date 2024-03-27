@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.information_assets.change_asset %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'asset_update' asset.id %}">
+      {% trans "Update asset" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% endif %}
+  {% if perms.information_assets.delete_asset %}
+    <a class="btn btn-sm btn-danger"
+       href="{% url 'asset_delete' asset.id %}">
+      {% trans "Delete asset" %}
+      <i class="fa fa-times"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'asset_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      <tr>
+        <th>{% trans "name"|capfirst %}</th>
+        <td>{{ asset.name }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "owner"|capfirst %}</th>
+        <td>{{ asset.owner.get_label_from_instance }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "description"|capfirst %}</th>
+        <td>{{ asset.description }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "type"|capfirst %}</th>
+        <td>
+          {% with asset_type=asset.asset_type %}<a href="{{ asset_type.get_absolute_url }}">{{ asset_type }}</a>{% endwith %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "criticality"|capfirst %}</th>
+        <td>{{ asset.get_criticality_display }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "classification"|capfirst %}</th>
+        <td>{{ asset.get_classification_display }}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock content %}

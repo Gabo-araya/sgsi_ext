@@ -123,5 +123,5 @@ urlpatterns = [
     path("documents/", include(document_urlpatterns)),
     path("documents/", include(documentversion_urlpatterns)),
     path("controls/", include(control_urlpatterns)),
-    path("controlcategories/", include(controlcatergory_urlpatterns)),
+    path("control-categories/", include(controlcatergory_urlpatterns)),
 ]

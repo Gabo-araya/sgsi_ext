@@ -23,13 +23,15 @@
           <ul class="navbar-nav me-auto">
             {% if user.is_authenticated %}
               {% if user.is_staff %}
-                {% include navbar_link_template with text="Administration" url_name="admin:index" %}
+                {% include navbar_link_template with text="administration" url_name="admin:index" %}
                 {% include navbar_link_template with text="status" url_name="status" %}
                 {% include navbar_link_template with text="users" url_name="user_list" %}
               {% endif %}
               {% include navbar_link_template with text="control categories" url_name="controlcategory_list" %}
               {% include navbar_link_template with text="controls" url_name="control_list" %}
               {% include navbar_link_template with text="documents" url_name="document_list" %}
+              {% include navbar_link_template with text="asset types" url_name="assettype_list" %}
+              {% include navbar_link_template with text="assets" url_name="asset_list" %}
             {% endif %}
           </ul>
 
