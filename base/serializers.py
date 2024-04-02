@@ -54,7 +54,7 @@ class StringFallbackJSONEncoder(JSONEncoder):
             return self.process_time(obj)
         if isinstance(obj, datetime.timedelta):
             return self.process_timedelta(obj)
-        if isinstance(obj, (decimal.Decimal, uuid.UUID, Promise)):
+        if isinstance(obj, decimal.Decimal | uuid.UUID | Promise):
             return self.process_decimal_uuid_or_promise(obj)
         if isinstance(obj, set):
             return self.process_set(obj)
@@ -63,7 +63,7 @@ class StringFallbackJSONEncoder(JSONEncoder):
     def process_other(self, obj):
         # dict-like classes that don't descend from `dict` are handled with duck typing
         if hasattr(obj, "__getitem__") and not isinstance(obj, bytes):
-            cls = list if isinstance(obj, (list, tuple)) else dict
+            cls = list if isinstance(obj, list | tuple) else dict
             try:
                 return cls(obj)
             except ValueError:

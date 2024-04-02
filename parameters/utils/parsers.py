@@ -141,7 +141,7 @@ def parse_json_value(value, json_decoder=None):
     """
     if value in EMPTY_VALUES:
         return None
-    if isinstance(value, (list, dict, int, float)):
+    if isinstance(value, list | dict | int | float):
         return value
     try:
         value = str(value).strip()
@@ -202,7 +202,7 @@ def parse_ip_address_value(value):
     if value in EMPTY_VALUES:
         return None
 
-    if isinstance(value, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
+    if isinstance(value, ipaddress.IPv4Address | ipaddress.IPv6Address):
         return value
 
     value = value.strip()
@@ -224,7 +224,7 @@ def parse_ip_prefix_value(value):
     if value in EMPTY_VALUES:
         return None
 
-    if isinstance(value, (ipaddress.IPv4Network, ipaddress.IPv6Network)):
+    if isinstance(value, ipaddress.IPv4Network | ipaddress.IPv6Network):
         return value
 
     value = value.strip()
@@ -246,7 +246,7 @@ def parse_ip_range_value(value):  # noqa: C901
     if value in EMPTY_VALUES:
         return None
 
-    if isinstance(value, (IPv4Range, IPv6Range)):
+    if isinstance(value, IPv4Range | IPv6Range):
         return value
 
     value = value.strip()
@@ -286,7 +286,7 @@ def parse_single_ip_network_value(value):
         return None
 
     if isinstance(
-        value, (IPv4Range, IPv6Range, ipaddress.IPv4Network, ipaddress.IPv6Network)
+        value, IPv4Range | IPv6Range | ipaddress.IPv4Network | ipaddress.IPv6Network
     ):
         return value
 
@@ -313,7 +313,7 @@ def parse_multiple_ip_network_value(value):
     valid_values = (IPv4Range, IPv6Range, ipaddress.IPv4Network, ipaddress.IPv6Network)
     if value in EMPTY_VALUES:
         return None
-    if isinstance(value, (tuple, list)) and all(
+    if isinstance(value, tuple | list) and all(
         isinstance(item, valid_values) for item in value
     ):
         return value

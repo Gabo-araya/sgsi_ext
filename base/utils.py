@@ -58,7 +58,7 @@ def rut_verifying_digit(rut):
 
     rev = map(int, reversed(str(rut)))
     factors = cycle(range(2, 8))
-    s = sum(d * f for d, f in zip(rev, factors))
+    s = sum(d * f for d, f in zip(rev, factors, strict=False))
     mod = (-s) % 11
     return "0123456789k"[mod]
 

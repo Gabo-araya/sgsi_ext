@@ -66,7 +66,7 @@ def django_file(settings) -> Generator[File, None, None]:
     if not os.path.exists(settings.MEDIA_ROOT):
         os.makedirs(settings.MEDIA_ROOT)
 
-    file_path = "base/test_assets/gondola.jpg"
+    file_path = os.path.join(settings.BASE_DIR, "base/test_assets/gondola.jpg")
     filename = os.path.basename(file_path)
 
     final_path = os.path.join(settings.MEDIA_ROOT, filename)
