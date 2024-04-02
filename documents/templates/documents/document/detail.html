@@ -43,12 +43,20 @@
         <th>{% trans "description"|capfirst %}</th>
         <td>{{ document.description }}</td>
       </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ document.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ document.latest_update }}</td>
+      </tr>
     </tbody>
   </table>
   <br>
-  <h2>{% trans "associated controls"|capfirst %}</h2>
-  {% include "documents/includes/control_table.html" with object_list=document.controls.all %}
-  <br>
   <h2>{% trans "versions"|capfirst %}</h2>
   {% include "documents/includes/documentversion_table.html" with object_list=document.versions.all %}
+  <br>
+  <h2>{% trans "related controls"|capfirst %}</h2>
+  {% include "documents/includes/control_table.html" with object_list=document.controls.all %}
 {% endblock content %}

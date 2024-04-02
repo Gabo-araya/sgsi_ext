@@ -52,6 +52,17 @@
           {% endif %}
         </td>
       </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ control.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ control.updated_at }}</td>
+      </tr>
     </tbody>
   </table>
+  <br>
+  <h2>{% trans "related risks"|capfirst %}</h2>
+  {% include "risks/includes/risk_table.html" with object_list=control.risks.all %}
 {% endblock content %}

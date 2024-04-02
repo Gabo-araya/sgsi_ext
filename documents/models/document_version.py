@@ -10,7 +10,6 @@ from base.models.base_model import BaseModel
 from documents.managers import DocumentVersionQuerySet
 from documents.models.document import Document
 from documents.models.document_read_by_user import DocumentReadByUser
-from documents.tasks import calculate_shasum_for_document_version
 from users.models import User
 
 
@@ -37,21 +36,29 @@ class DocumentVersion(BaseModel):
     class Meta:
         verbose_name = _("document version")
         verbose_name_plural = _("document versions")
+        ordering = ("-version",)
 
     def __str__(self) -> str:
         return f"{self.document.title} - V{self.version}"
 
+    @property
+    def can_be_updated(self) -> bool:
+        return not self.is_approved
+
     def save(self, *args, **kwargs) -> None:
         if self._state.adding:
             self._auto_increment_version()
+        self._set_shasum_of_file()
         super().save(*args, **kwargs)
-        calculate_shasum_for_document_version.delay(self.pk)
 
     def _auto_increment_version(self) -> None:
         last_version = self.document.versions.aggregate(Max("version")).get(
             "version__max"
         )
         self.version = last_version + 1 if last_version is not None else 1
+
+    def _set_shasum_of_file(self) -> str:
+        self.shasum = self.get_shasum_of_file()
 
     def get_shasum_of_file(self) -> str:
         sha256 = hashlib.sha256()

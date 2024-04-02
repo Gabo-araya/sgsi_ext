@@ -19,7 +19,7 @@ class AssetForm(BaseModelForm):
         super().__init__(*args, **kwargs)
         self.fields[
             "owner"
-        ].label_from_instance = lambda user: user.get_label_from_instance()
+        ].label_from_instance = lambda user: user.get_label_for_instance()
 
 
 class AssetTypeForm(BaseModelForm):

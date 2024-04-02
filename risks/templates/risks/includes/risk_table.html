@@ -1,0 +1,38 @@
+{% load i18n %}
+
+<table class="table table-striped table-hover table-sm">
+  <thead>
+    <tr>
+      <th>{% trans "name"|capfirst %}</th>
+      <th>{% trans "updated at"|capfirst %}</th>
+      {% if perms.risks.change_risk or perms.risks.delete_risk %}<th></th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for risk in object_list %}
+      <tr>
+        <td>
+          <a href="{{ risk.get_absolute_url }}">{{ risk }}</a>
+        </td>
+        <td>{{ risk.updated_at }}</td>
+        {% if perms.risks.change_risk or perms.risks.delete_risk %}
+          <td class="text-end">
+            {% if perms.risks.change_risk %}
+              <a class="btn btn-sm btn-outline-secondary"
+                 href="{% url 'risk_update' risk.id %}">
+                {% trans "Update risk" %}
+                <i class="fa fa-edit"></i>
+              </a>
+            {% endif %}
+            {% if perms.risks.delete_risk %}
+              <a class="btn btn-sm btn-danger" href="{% url 'risk_delete' risk.id %}">
+                {% trans "Delete risk" %}
+                <i class="fa fa-times"></i>
+              </a>
+            {% endif %}
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

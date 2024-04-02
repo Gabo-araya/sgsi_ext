@@ -2,7 +2,10 @@
 {% load i18n %}
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'documentversion_list' documentversion.document.id %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    <a href="{% url 'document_list' %}">{% trans "Documents" %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    {% with document=documentversion.document %}<a href="{{ document.get_absolute_url }}">{{ document }}</a>{% endwith %}
   </li>
   <li class="breadcrumb-item">
     <a href="{{ object.get_absolute_url }}">{{ object }}</a>

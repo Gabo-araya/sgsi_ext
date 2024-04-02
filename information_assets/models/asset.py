@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models import BaseModel
 from information_assets.enums import ClassificationChoices
-from information_assets.enums import CriticalityChoice
+from information_assets.enums import CriticalityChoices
 from information_assets.models.asset_type import AssetType
 from users.models import User
 
@@ -22,7 +22,7 @@ class Asset(BaseModel):
         related_name="assets",
     )
     criticality = models.CharField(
-        verbose_name=_("criticality"), choices=CriticalityChoice.choices, max_length=9
+        verbose_name=_("criticality"), choices=CriticalityChoices.choices, max_length=9
     )
     classification = models.CharField(
         verbose_name=_("classification"),

@@ -32,9 +32,17 @@
         <th>{% trans "name"|capfirst %}</th>
         <td>{{ controlcategory.name }}</td>
       </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ controlcategory.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ controlcategory.updated_at }}</td>
+      </tr>
     </tbody>
   </table>
   <br>
-  <h2>{% trans "associated controls"|capfirst %}</h2>
+  <h2>{% trans "related controls"|capfirst %}</h2>
   {% include "documents/includes/control_table.html" with object_list=controlcategory.controls.all %}
 {% endblock content %}

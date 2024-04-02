@@ -29,7 +29,8 @@
         },
         "emmet.includeLanguages": {
           "django-html": "html"
-        }
+        },
+        "black-formatter.importStrategy": "fromEnvironment"
       },
       // improvement: https://code.visualstudio.com/remote/advancedcontainers/avoid-extension-reinstalls
       "extensions": [

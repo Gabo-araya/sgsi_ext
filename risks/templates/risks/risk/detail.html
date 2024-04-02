@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.risks.change_risk %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'risk_update' risk.id %}">
+      {% trans "Update risk" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% endif %}
+  {% if perms.risks.delete_risk %}
+    <a class="btn btn-sm btn-danger" href="{% url 'risk_delete' risk.id %}">
+      {% trans "Delete risk" %}
+      <i class="fa fa-times"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'risk_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      <tr>
+        <th>{% trans "title"|capfirst %}</th>
+        <td>{{ risk.title }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "description"|capfirst %}</th>
+        <td>{{ risk.description }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "responsible"|capfirst %}</th>
+        <td>{{ risk.responsible.get_label_for_instance }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "severity"|capfirst %}</th>
+        <td>{{ risk.get_severity_display }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "likelihood"|capfirst %}</th>
+        <td>{{ risk.get_likelihood_display }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "treatment"|capfirst %}</th>
+        <td>{{ risk.get_treatment_display }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ risk.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ risk.updated_at }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <h2>{% trans "assets"|capfirst %}</h2>
+  {% include "information_assets/includes/asset_table.html" with object_list=risk.assets.all %}
+  <br>
+  <h2>{% trans "controls"|capfirst %}</h2>
+  {% include "documents/includes/control_table.html" with object_list=risk.controls.all %}
+  <br>
+  <h2>{% trans "residual risks"|capfirst %}</h2>
+  {% include "risks/includes/risk_table.html" with object_list=risk.residual_risks.all %}
+  <br>
+  <h2>{% trans "residual risk for"|capfirst %}</h2>
+  {% include "risks/includes/risk_table.html" with object_list=risk.residual_risk_for.all %}
+{% endblock content %}

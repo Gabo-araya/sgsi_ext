@@ -38,6 +38,7 @@ urlpatterns = [
     path("", misc_views.index, name="home"),
     path("", include("documents.urls")),
     path("", include("information_assets.urls")),
+    path("risks/", include("risks.urls")),
 ]
 
 if settings.DEBUG:

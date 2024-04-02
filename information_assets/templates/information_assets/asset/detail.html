@@ -34,7 +34,7 @@
       </tr>
       <tr>
         <th>{% trans "owner"|capfirst %}</th>
-        <td>{{ asset.owner.get_label_from_instance }}</td>
+        <td>{{ asset.owner.get_label_for_instance }}</td>
       </tr>
       <tr>
         <th>{% trans "description"|capfirst %}</th>
@@ -54,6 +54,17 @@
         <th>{% trans "classification"|capfirst %}</th>
         <td>{{ asset.get_classification_display }}</td>
       </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ asset.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ asset.updated_at }}</td>
+      </tr>
     </tbody>
   </table>
+  <br>
+  <h2>{% trans "related risks"|capfirst %}</h2>
+  {% include "risks/includes/risk_table.html" with object_list=asset.risks.all %}
 {% endblock content %}

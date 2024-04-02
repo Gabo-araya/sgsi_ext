@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.risks.add_risk %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'risk_create' %}">
+      {% trans "Add risk" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block content %}
+  {% include "risks/includes/risk_table.html" %}
+  {% include "includes/pagination.html" %}
+{% endblock content %}

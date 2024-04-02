@@ -149,3 +149,6 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         for s in Session.objects.all():
             if int(s.get_decoded().get("_auth_user_id")) == self.id:
                 s.delete()
+
+    def get_label_for_instance(self):
+        return f"{self.get_full_name()} ({self.email})"

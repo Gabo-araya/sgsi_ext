@@ -36,9 +36,17 @@
         <th>{% trans "description"|capfirst %}</th>
         <td>{{ assettype.description }}</td>
       </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ assettype.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ assettype.updated_at }}</td>
+      </tr>
     </tbody>
   </table>
   <br>
-  <h2>{% trans "associated assets"|capfirst %}</h2>
+  <h2>{% trans "related assets"|capfirst %}</h2>
   {% include "information_assets/includes/asset_table.html" with object_list=assettype.assets.all %}
 {% endblock content %}

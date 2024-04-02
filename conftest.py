@@ -13,4 +13,7 @@ pytest_plugins = [
     "parameters.fixtures",
     "regions.fixtures",
     "users.fixtures",
+    "documents.fixtures",
+    "information_assets.fixtures",
+    "risks.fixtures",
 ]

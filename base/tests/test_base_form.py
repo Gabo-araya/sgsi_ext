@@ -50,7 +50,7 @@ class ExampleBaseForm(BaseFormMixin):
         ),
         (
             "file",
-            "form-control is-invalid",
+            "form-control",
             {},
             {},
         ),

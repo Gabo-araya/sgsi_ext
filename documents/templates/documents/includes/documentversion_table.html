@@ -5,6 +5,7 @@
     <tr>
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "document"|capfirst %}</th>
+      <th>{% trans "updated at"|capfirst %}</th>
       {% if perms.documents.change_documentversion or perms.documents.delete_documentversion %}<th></th>{% endif %}
     </tr>
   </thead>
@@ -17,6 +18,7 @@
         <td>
           <a href="{{ documentversion.document.get_absolute_url }}">{{ documentversion.document }}</a>
         </td>
+        <td>{{ documentversion.updated_at }}</td>
         {% if perms.documents.change_documentversion or perms.documents.delete_documentversion %}
           <td class="text-end">
             {% if perms.documents.change_documentversion %}

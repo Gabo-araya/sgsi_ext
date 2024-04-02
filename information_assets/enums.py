@@ -2,7 +2,7 @@ from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 
 
-class CriticalityChoice(TextChoices):
+class CriticalityChoices(TextChoices):
     VERY_LOW = "VERY_LOW", _("Very low")
     LOW = "LOW", _("Low")
     MEDIUM = "MEDIUM", _("Medium")

@@ -25,10 +25,7 @@
     <a href="{% url 'document_list' %}">{% trans "Documents" %}</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'document_detail' documentversion.document.id %}">{{ documentversion.document }}</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'documentversion_list' documentversion.document.id %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    {% with document=documentversion.document %}<a href="{{ document.get_absolute_url }}">{{ document }}</a>{% endwith %}
   </li>
 {% endblock breadcrumbs %}
 
@@ -36,17 +33,17 @@
   <table class="table table-striped table-hover table-sm">
     <tbody>
       <tr>
-        <th>Document</th>
+        <th>{% trans "document"|capfirst %}</th>
         <td>
-          <a href='{{ documentversion.document.get_absolute_url }}'>{{ documentversion.document }}</a>
+          {% with document=documentversion.document %}<a href="{{ document.get_absolute_url }}">{{ document }}</a>{% endwith %}
         </td>
       </tr>
       <tr>
-        <th>Version</th>
+        <th>{% trans "version"|capfirst %}</th>
         <td>{{ documentversion.version }}</td>
       </tr>
       <tr>
-        <th>file</th>
+        <th>{% trans "file"|capfirst %}</th>
         <td>
           <a href="{{ documentversion.file.url }}">{{ documentversion.file|filename }}</a>
         </td>
@@ -56,8 +53,16 @@
         <td>{{ documentversion.shasum }}</td>
       </tr>
       <tr>
-        <th>Is approved</th>
+        <th>{% trans "is approved"|capfirst %}</th>
         <td>{{ documentversion.is_approved }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ documentversion.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ documentversion.updated_at }}</td>
       </tr>
     </tbody>
   </table>
@@ -75,10 +80,6 @@
           <td>{{ user.get_full_name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.group_names }}</td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td colspan="3">{% trans "no users to show"|capfirst %}</td>
         </tr>
       {% endfor %}
     </tbody>

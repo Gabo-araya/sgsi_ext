@@ -1,12 +1,10 @@
 import datetime
+import re
 
 from http import HTTPStatus
 
 from django.conf import settings
 from django.db.models import Model
-from django.urls import NoReverseMatch
-from django.urls import reverse
-from django.urls.converters import SlugConverter
 
 import pytest
 import pytz
@@ -14,12 +12,16 @@ import pytz
 from inflection import underscore
 
 from base.fixtures import MODEL_FIXTURE_CUSTOM_NAMES
+from base.tests.url_helper import UrlTestHelper
 from base.utils import get_our_models
 from base.utils import get_slug_fields
+
+PK_PARAM_RE = re.compile(r"([a-z_]+)_(?:pk|id)")
 
 EXCLUDED_NAMESPACES = [
     *settings.URLS_TEST_IGNORED_NAMESPACES,
 ]
+EXCLUDED_PATTERNS = ["admin:view_on_site"]
 
 
 @pytest.fixture
@@ -84,87 +86,12 @@ def default_parameter_values(default_objects):
     return default_params
 
 
-def get_url_using_param_names(
-    url_pattern,
-    namespace,
-    default_objects,
-    default_parameter_values,
-):
-    """
-    Using the dictionary of parameters defined on ``default_parameter_values`` and the
-    list of objects defined on ``default_objects``, construct urls with valid params.
+@pytest.fixture
+def extra_parameter_values(extra_objects):
+    """Same as default_parameter_values but allows to define extra parameter values for
+    external apps."""
 
-    This method assumes that nested urls name their parents ids as ``{model}_id``
-
-    Thus something like the comments of a user should be in the format of
-    ``/users/{user_id}/comments/``
-    """
-    param_converter_name = url_pattern.pattern.converters.items()
-
-    params = {}
-    if not param_converter_name:
-        return None
-
-    callback = url_pattern.callback
-
-    obj = None
-
-    for param_name, converter in param_converter_name:
-        if param_name == "pk" and hasattr(callback, "view_class"):
-            model_name = underscore(callback.view_class.model.__name__)
-            params["pk"] = default_parameter_values[f"{model_name}_id"]
-            obj = default_objects[model_name]
-        elif isinstance(converter, SlugConverter) and hasattr(callback, "view_class"):
-            model_name = underscore(callback.view_class.model.__name__)
-            params[param_name] = default_parameter_values[
-                f"{model_name}_{param_name}_slug"
-            ]
-            obj = default_objects[model_name]
-        else:
-            try:
-                params[param_name] = default_parameter_values[param_name]
-            except KeyError:
-                return None
-
-    if obj:
-        # if the object has an attribute named as the parameter
-        # assume it should be used on the url, since many views
-        # filter nested objects
-        for param in params:
-            if hasattr(obj, param) and getattr(obj, param):
-                params[param] = getattr(obj, param)
-
-    return reverse_pattern(url_pattern, namespace, kwargs=params)
-
-
-def reverse_pattern(pattern, namespace, args=None, kwargs=None):
-    try:
-        if namespace:
-            return reverse(f"{namespace}:{pattern.name}")
-        return reverse(pattern.name, args=args, kwargs=kwargs)
-    except NoReverseMatch:
-        return None
-
-
-def reverse_urlpattern(
-    url_pattern, namespace, default_objects, default_parameter_values
-):
-    url = get_url_using_param_names(
-        url_pattern, namespace, default_objects, default_parameter_values
-    )
-    if url:
-        return url
-
-    param_names = url_pattern.pattern.regex.groupindex.keys()
-    url_params = {}
-
-    for param in param_names:
-        try:
-            url_params[param] = default_parameter_values[param]
-        except KeyError:
-            url_params[param] = 1
-
-    return reverse_pattern(url_pattern, namespace, kwargs=url_params)
+    return {}
 
 
 @pytest.mark.slow
@@ -175,41 +102,27 @@ def test_responses(
     default_objects,
     extra_objects,
     default_parameter_values,
+    extra_parameter_values,
 ):
     """Test all URLs."""
 
-    from django.contrib import admin
+    helper_objects = {**default_objects, **extra_objects}
+    helper_params = {**default_parameter_values, **extra_parameter_values}
+    url_helper = UrlTestHelper(
+        excluded_namespaces=EXCLUDED_NAMESPACES,
+        excluded_patterns=EXCLUDED_PATTERNS,
+        default_objects=helper_objects,
+        default_params=helper_params,
+    )
 
-    from project.urls import urlpatterns
+    for url in url_helper.get_urls_to_test():
+        superuser_client.force_login(superuser_user)
+        response = superuser_client.get(url)
 
-    def test_url_patterns(tested_patterns, namespace=None):
-        if namespace in EXCLUDED_NAMESPACES:
-            return
-
-        for pattern in tested_patterns:
-            if hasattr(pattern, "name"):
-                url = reverse_urlpattern(
-                    pattern, namespace, default_objects, default_parameter_values
-                )
-
-                if not url:
-                    continue
-
-                superuser_client.force_login(superuser_user)
-                response = superuser_client.get(url)
-
-                msg = f'url "{url}" ({pattern.name}) returned {response.status_code}'
-                assert response.status_code in (
-                    HTTPStatus.OK,  # 200
-                    HTTPStatus.FOUND,  # 302
-                    HTTPStatus.FORBIDDEN,  # 403
-                    HTTPStatus.METHOD_NOT_ALLOWED,  # 405
-                ), msg
-
-            else:
-                test_url_patterns(pattern.url_patterns, pattern.namespace)
-
-    test_url_patterns(urlpatterns)
-    for _, model_admin in admin.site._registry.items():
-        patterns = model_admin.get_urls()
-        test_url_patterns(patterns, namespace="admin")
+        msg = f'url "{url}" returned {response.status_code}'
+        assert response.status_code in (
+            HTTPStatus.OK,  # 200
+            HTTPStatus.FOUND,  # 302
+            HTTPStatus.FORBIDDEN,  # 403
+            HTTPStatus.METHOD_NOT_ALLOWED,  # 405
+        ), msg

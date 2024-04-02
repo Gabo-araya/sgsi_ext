@@ -18,6 +18,7 @@
     <thead>
       <tr>
         <th>{% trans "name"|capfirst %}</th>
+        <th>{% trans "updated at"|capfirst %}</th>
         {% if perms.documents.change_controlcategory or perms.documents.delete_controlcategory %}<th></th>{% endif %}
       </tr>
     </thead>
@@ -27,6 +28,7 @@
           <td>
             <a href="{{ controlcategory.get_absolute_url }}">{{ controlcategory }}</a>
           </td>
+          <td>{{ controlcategory.updated_at }}</td>
           {% if perms.documents.change_controlcategory or perms.documents.delete_controlcategory %}
             <td class="text-end">
               {% if perms.documents.change_controlcategory %}

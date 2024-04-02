@@ -5,6 +5,7 @@
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "category"|capfirst %}</th>
       <th>{% trans "document"|capfirst %}</th>
+      <th>{% trans "updated at"|capfirst %}</th>
       {% if perms.documents.change_control or perms.documents.delete_control %}<th></th>{% endif %}
     </tr>
   </thead>
@@ -32,6 +33,7 @@
             {% endif %}
           {% endwith %}
         </td>
+        <td>{{ control.updated_at }}</td>
         {% if perms.documents.change_control or perms.documents.delete_control %}
           <td class="text-end">
             {% if perms.documents.change_control %}

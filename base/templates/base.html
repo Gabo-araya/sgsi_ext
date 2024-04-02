@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 {% load i18n static django_vite environment_badge %}
-<html lang="{{ request.LANGUAGE_CODE|default:'es' }}">
+<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
   <head>
     <meta charset="utf-8">
     <title>
       {% block title %}
         {% if title %}{{ title }} -{% endif %}
       {% endblock title %}
-    SGSI</title>
+      SGSI
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="https://magnet.cl">
@@ -135,7 +136,7 @@
       </div>
     </main>
 
-    <!-- {% include "includes/footer.html" %} -->
+    {% include "includes/footer.html" %}
 
     {% block legacy_javascripts %}
     {% endblock legacy_javascripts %}

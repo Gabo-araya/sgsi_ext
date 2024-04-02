@@ -36,11 +36,6 @@ document_urlpatterns = [
 
 documentversion_urlpatterns = [
     path(
-        "<int:parent_pk>/versions/",
-        documentversion_views.DocumentVersionListView.as_view(),
-        name="documentversion_list",
-    ),
-    path(
         "<int:parent_pk>/versions/create/",
         documentversion_views.DocumentVersionCreateView.as_view(),
         name="documentversion_create",
