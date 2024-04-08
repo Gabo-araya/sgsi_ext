@@ -6,7 +6,7 @@ import 'vite/modulepreload-polyfill';
 
 // Importing Bootstrap forces the load of the type definition for the window.bootstrap global.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Bootstrap from 'bootstrap';
+import Bootstrap, { Dropdown } from 'bootstrap';
 
 // Styles
 import '../scss/main.scss';
@@ -47,6 +47,9 @@ window.addEventListener('DOMContentLoaded', () => {
       window.bootstrap.Alert.getInstance(alert)?.close();
     });
   }, 10000);
+
+  const dropdowns = document.querySelectorAll('.dropdown-toggle');
+  dropdowns.forEach((dropdown) => new Dropdown(dropdown));
 
   document.querySelectorAll('form')
     .forEach((form) => {

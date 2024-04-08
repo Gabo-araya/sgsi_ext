@@ -36,3 +36,13 @@ class SuperuserRestrictedMixin:
         if not (user.is_authenticated and user.is_superuser):
             raise Http404
         return super().dispatch(request, *args, **kwargs)
+
+
+class StaffRestrictedMixin:
+    """Restricts a view to staffs only. Optionally hide it with 404."""
+
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if not (user.is_authenticated and user.is_staff):
+            raise Http404
+        return super().dispatch(request, *args, **kwargs)

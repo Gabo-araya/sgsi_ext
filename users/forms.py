@@ -4,6 +4,7 @@ from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from django.contrib.auth import password_validation
+from django.contrib.auth.models import Group
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
@@ -357,3 +358,9 @@ class UserForm(BaseModelForm):
     class Meta:
         model = User
         fields = ("first_name", "last_name", "email")
+
+
+class GroupForm(BaseModelForm):
+    class Meta:
+        model = Group
+        fields = ("name", "permissions")

@@ -4,9 +4,9 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'assettype_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    <a href="{% url 'group_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+    <a href="{% url 'group_detail' group.pk %}">{{ object }}</a>
   </li>
 {% endblock breadcrumbs %}

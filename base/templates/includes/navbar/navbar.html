@@ -26,13 +26,58 @@
                 {% include navbar_link_template with text="administration" url_name="admin:index" %}
                 {% include navbar_link_template with text="status" url_name="status" %}
                 {% include navbar_link_template with text="users" url_name="user_list" %}
+                {% include navbar_link_template with text="groups" url_name="group_list" %}
               {% endif %}
-              {% include navbar_link_template with text="control categories" url_name="controlcategory_list" %}
-              {% include navbar_link_template with text="controls" url_name="control_list" %}
-              {% include navbar_link_template with text="documents" url_name="document_list" %}
-              {% include navbar_link_template with text="asset types" url_name="assettype_list" %}
-              {% include navbar_link_template with text="assets" url_name="asset_list" %}
-              {% include navbar_link_template with text="risks" url_name="risk_list" %}
+              <li class="nav-item dropdown">
+                <a id="dropdownDocuments"
+                   class="nav-link dropdown-toggle"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">{% trans "documents"|capfirst %}</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownDocuments">
+                  {% include dropdown_link_template with text="control categories" url_name="controlcategory_list" %}
+                  {% include dropdown_link_template with text="controls" url_name="control_list" %}
+                  {% include dropdown_link_template with text="documents" url_name="document_list" %}
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a id="dropdownAssets"
+                   class="nav-link dropdown-toggle"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">{% trans "assets"|capfirst %}</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownAssets">
+                  {% include dropdown_link_template with text="asset types" url_name="assettype_list" %}
+                  {% include dropdown_link_template with text="assets" url_name="asset_list" %}
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a id="dropdownRisks"
+                   class="nav-link dropdown-toggle"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">{% trans "risks"|capfirst %}</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownRisks">
+                  {% include dropdown_link_template with text="risks" url_name="risk_list" %}
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a id="dropdownProcesses"
+                   class="nav-link dropdown-toggle"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">{% trans "processes"|capfirst %}</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownProcesses">
+                  {% include dropdown_link_template with text="process definitions" url_name="processdefinition_list" %}
+                  {% include dropdown_link_template with text="processes" url_name="process_list" %}
+                  {% include dropdown_link_template with text="process activity definitions" url_name="processactivitydefinition_list" %}
+                  {% include dropdown_link_template with text="process activities" url_name="processactivity_list" %}
+                </ul>
+              </li>
             {% endif %}
           </ul>
 

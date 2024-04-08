@@ -118,7 +118,7 @@ class Command(AppTemplateCommand):
                 with open(html_file_path) as file:
                     file_content = file.read()
                 for var, value in options.items():
-                    template_var = rf"{{{{\s*{var}\s*}}}}"
+                    template_var = f"{{{{ {var} }}}}"
                     file_content = re.sub(
                         re.escape(template_var), str(value), file_content
                     )

@@ -25,8 +25,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for {{ snake_case_model_name }}
-        in object_list %}
+      {% for {{ snake_case_model_name }} in object_list %}
         <tr>
           <td>
             <a href="{{ {{ snake_case_model_name }}.get_absolute_url }}">{{ {{ snake_case_model_name }}.id }}</a>

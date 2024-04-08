@@ -30,7 +30,7 @@ debug_patterns = [
 urlpatterns = [
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
-    path("accounts/", include("users.urls")),
+    path("", include("users.urls")),
     path("debug/", include(debug_patterns)),
     path("regions/", include("regions.urls")),
     path("status/", misc_views.StatusView.as_view(), name="status"),
@@ -39,6 +39,7 @@ urlpatterns = [
     path("", include("documents.urls")),
     path("", include("information_assets.urls")),
     path("risks/", include("risks.urls")),
+    path("", include("processes.urls")),
 ]
 
 if settings.DEBUG:

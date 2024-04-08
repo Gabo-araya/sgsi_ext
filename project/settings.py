@@ -110,6 +110,7 @@ INSTALLED_APPS = [
     "documents.apps.DocumentsConfig",
     "information_assets.apps.InformationAssetsConfig",
     "risks.apps.RisksConfig",
+    "processes.apps.ProcessesConfig",
 ]
 
 MIDDLEWARE = [
