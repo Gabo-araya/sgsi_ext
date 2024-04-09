@@ -72,5 +72,5 @@
   // because it's handled at a lower level (in Dockerfile).
 
   // See 90-vscode-env.zsh
-  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && printenv > /dev/shm/env_from_vscode_terminal"
+  "postStartCommand": "git config --global safe.directory ${containerWorkspaceFolder} && printenv > /dev/shm/env_from_vscode_terminal"
 }
