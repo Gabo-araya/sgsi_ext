@@ -65,4 +65,7 @@
   <br>
   <h2>{% trans "related risks"|capfirst %}</h2>
   {% include "risks/includes/risk_table.html" with object_list=control.risks.all %}
+  <br>
+  <h2>{% trans "evidences"|capfirst %}</h2>
+  {% include "documents/includes/evidence_table.html" with object_list=control.document.versions.evidences %}
 {% endblock content %}

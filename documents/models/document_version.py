@@ -26,7 +26,7 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
         related_name="read_document_versions",
     )
 
-    objects = models.Manager.from_queryset(DocumentVersionQuerySet)()
+    objects = DocumentVersionQuerySet.as_manager()
 
     class Meta:
         verbose_name = _("document version")
@@ -43,7 +43,6 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
     def save(self, *args, **kwargs) -> None:
         if self._state.adding:
             self._auto_increment_version()
-        self._set_shasum_of_file()
         super().save(*args, **kwargs)
 
     def _auto_increment_version(self) -> None:

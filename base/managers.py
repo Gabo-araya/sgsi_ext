@@ -1,6 +1,4 @@
 """ This document defines the Base Manager and BaseQuerySet classes"""
-
-
 import json
 
 from django.core.serializers.json import DjangoJSONEncoder

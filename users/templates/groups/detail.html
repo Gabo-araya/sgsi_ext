@@ -48,4 +48,24 @@
       {% endfor %}
     </tbody>
   </table>
+  <br>
+  <h2>{% trans "users"|capfirst %}</h2>
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th>{% trans "name"|capfirst %}</th>
+        <th>{% trans "email"|capfirst %}</th>
+        <th>{% trans "groups"|capfirst %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in group.user_set.all %}
+        <tr>
+          <td>{{ user.get_full_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.group_names }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock content %}

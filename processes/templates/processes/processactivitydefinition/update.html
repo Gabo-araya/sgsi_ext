@@ -1,0 +1,17 @@
+{% extends "form.html" %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'processdefinition_list' %}">{% trans "process definitions"|capfirst %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    {% with processdefinition=processactivitydefinition.process_definition %}
+      <a href="{% url 'processdefinition_detail' processdefinition.pk %}">{{ processdefinition }}</a>
+    {% endwith %}
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+  </li>
+{% endblock breadcrumbs %}

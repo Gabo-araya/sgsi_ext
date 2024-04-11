@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.processes.add_processactivitydefinition %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'processactivitydefinition_create' processdefinition.pk %}">
+      {% trans "Add process activity definition" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
+  {% if perms.processes.change_processdefinition %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'processdefinition_update' processdefinition.id %}">
+      {% trans "Update process definition" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% endif %}
+  {% if perms.processes.delete_processdefinition %}
+    <a class="btn btn-sm btn-danger"
+       href="{% url 'processdefinition_delete' processdefinition.id %}">
+      {% trans "Delete process definition" %}
+      <i class="fa fa-times"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'processdefinition_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      <tr>
+        <th>{% trans "name"|capfirst %}</th>
+        <td>{{ processdefinition.name }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "control"|capfirst %}</th>
+        {% with control=processdefinition.control %}
+          <td>
+            <a href="{{ control.get_absolute_url }}">{{ control }}</a>
+          </td>
+        {% endwith %}
+      </tr>
+      <tr>
+        <th>{% trans "recurrency"|capfirst %}</th>
+        <td>{{ processdefinition.get_recurrency_display|default:"-" }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <h2>{% trans "activity definitions"|capfirst %}</h2>
+  {% include "processes/includes/processactivitydefinition_table.html" with object_list=processdefinition.activity_definitions.all %}
+{% endblock content %}

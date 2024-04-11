@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.processes.change_process %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'process_update' process.id %}">
+      {% trans "Update process" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% endif %}
+  {% if perms.processes.delete_process %}
+    <a class="btn btn-sm btn-danger"
+       href="{% url 'process_delete' process.id %}">
+      {% trans "Delete process" %}
+      <i class="fa fa-times"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'process_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      <tr>
+        <th>{% trans "name"|capfirst %}</th>
+        <td>{{ process.name }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "control"|capfirst %}</th>
+        <td>
+          {% with control=process.control %}<a href="{{ control.get_absolute_url }}">{{ control }}</a>{% endwith %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "completed"|capfirst %}</th>
+        <td>{{ process.completed|yesno|capfirst }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "completed at"|capfirst %}</th>
+        <td>{{ process.completed_at|default_if_none:"-" }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <h2>{% trans "activities"|capfirst %}</h2>
+  {% include "processes/includes/processactivity_table.html" with object_list=process.activities.all %}
+{% endblock content %}

@@ -39,9 +39,9 @@ class RiskForm(BaseModelForm):
             residual_risk_for_field.initial = self.instance.residual_risk_for.all()
 
     def save(self, commit: bool = True) -> Risk:
-        obj = super().save(commit)
+        instance = super().save(commit)
         if not commit:
-            return obj
+            return instance
         for risk in self.cleaned_data["residual_risk_for"]:
-            risk.residual_risks.add(obj)
-        return obj
+            risk.residual_risks.add(instance)
+        return instance

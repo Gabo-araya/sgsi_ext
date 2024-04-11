@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<table class="table table-striped table-hover table-sm">
+  <thead>
+    <tr>
+      <th>{% trans "document_version"|capfirst %}</th>
+      <th>{% trans "activity"|capfirst %}</th>
+      <th>{% trans "updated at"|capfirst %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for evidence in object_list %}
+      <tr>
+        <td>{{ evidence.document_version }}</td>
+        <td>{{ evidence.activity }}</td>
+        <td>{{ evidence.updated_at }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

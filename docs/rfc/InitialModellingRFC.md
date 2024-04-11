@@ -10,7 +10,6 @@ The proposed solution is making an initial modelling of the application so error
 
 ### Infrastructure (Does not apply)
 
-
 ### Modelling
 
 The modelling can be split into each module, starting with documents module, we have
@@ -57,7 +56,7 @@ package Documents {
     class Evidence {
         + id: int
         + document_version: DocumentVersion
-        + process: Process
+        + process_activity: ProcessActivity
         + file: file
         + shasum: char
     }
@@ -190,7 +189,6 @@ package Processes {
         + id: int
         + name: char
         + control: Control
-        + side_effect: SideEffect
         + recurrency: TimeFrameChoices | None
     }
     class Process {
@@ -213,10 +211,6 @@ package Processes {
         + activity_definition: ActivityDefinition
         + completed: bool
     }
-    enum SideEffect {
-        MARK_DOCUMENT_AS_READ
-        MARK_DOCUMENT_AS_APPROVED
-    }
     enum TimeFrameChoices {
         DAILY
         WEEKLY
@@ -236,7 +230,6 @@ class Documents.DocumentVersion {
 }
 
 
-Processes.ProcessDefinition --* Processes.SideEffect
 Processes.ProcessDefinition -up-* Documents.Control
 Processes.ProcessDefinition -left* Processes.TimeFrameChoices
 Processes.Process -up-* Documents.DocumentVersion

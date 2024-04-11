@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.processes.change_processactivitydefinition %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'processactivitydefinition_update' processactivitydefinition.id %}">
+      {% trans "Update process activity definition" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% endif %}
+  {% if perms.processes.delete_processactivitydefinition %}
+    <a class="btn btn-sm btn-danger"
+       href="{% url 'processactivitydefinition_delete' processactivitydefinition.id %}">
+      {% trans "Delete process activity definition" %}
+      <i class="fa fa-times"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'processdefinition_list' %}">{% trans "process definitions"|capfirst %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    {% with processdefinition=processactivitydefinition.process_definition %}
+      <a href="{% url 'processdefinition_detail' processdefinition.pk %}">{{ processdefinition }}</a>
+    {% endwith %}
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      <tr>
+        <th>{% trans "process definition"|capfirst %}</th>
+        {% with process_definition=processactivitydefinition.process_definition %}
+          <td>
+            <a href="{{ process_definition.get_absolute_url }}">{{ process_definition }}</a>
+          </td>
+        {% endwith %}
+      </tr>
+      <tr>
+        <th>{% trans "order"|capfirst %}</th>
+        <td>{{ processactivitydefinition.order }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "description"|capfirst %}</th>
+        <td>{{ processactivitydefinition.description }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "asignee"|capfirst %}</th>
+        {% with asignee=processactivitydefinition.asignee %}
+          <td>
+            {% if asignee is not None %}
+              {{ asignee.get_label_for_instance }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        {% endwith %}
+      </tr>
+      <tr>
+        <th>{% trans "asignee group"|capfirst %}</th>
+        {% with asignee_group=processactivitydefinition.asignee_group %}
+          <td>
+            {% if asignee_group is not None %}
+              <a href="{% url 'group_detail' asignee_group.pk %}">{{ asignee_group }}</a>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        {% endwith %}
+      </tr>
+    </tbody>
+  </table>
+{% endblock content %}
