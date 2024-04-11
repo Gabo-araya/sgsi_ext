@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>{% trans "name"|capfirst %}</th>
+      <th>{% trans "asignee"|capfirst %}</th>
       <th>{% trans "asignee group"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       {% if perms.processes.change_processactivitydefinition or perms.processes.delete_processactivitydefinition %}
@@ -18,8 +19,21 @@
           <a href="{{ process_activity_definition.get_absolute_url }}">{{ process_activity_definition }}</a>
         </td>
         <td>
+          {% with asignee=process_activity_definition.asignee %}
+            {% if asignee is not None %}
+              {{ asignee.get_label_for_instance }}
+            {% else %}
+              -
+            {% endif %}
+          {% endwith %}
+        </td>
+        <td>
           {% with asignee_group=process_activity_definition.asignee_group %}
-            <a href="{{ asignee_group.get_absolute_url }}">{{ asignee_group }}</a>
+            {% if asignee_group is not None %}
+              <a href="{{ asignee_group.get_absolute_url }}">{{ asignee_group }}</a>
+            {% else %}
+              -
+            {% endif %}
           {% endwith %}
         </td>
         <td>{{ process_activity_definition.updated_at }}</td>

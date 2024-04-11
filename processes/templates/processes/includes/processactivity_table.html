@@ -6,7 +6,6 @@
       <th>{% trans "asignee"|capfirst %}</th>
       <th>{% trans "description"|capfirst %}</th>
       <th>{% trans "completed"|capfirst %}</th>
-      <th>{% trans "completed by"|capfirst %}</th>
       <th>{% trans "completed at"|capfirst %}</th>
       {% if perms.processes.change_processactivity %}<th></th>{% endif %}
     </tr>
@@ -17,15 +16,6 @@
         <td>{{ process_activity.asignee.get_label_for_instance }}</td>
         <td>{{ process_activity.description }}</td>
         <td>{{ process_activity.completed|yesno|capfirst }}</td>
-        <td>
-          {% with completed_by=process_activity.completed_by %}
-            {% if completed_by is not None %}
-              {{ completed_by.get_label_for_instance }}
-            {% else %}
-              -
-            {% endif %}
-          {% endwith %}
-        </td>
         <td>{{ process_activity.completed_at|default_if_none:"-" }}</td>
         {% if perms.processes.change_processactivity %}
           <td class="text-end">

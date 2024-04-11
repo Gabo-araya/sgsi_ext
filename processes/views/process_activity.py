@@ -27,7 +27,7 @@ class ProcessActivityCompleteView(BaseUpdateView):
     def form_valid(self, form: type[ModelForm]) -> HttpResponse:
         response = super().form_valid(form)
         self.create_evidence(form.cleaned_data["evidence"], self.object)
-        self.object.mark_as_completed(self.request.user)
+        self.object.mark_as_completed()
         return response
 
     def create_evidence(self, evidence_file: File, activity: ProcessActivity) -> None:

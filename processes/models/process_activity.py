@@ -41,14 +41,6 @@ class ProcessActivity(BaseModel):
         blank=True,
     )
     completed = models.BooleanField(verbose_name=_("completed"), default=False)
-    completed_by = models.ForeignKey(
-        verbose_name=_("completed by"),
-        to=User,
-        on_delete=models.PROTECT,
-        related_name="completed_activities",
-        null=True,
-        blank=True,
-    )
     completed_at = models.DateTimeField(
         verbose_name=_("completed at"), null=True, blank=True
     )
@@ -63,10 +55,8 @@ class ProcessActivity(BaseModel):
     def get_absolute_url(self) -> str:
         return reverse("processactivity_detail", args=(self.pk,))
 
-    def mark_as_completed(self, completed_by: User) -> None:
-        self.update(
-            completed=True, completed_by=completed_by, completed_at=timezone.now()
-        )
+    def mark_as_completed(self) -> None:
+        self.update(completed=True, completed_at=timezone.now())
         self.process.check_if_completed()
 
     def get_latest_document_version(self) -> DocumentVersion:
