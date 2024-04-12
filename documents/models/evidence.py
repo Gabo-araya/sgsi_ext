@@ -13,7 +13,7 @@ class Evidence(FileIntegrityModelBase, BaseModel):
         on_delete=models.PROTECT,
         related_name="evidences",
     )
-    activity = models.ForeignKey(
+    process_activity = models.ForeignKey(
         verbose_name=_("activity"),
         to=ProcessActivity,
         on_delete=models.PROTECT,
@@ -25,7 +25,7 @@ class Evidence(FileIntegrityModelBase, BaseModel):
         verbose_name_plural = _("evidences")
 
     def __str__(self) -> str:
-        return f"Evidence for {self.document_version} - {self.activity}"
+        return f"Evidence for {self.document_version} - {self.process_activity}"
 
     def get_absolute_url(self) -> str:
         ...

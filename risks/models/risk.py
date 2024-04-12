@@ -21,7 +21,7 @@ class Risk(BaseModel):
         verbose_name=_("control"),
         related_name="risks",
     )
-    title = models.CharField(verbose_name=_("title"), max_length=255)
+    title = models.CharField(verbose_name=_("title"), max_length=255, unique=True)
     description = models.TextField(verbose_name=_("description"), blank=True)
     responsible = models.ForeignKey(
         User,

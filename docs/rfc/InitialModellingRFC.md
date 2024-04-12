@@ -42,6 +42,7 @@ package Documents {
         + id: int
         + category: ControlCategory
         + title: char
+        + description: text
         + document: Document
     }
     class ControlGuidingText {
@@ -89,7 +90,7 @@ package Assets {
         + owner: User
         + name: char
         + description: text
-        + type: AssetType
+        + asset_type: AssetType
         + criticality: CriticalityChoices
         + classification: ClassificationChoices
     }
@@ -194,22 +195,29 @@ package Processes {
     class Process {
         + id: int
         + process_definition: ProcessDefinition
-        + assignee: User | None
-        + assigne_group: Group | None
+        + name: char
+        + control: Control
         + completed: bool
+        + completed_at: datetime
     }
     class ProcessActivityDefinition {
         + id: int
-        + order: int
         + process_definition: ProcessDefinition
+        + order: int
         + description: text
-        + completed: bool
+        + asignee: User
+        + asignee_group: Group
     }
     class ProcessActivity {
         + id: int
         + process: Process
         + activity_definition: ActivityDefinition
+        + order: int
+        + description: text
+        + asignee: User
+        + asignee_group: Group
         + completed: bool
+        + completed_at: datetime
     }
     enum TimeFrameChoices {
         DAILY

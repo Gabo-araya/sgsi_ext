@@ -32,6 +32,11 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
         verbose_name = _("document version")
         verbose_name_plural = _("document versions")
         ordering = ("-version",)
+        constraints = (
+            models.UniqueConstraint(
+                fields=["document", "version"], name="unique_document_version"
+            ),
+        )
 
     def __str__(self) -> str:
         return f"{self.document.title} - V{self.version}"

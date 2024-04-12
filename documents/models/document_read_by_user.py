@@ -15,3 +15,8 @@ class DocumentReadByUser(BaseModel):
     class Meta:
         verbose_name = _("document read by user")
         verbose_name_plural = _("documents read by users")
+        constraints = (
+            models.UniqueConstraint(
+                fields=("document_version", "user"), name="unique_document_read_by_user"
+            ),
+        )

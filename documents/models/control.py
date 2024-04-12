@@ -17,7 +17,7 @@ class Control(BaseModel):
         null=True,
         blank=True,
     )
-    title = models.CharField(verbose_name=_("title"), max_length=255)
+    title = models.CharField(verbose_name=_("title"), max_length=255, unique=True)
     description = models.TextField(verbose_name=_("description"), blank=True)
     document = models.ForeignKey(
         Document,

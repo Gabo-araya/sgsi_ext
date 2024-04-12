@@ -55,7 +55,6 @@
       <tr>
         <th>{% trans "name"|capfirst %}</th>
         <th>{% trans "email"|capfirst %}</th>
-        <th>{% trans "groups"|capfirst %}</th>
       </tr>
     </thead>
     <tbody>
@@ -63,7 +62,6 @@
         <tr>
           <td>{{ user.get_full_name }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.group_names }}</td>
         </tr>
       {% endfor %}
     </tbody>
