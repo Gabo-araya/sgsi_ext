@@ -7,7 +7,6 @@ from django.utils.translation import gettext_lazy as _
 
 from base.mixins import AuditMixin
 from base.serializers import ModelEncoder
-from base.signals import get_user
 from base.utils import build_absolute_url_wo_req
 
 
@@ -48,19 +47,20 @@ class BaseModel(AuditMixin, models.Model):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
-        user = get_user()
-        if self._state.adding:
-            self.created_by = user
-        self.updated_by = user
-        super().save(*args, **kwargs)
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_dict = self.to_dict(
             exclude=settings.LOG_IGNORE_FIELDS,
             include_m2m=False,
         )
+
+    def _save_addition(self, user, message):
+        self.update(created_by=user, updated_by=user, skip_save=True)
+        return super()._save_addition(user, message)
+
+    def _save_edition(self, user, message):
+        self.update(updated_by=user, skip_save=True)
+        return super()._save_edition(user, message)
 
     # public methods
     def update(self, skip_save=False, **kwargs):

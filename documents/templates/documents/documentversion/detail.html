@@ -4,14 +4,17 @@
 {% load file %}
 
 {% block options %}
-  {% if perms.documents.change_documentversion %}
+  {% if perms.documents.change_documentversion and documentversion.can_be_updated %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'documentversion_update' documentversion.id %}">
       {% trans "Update document version" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.documents.delete_documentversion %}
+  {% if perms.documents.approve_documentversion and not documentversion.is_approved %}
+    {% include "documents/includes/approve_modal.html" %}
+  {% endif %}
+  {% if perms.documents.delete_documentversion and documentversion.can_be_updated %}
     <a class="btn btn-sm btn-danger"
        href="{% url 'documentversion_delete' documentversion.id %}">
       {% trans "Delete document version" %}
@@ -54,7 +57,7 @@
       </tr>
       <tr>
         <th>{% trans "is approved"|capfirst %}</th>
-        <td>{{ documentversion.is_approved }}</td>
+        <td>{{ documentversion.is_approved|yesno|capfirst }}</td>
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>

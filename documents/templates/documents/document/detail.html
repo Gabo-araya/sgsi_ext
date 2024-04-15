@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.documents.add_documentversion %}
+  {% if perms.documents.add_documentversion and document.can_add_new_versions %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'documentversion_create' document.id %}">
       {% trans "Add version" %}

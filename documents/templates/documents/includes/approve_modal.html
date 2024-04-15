@@ -1,0 +1,36 @@
+{% load i18n %}
+
+<button type="button"
+        class="btn btn-sm btn-success"
+        data-bs-toggle="modal"
+        data-bs-target="#approveModal">
+  {% trans "approve"|capfirst %}
+  <i class="fa fa-check"></i>
+</button>
+
+<div class="modal fade"
+     id="approveModal"
+     tabindex="-1"
+     aria-labelledby="approveModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="approveModalLabel">{% blocktrans %}Approve {{documentversion}}{% endblocktrans %}</h1>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label='{% trans "cancel"|capfirst %}'></button>
+      </div>
+      <div class="modal-body">{% blocktrans %}Are you sure you want to approve {{documentversion}}?{% endblocktrans %}</div>
+      <div class="modal-footer">
+        <form action="{% url 'documentversion_approve' documentversion.pk %}"
+              method="post">
+          <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "cancel"|capfirst %}</button>
+          <button type="submit" class="btn btn-success">{% trans "approve"|capfirst %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

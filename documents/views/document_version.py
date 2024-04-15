@@ -1,6 +1,9 @@
+from django.shortcuts import redirect
+
 from base.views.generic.detail import BaseDetailView
 from base.views.generic.edit import BaseDeleteView
 from base.views.generic.edit import BaseSubModelCreateView
+from base.views.generic.edit import BaseUpdateRedirectView
 from base.views.generic.edit import BaseUpdateView
 from documents.forms import DocumentVersionForm
 from documents.managers import DocumentVersionQuerySet
@@ -14,6 +17,12 @@ class DocumentVersionCreateView(BaseSubModelCreateView):
     form_class = DocumentVersionForm
     template_name = "documents/documentversion/create.html"
     permission_required = "documents.add_documentversion"
+
+    def get(self, request, *args, **kwargs):
+        self.parent_object = self.get_parent_object()
+        if not self.parent_object.can_add_new_versions:
+            return redirect(self.parent_object, permanent=False)
+        return super().get(request, *args, **kwargs)
 
 
 class DocumentVersionDetailView(BaseDetailView):
@@ -31,9 +40,6 @@ class DocumentVersionUpdateView(BaseUpdateView):
     def get_queryset(self) -> DocumentVersionQuerySet:
         return super().get_queryset().not_approved()
 
-    def has_permission(self) -> bool:
-        return super().has_permission() and self.get_object().can_be_updated
-
 
 class DocumentVersionDeleteView(BaseDeleteView):
     model = DocumentVersion
@@ -42,3 +48,11 @@ class DocumentVersionDeleteView(BaseDeleteView):
 
     def get_queryset(self) -> DocumentVersionQuerySet:
         return super().get_queryset().not_approved()
+
+
+class DocumentVersionApproveView(BaseUpdateRedirectView):
+    model = DocumentVersion
+    permission_required = "documents.approve_documentversion"
+
+    def do_action(self):
+        self.object.approve()

@@ -38,6 +38,7 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
                 fields=["document", "version"], name="unique_document_version"
             ),
         )
+        permissions = (("approve_documentversion", _("Can approve document version")),)
 
     def __str__(self) -> str:
         return f"{self.document.title} - V{self.version}"
@@ -56,6 +57,9 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
             "version__max"
         )
         self.version = last_version + 1 if last_version is not None else 1
+
+    def approve(self) -> None:
+        self.update(is_approved=True)
 
     def get_absolute_url(self):
         return reverse("documentversion_detail", args=(self.pk,))

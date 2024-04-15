@@ -55,6 +55,11 @@ documentversion_urlpatterns = [
         documentversion_views.DocumentVersionDeleteView.as_view(),
         name="documentversion_delete",
     ),
+    path(
+        "versions/<int:pk>/approve/",
+        documentversion_views.DocumentVersionApproveView.as_view(),
+        name="documentversion_approve",
+    ),
 ]
 
 controlcatergory_urlpatterns = [

@@ -43,5 +43,9 @@ class Document(BaseModel):
             self, self.versions.latest("updated_at"), key=lambda x: x.updated_at
         ).updated_by
 
+    @property
+    def can_add_new_versions(self) -> bool:
+        return not self.versions.not_approved().exists()
+
     def get_absolute_url(self) -> str:
         return reverse("document_detail", args=(self.pk,))
