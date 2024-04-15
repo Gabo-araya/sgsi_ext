@@ -51,6 +51,22 @@
         <th>{% trans "recurrency"|capfirst %}</th>
         <td>{{ processdefinition.get_recurrency_display|default:"-" }}</td>
       </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ processdefinition.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ processdefinition.created_by.get_label }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ processdefinition.updated_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ processdefinition.updated_by.get_label }}</td>
+      </tr>
     </tbody>
   </table>
   <br>

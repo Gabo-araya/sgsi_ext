@@ -57,8 +57,16 @@
         <td>{{ control.created_at }}</td>
       </tr>
       <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ control.created_by.get_label }}</td>
+      </tr>
+      <tr>
         <th>{% trans "updated at"|capfirst %}</th>
         <td>{{ control.updated_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ control.updated_by.get_label }}</td>
       </tr>
     </tbody>
   </table>

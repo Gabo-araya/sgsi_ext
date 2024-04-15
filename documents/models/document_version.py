@@ -23,6 +23,7 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
         verbose_name=_("read by users"),
         to=User,
         through=DocumentReadByUser,
+        through_fields=("document_version", "user"),
         related_name="read_document_versions",
     )
 

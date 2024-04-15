@@ -4,18 +4,24 @@
   <thead>
     <tr>
       <th>{% trans "asignee"|capfirst %}</th>
-      <th>{% trans "document_version"|capfirst %}</th>
+      <th>{% trans "document version"|capfirst %}</th>
       <th>{% trans "activity"|capfirst %}</th>
-      <th>{% trans "updated at"|capfirst %}</th>
+      <th>{% trans "created at"|capfirst %}</th>
+      <th>{% trans "created by"|capfirst %}</th>
     </tr>
   </thead>
   <tbody>
     {% for evidence in object_list %}
       <tr>
         <td>{{ evidence.process_activity.asignee }}</td>
-        <td>{{ evidence.document_version }}</td>
+        <td>
+          {% with document_version=evidence.document_version %}
+            <a href="{{ document_version.get_absolute_url }}">{{ document_version }}</a>
+          {% endwith %}
+        </td>
         <td>{{ evidence.process_activity }}</td>
-        <td>{{ evidence.updated_at }}</td>
+        <td>{{ evidence.created_at }}</td>
+        <td>{{ evidence.created_by.get_label }}</td>
       </tr>
     {% endfor %}
   </tbody>

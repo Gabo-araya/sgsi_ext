@@ -25,9 +25,7 @@ class ProcessActivityDefinitionForm(BaseModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields[
-            "asignee"
-        ].label_from_instance = lambda user: user.get_label_for_instance()
+        self.fields["asignee"].label_from_instance = lambda user: user.get_label()
 
 
 class ProcessForm(BaseModelForm):

@@ -48,8 +48,16 @@
         <td>{{ document.created_at }}</td>
       </tr>
       <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ document.created_by.get_label }}</td>
+      </tr>
+      <tr>
         <th>{% trans "updated at"|capfirst %}</th>
         <td>{{ document.latest_update }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ document.latest_updator.get_label }}</td>
       </tr>
     </tbody>
   </table>

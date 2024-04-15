@@ -39,6 +39,14 @@
         </td>
       </tr>
       <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ process.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ process.created_by.get_label }}</td>
+      </tr>
+      <tr>
         <th>{% trans "completed"|capfirst %}</th>
         <td>{{ process.completed|yesno|capfirst }}</td>
       </tr>

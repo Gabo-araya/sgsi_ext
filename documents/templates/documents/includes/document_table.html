@@ -7,6 +7,7 @@
       <th>{% trans "last approved version"|capfirst %}</th>
       <th>{% trans "last version"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
+      <th>{% trans "updated by"|capfirst %}</th>
       {% if perms.documents.change_document or perms.documents.delete_document %}<th></th>{% endif %}
     </tr>
   </thead>
@@ -35,6 +36,7 @@
           {% endwith %}
         </td>
         <td>{{ document.latest_update }}</td>
+        <td>{{ document.latest_updator.get_label }}</td>
         {% if perms.documents.change_document or perms.documents.delete_document %}
           <td class="text-end">
             {% if perms.documents.change_document %}

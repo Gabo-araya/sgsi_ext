@@ -41,8 +41,16 @@
         <td>{{ assettype.created_at }}</td>
       </tr>
       <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ assettype.created_by.get_label }}</td>
+      </tr>
+      <tr>
         <th>{% trans "updated at"|capfirst %}</th>
         <td>{{ assettype.updated_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ assettype.updated_by.get_label }}</td>
       </tr>
     </tbody>
   </table>

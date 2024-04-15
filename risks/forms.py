@@ -28,9 +28,7 @@ class RiskForm(BaseModelForm):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.fields[
-            "responsible"
-        ].label_from_instance = lambda user: user.get_label_for_instance()
+        self.fields["responsible"].label_from_instance = lambda user: user.get_label()
         if self.instance.pk is not None:
             residual_risk_for_field = self.fields["residual_risk_for"]
             residual_risk_for_field.queryset = (

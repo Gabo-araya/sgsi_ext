@@ -54,7 +54,7 @@
         {% with asignee=processactivitydefinition.asignee %}
           <td>
             {% if asignee is not None %}
-              {{ asignee.get_label_for_instance }}
+              {{ asignee.get_label }}
             {% else %}
               -
             {% endif %}
@@ -72,6 +72,22 @@
             {% endif %}
           </td>
         {% endwith %}
+      </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ processactivitydefinition.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ processactivitydefinition.created_by.get_label }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ processactivitydefinition.updated_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ processactivitydefinition.updated_by.get_label }}</td>
       </tr>
     </tbody>
   </table>

@@ -19,6 +19,8 @@
       <tr>
         <th>{% trans "name"|capfirst %}</th>
         <th>{% trans "control"|capfirst %}</th>
+        <th>{% trans "created at"|capfirst %}</th>
+        <th>{% trans "created by"|capfirst %}</th>
         <th>{% trans "completed"|capfirst %}</th>
         <th>{% trans "completed at"|capfirst %}</th>
         {% if perms.processes.change_process or perms.processes.delete_process %}<th></th>{% endif %}
@@ -33,6 +35,8 @@
           <td>
             {% with control=process.control %}<a href="{{ control.get_absolute_url }}">{{ control }}</a>{% endwith %}
           </td>
+          <td>{{ process.created_at }}</td>
+          <td>{{ process.created_by.get_label }}</td>
           <td>{{ process.completed|yesno|capfirst }}</td>
           <td>{{ process.completed_at|default_if_none:"-" }}</td>
           {% if perms.processes.change_process or perms.processes.delete_process %}

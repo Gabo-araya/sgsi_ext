@@ -19,6 +19,7 @@
       <tr>
         <th>{% trans "name"|capfirst %}</th>
         <th>{% trans "updated at"|capfirst %}</th>
+        <th>{% trans "updated by"|capfirst %}</th>
         {% if perms.information_assets.change_assettype or perms.information_assets.delete_assettype %}<th></th>{% endif %}
       </tr>
     </thead>
@@ -29,6 +30,7 @@
             <a href="{{ assettype.get_absolute_url }}">{{ assettype.name }}</a>
           </td>
           <td>{{ assettype.updated_at }}</td>
+          <td>{{ assettype.updated_by.get_label }}</td>
           {% if perms.information_assets.change_assettype or perms.information_assets.delete_assettype %}
             <td class="text-end">
               {% if perms.information_assets.change_assettype %}

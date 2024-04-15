@@ -37,7 +37,7 @@
       </tr>
       <tr>
         <th>{% trans "responsible"|capfirst %}</th>
-        <td>{{ risk.responsible.get_label_for_instance }}</td>
+        <td>{{ risk.responsible.get_label }}</td>
       </tr>
       <tr>
         <th>{% trans "severity"|capfirst %}</th>
@@ -56,8 +56,16 @@
         <td>{{ risk.created_at }}</td>
       </tr>
       <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ risk.created_by.get_label }}</td>
+      </tr>
+      <tr>
         <th>{% trans "updated at"|capfirst %}</th>
         <td>{{ risk.updated_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ risk.updated_by.get_label }}</td>
       </tr>
     </tbody>
   </table>

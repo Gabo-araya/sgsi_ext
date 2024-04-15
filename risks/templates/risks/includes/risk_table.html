@@ -5,6 +5,7 @@
     <tr>
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
+      <th>{% trans "updated by"|capfirst %}</th>
       {% if perms.risks.change_risk or perms.risks.delete_risk %}<th></th>{% endif %}
     </tr>
   </thead>
@@ -15,6 +16,7 @@
           <a href="{{ risk.get_absolute_url }}">{{ risk }}</a>
         </td>
         <td>{{ risk.updated_at }}</td>
+        <td>{{ risk.updated_by.get_label }}</td>
         {% if perms.risks.change_risk or perms.risks.delete_risk %}
           <td class="text-end">
             {% if perms.risks.change_risk %}

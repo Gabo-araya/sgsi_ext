@@ -17,9 +17,7 @@ class AssetForm(BaseModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields[
-            "owner"
-        ].label_from_instance = lambda user: user.get_label_for_instance()
+        self.fields["owner"].label_from_instance = lambda user: user.get_label()
 
 
 class AssetTypeForm(BaseModelForm):

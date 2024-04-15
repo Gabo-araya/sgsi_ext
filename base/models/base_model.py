@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.mixins import AuditMixin
 from base.serializers import ModelEncoder
+from base.signals import get_user
 from base.utils import build_absolute_url_wo_req
 
 
@@ -20,11 +21,25 @@ class BaseModel(AuditMixin, models.Model):
         help_text=_("creation date"),
         verbose_name=_("created at"),
     )
+    created_by = models.ForeignKey(
+        verbose_name=_("created by"),
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        null=True,
+    )
     updated_at = models.DateTimeField(
         auto_now=True,
         null=True,
         help_text=_("edition date"),
         verbose_name=_("updated at"),
+    )
+    updated_by = models.ForeignKey(
+        verbose_name=_("updated by"),
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        null=True,
     )
 
     # field used to store a dictionary with the instance original fields
@@ -32,6 +47,13 @@ class BaseModel(AuditMixin, models.Model):
 
     class Meta:
         abstract = True
+
+    def save(self, *args, **kwargs):
+        user = get_user()
+        if self._state.adding:
+            self.created_by = user
+        self.updated_by = user
+        super().save(*args, **kwargs)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

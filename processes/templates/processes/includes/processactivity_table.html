@@ -13,7 +13,7 @@
   <tbody>
     {% for process_activity in object_list %}
       <tr>
-        <td>{{ process_activity.asignee.get_label_for_instance }}</td>
+        <td>{{ process_activity.asignee.get_label }}</td>
         <td>{{ process_activity.description }}</td>
         <td>{{ process_activity.completed|yesno|capfirst }}</td>
         <td>{{ process_activity.completed_at|default_if_none:"-" }}</td>

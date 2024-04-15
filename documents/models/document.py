@@ -37,5 +37,11 @@ class Document(BaseModel):
     def latest_update(self) -> datetime.datetime:
         return max(self.updated_at, self.versions.latest("updated_at").updated_at)
 
+    @property
+    def latest_updator(self) -> datetime.datetime:
+        return max(
+            self, self.versions.latest("updated_at"), key=lambda x: x.updated_at
+        ).updated_by
+
     def get_absolute_url(self) -> str:
         return reverse("document_detail", args=(self.pk,))
