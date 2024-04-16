@@ -1,12 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from django.db.models import QuerySet
-
-if TYPE_CHECKING:
-
-    pass
 
 
 class DocumentVersionQuerySet(QuerySet):

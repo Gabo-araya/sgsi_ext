@@ -83,14 +83,12 @@
     <thead>
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "email"|capfirst %}</th>
-      <th>{% trans "groups"|capfirst %}</th>
     </thead>
     <tbody>
       {% for user in documentversion.read_by.all %}
         <tr>
           <td>{{ user.get_full_name }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.group_names }}</td>
         </tr>
       {% endfor %}
     </tbody>

@@ -3,6 +3,9 @@
 {% load i18n %}
 
 {% block options %}
+  {% if perms.documents.add_documentversionreadbyuser and not read_by_user %}
+    {% include "documents/includes/mark_as_read_button.html" %}
+  {% endif %}
   {% if perms.documents.add_documentversion and document.can_add_new_versions %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'documentversion_create' document.id %}">

@@ -56,3 +56,14 @@ class DocumentVersionApproveView(BaseUpdateRedirectView):
 
     def do_action(self):
         self.object.approve()
+
+
+class DocumentVersionMarkAsReadView(BaseUpdateRedirectView):
+    model = DocumentVersion
+    permission_required = "documents.add_documentversionreadbyuser"
+
+    def get_queryset(self) -> DocumentVersionQuerySet:
+        return super().get_queryset().approved()
+
+    def do_action(self):
+        self.object.mark_as_read(self.request.user)

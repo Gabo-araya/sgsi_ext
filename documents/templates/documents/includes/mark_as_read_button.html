@@ -1,0 +1,14 @@
+{% load i18n %}
+
+<button class="btn btn-sm btn-outline-secondary"
+        type="submit"
+        form="markAsReadForm">
+  {% trans "mark as read"|capfirst %}
+  <i class="fa fa-book"></i>
+</button>
+
+<form id="markAsReadForm"
+      action="{% url 'documentversion_mark_as_read' document.last_approved_version.pk %}"
+      method="post">
+  <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
+</form>

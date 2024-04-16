@@ -25,6 +25,13 @@ class DocumentDetailView(BaseDetailView):
     template_name = "documents/document/detail.html"
     permission_required = "documents.view_document"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["read_by_user"] = self.object.last_approved_version.was_read_by_user(
+            self.request.user
+        )
+        return context
+
 
 class DocumentUpdateView(BaseUpdateView):
     model = Document

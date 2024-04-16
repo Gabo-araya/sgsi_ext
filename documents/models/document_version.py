@@ -61,5 +61,11 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
     def approve(self) -> None:
         self.update(is_approved=True)
 
+    def mark_as_read(self, user: User) -> None:
+        self.read_by.add(user)
+
+    def was_read_by_user(self, user: User) -> bool:
+        return self.read_by.filter(pk=user.pk).exists()
+
     def get_absolute_url(self):
         return reverse("documentversion_detail", args=(self.pk,))
