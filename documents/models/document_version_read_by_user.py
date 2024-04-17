@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models import BaseModel
 
 
-class DocumentReadByUser(BaseModel):
+class DocumentVersionReadByUser(BaseModel):
     document_version = models.ForeignKey(
         "documents.DocumentVersion",
         verbose_name=_("document version"),
@@ -13,10 +13,11 @@ class DocumentReadByUser(BaseModel):
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = _("document read by user")
-        verbose_name_plural = _("documents read by users")
+        verbose_name = _("document version read by user")
+        verbose_name_plural = _("document versions read by users")
         constraints = (
             models.UniqueConstraint(
-                fields=("document_version", "user"), name="unique_document_read_by_user"
+                fields=("document_version", "user"),
+                name="unique_document_version_read_by_user",
             ),
         )

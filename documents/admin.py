@@ -3,8 +3,8 @@ from django.contrib import admin
 from documents.models.control import Control
 from documents.models.control_category import ControlCategory
 from documents.models.document import Document
-from documents.models.document_read_by_user import DocumentReadByUser
 from documents.models.document_version import DocumentVersion
+from documents.models.document_version_read_by_user import DocumentVersionReadByUser
 
 
 @admin.register(Document)
@@ -17,8 +17,8 @@ class DocumentVersionAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(DocumentReadByUser)
-class DocumentReadByUserAdmin(admin.ModelAdmin):
+@admin.register(DocumentVersionReadByUser)
+class DocumentVersionReadByUserAdmin(admin.ModelAdmin):
     pass
 
 

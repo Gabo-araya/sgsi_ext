@@ -6,7 +6,7 @@ from base.models.base_model import BaseModel
 from base.models.mixins import FileIntegrityModelBase
 from documents.managers import DocumentVersionQuerySet
 from documents.models.document import Document
-from documents.models.document_read_by_user import DocumentReadByUser
+from documents.models.document_version_read_by_user import DocumentVersionReadByUser
 from users.models import User
 
 
@@ -22,7 +22,7 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
     read_by = models.ManyToManyField(
         verbose_name=_("read by users"),
         to=User,
-        through=DocumentReadByUser,
+        through=DocumentVersionReadByUser,
         through_fields=("document_version", "user"),
         related_name="read_document_versions",
     )

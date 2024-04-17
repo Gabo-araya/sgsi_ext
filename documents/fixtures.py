@@ -3,8 +3,8 @@ import pytest
 from documents.models.control import Control
 from documents.models.control_category import ControlCategory
 from documents.models.document import Document
-from documents.models.document_read_by_user import DocumentReadByUser
 from documents.models.document_version import DocumentVersion
+from documents.models.document_version_read_by_user import DocumentVersionReadByUser
 
 
 @pytest.fixture
@@ -26,8 +26,8 @@ def control(control_category, document):
 
 @pytest.fixture
 @pytest.mark.django_db
-def document_read_by_user(document_version, regular_user):
-    return DocumentReadByUser.objects.create(
+def document_version_read_by_user(document_version, regular_user):
+    return DocumentVersionReadByUser.objects.create(
         document_version=document_version,
         user=regular_user,
     )
