@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models.base_model import BaseModel
 from documents.models.document_version import DocumentVersion
 from processes.models.process import Process
-from processes.models.process_activity_definition import ProcessActivityDefinition
+from processes.models.process_activity import ProcessActivity
 from users.models import User
 
 
@@ -18,11 +18,11 @@ class ProcessActivityInstance(BaseModel):
         related_name="activity_instances",
         verbose_name=_("process"),
     )
-    activity_definition = models.ForeignKey(
-        to=ProcessActivityDefinition,
+    activity = models.ForeignKey(
+        to=ProcessActivity,
         on_delete=models.PROTECT,
         related_name="activity_instances",
-        verbose_name=_("activity definition"),
+        verbose_name=_("activity"),
     )
     order = models.PositiveIntegerField(verbose_name=_("order"))
     description = models.TextField(verbose_name=_("description"))
@@ -50,7 +50,7 @@ class ProcessActivityInstance(BaseModel):
         verbose_name_plural = _("process activity instances")
 
     def __str__(self) -> str:
-        return f"{self.process} - {self.activity_definition}"
+        return f"{self.process} - {self.activity}"
 
     def get_absolute_url(self) -> str:
         return reverse("processactivityinstanceinstance_detail", args=(self.pk,))

@@ -7,7 +7,7 @@
     <a href="{% url 'processdefinition_list' %}">{% trans "process definitions"|capfirst %}</a>
   </li>
   <li class="breadcrumb-item">
-    {% with processdefinition=processactivitydefinition.process_definition %}
+    {% with processdefinition=processactivity.process_definition %}
       <a href="{% url 'processdefinition_detail' processdefinition.pk %}">{{ processdefinition }}</a>
     {% endwith %}
   </li>

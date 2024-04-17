@@ -8,19 +8,17 @@
       <th>{% trans "asignee group"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
-      {% if perms.processes.change_processactivitydefinition or perms.processes.delete_processactivitydefinition %}
-        <th></th>
-      {% endif %}
+      {% if perms.processes.change_processactivity or perms.processes.delete_processactivity %}<th></th>{% endif %}
     </tr>
   </thead>
   <tbody>
-    {% for process_activity_definition in object_list %}
+    {% for process_activity in object_list %}
       <tr>
         <td>
-          <a href="{{ process_activity_definition.get_absolute_url }}">{{ process_activity_definition }}</a>
+          <a href="{{ process_activity.get_absolute_url }}">{{ process_activity }}</a>
         </td>
         <td>
-          {% with asignee=process_activity_definition.asignee %}
+          {% with asignee=process_activity.asignee %}
             {% if asignee is not None %}
               {{ asignee.get_label }}
             {% else %}
@@ -29,7 +27,7 @@
           {% endwith %}
         </td>
         <td>
-          {% with asignee_group=process_activity_definition.asignee_group %}
+          {% with asignee_group=process_activity.asignee_group %}
             {% if asignee_group is not None %}
               <a href="{{ asignee_group.get_absolute_url }}">{{ asignee_group }}</a>
             {% else %}
@@ -37,21 +35,21 @@
             {% endif %}
           {% endwith %}
         </td>
-        <td>{{ process_activity_definition.updated_at }}</td>
-        <td>{{ process_activity_definition.updated_by.get_label }}</td>
-        {% if perms.processes.change_processactivitydefinition or perms.processes.delete_processactivitydefinition %}
+        <td>{{ process_activity.updated_at }}</td>
+        <td>{{ process_activity.updated_by.get_label }}</td>
+        {% if perms.processes.change_processactivity or perms.processes.delete_processactivity %}
           <td class="text-end">
-            {% if perms.processes.change_processactivitydefinition %}
+            {% if perms.processes.change_processactivity %}
               <a class="btn btn-sm btn-outline-secondary"
-                 href="{% url 'processactivitydefinition_update' process_activity_definition.id %}">
-                {% trans "Update process activity definition" %}
+                 href="{% url 'processactivity_update' process_activity.id %}">
+                {% trans "Update process activity" %}
                 <i class="fa fa-edit"></i>
               </a>
             {% endif %}
-            {% if perms.processes.delete_processactivitydefinition %}
+            {% if perms.processes.delete_processactivity %}
               <a class="btn btn-sm btn-danger"
-                 href="{% url 'processactivitydefinition_delete' process_activity_definition.id %}">
-                {% trans "Delete process activity definition" %}
+                 href="{% url 'processactivity_delete' process_activity.id %}">
+                {% trans "Delete process activity" %}
                 <i class="fa fa-times"></i>
               </a>
             {% endif %}

@@ -3,10 +3,10 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.add_processactivitydefinition %}
+  {% if perms.processes.add_processactivity %}
     <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'processactivitydefinition_create' processdefinition.pk %}">
-      {% trans "Add process activity definition" %}
+       href="{% url 'processactivity_create' processdefinition.pk %}">
+      {% trans "Add process activity" %}
       <i class="fa fa-plus"></i>
     </a>
   {% endif %}
@@ -70,6 +70,6 @@
     </tbody>
   </table>
   <br>
-  <h2>{% trans "activity definitions"|capfirst %}</h2>
-  {% include "processes/includes/processactivitydefinition_table.html" with object_list=processdefinition.activity_definitions.all %}
+  <h2>{% trans "activities"|capfirst %}</h2>
+  {% include "processes/includes/processactivity_table.html" with object_list=processdefinition.activities.all %}
 {% endblock content %}

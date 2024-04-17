@@ -3,17 +3,17 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.change_processactivitydefinition %}
+  {% if perms.processes.change_processactivity %}
     <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'processactivitydefinition_update' processactivitydefinition.id %}">
-      {% trans "Update process activity definition" %}
+       href="{% url 'processactivity_update' processactivity.id %}">
+      {% trans "Update process activity" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.processes.delete_processactivitydefinition %}
+  {% if perms.processes.delete_processactivity %}
     <a class="btn btn-sm btn-danger"
-       href="{% url 'processactivitydefinition_delete' processactivitydefinition.id %}">
-      {% trans "Delete process activity definition" %}
+       href="{% url 'processactivity_delete' processactivity.id %}">
+      {% trans "Delete process activity" %}
       <i class="fa fa-times"></i>
     </a>
   {% endif %}
@@ -24,7 +24,7 @@
     <a href="{% url 'processdefinition_list' %}">{% trans "process definitions"|capfirst %}</a>
   </li>
   <li class="breadcrumb-item">
-    {% with processdefinition=processactivitydefinition.process_definition %}
+    {% with processdefinition=processactivity.process_definition %}
       <a href="{% url 'processdefinition_detail' processdefinition.pk %}">{{ processdefinition }}</a>
     {% endwith %}
   </li>
@@ -35,7 +35,7 @@
     <tbody>
       <tr>
         <th>{% trans "process definition"|capfirst %}</th>
-        {% with process_definition=processactivitydefinition.process_definition %}
+        {% with process_definition=processactivity.process_definition %}
           <td>
             <a href="{{ process_definition.get_absolute_url }}">{{ process_definition }}</a>
           </td>
@@ -43,15 +43,15 @@
       </tr>
       <tr>
         <th>{% trans "order"|capfirst %}</th>
-        <td>{{ processactivitydefinition.order }}</td>
+        <td>{{ processactivity.order }}</td>
       </tr>
       <tr>
         <th>{% trans "description"|capfirst %}</th>
-        <td>{{ processactivitydefinition.description }}</td>
+        <td>{{ processactivity.description }}</td>
       </tr>
       <tr>
         <th>{% trans "asignee"|capfirst %}</th>
-        {% with asignee=processactivitydefinition.asignee %}
+        {% with asignee=processactivity.asignee %}
           <td>
             {% if asignee is not None %}
               {{ asignee.get_label }}
@@ -63,7 +63,7 @@
       </tr>
       <tr>
         <th>{% trans "asignee group"|capfirst %}</th>
-        {% with asignee_group=processactivitydefinition.asignee_group %}
+        {% with asignee_group=processactivity.asignee_group %}
           <td>
             {% if asignee_group is not None %}
               <a href="{% url 'group_detail' asignee_group.pk %}">{{ asignee_group }}</a>
@@ -75,19 +75,19 @@
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>
-        <td>{{ processactivitydefinition.created_at }}</td>
+        <td>{{ processactivity.created_at }}</td>
       </tr>
       <tr>
         <th>{% trans "created by"|capfirst %}</th>
-        <td>{{ processactivitydefinition.created_by.get_label }}</td>
+        <td>{{ processactivity.created_by.get_label }}</td>
       </tr>
       <tr>
         <th>{% trans "updated at"|capfirst %}</th>
-        <td>{{ processactivitydefinition.updated_at }}</td>
+        <td>{{ processactivity.updated_at }}</td>
       </tr>
       <tr>
         <th>{% trans "updated by"|capfirst %}</th>
-        <td>{{ processactivitydefinition.updated_by.get_label }}</td>
+        <td>{{ processactivity.updated_by.get_label }}</td>
       </tr>
     </tbody>
   </table>

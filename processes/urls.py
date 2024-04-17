@@ -2,9 +2,7 @@ from django.urls import include
 from django.urls import path
 
 from processes.views import process as process_views
-from processes.views import (
-    process_activity_definition as processactivitydefinition_views,
-)
+from processes.views import process_activity as processactivity_views
 from processes.views import (
     process_activity_instance as processactivityinstanceinstance_views,
 )
@@ -65,9 +63,9 @@ processdefinition_urlpatterns = [
         name="processdefinition_delete",
     ),
     path(
-        "<int:parent_pk>/activity-definitions/create/",
-        processactivitydefinition_views.ProcessActivityDefinitionCreateView.as_view(),
-        name="processactivitydefinition_create",
+        "<int:parent_pk>/activities/create/",
+        processactivity_views.ProcessActivityCreateView.as_view(),
+        name="processactivity_create",
     ),
 ]
 
@@ -79,27 +77,27 @@ processactivityinstanceinstance_urlpatterns = [
     )
 ]
 
-processactivitydefinition_urlpatterns = [
+processactivity_urlpatterns = [
     path(
         "<int:pk>/",
-        processactivitydefinition_views.ProcessActivityDefinitionDetailView.as_view(),
-        name="processactivitydefinition_detail",
+        processactivity_views.ProcessActivityDetailView.as_view(),
+        name="processactivity_detail",
     ),
     path(
         "<int:pk>/update/",
-        processactivitydefinition_views.ProcessActivityDefinitionUpdateView.as_view(),
-        name="processactivitydefinition_update",
+        processactivity_views.ProcessActivityUpdateView.as_view(),
+        name="processactivity_update",
     ),
     path(
         "<int:pk>/delete/",
-        processactivitydefinition_views.ProcessActivityDefinitionDeleteView.as_view(),
-        name="processactivitydefinition_delete",
+        processactivity_views.ProcessActivityDeleteView.as_view(),
+        name="processactivity_delete",
     ),
 ]
 
 urlpatterns = [
     path("processes/", include(process_urlpatterns)),
     path("process-definitions/", include(processdefinition_urlpatterns)),
-    path("activities/", include(processactivityinstanceinstance_urlpatterns)),
-    path("activity-definitions/", include(processactivitydefinition_urlpatterns)),
+    path("activity-instances/", include(processactivityinstanceinstance_urlpatterns)),
+    path("activities/", include(processactivity_urlpatterns)),
 ]

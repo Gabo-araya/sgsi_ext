@@ -37,8 +37,8 @@ class ProcessDefinition(BaseModel):
         return self.name
 
     def create_activities_for_process(self, process: Process) -> None:
-        for activity_definition in self.activity_definitions.all():
-            activity_definition.create_activity_for_process(process)
+        for activity in self.activities.all():
+            activity.create_activity_for_process(process)
 
     def get_absolute_url(self) -> str:
         return reverse("processdefinition_detail", args=(self.pk,))

@@ -8,11 +8,11 @@ from processes.models.process import Process
 from users.models import User
 
 
-class ProcessActivityDefinition(BaseModel):
+class ProcessActivity(BaseModel):
     process_definition = models.ForeignKey(
         to="ProcessDefinition",
         on_delete=models.CASCADE,
-        related_name="activity_definitions",
+        related_name="activities",
         verbose_name=_("process definition"),
     )
     order = models.PositiveIntegerField(verbose_name=_("order"))
@@ -21,7 +21,7 @@ class ProcessActivityDefinition(BaseModel):
         verbose_name=_("asignee"),
         to=User,
         on_delete=models.PROTECT,
-        related_name="activity_definitions",
+        related_name="activities",
         null=True,
         blank=True,
     )
@@ -29,14 +29,14 @@ class ProcessActivityDefinition(BaseModel):
         verbose_name=_("asignee group"),
         to=Group,
         on_delete=models.PROTECT,
-        related_name="activity_definitions",
+        related_name="activities",
         null=True,
         blank=True,
     )
 
     class Meta:
-        verbose_name = _("process activity definition")
-        verbose_name_plural = _("process activity definitions")
+        verbose_name = _("process activity")
+        verbose_name_plural = _("process activities")
         ordering = ("process_definition", "order")
         constraints = (
             models.CheckConstraint(
@@ -46,7 +46,7 @@ class ProcessActivityDefinition(BaseModel):
                 ),
                 name="asignee_xor_asignee_group",
                 violation_error_message=_(
-                    "An activity definition must have an asignee or an asignee group, "
+                    "An activity must have an asignee or an asignee group, "
                     "but not both."
                 ),
             ),
@@ -61,7 +61,7 @@ class ProcessActivityDefinition(BaseModel):
         return super().save(*args, **kwargs)
 
     def _auto_increment_order(self) -> None:
-        last_order = self.process_definition.activity_definitions.aggregate(
+        last_order = self.process_definition.activities.aggregate(
             models.Max("order")
         ).get("order__max")
         self.order = last_order + 1 if last_order is not None else 1
@@ -70,7 +70,7 @@ class ProcessActivityDefinition(BaseModel):
         if self.asignee is not None:
             process.activities.create(
                 process=process,
-                activity_definition=self,
+                activity=self,
                 order=self.order,
                 description=self.description,
                 asignee=self.asignee,
@@ -79,7 +79,7 @@ class ProcessActivityDefinition(BaseModel):
             for user in self.asignee_group.user_set.all():
                 process.activities.create(
                     process=process,
-                    activity_definition=self,
+                    activity=self,
                     order=self.order,
                     description=self.description,
                     asignee=user,
@@ -87,4 +87,4 @@ class ProcessActivityDefinition(BaseModel):
                 )
 
     def get_absolute_url(self) -> str:
-        return reverse("processactivitydefinition_detail", args=(self.pk,))
+        return reverse("processactivity_detail", args=(self.pk,))

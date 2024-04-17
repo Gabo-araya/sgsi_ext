@@ -200,7 +200,7 @@ package Processes {
         + completed: bool
         + completed_at: datetime
     }
-    class ProcessActivityDefinition {
+    class ProcessActivity {
         + id: int
         + process_definition: ProcessDefinition
         + order: int
@@ -211,7 +211,7 @@ package Processes {
     class ProcessActivityInstance {
         + id: int
         + process: Process
-        + activity_definition: ActivityDefinition
+        + activity: ActivityDefinition
         + order: int
         + description: text
         + asignee: User
@@ -242,7 +242,7 @@ Processes.ProcessDefinition -up-* Documents.Control
 Processes.ProcessDefinition -left* Processes.TimeFrameChoices
 Processes.Process -up-* Documents.DocumentVersion
 Processes.Process -left* Processes.ProcessDefinition
-Processes.ProcessActivityDefinition --* Processes.ProcessDefinition
-Processes.ProcessActivityInstance -* Processes.ProcessActivityDefinition
+Processes.ProcessActivity --* Processes.ProcessDefinition
+Processes.ProcessActivityInstance -* Processes.ProcessActivity
 Processes.ProcessActivityInstance -up-* Processes.Process
 ```

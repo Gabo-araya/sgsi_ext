@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.forms import BaseModelForm
 from processes.models.process import Process
-from processes.models.process_activity_definition import ProcessActivityDefinition
+from processes.models.process_activity import ProcessActivity
 from processes.models.process_activity_instance import ProcessActivityInstance
 from processes.models.process_definition import ProcessDefinition
 
@@ -18,9 +18,9 @@ class ProcessDefinitionForm(BaseModelForm):
         )
 
 
-class ProcessActivityDefinitionForm(BaseModelForm):
+class ProcessActivityForm(BaseModelForm):
     class Meta:
-        model = ProcessActivityDefinition
+        model = ProcessActivity
         fields = ("description", "asignee", "asignee_group")
 
     def __init__(self, *args, **kwargs):
