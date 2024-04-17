@@ -57,13 +57,13 @@ package Documents {
     class Evidence {
         + id: int
         + document_version: DocumentVersion
-        + process_activity: ProcessActivity
+        + process_activity_instance: ProcessActivityInstance
         + file: file
         + shasum: char
     }
 }
 
-class Processes.ProcessActivity {
+class Processes.ProcessActivityInstance {
     ...
 }
 
@@ -76,7 +76,7 @@ Documents.Control -* Documents.ControlCategory
 Documents.Control --* Documents.ControlGuidingText
 Documents.DocumentVersion -up-* Documents.Document
 Documents.DocumentVersion --* Documents.DocumentVersionReadByUser
-Documents.Evidence -up-* Processes.ProcessActivity
+Documents.Evidence -up-* Processes.ProcessActivityInstance
 Documents.Evidence -* Documents.DocumentVersion
 Documents.DocumentVersionReadByUser -* Users.User
 ```
@@ -208,7 +208,7 @@ package Processes {
         + asignee: User
         + asignee_group: Group
     }
-    class ProcessActivity {
+    class ProcessActivityInstance {
         + id: int
         + process: Process
         + activity_definition: ActivityDefinition
@@ -243,6 +243,6 @@ Processes.ProcessDefinition -left* Processes.TimeFrameChoices
 Processes.Process -up-* Documents.DocumentVersion
 Processes.Process -left* Processes.ProcessDefinition
 Processes.ProcessActivityDefinition --* Processes.ProcessDefinition
-Processes.ProcessActivity -* Processes.ProcessActivityDefinition
-Processes.ProcessActivity -up-* Processes.Process
+Processes.ProcessActivityInstance -* Processes.ProcessActivityDefinition
+Processes.ProcessActivityInstance -up-* Processes.Process
 ```

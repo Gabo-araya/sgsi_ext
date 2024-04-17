@@ -5,15 +5,15 @@ from django.urls import reverse
 
 from base.views.generic.edit import BaseUpdateView
 from documents.models.evidence import Evidence
-from processes.forms import ProcessActivityCompleteForm
-from processes.models.process_activity import ProcessActivity
+from processes.forms import ProcessActivityInstanceCompleteForm
+from processes.models.process_activity_instance import ProcessActivityInstance
 
 
-class ProcessActivityCompleteView(BaseUpdateView):
-    model = ProcessActivity
-    form_class = ProcessActivityCompleteForm
-    template_name = "processes/processactivity/update.html"
-    permission_required = "processes.change_processactivity"
+class ProcessActivityInstanceCompleteView(BaseUpdateView):
+    model = ProcessActivityInstance
+    form_class = ProcessActivityInstanceCompleteForm
+    template_name = "processes/processactivityinstance/update.html"
+    permission_required = "processes.change_processactivityinstance"
 
     def get_process_detail_url(self) -> str:
         return reverse("process_detail", args=(self.object.process.pk,))
@@ -30,7 +30,9 @@ class ProcessActivityCompleteView(BaseUpdateView):
         self.object.mark_as_completed()
         return response
 
-    def create_evidence(self, evidence_file: File, activity: ProcessActivity) -> None:
+    def create_evidence(
+        self, evidence_file: File, activity: ProcessActivityInstance
+    ) -> None:
         Evidence.objects.create(
             document_version=activity.get_latest_document_version(),
             activity=activity,

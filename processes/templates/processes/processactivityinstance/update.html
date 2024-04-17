@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block breadcrumbs %}
-  {% with process=processactivity.process %}
+  {% with process=processactivityinstance.process %}
     <li class="breadcrumb-item">
       <a href="{% url 'process_list' %}">{% trans "processes"|capfirst %}</a>
     </li>

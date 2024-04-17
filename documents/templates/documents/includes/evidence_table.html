@@ -13,13 +13,13 @@
   <tbody>
     {% for evidence in object_list %}
       <tr>
-        <td>{{ evidence.process_activity.asignee }}</td>
+        <td>{{ evidence.process_activity_instance.asignee }}</td>
         <td>
           {% with document_version=evidence.document_version %}
             <a href="{{ document_version.get_absolute_url }}">{{ document_version }}</a>
           {% endwith %}
         </td>
-        <td>{{ evidence.process_activity }}</td>
+        <td>{{ evidence.process_activity_instance }}</td>
         <td>{{ evidence.created_at }}</td>
         <td>{{ evidence.created_by.get_label }}</td>
       </tr>

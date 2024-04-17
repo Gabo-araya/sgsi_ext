@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
 from base.models.mixins import FileIntegrityModelBase
-from processes.models.process_activity import ProcessActivity
+from processes.models.process_activity_instance import ProcessActivityInstance
 
 
 class Evidence(FileIntegrityModelBase, BaseModel):
@@ -13,9 +13,9 @@ class Evidence(FileIntegrityModelBase, BaseModel):
         on_delete=models.PROTECT,
         related_name="evidences",
     )
-    process_activity = models.ForeignKey(
+    process_activity_instance = models.ForeignKey(
         verbose_name=_("activity"),
-        to=ProcessActivity,
+        to=ProcessActivityInstance,
         on_delete=models.PROTECT,
         related_name="evidences",
     )
@@ -25,7 +25,9 @@ class Evidence(FileIntegrityModelBase, BaseModel):
         verbose_name_plural = _("evidences")
 
     def __str__(self) -> str:
-        return f"Evidence for {self.document_version} - {self.process_activity}"
+        return (
+            f"Evidence for {self.document_version} - {self.process_activity_instance}"
+        )
 
     def get_absolute_url(self) -> str:
         ...

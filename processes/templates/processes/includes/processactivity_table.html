@@ -7,21 +7,21 @@
       <th>{% trans "description"|capfirst %}</th>
       <th>{% trans "completed"|capfirst %}</th>
       <th>{% trans "completed at"|capfirst %}</th>
-      {% if perms.processes.change_processactivity %}<th></th>{% endif %}
+      {% if perms.processes.change_processactivityinstance %}<th></th>{% endif %}
     </tr>
   </thead>
   <tbody>
-    {% for process_activity in object_list %}
+    {% for process_activity_instance in object_list %}
       <tr>
-        <td>{{ process_activity.asignee.get_label }}</td>
-        <td>{{ process_activity.description }}</td>
-        <td>{{ process_activity.completed|yesno|capfirst }}</td>
-        <td>{{ process_activity.completed_at|default_if_none:"-" }}</td>
-        {% if perms.processes.change_processactivity %}
+        <td>{{ process_activity_instance.asignee.get_label }}</td>
+        <td>{{ process_activity_instance.description }}</td>
+        <td>{{ process_activity_instance.completed|yesno|capfirst }}</td>
+        <td>{{ process_activity_instance.completed_at|default_if_none:"-" }}</td>
+        {% if perms.processes.change_processactivityinstance %}
           <td class="text-end">
-            {% if perms.processes.change_processactivity and not process_activity.completed %}
+            {% if perms.processes.change_processactivityinstance and not process_activity_instance.completed %}
               <a class="btn btn-sm btn-success"
-                 href="{% url 'processactivity_complete' process_activity.pk %}">
+                 href="{% url 'processactivityinstanceinstance_complete' process_activity_instance.pk %}">
                 {% trans "Complete activity" %}
                 <i class="fa fa-check"></i>
               </a>

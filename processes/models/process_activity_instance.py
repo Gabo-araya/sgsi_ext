@@ -11,17 +11,17 @@ from processes.models.process_activity_definition import ProcessActivityDefiniti
 from users.models import User
 
 
-class ProcessActivity(BaseModel):
+class ProcessActivityInstance(BaseModel):
     process = models.ForeignKey(
         to=Process,
         on_delete=models.PROTECT,
-        related_name="activities",
+        related_name="activity_instances",
         verbose_name=_("process"),
     )
     activity_definition = models.ForeignKey(
         to=ProcessActivityDefinition,
         on_delete=models.PROTECT,
-        related_name="activities",
+        related_name="activity_instances",
         verbose_name=_("activity definition"),
     )
     order = models.PositiveIntegerField(verbose_name=_("order"))
@@ -30,13 +30,13 @@ class ProcessActivity(BaseModel):
         verbose_name=_("asignee"),
         to=User,
         on_delete=models.PROTECT,
-        related_name="activities",
+        related_name="activity_instances",
     )
     asignee_group = models.ForeignKey(
         verbose_name=_("asignee group"),
         to=Group,
         on_delete=models.PROTECT,
-        related_name="activities",
+        related_name="activity_instances",
         null=True,
         blank=True,
     )
@@ -46,14 +46,14 @@ class ProcessActivity(BaseModel):
     )
 
     class Meta:
-        verbose_name = _("process activity")
-        verbose_name_plural = _("process activities")
+        verbose_name = _("process activity instance")
+        verbose_name_plural = _("process activity instances")
 
     def __str__(self) -> str:
         return f"{self.process} - {self.activity_definition}"
 
     def get_absolute_url(self) -> str:
-        return reverse("processactivity_detail", args=(self.pk,))
+        return reverse("processactivityinstanceinstance_detail", args=(self.pk,))
 
     def mark_as_completed(self) -> None:
         self.update(completed=True, completed_at=timezone.now())

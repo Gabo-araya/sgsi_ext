@@ -2,9 +2,11 @@ from django.urls import include
 from django.urls import path
 
 from processes.views import process as process_views
-from processes.views import process_activity as processactivity_views
 from processes.views import (
     process_activity_definition as processactivitydefinition_views,
+)
+from processes.views import (
+    process_activity_instance as processactivityinstanceinstance_views,
 )
 from processes.views import process_definition as processdefinition_views
 
@@ -69,11 +71,11 @@ processdefinition_urlpatterns = [
     ),
 ]
 
-processactivity_urlpatterns = [
+processactivityinstanceinstance_urlpatterns = [
     path(
         "<int:pk>/complete/",
-        processactivity_views.ProcessActivityCompleteView.as_view(),
-        name="processactivity_complete",
+        processactivityinstanceinstance_views.ProcessActivityInstanceCompleteView.as_view(),
+        name="processactivityinstanceinstance_complete",
     )
 ]
 
@@ -98,6 +100,6 @@ processactivitydefinition_urlpatterns = [
 urlpatterns = [
     path("processes/", include(process_urlpatterns)),
     path("process-definitions/", include(processdefinition_urlpatterns)),
-    path("activities/", include(processactivity_urlpatterns)),
+    path("activities/", include(processactivityinstanceinstance_urlpatterns)),
     path("activity-definitions/", include(processactivitydefinition_urlpatterns)),
 ]

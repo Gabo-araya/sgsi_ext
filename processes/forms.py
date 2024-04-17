@@ -3,8 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 from base.forms import BaseModelForm
 from processes.models.process import Process
-from processes.models.process_activity import ProcessActivity
 from processes.models.process_activity_definition import ProcessActivityDefinition
+from processes.models.process_activity_instance import ProcessActivityInstance
 from processes.models.process_definition import ProcessDefinition
 
 
@@ -34,7 +34,7 @@ class ProcessForm(BaseModelForm):
         fields = ("process_definition",)
 
 
-class ProcessActivityCompleteForm(BaseModelForm):
+class ProcessActivityInstanceCompleteForm(BaseModelForm):
     evidence = forms.FileField(
         label=_("Evidence"),
         required=True,
@@ -42,5 +42,5 @@ class ProcessActivityCompleteForm(BaseModelForm):
     )
 
     class Meta:
-        model = ProcessActivity
+        model = ProcessActivityInstance
         fields = ("evidence",)
