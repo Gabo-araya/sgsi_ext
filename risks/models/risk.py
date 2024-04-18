@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -9,7 +10,6 @@ from risks.enums import LikelihoodChoices
 from risks.enums import SeverityChoices
 from risks.enums import TreatmentChoices
 from risks.managers import RiskQuerySet
-from users.models import User
 
 
 class Risk(BaseModel):
@@ -24,9 +24,9 @@ class Risk(BaseModel):
     title = models.CharField(verbose_name=_("title"), max_length=255, unique=True)
     description = models.TextField(verbose_name=_("description"), blank=True)
     responsible = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
         verbose_name=_("responsible"),
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
         related_name="risks",
     )
     severity = models.CharField(

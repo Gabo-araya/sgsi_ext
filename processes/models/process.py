@@ -17,10 +17,10 @@ if TYPE_CHECKING:
 class Process(BaseModel):
     name = models.CharField(verbose_name=_("name"), max_length=255)
     control = models.ForeignKey(
-        to=Control,
-        on_delete=models.CASCADE,
-        related_name="processes",
         verbose_name=_("control"),
+        to=Control,
+        on_delete=models.PROTECT,
+        related_name="processes",
     )
     recurrency = models.CharField(
         verbose_name=_("recurrency"),

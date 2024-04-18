@@ -13,13 +13,13 @@ class ProcessInstance(BaseModel):
     process = models.ForeignKey(
         verbose_name=_("process"),
         to=Process,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="process_instances",
     )
     name = models.CharField(verbose_name=_("name"), max_length=255)
     control = models.ForeignKey(
         to=Control,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="process_instances",
         verbose_name=_("control"),
     )

@@ -16,7 +16,7 @@ class DocumentForm(BaseModelForm):
 class DocumentVersionForm(BaseModelForm):
     class Meta:
         model = DocumentVersion
-        fields = ("file",)
+        fields = ("file", "comment")
 
 
 class ControlForm(BaseModelForm):

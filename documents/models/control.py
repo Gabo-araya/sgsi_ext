@@ -10,20 +10,27 @@ from documents.models.document_version import DocumentVersion
 
 class Control(BaseModel):
     category = models.ForeignKey(
-        ControlCategory,
         verbose_name=_("category"),
-        related_name="controls",
+        to=ControlCategory,
         on_delete=models.PROTECT,
+        related_name="controls",
         null=True,
         blank=True,
     )
-    title = models.CharField(verbose_name=_("title"), max_length=255, unique=True)
-    description = models.TextField(verbose_name=_("description"), blank=True)
+    title = models.CharField(
+        verbose_name=_("title"),
+        max_length=255,
+        unique=True,
+    )
+    description = models.TextField(
+        verbose_name=_("description"),
+        blank=True,
+    )
     document = models.ForeignKey(
-        Document,
         verbose_name=_("document"),
-        related_name="controls",
+        to=Document,
         on_delete=models.PROTECT,
+        related_name="controls",
         null=True,
         blank=True,
     )

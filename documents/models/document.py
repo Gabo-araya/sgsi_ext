@@ -15,8 +15,15 @@ if TYPE_CHECKING:
 
 
 class Document(BaseModel):
-    title = models.CharField(verbose_name=_("title"), max_length=255, unique=True)
-    description = models.TextField(verbose_name=_("description"), blank=True)
+    title = models.CharField(
+        verbose_name=_("title"),
+        max_length=255,
+        unique=True,
+    )
+    description = models.TextField(
+        verbose_name=_("description"),
+        blank=True,
+    )
 
     class Meta:
         verbose_name = _("document")

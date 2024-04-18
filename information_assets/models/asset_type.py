@@ -6,8 +6,15 @@ from base.models.base_model import BaseModel
 
 
 class AssetType(BaseModel):
-    name = models.CharField(verbose_name=_("name"), max_length=255, unique=True)
-    description = models.TextField(verbose_name=_("description"), blank=True)
+    name = models.CharField(
+        verbose_name=_("name"),
+        max_length=255,
+        unique=True,
+    )
+    description = models.TextField(
+        verbose_name=_("description"),
+        blank=True,
+    )
 
     class Meta:
         verbose_name = _("asset type")

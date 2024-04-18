@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
 from django.urls import reverse
@@ -5,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
 from processes.models.process_instance import ProcessInstance
-from users.models import User
 
 
 class ProcessActivity(BaseModel):
@@ -19,7 +19,7 @@ class ProcessActivity(BaseModel):
     description = models.TextField(verbose_name=_("description"))
     asignee = models.ForeignKey(
         verbose_name=_("asignee"),
-        to=User,
+        to=settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="activities",
         null=True,

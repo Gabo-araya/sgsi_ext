@@ -25,6 +25,7 @@ class BaseModel(AuditMixin, models.Model):
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name="+",
+        blank=True,
         null=True,
     )
     updated_at = models.DateTimeField(
@@ -38,6 +39,7 @@ class BaseModel(AuditMixin, models.Model):
         to=settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name="+",
+        blank=True,
         null=True,
     )
 
@@ -55,11 +57,13 @@ class BaseModel(AuditMixin, models.Model):
         )
 
     def _save_addition(self, user, message):
-        self.update(created_by=user, updated_by=user, skip_save=True)
+        if user and not user.is_anonymous:
+            self.update(created_by=user, updated_by=user, skip_save=True)
         return super()._save_addition(user, message)
 
     def _save_edition(self, user, message):
-        self.update(updated_by=user, skip_save=True)
+        if user and not user.is_anonymous:
+            self.update(updated_by=user, skip_save=True)
         return super()._save_edition(user, message)
 
     # public methods

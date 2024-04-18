@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -14,14 +15,23 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
     document = models.ForeignKey(
         verbose_name=_("document"),
         to=Document,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="versions",
     )
-    version = models.PositiveIntegerField(verbose_name=_("version"))
-    is_approved = models.BooleanField(verbose_name=_("is approved"), default=False)
+    version = models.PositiveIntegerField(
+        verbose_name=_("version"),
+    )
+    comment = models.TextField(
+        verbose_name=_("comment"),
+        blank=True,
+    )
+    is_approved = models.BooleanField(
+        verbose_name=_("is approved"),
+        default=False,
+    )
     read_by = models.ManyToManyField(
         verbose_name=_("read by users"),
-        to=User,
+        to=settings.AUTH_USER_MODEL,
         through=DocumentVersionReadByUser,
         through_fields=("document_version", "user"),
         related_name="read_document_versions",
