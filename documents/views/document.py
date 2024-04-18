@@ -27,8 +27,10 @@ class DocumentDetailView(BaseDetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["read_by_user"] = self.object.last_approved_version.was_read_by_user(
-            self.request.user
+        context["read_by_user"] = (
+            self.object.last_approved_version.was_read_by_user(self.request.user)
+            if self.object.last_approved_version
+            else True
         )
         return context
 

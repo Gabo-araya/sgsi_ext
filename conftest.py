@@ -16,4 +16,5 @@ pytest_plugins = [
     "documents.fixtures",
     "information_assets.fixtures",
     "risks.fixtures",
+    "processes.fixtures",
 ]

@@ -60,11 +60,6 @@ documentversion_urlpatterns = [
         documentversion_views.DocumentVersionApproveView.as_view(),
         name="documentversion_approve",
     ),
-    path(
-        "versions/<int:pk>/mark-as-read/",
-        documentversion_views.DocumentVersionMarkAsReadView.as_view(),
-        name="documentversion_mark_as_read",
-    ),
 ]
 
 controlcatergory_urlpatterns = [

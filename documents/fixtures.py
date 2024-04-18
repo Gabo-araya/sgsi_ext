@@ -5,6 +5,7 @@ from documents.models.control_category import ControlCategory
 from documents.models.document import Document
 from documents.models.document_version import DocumentVersion
 from documents.models.document_version_read_by_user import DocumentVersionReadByUser
+from documents.models.evidence import Evidence
 
 
 @pytest.fixture
@@ -45,3 +46,9 @@ def document():
     return Document.objects.create(
         title="test document", description="test description"
     )
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def evidence(document_version, django_file):
+    return Evidence.objects.create(document_version=document_version, file=django_file)
