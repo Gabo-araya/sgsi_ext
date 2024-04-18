@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
-from processes.models.process import Process
+from processes.models.process_instance import ProcessInstance
 from users.models import User
 
 
@@ -66,10 +66,12 @@ class ProcessActivity(BaseModel):
         ).get("order__max")
         self.order = last_order + 1 if last_order is not None else 1
 
-    def create_activity_for_process(self, process: Process) -> None:
+    def create_activity_for_process_instance(
+        self, process_instance: ProcessInstance
+    ) -> None:
         if self.asignee is not None:
-            process.activities.create(
-                process=process,
+            process_instance.activities.create(
+                process_instance=process_instance,
                 activity=self,
                 order=self.order,
                 description=self.description,
@@ -77,8 +79,8 @@ class ProcessActivity(BaseModel):
             )
         else:
             for user in self.asignee_group.user_set.all():
-                process.activities.create(
-                    process=process,
+                process_instance.activities.create(
+                    process_instance=process_instance,
                     activity=self,
                     order=self.order,
                     description=self.description,

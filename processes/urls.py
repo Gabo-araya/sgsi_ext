@@ -1,38 +1,38 @@
 from django.urls import include
 from django.urls import path
 
-from processes.views import process as process_views
 from processes.views import process_activity as processactivity_views
 from processes.views import (
     process_activity_instance as processactivityinstanceinstance_views,
 )
 from processes.views import process_definition as processdefinition_views
+from processes.views import process_instance as processinstance_views
 
-process_urlpatterns = [
+processinstance_urlpatterns = [
     path(
         "",
-        process_views.ProcessListView.as_view(),
-        name="process_list",
+        processinstance_views.ProcessInstanceListView.as_view(),
+        name="processinstance_list",
     ),
     path(
         "create/",
-        process_views.ProcessCreateView.as_view(),
-        name="process_create",
+        processinstance_views.ProcessInstanceCreateView.as_view(),
+        name="processinstance_create",
     ),
     path(
         "<int:pk>/",
-        process_views.ProcessDetailView.as_view(),
-        name="process_detail",
+        processinstance_views.ProcessInstanceDetailView.as_view(),
+        name="processinstance_detail",
     ),
     path(
         "<int:pk>/update/",
-        process_views.ProcessUpdateView.as_view(),
-        name="process_update",
+        processinstance_views.ProcessInstanceUpdateView.as_view(),
+        name="processinstance_update",
     ),
     path(
         "<int:pk>/delete/",
-        process_views.ProcessDeleteView.as_view(),
-        name="process_delete",
+        processinstance_views.ProcessInstanceDeleteView.as_view(),
+        name="processinstance_delete",
     ),
 ]
 
@@ -96,7 +96,7 @@ processactivity_urlpatterns = [
 ]
 
 urlpatterns = [
-    path("processes/", include(process_urlpatterns)),
+    path("processes/", include(processinstance_urlpatterns)),
     path("process-definitions/", include(processdefinition_urlpatterns)),
     path("activity-instances/", include(processactivityinstanceinstance_urlpatterns)),
     path("activities/", include(processactivity_urlpatterns)),

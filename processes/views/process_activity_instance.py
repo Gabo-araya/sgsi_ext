@@ -15,14 +15,16 @@ class ProcessActivityInstanceCompleteView(BaseUpdateView):
     template_name = "processes/processactivityinstance/update.html"
     permission_required = "processes.change_processactivityinstance"
 
-    def get_process_detail_url(self) -> str:
-        return reverse("process_detail", args=(self.object.process.pk,))
+    def get_processinstance_detail_url(self) -> str:
+        return reverse(
+            "processinstance_detail", args=(self.object.process_instance.pk,)
+        )
 
     def get_success_url(self):
-        return self.get_process_detail_url()
+        return self.get_processinstance_detail_url()
 
     def get_cancel_url(self):
-        return self.get_process_detail_url()
+        return self.get_processinstance_detail_url()
 
     def form_valid(self, form: type[ModelForm]) -> HttpResponse:
         response = super().form_valid(form)

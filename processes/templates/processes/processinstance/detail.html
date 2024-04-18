@@ -3,17 +3,17 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.change_process %}
+  {% if perms.processes.change_processinstance %}
     <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'process_update' process.id %}">
-      {% trans "Update process" %}
+       href="{% url 'processinstance_update' processinstance.id %}">
+      {% trans "Update process instance" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.processes.delete_process %}
+  {% if perms.processes.delete_processinstance %}
     <a class="btn btn-sm btn-danger"
-       href="{% url 'process_delete' process.id %}">
-      {% trans "Delete process" %}
+       href="{% url 'processinstance_delete' processinstance.id %}">
+      {% trans "Delete process instance" %}
       <i class="fa fa-times"></i>
     </a>
   {% endif %}
@@ -21,7 +21,7 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'process_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    <a href="{% url 'processinstance_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
   </li>
 {% endblock breadcrumbs %}
 
@@ -30,33 +30,33 @@
     <tbody>
       <tr>
         <th>{% trans "name"|capfirst %}</th>
-        <td>{{ process.name }}</td>
+        <td>{{ processinstance.name }}</td>
       </tr>
       <tr>
         <th>{% trans "control"|capfirst %}</th>
         <td>
-          {% with control=process.control %}<a href="{{ control.get_absolute_url }}">{{ control }}</a>{% endwith %}
+          {% with control=processinstance.control %}<a href="{{ control.get_absolute_url }}">{{ control }}</a>{% endwith %}
         </td>
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>
-        <td>{{ process.created_at }}</td>
+        <td>{{ processinstance.created_at }}</td>
       </tr>
       <tr>
         <th>{% trans "created by"|capfirst %}</th>
-        <td>{{ process.created_by.get_label }}</td>
+        <td>{{ processinstance.created_by.get_label }}</td>
       </tr>
       <tr>
         <th>{% trans "completed"|capfirst %}</th>
-        <td>{{ process.completed|yesno|capfirst }}</td>
+        <td>{{ processinstance.completed|yesno|capfirst }}</td>
       </tr>
       <tr>
         <th>{% trans "completed at"|capfirst %}</th>
-        <td>{{ process.completed_at|default_if_none:"-" }}</td>
+        <td>{{ processinstance.completed_at|default_if_none:"-" }}</td>
       </tr>
     </tbody>
   </table>
   <br>
   <h2>{% trans "activities"|capfirst %}</h2>
-  {% include "processes/includes/processactivityinstanceinstance_table.html" with object_list=process.activities.all %}
+  {% include "processes/includes/processactivityinstanceinstance_table.html" with object_list=processinstance.activities.all %}
 {% endblock content %}

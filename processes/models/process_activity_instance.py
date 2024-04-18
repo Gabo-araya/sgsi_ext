@@ -6,17 +6,17 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
 from documents.models.document_version import DocumentVersion
-from processes.models.process import Process
 from processes.models.process_activity import ProcessActivity
+from processes.models.process_instance import ProcessInstance
 from users.models import User
 
 
 class ProcessActivityInstance(BaseModel):
-    process = models.ForeignKey(
-        to=Process,
+    process_instance = models.ForeignKey(
+        to=ProcessInstance,
         on_delete=models.PROTECT,
         related_name="activity_instances",
-        verbose_name=_("process"),
+        verbose_name=_("process instance"),
     )
     activity = models.ForeignKey(
         to=ProcessActivity,
@@ -50,14 +50,14 @@ class ProcessActivityInstance(BaseModel):
         verbose_name_plural = _("process activity instances")
 
     def __str__(self) -> str:
-        return f"{self.process} - {self.activity}"
+        return f"{self.process_instance} - {self.activity}"
 
     def get_absolute_url(self) -> str:
         return reverse("processactivityinstanceinstance_detail", args=(self.pk,))
 
     def mark_as_completed(self) -> None:
         self.update(completed=True, completed_at=timezone.now())
-        self.process.check_if_completed()
+        self.process_instance.check_if_completed()
 
     def get_latest_document_version(self) -> DocumentVersion:
-        return self.process.get_latest_document_version()
+        return self.process_instance.get_latest_document_version()

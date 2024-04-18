@@ -11,7 +11,7 @@ from documents.models.control import Control
 from processes.enums import TimeFrameChoices
 
 if TYPE_CHECKING:
-    from processes.models.process import Process
+    from processes.models.process_instance import ProcessInstance
 
 
 class ProcessDefinition(BaseModel):
@@ -36,9 +36,11 @@ class ProcessDefinition(BaseModel):
     def __str__(self) -> str:
         return self.name
 
-    def create_activities_for_process(self, process: Process) -> None:
+    def create_activities_for_process_instance(
+        self, process_instance: ProcessInstance
+    ) -> None:
         for activity in self.activities.all():
-            activity.create_activity_for_process(process)
+            activity.create_activity_for_process_instance(process_instance)
 
     def get_absolute_url(self) -> str:
         return reverse("processdefinition_detail", args=(self.pk,))

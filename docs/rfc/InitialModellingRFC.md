@@ -136,7 +136,7 @@ package Risks {
         + severity: SeverityChoices
         + likelihood: LikelihoodChoices
         + treatment: TreatmentChoices
-        + process: Process
+        + process_instance: ProcessInstance
         + residual_risk: Risk
     }
     enum LikelihoodChoices {
@@ -169,13 +169,13 @@ class Documents.Control {
     ...
 }
 
-class Processes.Process {
+class Processes.ProcessInstance {
     ...
 }
 
 Risks.Risk -up-* Assets.Asset
 Risks.Risk -up-* Documents.Control
-Risks.Risk -up-* Processes.Process
+Risks.Risk -up-* Processes.ProcessInstance
 Risks.Risk -left* Risks.LikelihoodChoices
 Risks.Risk --* Risks.TreatmentChoices
 Risks.Risk --* Risks.SeverityChoices
@@ -192,7 +192,7 @@ package Processes {
         + control: Control
         + recurrency: TimeFrameChoices | None
     }
-    class Process {
+    class ProcessInstance {
         + id: int
         + process_definition: ProcessDefinition
         + name: char
@@ -210,7 +210,7 @@ package Processes {
     }
     class ProcessActivityInstance {
         + id: int
-        + process: Process
+        + process_instance: ProcessInstance
         + activity: ActivityDefinition
         + order: int
         + description: text
@@ -240,9 +240,9 @@ class Documents.DocumentVersion {
 
 Processes.ProcessDefinition -up-* Documents.Control
 Processes.ProcessDefinition -left* Processes.TimeFrameChoices
-Processes.Process -up-* Documents.DocumentVersion
-Processes.Process -left* Processes.ProcessDefinition
+Processes.ProcessInstance -up-* Documents.DocumentVersion
+Processes.ProcessInstance -left* Processes.ProcessDefinition
 Processes.ProcessActivity --* Processes.ProcessDefinition
 Processes.ProcessActivityInstance -* Processes.ProcessActivity
-Processes.ProcessActivityInstance -up-* Processes.Process
+Processes.ProcessActivityInstance -up-* Processes.ProcessInstance
 ```

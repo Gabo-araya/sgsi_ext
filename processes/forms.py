@@ -2,10 +2,10 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from base.forms import BaseModelForm
-from processes.models.process import Process
 from processes.models.process_activity import ProcessActivity
 from processes.models.process_activity_instance import ProcessActivityInstance
 from processes.models.process_definition import ProcessDefinition
+from processes.models.process_instance import ProcessInstance
 
 
 class ProcessDefinitionForm(BaseModelForm):
@@ -28,9 +28,9 @@ class ProcessActivityForm(BaseModelForm):
         self.fields["asignee"].label_from_instance = lambda user: user.get_label()
 
 
-class ProcessForm(BaseModelForm):
+class ProcessInstanceForm(BaseModelForm):
     class Meta:
-        model = Process
+        model = ProcessInstance
         fields = ("process_definition",)
 
 

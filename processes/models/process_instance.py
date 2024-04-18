@@ -9,7 +9,7 @@ from documents.models.document_version import DocumentVersion
 from processes.models.process_definition import ProcessDefinition
 
 
-class Process(BaseModel):
+class ProcessInstance(BaseModel):
     process_definition = models.ForeignKey(
         verbose_name=_("process definition"),
         to=ProcessDefinition,
@@ -29,8 +29,8 @@ class Process(BaseModel):
     )
 
     class Meta:
-        verbose_name = _("process")
-        verbose_name_plural = _("processes")
+        verbose_name = _("process instance")
+        verbose_name_plural = _("process instances")
 
     def __str__(self) -> str:
         return self.name
@@ -39,7 +39,7 @@ class Process(BaseModel):
         if self._state.adding:
             self.set_attributes_from_definition()
             super().save(*args, **kwargs)
-            self.process_definition.create_activities_for_process(self)
+            self.process_definition.create_activities_for_process_instance(self)
         else:
             super().save(*args, **kwargs)
 
@@ -48,7 +48,7 @@ class Process(BaseModel):
         self.control = self.process_definition.control
 
     def get_absolute_url(self) -> str:
-        return reverse("process_detail", args=(self.pk,))
+        return reverse("processinstance_detail", args=(self.pk,))
 
     def check_if_completed(self) -> None:
         if self.activities.filter(completed=False).count() == 0:
