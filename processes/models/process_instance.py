@@ -6,21 +6,21 @@ from django.utils.translation import gettext_lazy as _
 from base.models.base_model import BaseModel
 from documents.models.control import Control
 from documents.models.document_version import DocumentVersion
-from processes.models.process_definition import ProcessDefinition
+from processes.models.process import Process
 
 
 class ProcessInstance(BaseModel):
-    process_definition = models.ForeignKey(
-        verbose_name=_("process definition"),
-        to=ProcessDefinition,
+    process = models.ForeignKey(
+        verbose_name=_("process"),
+        to=Process,
         on_delete=models.CASCADE,
-        related_name="processes",
+        related_name="process_instances",
     )
     name = models.CharField(verbose_name=_("name"), max_length=255)
     control = models.ForeignKey(
         to=Control,
         on_delete=models.CASCADE,
-        related_name="processes",
+        related_name="process_instances",
         verbose_name=_("control"),
     )
     completed = models.BooleanField(verbose_name=_("completed"), default=False)
@@ -39,13 +39,13 @@ class ProcessInstance(BaseModel):
         if self._state.adding:
             self.set_attributes_from_definition()
             super().save(*args, **kwargs)
-            self.process_definition.create_activities_for_process_instance(self)
+            self.process.create_activities_for_process_instance(self)
         else:
             super().save(*args, **kwargs)
 
     def set_attributes_from_definition(self) -> None:
-        self.name = self.process_definition.name
-        self.control = self.process_definition.control
+        self.name = self.process.name
+        self.control = self.process.control
 
     def get_absolute_url(self) -> str:
         return reverse("processinstance_detail", args=(self.pk,))

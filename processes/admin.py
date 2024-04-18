@@ -1,8 +1,8 @@
 from django.contrib import admin
 
+from processes.models.process import Process
 from processes.models.process_activity import ProcessActivity
 from processes.models.process_activity_instance import ProcessActivityInstance
-from processes.models.process_definition import ProcessDefinition
 from processes.models.process_instance import ProcessInstance
 
 
@@ -11,8 +11,8 @@ class ProcessInstanceAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(ProcessDefinition)
-class ProcessDefinitionAdmin(admin.ModelAdmin):
+@admin.register(Process)
+class ProcessAdmin(admin.ModelAdmin):
     pass
 
 

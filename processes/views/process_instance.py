@@ -6,7 +6,7 @@ from base.views.generic import BaseDetailView
 from base.views.generic import BaseListView
 from base.views.generic import BaseUpdateView
 from processes.forms import ProcessInstanceForm
-from processes.models.process_definition import ProcessDefinition
+from processes.models.process import Process
 from processes.models.process_instance import ProcessInstance
 
 
@@ -24,11 +24,9 @@ class ProcessInstanceCreateView(BaseCreateView):
 
     def get_initial(self) -> dict[str, Any]:
         initial = super().get_initial()
-        process_definition_pk = self.kwargs.get("process_definition_pk")
-        if process_definition_pk is not None:
-            initial["process_definition"] = ProcessDefinition.objects.get(
-                pk=process_definition_pk
-            )
+        process_pk = self.kwargs.get("process_pk")
+        if process_pk is not None:
+            initial["process"] = Process.objects.get(pk=process_pk)
         return initial
 
 

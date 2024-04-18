@@ -4,8 +4,8 @@ from base.views.generic.edit import BaseSubModelCreateView
 from base.views.generic.edit import BaseUpdateView
 from base.views.generic.list import BaseListView
 from processes.forms import ProcessActivityForm
+from processes.models.process import Process
 from processes.models.process_activity import ProcessActivity
-from processes.models.process_definition import ProcessDefinition
 
 
 class ProcessActivityListView(BaseListView):
@@ -16,7 +16,7 @@ class ProcessActivityListView(BaseListView):
 
 class ProcessActivityCreateView(BaseSubModelCreateView):
     model = ProcessActivity
-    parent_model = ProcessDefinition
+    parent_model = Process
     form_class = ProcessActivityForm
     template_name = "processes/processactivity/create.html"
     permission_required = "processes.add_processactivity"

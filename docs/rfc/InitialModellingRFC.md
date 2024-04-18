@@ -186,7 +186,7 @@ And lastly the processes module
 
 ```plantuml
 package Processes {
-    class ProcessDefinition {
+    class Process {
         + id: int
         + name: char
         + control: Control
@@ -194,7 +194,7 @@ package Processes {
     }
     class ProcessInstance {
         + id: int
-        + process_definition: ProcessDefinition
+        + process: Process
         + name: char
         + control: Control
         + completed: bool
@@ -202,7 +202,7 @@ package Processes {
     }
     class ProcessActivity {
         + id: int
-        + process_definition: ProcessDefinition
+        + process: Process
         + order: int
         + description: text
         + asignee: User
@@ -211,7 +211,7 @@ package Processes {
     class ProcessActivityInstance {
         + id: int
         + process_instance: ProcessInstance
-        + activity: ActivityDefinition
+        + activity: Activity
         + order: int
         + description: text
         + asignee: User
@@ -238,11 +238,11 @@ class Documents.DocumentVersion {
 }
 
 
-Processes.ProcessDefinition -up-* Documents.Control
-Processes.ProcessDefinition -left* Processes.TimeFrameChoices
+Processes.Process -up-* Documents.Control
+Processes.Process -left* Processes.TimeFrameChoices
 Processes.ProcessInstance -up-* Documents.DocumentVersion
-Processes.ProcessInstance -left* Processes.ProcessDefinition
-Processes.ProcessActivity --* Processes.ProcessDefinition
+Processes.ProcessInstance -left* Processes.Process
+Processes.ProcessActivity --* Processes.Process
 Processes.ProcessActivityInstance -* Processes.ProcessActivity
 Processes.ProcessActivityInstance -up-* Processes.ProcessInstance
 ```

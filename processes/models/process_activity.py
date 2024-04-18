@@ -9,11 +9,11 @@ from users.models import User
 
 
 class ProcessActivity(BaseModel):
-    process_definition = models.ForeignKey(
-        to="ProcessDefinition",
+    process = models.ForeignKey(
+        to="Process",
         on_delete=models.CASCADE,
         related_name="activities",
-        verbose_name=_("process definition"),
+        verbose_name=_("process"),
     )
     order = models.PositiveIntegerField(verbose_name=_("order"))
     description = models.TextField(verbose_name=_("description"))
@@ -37,7 +37,7 @@ class ProcessActivity(BaseModel):
     class Meta:
         verbose_name = _("process activity")
         verbose_name_plural = _("process activities")
-        ordering = ("process_definition", "order")
+        ordering = ("process", "order")
         constraints = (
             models.CheckConstraint(
                 check=(
@@ -53,7 +53,7 @@ class ProcessActivity(BaseModel):
         )
 
     def __str__(self) -> str:
-        return f"{self._meta.verbose_name} {self.order} for {self.process_definition}"
+        return f"{self._meta.verbose_name} {self.order} for {self.process}"
 
     def save(self, *args, **kwargs) -> None:
         if self._state.adding:
@@ -61,9 +61,9 @@ class ProcessActivity(BaseModel):
         return super().save(*args, **kwargs)
 
     def _auto_increment_order(self) -> None:
-        last_order = self.process_definition.activities.aggregate(
-            models.Max("order")
-        ).get("order__max")
+        last_order = self.process.activities.aggregate(models.Max("order")).get(
+            "order__max"
+        )
         self.order = last_order + 1 if last_order is not None else 1
 
     def create_activity_for_process_instance(

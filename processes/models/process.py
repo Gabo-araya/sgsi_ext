@@ -14,12 +14,12 @@ if TYPE_CHECKING:
     from processes.models.process_instance import ProcessInstance
 
 
-class ProcessDefinition(BaseModel):
+class Process(BaseModel):
     name = models.CharField(verbose_name=_("name"), max_length=255)
     control = models.ForeignKey(
         to=Control,
         on_delete=models.CASCADE,
-        related_name="process_definitions",
+        related_name="processes",
         verbose_name=_("control"),
     )
     recurrency = models.CharField(
@@ -30,8 +30,8 @@ class ProcessDefinition(BaseModel):
     )
 
     class Meta:
-        verbose_name = _("process definition")
-        verbose_name_plural = _("process definitions")
+        verbose_name = _("process")
+        verbose_name_plural = _("processes")
 
     def __str__(self) -> str:
         return self.name
@@ -43,4 +43,4 @@ class ProcessDefinition(BaseModel):
             activity.create_activity_for_process_instance(process_instance)
 
     def get_absolute_url(self) -> str:
-        return reverse("processdefinition_detail", args=(self.pk,))
+        return reverse("process_detail", args=(self.pk,))

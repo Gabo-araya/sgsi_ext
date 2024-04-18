@@ -5,22 +5,22 @@
 {% block options %}
   {% if perms.processes.add_processactivity %}
     <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'processactivity_create' processdefinition.pk %}">
+       href="{% url 'processactivity_create' process.pk %}">
       {% trans "Add process activity" %}
       <i class="fa fa-plus"></i>
     </a>
   {% endif %}
-  {% if perms.processes.change_processdefinition %}
+  {% if perms.processes.change_process %}
     <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'processdefinition_update' processdefinition.id %}">
-      {% trans "Update process definition" %}
+       href="{% url 'process_update' process.id %}">
+      {% trans "Update process" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.processes.delete_processdefinition %}
+  {% if perms.processes.delete_process %}
     <a class="btn btn-sm btn-danger"
-       href="{% url 'processdefinition_delete' processdefinition.id %}">
-      {% trans "Delete process definition" %}
+       href="{% url 'process_delete' process.id %}">
+      {% trans "Delete process" %}
       <i class="fa fa-times"></i>
     </a>
   {% endif %}
@@ -28,7 +28,7 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'processdefinition_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    <a href="{% url 'process_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
   </li>
 {% endblock breadcrumbs %}
 
@@ -37,11 +37,11 @@
     <tbody>
       <tr>
         <th>{% trans "name"|capfirst %}</th>
-        <td>{{ processdefinition.name }}</td>
+        <td>{{ process.name }}</td>
       </tr>
       <tr>
         <th>{% trans "control"|capfirst %}</th>
-        {% with control=processdefinition.control %}
+        {% with control=process.control %}
           <td>
             <a href="{{ control.get_absolute_url }}">{{ control }}</a>
           </td>
@@ -49,27 +49,27 @@
       </tr>
       <tr>
         <th>{% trans "recurrency"|capfirst %}</th>
-        <td>{{ processdefinition.get_recurrency_display|default:"-" }}</td>
+        <td>{{ process.get_recurrency_display|default:"-" }}</td>
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>
-        <td>{{ processdefinition.created_at }}</td>
+        <td>{{ process.created_at }}</td>
       </tr>
       <tr>
         <th>{% trans "created by"|capfirst %}</th>
-        <td>{{ processdefinition.created_by.get_label }}</td>
+        <td>{{ process.created_by.get_label }}</td>
       </tr>
       <tr>
         <th>{% trans "updated at"|capfirst %}</th>
-        <td>{{ processdefinition.updated_at }}</td>
+        <td>{{ process.updated_at }}</td>
       </tr>
       <tr>
         <th>{% trans "updated by"|capfirst %}</th>
-        <td>{{ processdefinition.updated_by.get_label }}</td>
+        <td>{{ process.updated_by.get_label }}</td>
       </tr>
     </tbody>
   </table>
   <br>
   <h2>{% trans "activities"|capfirst %}</h2>
-  {% include "processes/includes/processactivity_table.html" with object_list=processdefinition.activities.all %}
+  {% include "processes/includes/processactivity_table.html" with object_list=process.activities.all %}
 {% endblock content %}

@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
 from documents.models.document_version import DocumentVersion
+from documents.models.evidence import Evidence
 from processes.models.process_activity import ProcessActivity
 from processes.models.process_instance import ProcessInstance
 from users.models import User
@@ -43,6 +44,12 @@ class ProcessActivityInstance(BaseModel):
     completed = models.BooleanField(verbose_name=_("completed"), default=False)
     completed_at = models.DateTimeField(
         verbose_name=_("completed at"), null=True, blank=True
+    )
+    evidence = models.OneToOneField(
+        verbose_name=_("evidence"),
+        to=Evidence,
+        on_delete=models.PROTECT,
+        related_name="process_activity_instance",
     )
 
     class Meta:

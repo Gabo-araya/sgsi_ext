@@ -21,11 +21,11 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'processdefinition_list' %}">{% trans "process definitions"|capfirst %}</a>
+    <a href="{% url 'process_list' %}">{% trans "processes"|capfirst %}</a>
   </li>
   <li class="breadcrumb-item">
-    {% with processdefinition=processactivity.process_definition %}
-      <a href="{% url 'processdefinition_detail' processdefinition.pk %}">{{ processdefinition }}</a>
+    {% with process=processactivity.process %}
+      <a href="{% url 'process_detail' process.pk %}">{{ process }}</a>
     {% endwith %}
   </li>
 {% endblock breadcrumbs %}
@@ -34,10 +34,10 @@
   <table class="table table-striped table-hover table-sm">
     <tbody>
       <tr>
-        <th>{% trans "process definition"|capfirst %}</th>
-        {% with process_definition=processactivity.process_definition %}
+        <th>{% trans "process"|capfirst %}</th>
+        {% with process=processactivity.process %}
           <td>
-            <a href="{{ process_definition.get_absolute_url }}">{{ process_definition }}</a>
+            <a href="{{ process.get_absolute_url }}">{{ process }}</a>
           </td>
         {% endwith %}
       </tr>
