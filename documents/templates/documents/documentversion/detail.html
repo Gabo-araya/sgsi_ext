@@ -46,6 +46,10 @@
         <td>{{ documentversion.version }}</td>
       </tr>
       <tr>
+        <th>{% trans "comment"|capfirst %}</th>
+        <td>{{ documentversion.comment }}</td>
+      </tr>
+      <tr>
         <th>{% trans "file"|capfirst %}</th>
         <td>
           <a href="{{ documentversion.file.url }}">{{ documentversion.file|filename }}</a>
