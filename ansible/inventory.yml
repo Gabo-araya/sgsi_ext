@@ -4,7 +4,7 @@ all:
       ansible_host: 104.131.163.155
       server_domain: sgsi-stg.do.magnet.cl
       site_name: "SGSI Staging"
-      branch: development
+      branch: release/0001
       docker_mountpoint: /
 
   vars:
