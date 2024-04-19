@@ -42,10 +42,14 @@ class Document(BaseModel):
 
     @property
     def latest_update(self) -> datetime.datetime:
+        if not self.versions.exists():
+            return self.updated_at
         return max(self.updated_at, self.versions.latest("updated_at").updated_at)
 
     @property
     def latest_updator(self) -> datetime.datetime:
+        if not self.versions.exists():
+            return self.updated_by
         return max(
             self, self.versions.latest("updated_at"), key=lambda x: x.updated_at
         ).updated_by
