@@ -1,13 +1,12 @@
 all:
   hosts:
-   # dev:
-    #   ansible_host: 12.34.56.78
-    #   server_domain: dj3-dev.do.magnet.cl
-    #   Avoid putting 'production' on production sites in case emails use the site name.
-    #   site_name: "DPT Playground"
-    #   branch: dev
-    #   docker_mountpoint: /
+    staging:
+      ansible_host: 104.131.163.155
+      server_domain: sgsi-stg.do.magnet.cl
+      site_name: "SGSI Staging"
+      branch: main
+      docker_mountpoint: /
 
   vars:
-    minimum_free_space: 2048
+    minimum_free_space: 4096
     ansible_user: magnet
