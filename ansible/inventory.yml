@@ -7,6 +7,13 @@ all:
       branch: release/0001
       docker_mountpoint: /
 
+    production:
+      ansible_host: 209.97.154.158
+      server_domain: compliance.magnet.cl
+      site_name: "Compliance"
+      branch: main
+      docker_mountpoint: /
+
   vars:
     minimum_free_space: 4096
     ansible_user: magnet
