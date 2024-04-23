@@ -194,7 +194,7 @@ package Processes {
     }
     class ProcessInstance {
         + id: int
-        + process: Process
+        + process_version: Process
         + name: char
         + control: Control
         + completed: bool
@@ -202,7 +202,7 @@ package Processes {
     }
     class ProcessActivity {
         + id: int
-        + process: Process
+        + process_version: Process
         + order: int
         + description: text
         + asignee: User

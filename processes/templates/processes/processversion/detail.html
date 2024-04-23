@@ -5,22 +5,22 @@
 {% block options %}
   {% if perms.processes.add_processactivity %}
     <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'processactivity_create' process.pk %}">
+       href="{% url 'processactivity_create' processversion.pk %}">
       {% trans "Add process activity" %}
       <i class="fa fa-plus"></i>
     </a>
   {% endif %}
-  {% if perms.processes.change_process %}
+  {% if perms.processes.change_processversion %}
     <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'process_update' process.id %}">
-      {% trans "Update process" %}
+       href="{% url 'processversion_update' processversion.id %}">
+      {% trans "Update process version" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.processes.delete_process %}
+  {% if perms.processes.delete_processversion %}
     <a class="btn btn-sm btn-danger"
-       href="{% url 'process_delete' process.id %}">
-      {% trans "Delete process" %}
+       href="{% url 'processversion_delete' processversion.id %}">
+      {% trans "Delete process version" %}
       <i class="fa fa-times"></i>
     </a>
   {% endif %}
@@ -28,7 +28,7 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'process_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    <a href="{% url 'processversion_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
   </li>
 {% endblock breadcrumbs %}
 
@@ -37,11 +37,11 @@
     <tbody>
       <tr>
         <th>{% trans "name"|capfirst %}</th>
-        <td>{{ process.name }}</td>
+        <td>{{ processversion.name }}</td>
       </tr>
       <tr>
         <th>{% trans "control"|capfirst %}</th>
-        {% with control=process.control %}
+        {% with control=processversion.control %}
           <td>
             <a href="{{ control.get_absolute_url }}">{{ control }}</a>
           </td>
@@ -49,27 +49,27 @@
       </tr>
       <tr>
         <th>{% trans "recurrency"|capfirst %}</th>
-        <td>{{ process.get_recurrency_display|default:"-" }}</td>
+        <td>{{ processversion.get_recurrency_display|default:"-" }}</td>
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>
-        <td>{{ process.created_at }}</td>
+        <td>{{ processversion.created_at }}</td>
       </tr>
       <tr>
         <th>{% trans "created by"|capfirst %}</th>
-        <td>{{ process.created_by.get_label }}</td>
+        <td>{{ processversion.created_by.get_label }}</td>
       </tr>
       <tr>
         <th>{% trans "updated at"|capfirst %}</th>
-        <td>{{ process.updated_at }}</td>
+        <td>{{ processversion.updated_at }}</td>
       </tr>
       <tr>
         <th>{% trans "updated by"|capfirst %}</th>
-        <td>{{ process.updated_by.get_label }}</td>
+        <td>{{ processversion.updated_by.get_label }}</td>
       </tr>
     </tbody>
   </table>
   <br>
   <h2>{% trans "activities"|capfirst %}</h2>
-  {% include "processes/includes/processactivity_table.html" with object_list=process.activities.all %}
+  {% include "processes/includes/processactivity_table.html" with object_list=processversion.activities.all %}
 {% endblock content %}

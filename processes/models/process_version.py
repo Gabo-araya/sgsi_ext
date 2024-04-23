@@ -11,16 +11,15 @@ from documents.models.control import Control
 from processes.enums import TimeFrameChoices
 
 if TYPE_CHECKING:
-    from processes.models.process_instance import ProcessInstance
+    pass
 
 
-class Process(BaseModel):
-    name = models.CharField(verbose_name=_("name"), max_length=255)
+class ProcessVersion(BaseModel):
     control = models.ForeignKey(
         verbose_name=_("control"),
         to=Control,
         on_delete=models.PROTECT,
-        related_name="processes",
+        related_name="process_versions",
     )
     recurrency = models.CharField(
         verbose_name=_("recurrency"),
@@ -30,17 +29,12 @@ class Process(BaseModel):
     )
 
     class Meta:
-        verbose_name = _("process")
-        verbose_name_plural = _("processes")
+        verbose_name = _("process version")
+        verbose_name_plural = _("process versions")
 
     def __str__(self) -> str:
-        return self.name
-
-    def create_activities_for_process_instance(
-        self, process_instance: ProcessInstance
-    ) -> None:
-        for activity in self.activities.all():
-            activity.create_activity_for_process_instance(process_instance)
+        # TODO: implement
+        return ""
 
     def get_absolute_url(self) -> str:
-        return reverse("process_detail", args=(self.pk,))
+        return reverse("processversion_detail", args=(self.pk,))

@@ -6,8 +6,8 @@ from base.views.generic import BaseDetailView
 from base.views.generic import BaseListView
 from base.views.generic import BaseUpdateView
 from processes.forms import ProcessInstanceForm
-from processes.models.process import Process
 from processes.models.process_instance import ProcessInstance
+from processes.models.process_version import ProcessVersion
 
 
 class ProcessInstanceListView(BaseListView):
@@ -23,10 +23,11 @@ class ProcessInstanceCreateView(BaseCreateView):
     permission_required = "processes.add_processinstance"
 
     def get_initial(self) -> dict[str, Any]:
+        # TODO: fix this when process exists and make link to version
         initial = super().get_initial()
         process_pk = self.kwargs.get("process_pk")
         if process_pk is not None:
-            initial["process"] = Process.objects.get(pk=process_pk)
+            initial["process"] = ProcessVersion.objects.get(pk=process_pk)
         return initial
 
 

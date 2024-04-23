@@ -5,15 +5,14 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
-from processes.models.process_instance import ProcessInstance
 
 
 class ProcessActivity(BaseModel):
-    process = models.ForeignKey(
-        to="Process",
+    process_version = models.ForeignKey(
+        verbose_name=_("process version"),
+        to="ProcessVersion",
         on_delete=models.CASCADE,
         related_name="activities",
-        verbose_name=_("process"),
     )
     order = models.PositiveIntegerField(verbose_name=_("order"))
     description = models.TextField(verbose_name=_("description"))
@@ -37,7 +36,7 @@ class ProcessActivity(BaseModel):
     class Meta:
         verbose_name = _("process activity")
         verbose_name_plural = _("process activities")
-        ordering = ("process", "order")
+        ordering = ("process_version", "order")
         constraints = (
             models.CheckConstraint(
                 check=(
@@ -53,7 +52,7 @@ class ProcessActivity(BaseModel):
         )
 
     def __str__(self) -> str:
-        return f"{self._meta.verbose_name} {self.order} for {self.process}"
+        return f"{self._meta.verbose_name} {self.order} for {self.process_version}"
 
     def save(self, *args, **kwargs) -> None:
         if self._state.adding:
@@ -61,32 +60,10 @@ class ProcessActivity(BaseModel):
         return super().save(*args, **kwargs)
 
     def _auto_increment_order(self) -> None:
-        last_order = self.process.activities.aggregate(models.Max("order")).get(
+        last_order = self.process_version.activities.aggregate(models.Max("order")).get(
             "order__max"
         )
         self.order = last_order + 1 if last_order is not None else 1
-
-    def create_activity_for_process_instance(
-        self, process_instance: ProcessInstance
-    ) -> None:
-        if self.asignee is not None:
-            process_instance.activities.create(
-                process_instance=process_instance,
-                activity=self,
-                order=self.order,
-                description=self.description,
-                asignee=self.asignee,
-            )
-        else:
-            for user in self.asignee_group.user_set.all():
-                process_instance.activities.create(
-                    process_instance=process_instance,
-                    activity=self,
-                    order=self.order,
-                    description=self.description,
-                    asignee=user,
-                    asignee_group=self.asignee_group,
-                )
 
     def get_absolute_url(self) -> str:
         return reverse("processactivity_detail", args=(self.pk,))

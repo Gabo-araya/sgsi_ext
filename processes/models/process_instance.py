@@ -4,24 +4,16 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
-from documents.models.control import Control
 from documents.models.document_version import DocumentVersion
-from processes.models.process import Process
+from processes.models.process_version import ProcessVersion
 
 
 class ProcessInstance(BaseModel):
-    process = models.ForeignKey(
-        verbose_name=_("process"),
-        to=Process,
+    process_version = models.ForeignKey(
+        verbose_name=_("process version"),
+        to=ProcessVersion,
         on_delete=models.PROTECT,
-        related_name="process_instances",
-    )
-    name = models.CharField(verbose_name=_("name"), max_length=255)
-    control = models.ForeignKey(
-        to=Control,
-        on_delete=models.PROTECT,
-        related_name="process_instances",
-        verbose_name=_("control"),
+        related_name="instances",
     )
     completed = models.BooleanField(verbose_name=_("completed"), default=False)
     completed_at = models.DateTimeField(
@@ -34,18 +26,6 @@ class ProcessInstance(BaseModel):
 
     def __str__(self) -> str:
         return self.name
-
-    def save(self, *args, **kwargs) -> None:
-        if self._state.adding:
-            self.set_attributes_from_definition()
-            super().save(*args, **kwargs)
-            self.process.create_activities_for_process_instance(self)
-        else:
-            super().save(*args, **kwargs)
-
-    def set_attributes_from_definition(self) -> None:
-        self.name = self.process.name
-        self.control = self.process.control
 
     def get_absolute_url(self) -> str:
         return reverse("processinstance_detail", args=(self.pk,))
