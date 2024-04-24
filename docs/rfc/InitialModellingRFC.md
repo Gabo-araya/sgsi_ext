@@ -189,12 +189,17 @@ package Processes {
     class Process {
         + id: int
         + name: char
+    }
+    class ProcessVersion {
+        + id: int
+        + process: Process
+        + version: int
         + control: Control
         + recurrency: TimeFrameChoices | None
     }
     class ProcessInstance {
         + id: int
-        + process_version: Process
+        + process_version: ProcessVersion
         + name: char
         + control: Control
         + completed: bool
@@ -202,7 +207,7 @@ package Processes {
     }
     class ProcessActivity {
         + id: int
-        + process_version: Process
+        + process_version: ProcessVersion
         + order: int
         + description: text
         + asignee: User
@@ -238,11 +243,12 @@ class Documents.DocumentVersion {
 }
 
 
-Processes.Process -up-* Documents.Control
-Processes.Process -left* Processes.TimeFrameChoices
+Processes.ProcessVersion -up-* Documents.Control
+Processes.ProcessVersion --* Processes.TimeFrameChoices
 Processes.ProcessInstance -up-* Documents.DocumentVersion
-Processes.ProcessInstance -left* Processes.Process
-Processes.ProcessActivity --* Processes.Process
+Processes.ProcessInstance -left* Processes.ProcessVersion
+Processes.ProcessActivity --* Processes.ProcessVersion
+Processes.ProcessVersion -left-* Processes.Process
 Processes.ProcessActivityInstance -* Processes.ProcessActivity
 Processes.ProcessActivityInstance -up-* Processes.ProcessInstance
 ```

@@ -11,7 +11,7 @@ class ProcessActivity(BaseModel):
     process_version = models.ForeignKey(
         verbose_name=_("process version"),
         to="ProcessVersion",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="activities",
     )
     order = models.PositiveIntegerField(verbose_name=_("order"))

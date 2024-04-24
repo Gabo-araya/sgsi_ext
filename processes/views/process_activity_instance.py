@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from django.urls import reverse
 
 from base.views.generic.edit import BaseUpdateView
-from documents.models.evidence import Evidence
 from processes.forms import ProcessActivityInstanceCompleteForm
 from processes.models.process_activity_instance import ProcessActivityInstance
 
@@ -35,8 +34,5 @@ class ProcessActivityInstanceCompleteView(BaseUpdateView):
     def create_evidence(
         self, evidence_file: File, activity: ProcessActivityInstance
     ) -> None:
-        Evidence.objects.create(
-            document_version=activity.get_latest_document_version(),
-            activity=activity,
-            file=evidence_file,
-        )
+        # TODO: implement
+        raise NotImplementedError()

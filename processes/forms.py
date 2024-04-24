@@ -2,17 +2,25 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from base.forms import BaseModelForm
+from processes.models.process import Process
 from processes.models.process_activity import ProcessActivity
 from processes.models.process_activity_instance import ProcessActivityInstance
 from processes.models.process_instance import ProcessInstance
 from processes.models.process_version import ProcessVersion
 
 
+class ProcessForm(BaseModelForm):
+    class Meta:
+        model = Process
+        fields = ("name",)
+
+
 class ProcessVersionForm(BaseModelForm):
     class Meta:
         model = ProcessVersion
         fields = (
-            "control",
+            "defined_in",
+            "controls",
             "recurrency",
         )
 

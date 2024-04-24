@@ -4,22 +4,20 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
-from base.models.mixins import FileIntegrityModelBase
+from base.models.file_integrity_mixin import FileIntegrityModelBase
+from base.models.version_mixin import VersionModelBase
 from documents.managers import DocumentVersionQuerySet
 from documents.models.document import Document
 from documents.models.document_version_read_by_user import DocumentVersionReadByUser
 from users.models import User
 
 
-class DocumentVersion(FileIntegrityModelBase, BaseModel):
+class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
     document = models.ForeignKey(
         verbose_name=_("document"),
         to=Document,
         on_delete=models.PROTECT,
         related_name="versions",
-    )
-    version = models.PositiveIntegerField(
-        verbose_name=_("version"),
     )
     comment = models.TextField(
         verbose_name=_("comment"),
@@ -57,16 +55,8 @@ class DocumentVersion(FileIntegrityModelBase, BaseModel):
     def can_be_updated(self) -> bool:
         return not self.is_approved
 
-    def save(self, *args, **kwargs) -> None:
-        if self._state.adding:
-            self._auto_increment_version()
-        super().save(*args, **kwargs)
-
-    def _auto_increment_version(self) -> None:
-        last_version = self.document.versions.aggregate(models.Max("version")).get(
-            "version__max"
-        )
-        self.version = last_version + 1 if last_version is not None else 1
+    def _get_versioned_instance(self) -> Document:
+        return self.document
 
     def approve(self) -> None:
         self.update(is_approved=True)

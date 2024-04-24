@@ -7,14 +7,13 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.models import BaseModel
+from base.models.versionable_mixin import VersionableMixin
 
 if TYPE_CHECKING:
-    import datetime
-
     from documents.models.document_version import DocumentVersion
 
 
-class Document(BaseModel):
+class Document(VersionableMixin, BaseModel):
     title = models.CharField(
         verbose_name=_("title"),
         max_length=255,
@@ -33,26 +32,8 @@ class Document(BaseModel):
         return self.title
 
     @property
-    def last_version(self) -> DocumentVersion | None:
-        return self.versions.order_by("-version").first()
-
-    @property
     def last_approved_version(self) -> DocumentVersion | None:
         return self.versions.approved().order_by("-version").first()
-
-    @property
-    def latest_update(self) -> datetime.datetime:
-        if not self.versions.exists():
-            return self.updated_at
-        return max(self.updated_at, self.versions.latest("updated_at").updated_at)
-
-    @property
-    def latest_updator(self) -> datetime.datetime:
-        if not self.versions.exists():
-            return self.updated_by
-        return max(
-            self, self.versions.latest("updated_at"), key=lambda x: x.updated_at
-        ).updated_by
 
     @property
     def can_add_new_versions(self) -> bool:

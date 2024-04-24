@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
-from documents.models.document_version import DocumentVersion
 from documents.models.evidence import Evidence
 from processes.models.process_activity import ProcessActivity
 from processes.models.process_instance import ProcessInstance
@@ -75,6 +74,3 @@ class ProcessActivityInstance(BaseModel):
     def mark_as_completed(self) -> None:
         self.update(completed=True, completed_at=timezone.now())
         self.process_instance.check_if_completed()
-
-    def get_latest_document_version(self) -> DocumentVersion:
-        return self.process_instance.get_latest_document_version()

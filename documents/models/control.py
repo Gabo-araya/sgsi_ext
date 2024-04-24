@@ -5,7 +5,6 @@ from django.utils.translation import gettext_lazy as _
 from base.models.base_model import BaseModel
 from documents.models.control_category import ControlCategory
 from documents.models.document import Document
-from documents.models.document_version import DocumentVersion
 
 
 class Control(BaseModel):
@@ -44,6 +43,3 @@ class Control(BaseModel):
 
     def get_absolute_url(self):
         return reverse("control_detail", args=(self.pk,))
-
-    def get_latest_document_version(self) -> DocumentVersion:
-        return self.document.last_version

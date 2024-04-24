@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
-from base.models.mixins import FileIntegrityModelBase
+from base.models.file_integrity_mixin import FileIntegrityModelBase
 
 
 class Evidence(FileIntegrityModelBase, BaseModel):

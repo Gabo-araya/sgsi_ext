@@ -4,7 +4,10 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    <a href="{% url 'processversion_list' %}">{% trans "processes"|capfirst %}</a>
+    <a href="{% url 'process_list' %}">{% trans "processes"|capfirst %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    {% with process=object.process %}<a href="{{ process.get_absolute_url }}">{{ processs }}</a>{% endwith %}
   </li>
   <li class="breadcrumb-item">
     <a href="{% url 'processversion_detail' process.pk %}">{{ process }}</a>

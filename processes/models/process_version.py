@@ -1,24 +1,31 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
+from base.models.version_mixin import VersionModelBase
 from documents.models.control import Control
+from documents.models.document import Document
 from processes.enums import TimeFrameChoices
-
-if TYPE_CHECKING:
-    pass
+from processes.models.process import Process
 
 
-class ProcessVersion(BaseModel):
-    control = models.ForeignKey(
+class ProcessVersion(VersionModelBase, BaseModel):
+    process = models.ForeignKey(
+        verbose_name=_("process"),
+        to=Process,
+        on_delete=models.PROTECT,
+        related_name="versions",
+    )
+    defined_in = models.ForeignKey(
+        verbose_name=_("defined in"),
+        to=Document,
+        on_delete=models.PROTECT,
+        related_name="processes",
+    )
+    controls = models.ManyToManyField(
         verbose_name=_("control"),
         to=Control,
-        on_delete=models.PROTECT,
         related_name="process_versions",
     )
     recurrency = models.CharField(
@@ -33,8 +40,10 @@ class ProcessVersion(BaseModel):
         verbose_name_plural = _("process versions")
 
     def __str__(self) -> str:
-        # TODO: implement
-        return ""
+        return f"{self.process}  V{self.version}"
+
+    def _get_versioned_instance(self) -> Process:
+        return self.process
 
     def get_absolute_url(self) -> str:
         return reverse("processversion_detail", args=(self.pk,))
