@@ -1,5 +1,3 @@
-from django.shortcuts import redirect
-
 from base.views.generic.detail import BaseDetailView
 from base.views.generic.edit import BaseDeleteView
 from base.views.generic.edit import BaseSubModelCreateView
@@ -18,11 +16,8 @@ class DocumentVersionCreateView(BaseSubModelCreateView):
     template_name = "documents/documentversion/create.html"
     permission_required = "documents.add_documentversion"
 
-    def get(self, request, *args, **kwargs):
-        self.parent_object = self.get_parent_object()
-        if not self.parent_object.can_add_new_versions:
-            return redirect(self.parent_object, permanent=False)
-        return super().get(request, *args, **kwargs)
+    def get_parent_queryset(self):
+        return super().get_parent_queryset().exclude(versions__is_approved=False)
 
 
 class DocumentVersionDetailView(BaseDetailView):
@@ -55,7 +50,8 @@ class DocumentVersionApproveView(BaseUpdateRedirectView):
     permission_required = "documents.approve_documentversion"
 
     def do_action(self):
-        self.object.approve()
+        if not self.object.is_approved:
+            self.object.approve()
 
 
 class DocumentVersionMarkAsReadView(BaseUpdateRedirectView):

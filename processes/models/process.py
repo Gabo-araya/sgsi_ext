@@ -16,6 +16,10 @@ class Process(VersionableMixin, BaseModel):
         verbose_name = _("process")
         verbose_name_plural = _("processes")
 
+    @property
+    def can_add_new_versions(self) -> bool:
+        return not self.versions.not_published().exists()
+
     def __str__(self):
         return self.name
 

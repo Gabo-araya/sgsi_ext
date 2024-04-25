@@ -67,4 +67,7 @@
   <br>
   <h2>{% trans "related controls"|capfirst %}</h2>
   {% include "documents/includes/control_table.html" with object_list=document.controls.all %}
+  <br>
+  <h2>{% trans "processes defined by this document"|capfirst %}</h2>
+  {% include "processes/includes/process_table.html" with object_list=document.defined_processes %}
 {% endblock content %}

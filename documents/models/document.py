@@ -11,6 +11,7 @@ from base.models.versionable_mixin import VersionableMixin
 
 if TYPE_CHECKING:
     from documents.models.document_version import DocumentVersion
+    from processes.models.process import Process
 
 
 class Document(VersionableMixin, BaseModel):
@@ -38,6 +39,12 @@ class Document(VersionableMixin, BaseModel):
     @property
     def can_add_new_versions(self) -> bool:
         return not self.versions.not_approved().exists()
+
+    @property
+    def defined_processes(self) -> models.QuerySet[Process]:
+        from processes.models.process import Process
+
+        return Process.objects.filter(versions__defined_in=self)
 
     def get_absolute_url(self) -> str:
         return reverse("document_detail", args=(self.pk,))

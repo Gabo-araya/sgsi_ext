@@ -21,6 +21,9 @@ class ProcessActivityCreateView(BaseSubModelCreateView):
     template_name = "processes/processactivity/create.html"
     permission_required = "processes.add_processactivity"
 
+    def get_parent_queryset(self):
+        return super().get_parent_queryset().filter(is_published=False)
+
 
 class ProcessActivityDetailView(BaseDetailView):
     model = ProcessActivity
@@ -34,8 +37,14 @@ class ProcessActivityUpdateView(BaseUpdateView):
     template_name = "processes/processactivity/update.html"
     permission_required = "processes.change_processactivity"
 
+    def get_queryset(self):
+        return super().get_queryset().filter(process_version__is_published=False)
+
 
 class ProcessActivityDeleteView(BaseDeleteView):
     model = ProcessActivity
     template_name = "processes/processactivity/delete.html"
     permission_required = "processes.delete_processactivity"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(process_version__is_published=False)

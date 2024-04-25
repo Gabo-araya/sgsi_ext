@@ -48,15 +48,15 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
         )
         permissions = (("approve_documentversion", _("Can approve document version")),)
 
-    def __str__(self) -> str:
-        return f"{self.document.title} - V{self.version}"
-
     @property
     def can_be_updated(self) -> bool:
         return not self.is_approved
 
-    def _get_versioned_instance(self) -> Document:
-        return self.document
+    def __str__(self) -> str:
+        return f"{self.document.title} - V{self.version}"
+
+    def _get_increment_queryset(self) -> DocumentVersionQuerySet:
+        return self.document.versions.all()
 
     def approve(self) -> None:
         self.update(is_approved=True)

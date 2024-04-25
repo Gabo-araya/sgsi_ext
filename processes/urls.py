@@ -57,6 +57,11 @@ processversion_urlpatterns = [
         name="processversion_delete",
     ),
     path(
+        "versions/<int:pk>/publish/",
+        processversion_views.ProcessVersionPublishView.as_view(),
+        name="processversion_publish",
+    ),
+    path(
         "versions/<int:parent_pk>/activities/create/",
         processactivity_views.ProcessActivityCreateView.as_view(),
         name="processactivity_create",

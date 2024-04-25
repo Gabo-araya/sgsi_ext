@@ -40,6 +40,12 @@ class ProcessInstanceForm(BaseModelForm):
         model = ProcessInstance
         fields = ("process_version",)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["process_version"].queryset = ProcessVersion.objects.filter(
+            is_published=True,
+        ).order_by("process", "-version")
+
 
 class ProcessActivityInstanceCompleteForm(BaseModelForm):
     evidence = forms.FileField(

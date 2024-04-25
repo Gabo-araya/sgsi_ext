@@ -1,13 +1,18 @@
+from __future__ import annotations
+
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from inflection import ordinal
+
 from base.models.base_model import BaseModel
+from base.models.increment_field_mixin import IncrementFieldModelBase
 
 
-class ProcessActivity(BaseModel):
+class ProcessActivity(IncrementFieldModelBase, BaseModel):
     process_version = models.ForeignKey(
         verbose_name=_("process version"),
         to="ProcessVersion",
@@ -51,19 +56,18 @@ class ProcessActivity(BaseModel):
             ),
         )
 
+    @property
+    def can_be_updated(self) -> bool:
+        return self.process_version.can_be_updated
+
     def __str__(self) -> str:
-        return f"{self._meta.verbose_name} {self.order} for {self.process_version}"
+        return f"{self.order}{ordinal(self.order)} Activity of {self.process_version}"
 
-    def save(self, *args, **kwargs) -> None:
-        if self._state.adding:
-            self._auto_increment_order()
-        return super().save(*args, **kwargs)
+    def _get_increment_queryset(self) -> models.QuerySet[ProcessActivity]:
+        return self.process_version.activities.all()
 
-    def _auto_increment_order(self) -> None:
-        last_order = self.process_version.activities.aggregate(models.Max("order")).get(
-            "order__max"
-        )
-        self.order = last_order + 1 if last_order is not None else 1
+    def _get_field_to_increment(self) -> str:
+        return "order"
 
     def get_absolute_url(self) -> str:
         return reverse("processactivity_detail", args=(self.pk,))

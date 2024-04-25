@@ -3,21 +3,24 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.add_processactivity %}
+  {% if processversion.can_be_updated and perms.processes.publish_processversion %}
+    {% include "processes/includes/publish_modal.html" %}
+  {% endif %}
+  {% if processversion.can_be_updated and perms.processes.add_processactivity %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'processactivity_create' processversion.pk %}">
       {% trans "Add process activity" %}
       <i class="fa fa-plus"></i>
     </a>
   {% endif %}
-  {% if perms.processes.change_processversion %}
+  {% if processversion.can_be_updated and perms.processes.change_processversion %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'processversion_update' processversion.id %}">
       {% trans "Update process version" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.processes.delete_processversion %}
+  {% if processversion.can_be_updated and perms.processes.delete_processversion %}
     <a class="btn btn-sm btn-danger"
        href="{% url 'processversion_delete' processversion.id %}">
       {% trans "Delete process version" %}
@@ -27,20 +30,30 @@
 {% endblock options %}
 
 {% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'process_list' %}">{% trans "processes"|capfirst %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    {% with process=processversion.process %}<a href="{{ process.get_absolute_url }}">{{ process }}</a>{% endwith %}
+  </li>
 {% endblock breadcrumbs %}
 
 {% block content %}
   <table class="table table-striped table-hover table-sm">
     <tbody>
       <tr>
-        <th>{% trans "name"|capfirst %}</th>
-        <td>{{ processversion.name }}</td>
+        <th>{% trans "process"|capfirst %}</th>
+        {% with process=processversion.process %}
+          <td>
+            <a href="{{ process.get_absolute_url }}">{{ process }}</a>
+          </td>
+        {% endwith %}
       </tr>
       <tr>
-        <th>{% trans "control"|capfirst %}</th>
-        {% with control=processversion.control %}
+        <th>{% trans "defined in"|capfirst %}</th>
+        {% with defined_in=processversion.defined_in %}
           <td>
-            <a href="{{ control.get_absolute_url }}">{{ control }}</a>
+            <a href="{{ defined_in.get_absolute_url }}">{{ defined_in }}</a>
           </td>
         {% endwith %}
       </tr>
@@ -66,6 +79,9 @@
       </tr>
     </tbody>
   </table>
+  <br>
+  <h2>{% trans "controls"|capfirst %}</h2>
+  {% include "documents/includes/control_table.html" with object_list=processversion.controls.all %}
   <br>
   <h2>{% trans "activities"|capfirst %}</h2>
   {% include "processes/includes/processactivity_table.html" with object_list=processversion.activities.all %}

@@ -3,14 +3,14 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.change_processactivity %}
+  {% if processactivity.can_be_updated and perms.processes.change_processactivity %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'processactivity_update' processactivity.id %}">
       {% trans "Update process activity" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.processes.delete_processactivity %}
+  {% if processactivity.can_be_updated and perms.processes.delete_processactivity %}
     <a class="btn btn-sm btn-danger"
        href="{% url 'processactivity_delete' processactivity.id %}">
       {% trans "Delete process activity" %}
@@ -21,8 +21,16 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    {% with process=processactivity.process %}
-      <a href="{% url 'processversion_detail' process.pk %}">{{ process }}</a>
+    <a href="{% url 'process_list' %}">{% trans "processes"|capfirst %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    {% with process=processactivity.process_version.process %}
+      <a href="{{ process.get_absolute_url }}">{{ process }}</a>
+    {% endwith %}
+  </li>
+  <li class="breadcrumb-item">
+    {% with processversion=processactivity.process_version %}
+      <a href="{{ processversion.get_absolute_url }}">{{ processversion }}</a>
     {% endwith %}
   </li>
 {% endblock breadcrumbs %}
@@ -31,10 +39,10 @@
   <table class="table table-striped table-hover table-sm">
     <tbody>
       <tr>
-        <th>{% trans "process"|capfirst %}</th>
-        {% with process=processactivity.process %}
+        <th>{% trans "process version"|capfirst %}</th>
+        {% with processversion=processactivity.process_version %}
           <td>
-            <a href="{{ process.get_absolute_url }}">{{ process }}</a>
+            <a href="{{ processversion.get_absolute_url }}">{{ processversion }}</a>
           </td>
         {% endwith %}
       </tr>

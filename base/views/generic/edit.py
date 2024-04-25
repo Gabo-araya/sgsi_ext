@@ -72,6 +72,7 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
     parent_object = None
     parent_pk_url_kwarg = "parent_pk"
     model_parent_fk_field = None
+    parent_queryset = None
     context_parent_object_name = None
     login_required = True
     permission_required = ()
@@ -93,9 +94,24 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         self.pre_post(request, *args, **kwargs)
         return super(GenericBaseCreateView, self).post(request, *args, **kwargs)
 
-    def get_parent_object(self):
+    def get_parent_object(self, parent_queryset=None):
+        if parent_queryset is None:
+            parent_queryset = self.get_parent_queryset()
         parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
-        return get_object_or_404(self.parent_model, pk=parent_pk)
+        return get_object_or_404(parent_queryset, pk=parent_pk)
+
+    def get_parent_queryset(self):
+        if self.parent_queryset is None:
+            if self.parent_model:
+                return self.parent_model._default_manager.all()
+            class_name = self.__class__.__name__
+            msg = (
+                f"{class_name} is missing a parent QuerySet. Define "
+                f"{class_name}.parent_model, {class_name}.parent_queryset, or override "
+                f"{class_name}.get_parent_queryset()."
+            )
+            raise ImproperlyConfigured(msg)
+        return self.parent_queryset.all()
 
     def pre_get(self, request, *args, **kwargs):
         """

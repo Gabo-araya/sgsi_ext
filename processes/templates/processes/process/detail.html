@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.add_processversion %}
+  {% if process.can_add_new_versions and perms.processes.add_processversion %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'processversion_create' process.pk %}">
       {% trans "Add process version" %}
@@ -36,9 +36,28 @@
   <table class="table table-striped table-hover table-sm">
     <tbody>
       <tr>
-        <th>Id</th>
-        <td>{{ process.id }}</td>
+        <th>{% trans "name"|capfirst %}</th>
+        <td>{{ process.name }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ process.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ process.created_by }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ process.updated_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ process.updated_by }}</td>
       </tr>
     </tbody>
   </table>
+  <br>
+  <h2>{% trans "versions"|capfirst %}</h2>
+  {% include "processes/includes/processversion_table.html" with object_list=process.versions.all %}
 {% endblock content %}
