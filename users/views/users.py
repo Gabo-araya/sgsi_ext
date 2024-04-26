@@ -68,7 +68,7 @@ def user_new_confirm(  # noqa: PLR0913
 class LoginView(auth_views.LoginView):
     """view that renders the login"""
 
-    template_name = "registration/login.html"
+    template_name = "users/login.html"
     form_class = AuthenticationForm
     title = _("Login")
 
@@ -116,36 +116,36 @@ class UserRegisterView(BaseCreateView):
 class PasswordChangeView(auth_views.PasswordChangeView):
     """view that renders the password change form"""
 
-    template_name = "registration/password_change_form.html"
+    template_name = "users/password_change_form.html"
 
 
 class PasswordChangeDoneView(auth_views.PasswordChangeDoneView):
-    template_name = "registration/password_change_done.html"
+    template_name = "users/password_change_done.html"
 
 
 class PasswordResetView(auth_views.PasswordResetView):
     """view that handles the recover password process"""
 
-    template_name = "registration/password_reset_form.html"
+    template_name = "users/password_reset_form.html"
     email_template_name = "emails/password_reset.txt"
 
 
 class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     """view that handles the recover password process"""
 
-    template_name = "registration/password_reset_confirm.html"
+    template_name = "users/password_reset_confirm.html"
 
 
 class PasswordResetDoneView(auth_views.PasswordResetDoneView):
     """View that shows a success message to the user"""
 
-    template_name = "registration/password_reset_done.html"
+    template_name = "users/password_reset_done.html"
 
 
 class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     """View that shows a success message to the user"""
 
-    template_name = "registration/password_reset_complete.html"
+    template_name = "users/password_reset_complete.html"
 
 
 class UserListView(BaseListView):
