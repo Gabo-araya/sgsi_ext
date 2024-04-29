@@ -24,7 +24,7 @@ class ProcessInstance(BaseModel):
         verbose_name_plural = _("process instances")
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.process_version} Instance"
 
     def get_absolute_url(self) -> str:
         return reverse("processinstance_detail", args=(self.pk,))

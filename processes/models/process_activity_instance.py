@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib.auth.models import Group
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -24,25 +23,11 @@ class ProcessActivityInstance(BaseModel):
         on_delete=models.PROTECT,
         related_name="activity_instances",
     )
-    order = models.PositiveIntegerField(
-        verbose_name=_("order"),
-    )
-    description = models.TextField(
-        verbose_name=_("description"),
-    )
     asignee = models.ForeignKey(
         verbose_name=_("asignee"),
         to=settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
         related_name="activity_instances",
-    )
-    asignee_group = models.ForeignKey(
-        verbose_name=_("asignee group"),
-        to=Group,
-        on_delete=models.PROTECT,
-        related_name="activity_instances",
-        null=True,
-        blank=True,
     )
     completed = models.BooleanField(
         verbose_name=_("completed"),

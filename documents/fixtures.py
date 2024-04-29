@@ -37,7 +37,9 @@ def document_version_read_by_user(document_version, regular_user):
 @pytest.fixture
 @pytest.mark.django_db
 def document_version(document, django_file):
-    return DocumentVersion.objects.create(document=document, file=django_file)
+    return DocumentVersion.objects.create(
+        document=document, file=django_file, comment="test comment"
+    )
 
 
 @pytest.fixture
@@ -50,5 +52,5 @@ def document():
 
 @pytest.fixture
 @pytest.mark.django_db
-def evidence(document_version, django_file):
-    return Evidence.objects.create(document_version=document_version, file=django_file)
+def evidence(django_file):
+    return Evidence.objects.create(file=django_file)

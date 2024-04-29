@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -12,6 +15,9 @@ from documents.models.document import Document
 from processes.enums import TimeFrameChoices
 from processes.managers import ProcessVersionQuerySet
 from processes.models.process import Process
+
+if TYPE_CHECKING:
+    from users.models import User
 
 
 class ProcessVersion(VersionModelBase, BaseModel):
@@ -47,6 +53,14 @@ class ProcessVersion(VersionModelBase, BaseModel):
         null=True,
         blank=True,
     )
+    published_by = models.ForeignKey(
+        verbose_name=_("published by"),
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="published_process_versions",
+        null=True,
+        blank=True,
+    )
 
     objects = ProcessVersionQuerySet.as_manager()
 
@@ -68,5 +82,8 @@ class ProcessVersion(VersionModelBase, BaseModel):
     def get_absolute_url(self) -> str:
         return reverse("processversion_detail", args=(self.pk,))
 
-    def publish(self) -> None:
-        self.update(is_published=True, published_at=timezone.now())
+    def publish(self, user: User) -> None:
+        update_dict = {"is_published": True, "published_at": timezone.now()}
+        if user and not user.is_anonymous:
+            update_dict["published_by"] = user
+        self.update(**update_dict)

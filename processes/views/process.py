@@ -35,5 +35,5 @@ class ProcessUpdateView(BaseUpdateView):
 
 class ProcessDeleteView(BaseDeleteView):
     model = Process
-    template_name = "processes/process/confirm_delete.html"
+    template_name = "processes/process/delete.html"
     permission_required = "processes.delete_process"

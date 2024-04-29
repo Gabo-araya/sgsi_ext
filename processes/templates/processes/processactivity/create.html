@@ -7,9 +7,13 @@
     <a href="{% url 'process_list' %}">{% trans "processes"|capfirst %}</a>
   </li>
   <li class="breadcrumb-item">
-    {% with process=processversion.process %}<a href="{{ process.get_absolute_url }}">{{ process }}</a>{% endwith %}
+    {% with process=processactivity.processversion.process %}
+      <a href="{{ process.get_absolute_url }}">{{ process }}</a>
+    {% endwith %}
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'processversion_detail' processversion.pk %}">{{ processversion }}</a>
+    {% with processversion=processactivity.processversion %}
+      <a href="{{ processversion.get_absolute_url }}">{{ processversion }}</a>
+    {% endwith %}
   </li>
 {% endblock breadcrumbs %}

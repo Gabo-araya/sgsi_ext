@@ -4,8 +4,8 @@
 
 {% block breadcrumbs %}
   <li class="breadcrumb-item">
-    {% with process=processactivity.process %}
-      <a href="{% url 'processversion_detail' process.pk %}">{{ process }}</a>
+    {% with process=processactivity.processversion.process %}
+      <a href="{{ process.get_absolute_url }}">{{ process }}</a>
     {% endwith %}
   </li>
   <li class="breadcrumb-item">

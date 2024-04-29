@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
@@ -26,6 +27,19 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
     is_approved = models.BooleanField(
         verbose_name=_("is approved"),
         default=False,
+    )
+    approved_at = models.DateTimeField(
+        verbose_name=_("approved at"),
+        null=True,
+        blank=True,
+    )
+    approved_by = models.ForeignKey(
+        verbose_name=_("approved by"),
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="approved_document_versions",
+        null=True,
+        blank=True,
     )
     read_by = models.ManyToManyField(
         verbose_name=_("read by users"),
@@ -58,8 +72,11 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
     def _get_increment_queryset(self) -> DocumentVersionQuerySet:
         return self.document.versions.all()
 
-    def approve(self) -> None:
-        self.update(is_approved=True)
+    def approve(self, user: User) -> None:
+        update_dict = {"is_approved": True, "approved_at": timezone.now()}
+        if user and not user.is_anonymous:
+            update_dict["approved_by"] = user
+        self.update(**update_dict)
 
     def mark_as_read(self, user: User) -> None:
         self.read_by.add(user)

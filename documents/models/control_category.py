@@ -15,6 +15,7 @@ class ControlCategory(BaseModel):
     class Meta:
         verbose_name = _("control category")
         verbose_name_plural = _("control categories")
+        ordering = ("name",)
 
     def __str__(self) -> str:
         return self.name

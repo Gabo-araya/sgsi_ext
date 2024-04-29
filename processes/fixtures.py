@@ -1,5 +1,6 @@
 import pytest
 
+from processes.models.process import Process
 from processes.models.process_activity import ProcessActivity
 from processes.models.process_activity_instance import ProcessActivityInstance
 from processes.models.process_instance import ProcessInstance
@@ -8,10 +9,21 @@ from processes.models.process_version import ProcessVersion
 
 @pytest.fixture
 @pytest.mark.django_db
-def process_version(control):
-    return ProcessVersion.objects.create(
-        control=control,
+def process():
+    return Process.objects.create(
+        name="test process",
     )
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def process_version(process, document, control):
+    process_version = ProcessVersion.objects.create(
+        process=process,
+        defined_in=document,
+    )
+    process_version.controls.set([control])
+    return process_version
 
 
 @pytest.fixture
@@ -34,11 +46,9 @@ def process_instance(process_version):
 
 @pytest.fixture
 @pytest.mark.django_db
-def process_activity_instance(process_instance, process_activity):
+def process_activity_instance(process_instance, process_activity, regular_user):
     return ProcessActivityInstance.objects.create(
         process_instance=process_instance,
         activity=process_activity,
-        order=process_activity.order,
-        description=process_activity.description,
-        asignee=process_activity.asignee,
+        asignee=regular_user,
     )

@@ -51,7 +51,7 @@ class DocumentVersionApproveView(BaseUpdateRedirectView):
 
     def do_action(self):
         if not self.object.is_approved:
-            self.object.approve()
+            self.object.approve(self.request.user)
 
 
 class DocumentVersionMarkAsReadView(BaseUpdateRedirectView):

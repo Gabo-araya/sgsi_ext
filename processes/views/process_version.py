@@ -65,4 +65,4 @@ class ProcessVersionPublishView(BaseUpdateRedirectView):
 
     def do_action(self):
         if not self.object.is_published:
-            self.object.publish()
+            self.object.publish(self.request.user)
