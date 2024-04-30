@@ -26,11 +26,23 @@
                 {% include navbar_link_template with text="administration" url_name="admin:index" %}
                 {% include navbar_link_template with text="status" url_name="status" %}
               {% endif %}
-              {% if perms.users.view_user %}
-                {% include navbar_link_template with text="users" url_name="user_list" %}
-              {% endif %}
-              {% if perms %}
-                {% include navbar_link_template with text="groups" url_name="group_list" %}
+              {% if perms.users.view_user or perms.auth.view_group %}
+                <li class="nav-item dropdown">
+                  <a id="dropdownUsers"
+                     class="nav-link dropdown-toggle"
+                     href="#"
+                     role="button"
+                     data-bs-toggle="dropdown"
+                     aria-expanded="false">{% trans "users"|capfirst %}</a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownUsers">
+                    {% if perms.users.view_user %}
+                      {% include dropdown_link_template with text="users" url_name="user_list" %}
+                    {% endif %}
+                    {% if perms.auth.view_group %}
+                      {% include dropdown_link_template with text="groups" url_name="group_list" %}
+                    {% endif %}
+                  </ul>
+                </li>
               {% endif %}
               {% if perms.documents.view_controlcategory or perms.documents.view_control or perms.documents.view_document %}
                 <li class="nav-item dropdown">

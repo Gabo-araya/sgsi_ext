@@ -55,18 +55,6 @@
         <td>{{ processactivity.description }}</td>
       </tr>
       <tr>
-        <th>{% trans "asignee"|capfirst %}</th>
-        {% with asignee=processactivity.asignee %}
-          <td>
-            {% if asignee is not None %}
-              {{ asignee.get_label }}
-            {% else %}
-              -
-            {% endif %}
-          </td>
-        {% endwith %}
-      </tr>
-      <tr>
         <th>{% trans "asignee group"|capfirst %}</th>
         {% with asignee_group=processactivity.asignee_group %}
           <td>

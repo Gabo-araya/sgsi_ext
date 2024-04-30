@@ -5,6 +5,7 @@ from documents.views import control as control_views
 from documents.views import control_category as controlcategory_views
 from documents.views import document as document_views
 from documents.views import document_version as documentversion_views
+from documents.views import evidence as evidence_views
 
 document_urlpatterns = [
     path(
@@ -118,10 +119,19 @@ control_urlpatterns = [
     ),
 ]
 
+evidence_urlpatterns = [
+    path(
+        "<int:pk>/",
+        evidence_views.EvidenceDetailView.as_view(),
+        name="evidence_detail",
+    )
+]
+
 
 urlpatterns = [
     path("documents/", include(document_urlpatterns)),
     path("documents/", include(documentversion_urlpatterns)),
     path("controls/", include(control_urlpatterns)),
     path("control-categories/", include(controlcatergory_urlpatterns)),
+    path("evidences/", include(evidence_urlpatterns)),
 ]

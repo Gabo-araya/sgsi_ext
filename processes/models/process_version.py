@@ -17,6 +17,7 @@ from processes.managers import ProcessVersionQuerySet
 from processes.models.process import Process
 
 if TYPE_CHECKING:
+    from processes.models.process_instance import ProcessInstance
     from users.models import User
 
 
@@ -78,6 +79,10 @@ class ProcessVersion(VersionModelBase, BaseModel):
 
     def _get_increment_queryset(self) -> models.QuerySet[ProcessVersion]:
         return self.process.versions.all()
+
+    def create_first_activity_instance(self, process_instance: ProcessInstance) -> None:
+        if self.activities.exists():
+            self.activities.earliest("order").create_instance(process_instance)
 
     def get_absolute_url(self) -> str:
         return reverse("processversion_detail", args=(self.pk,))

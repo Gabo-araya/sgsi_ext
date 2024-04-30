@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import hashlib
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.fields.base import BaseFileField
@@ -57,4 +60,4 @@ class Evidence(BaseModel):
         return hashlib.sha256(self.url.encode()).hexdigest()
 
     def get_absolute_url(self) -> str:
-        ...
+        return reverse("evidence_detail", args=(self.pk,))

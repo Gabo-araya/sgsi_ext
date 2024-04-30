@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import Group
 
 import pytest
 
@@ -72,3 +73,9 @@ def regular_user2(db):
 @pytest.fixture
 def anonymous_user(db):
     return AnonymousUser()
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def group():
+    return Group.objects.create(name="test group")

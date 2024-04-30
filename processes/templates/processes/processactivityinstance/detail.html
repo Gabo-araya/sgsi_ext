@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.processes.change_processactivityinstance and not processactivityinstance.is_completed %}
+    <a class="btn btn-sm btn-success"
+       href="{% url 'processactivityinstance_complete' processactivityinstance.pk %}">
+      {% trans "Complete activity" %}
+      <i class="fa fa-check"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'processinstance_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  </li>
+  <li class="breadcrumb-item">
+    {% with process_instance=processactivityinstance.process_instance %}
+      <a href="{{ process_instance.get_absolute_url }}">{{ process_instance }}</a>
+    {% endwith %}
+  </li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      <tr>
+        <th>{% trans "process instance"|capfirst %}</th>
+        <td>
+          {% with process_instance=processactivityinstance.process_instance %}
+            <a href="{{ process_instance.get_absolute_url }}">{{ process_instance }}</a>
+          {% endwith %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "activity"|capfirst %}</th>
+        <td>
+          {% with activity=processactivityinstance.activity %}
+            <a href="{{ activity.get_absolute_url }}">{{ activity }}</a>
+          {% endwith %}
+        </td>
+      </tr>
+      <tr>
+        <th>{% trans "asignee"|capfirst %}</th>
+        <td>{{ processactivityinstance.asignee.get_label }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "description"|capfirst %}</th>
+        <td>{{ processactivityinstance.activity.description }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "completed"|capfirst %}</th>
+        <td>{{ processactivityinstance.is_completed|yesno|capfirst }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "completed at"|capfirst %}</th>
+        <td>{{ processactivityinstance.completed_at|default_if_none:"-" }}</td>
+      </tr>
+      {% with evidence=processactivityinstance.evidence %}
+        {% if evidence %}
+          <tr>
+            <th>{% trans "evidence"|capfirst %}</th>
+            <td>
+              <a href="{{ evidence.get_absolute_url }}">{{ evidence }}</a>
+            </td>
+          </tr>
+        {% endif %}
+      {% endwith %}
+    </tbody>
+  </table>
+{% endblock content %}

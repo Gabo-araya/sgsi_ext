@@ -58,6 +58,10 @@
         {% endwith %}
       </tr>
       <tr>
+        <th>{% trans "published"|capfirst %}</th>
+        <td>{{ processversion.is_published|yesno|capfirst }}</td>
+      </tr>
+      <tr>
         <th>{% trans "recurrency"|capfirst %}</th>
         <td>{{ processversion.get_recurrency_display|default:"-" }}</td>
       </tr>

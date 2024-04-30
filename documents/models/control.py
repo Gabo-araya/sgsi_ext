@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models.base_model import BaseModel
 from documents.models.control_category import ControlCategory
 from documents.models.document import Document
+from documents.models.evidence import Evidence
 
 
 class Control(BaseModel):
@@ -38,6 +39,16 @@ class Control(BaseModel):
         verbose_name = _("control")
         verbose_name_plural = _("controls")
         ordering = ("category", "title")
+
+    @property
+    def evidences(self) -> models.QuerySet[Evidence]:
+        from processes.models.process_activity_instance import ProcessActivityInstance
+
+        return Evidence.objects.filter(
+            process_activity_instance__in=ProcessActivityInstance.objects.filter(
+                process_instance__process_version__controls=self
+            )
+        )
 
     def __str__(self) -> str:
         return self.title

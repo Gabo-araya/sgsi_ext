@@ -4,10 +4,10 @@ from base.views.generic import BaseCreateView
 from base.views.generic import BaseDeleteView
 from base.views.generic import BaseDetailView
 from base.views.generic import BaseListView
-from base.views.generic import BaseUpdateView
 from processes.forms import ProcessInstanceForm
+from processes.managers import ProcessInstanceQuerySet
+from processes.models.process import Process
 from processes.models.process_instance import ProcessInstance
-from processes.models.process_version import ProcessVersion
 
 
 class ProcessInstanceListView(BaseListView):
@@ -23,12 +23,17 @@ class ProcessInstanceCreateView(BaseCreateView):
     permission_required = "processes.add_processinstance"
 
     def get_initial(self) -> dict[str, Any]:
-        # TODO: fix this when process exists and make link to version
         initial = super().get_initial()
-        process_pk = self.kwargs.get("process_pk")
-        if process_pk is not None:
-            initial["process"] = ProcessVersion.objects.get(pk=process_pk)
+        process_pk = self.request.GET.get("process_pk")
+        process = Process.objects.filter(pk=process_pk).first()
+        if process is not None:
+            initial["process"] = process
         return initial
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class ProcessInstanceDetailView(BaseDetailView):
@@ -37,14 +42,10 @@ class ProcessInstanceDetailView(BaseDetailView):
     permission_required = "processes.view_processinstance"
 
 
-class ProcessInstanceUpdateView(BaseUpdateView):
-    model = ProcessInstance
-    form_class = ProcessInstanceForm
-    template_name = "processes/processinstance/update.html"
-    permission_required = "processes.change_processinstance"
-
-
 class ProcessInstanceDeleteView(BaseDeleteView):
     model = ProcessInstance
     permission_required = "processes.delete_processinstance"
     template_name = "processes/processinstance/delete.html"
+
+    def get_queryset(self) -> ProcessInstanceQuerySet:
+        return super().get_queryset().not_completed()

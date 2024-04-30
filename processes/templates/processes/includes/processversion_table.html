@@ -21,7 +21,7 @@
         <td>
           <a href="{{ processversion.get_absolute_url }}">V{{ processversion.version }}</a>
         </td>
-        <td>{{ processversion.published|yesno|capfirst }}</td>
+        <td>{{ processversion.is_published|yesno|capfirst }}</td>
         <td>
           {% with defined_in=processversion.defined_in %}
             <a href="{{ defined_in.get_absolute_url }}">{{ defined_in }}</a>

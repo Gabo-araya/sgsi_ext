@@ -202,7 +202,7 @@ package Processes {
         + process_version: ProcessVersion
         + name: char
         + control: Control
-        + completed: bool
+        + is_completed: bool
         + completed_at: datetime
     }
     class ProcessActivity {
@@ -210,7 +210,6 @@ package Processes {
         + process_version: ProcessVersion
         + order: int
         + description: text
-        + asignee: User
         + asignee_group: Group
     }
     class ProcessActivityInstance {
@@ -220,8 +219,7 @@ package Processes {
         + order: int
         + description: text
         + asignee: User
-        + asignee_group: Group
-        + completed: bool
+        + is_completed: bool
         + completed_at: datetime
     }
     enum TimeFrameChoices {

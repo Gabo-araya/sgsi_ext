@@ -3,6 +3,10 @@
 All apps should use the users.User model for all users
 """
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.tokens import default_token_generator
@@ -27,6 +31,9 @@ from users.managers import UserManager
 
 # mark for translation the app name
 gettext_noop("Users")
+
+if TYPE_CHECKING:
+    from processes.managers import ProcessQuerySet
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -152,3 +159,8 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     def get_label(self):
         return f"{self.get_full_name()} ({self.email})"
+
+    def get_instantiable_processes(self) -> ProcessQuerySet:
+        from processes.models.process import Process
+
+        return Process.objects.instantiable_by_user(user=self)

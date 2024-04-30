@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
+from processes.managers import ProcessInstanceQuerySet
 from processes.models.process_version import ProcessVersion
 
 
@@ -14,10 +15,12 @@ class ProcessInstance(BaseModel):
         on_delete=models.PROTECT,
         related_name="instances",
     )
-    completed = models.BooleanField(verbose_name=_("completed"), default=False)
+    is_completed = models.BooleanField(verbose_name=_("is completed"), default=False)
     completed_at = models.DateTimeField(
         verbose_name=_("completed at"), blank=True, null=True
     )
+
+    objects = ProcessInstanceQuerySet.as_manager()
 
     class Meta:
         verbose_name = _("process instance")
@@ -26,9 +29,15 @@ class ProcessInstance(BaseModel):
     def __str__(self) -> str:
         return f"{self.process_version} Instance"
 
+    def save(self, *args, **kwargs) -> None:
+        adding = self._state.adding
+        super().save(*args, **kwargs)
+        if adding:
+            self.process_version.create_first_activity_instance(self)
+
     def get_absolute_url(self) -> str:
         return reverse("processinstance_detail", args=(self.pk,))
 
     def check_if_completed(self) -> None:
-        if self.activities.filter(completed=False).count() == 0:
-            self.update(completed=True, completed_at=timezone.now())
+        if self.activity_instances.filter(is_completed=False).count() == 0:
+            self.update(is_completed=True, completed_at=timezone.now())

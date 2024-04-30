@@ -28,11 +28,11 @@ def process_version(process, document, control):
 
 @pytest.fixture
 @pytest.mark.django_db
-def process_activity(process_version, regular_user):
+def process_activity(process_version, group):
     return ProcessActivity.objects.create(
         process_version=process_version,
         description="test description",
-        asignee=regular_user,
+        asignee_group=group,
     )
 
 

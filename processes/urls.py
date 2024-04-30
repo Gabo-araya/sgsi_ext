@@ -85,11 +85,6 @@ processinstance_urlpatterns = [
         name="processinstance_detail",
     ),
     path(
-        "<int:pk>/update/",
-        processinstance_views.ProcessInstanceUpdateView.as_view(),
-        name="processinstance_update",
-    ),
-    path(
         "<int:pk>/delete/",
         processinstance_views.ProcessInstanceDeleteView.as_view(),
         name="processinstance_delete",
@@ -116,10 +111,15 @@ processactivity_urlpatterns = [
 
 processactivityinstance_urlpatterns = [
     path(
+        "<int:pk>/",
+        processactivityinstance_views.ProcessActivityInstanceDetailView.as_view(),
+        name="processactivityinstance_detail",
+    ),
+    path(
         "<int:pk>/complete/",
         processactivityinstance_views.ProcessActivityInstanceCompleteView.as_view(),
         name="processactivityinstance_complete",
-    )
+    ),
 ]
 
 urlpatterns = [

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% load i18n file %}
+
+{% block options %}
+{% endblock options %}
+
+{% block breadcrumbs %}
+{% endblock breadcrumbs %}
+
+{% block content %}
+  <table class="table table-striped table-hover table-sm">
+    <tbody>
+      {% with process_activity_instance=evidence.process_activity_instance %}
+        {% if process_activity_instance %}
+          <tr>
+            <th>{% trans "process activity instance"|capfirst %}</th>
+            <td>
+              <a href="{{ process_activity_instance.get_absolute_url }}">{{ process_activity_instance }}
+              </td>
+            </a>
+          </tr>
+        {% endif %}
+      {% endwith %}
+      {% with file=evidence.file %}
+        {% if file %}
+          <tr>
+            <th>{% trans "file"|capfirst %}</th>
+            <td>
+              <a href="{{ file.url }}">{{ file|filename }}
+              </td>
+            </a>
+          </tr>
+        {% endif %}
+      {% endwith %}
+      {% with url=evidence.url %}
+        {% if url %}
+          <tr>
+            <th>{% trans "url"|capfirst %}</th>
+            <td>
+              <a href="{{ url }}">{{ url }}
+              </td>
+            </a>
+          </tr>
+        {% endif %}
+      {% endwith %}
+      <tr>
+        <th>{% trans "shasum"|capfirst %}</th>
+        <td>{{ evidence.shasum }}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock content %}

@@ -3,13 +3,6 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.change_processinstance %}
-    <a class="btn btn-sm btn-outline-secondary"
-       href="{% url 'processinstance_update' processinstance.id %}">
-      {% trans "Update process instance" %}
-      <i class="fa fa-edit"></i>
-    </a>
-  {% endif %}
   {% if perms.processes.delete_processinstance %}
     <a class="btn btn-sm btn-danger"
        href="{% url 'processinstance_delete' processinstance.id %}">
@@ -29,13 +22,11 @@
   <table class="table table-striped table-hover table-sm">
     <tbody>
       <tr>
-        <th>{% trans "name"|capfirst %}</th>
-        <td>{{ processinstance.name }}</td>
-      </tr>
-      <tr>
-        <th>{% trans "control"|capfirst %}</th>
+        <th>{% trans "process version"|capfirst %}</th>
         <td>
-          {% with control=processinstance.control %}<a href="{{ control.get_absolute_url }}">{{ control }}</a>{% endwith %}
+          {% with process_version=processinstance.process_version %}
+            <a href="{{ process_version.get_absolute_url }}">{{ process_version }}</a>
+          {% endwith %}
         </td>
       </tr>
       <tr>
@@ -47,8 +38,16 @@
         <td>{{ processinstance.created_by.get_label }}</td>
       </tr>
       <tr>
+        <th>{% trans "updated at"|capfirst %}</th>
+        <td>{{ processinstance.updated_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "updated by"|capfirst %}</th>
+        <td>{{ processinstance.updated_by.get_label }}</td>
+      </tr>
+      <tr>
         <th>{% trans "completed"|capfirst %}</th>
-        <td>{{ processinstance.completed|yesno|capfirst }}</td>
+        <td>{{ processinstance.is_completed|yesno|capfirst }}</td>
       </tr>
       <tr>
         <th>{% trans "completed at"|capfirst %}</th>
@@ -58,5 +57,5 @@
   </table>
   <br>
   <h2>{% trans "activities"|capfirst %}</h2>
-  {% include "processes/includes/processactivityinstance_table.html" with object_list=processinstance.activities.all %}
+  {% include "processes/includes/processactivityinstance_table.html" with object_list=processinstance.activity_instances.all %}
 {% endblock content %}

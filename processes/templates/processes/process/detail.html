@@ -3,6 +3,13 @@
 {% load i18n %}
 
 {% block options %}
+  {% if process.last_published_version is not None and perms.processes.add_processinstance %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'processinstance_create' %}?process_pk={{ process.pk }}">
+      {% trans "Create instance" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
   {% if process.can_add_new_versions and perms.processes.add_processversion %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'processversion_create' process.pk %}">
