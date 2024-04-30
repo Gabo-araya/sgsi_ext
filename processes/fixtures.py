@@ -38,17 +38,18 @@ def process_activity(process_version, group):
 
 @pytest.fixture
 @pytest.mark.django_db
-def process_instance(process_version):
+def process_instance(process_version, regular_user):
     return ProcessInstance.objects.create(
         process_version=process_version,
+        created_by=regular_user,
     )
 
 
 @pytest.fixture
 @pytest.mark.django_db
-def process_activity_instance(process_instance, process_activity, regular_user):
+def process_activity_instance(process_instance, process_activity, superuser_user):
     return ProcessActivityInstance.objects.create(
         process_instance=process_instance,
         activity=process_activity,
-        asignee=regular_user,
+        asignee=superuser_user,
     )
