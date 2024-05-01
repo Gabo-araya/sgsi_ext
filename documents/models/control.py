@@ -26,12 +26,10 @@ class Control(BaseModel):
         verbose_name=_("description"),
         blank=True,
     )
-    document = models.ForeignKey(
-        verbose_name=_("document"),
+    documents = models.ManyToManyField(
+        verbose_name=_("documents"),
         to=Document,
-        on_delete=models.PROTECT,
         related_name="controls",
-        null=True,
         blank=True,
     )
 

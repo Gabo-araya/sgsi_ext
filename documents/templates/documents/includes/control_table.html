@@ -4,7 +4,6 @@
     <tr>
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "category"|capfirst %}</th>
-      <th>{% trans "document"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
       {% if perms.documents.change_control or perms.documents.delete_control %}<th></th>{% endif %}
@@ -22,15 +21,6 @@
               -
             {% else %}
               <a href="{{ category.get_absolute_url }}">{{ category }}</a>
-            {% endif %}
-          {% endwith %}
-        </td>
-        <td>
-          {% with control.document as document %}
-            {% if not document %}
-              -
-            {% else %}
-              <a href="{{ document.get_absolute_url }}">{{ document }}</a>
             {% endif %}
           {% endwith %}
         </td>

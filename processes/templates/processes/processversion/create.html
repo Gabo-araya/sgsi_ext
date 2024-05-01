@@ -3,4 +3,10 @@
 {% load i18n %}
 
 {% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'process_list' %}">{% trans "processes"|capfirst %}</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{{ process.get_absolute_url }}">{{ process }}</a>
+  </li>
 {% endblock breadcrumbs %}

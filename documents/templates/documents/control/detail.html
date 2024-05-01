@@ -43,16 +43,6 @@
         <td>{{ control.description }}</td>
       </tr>
       <tr>
-        <th>{% trans "document"|capfirst %}</th>
-        <td>
-          {% if not control.document %}
-            -
-          {% else %}
-            <a href="{{ control.document.get_absolute_url }}">{{ control.document }}</a>
-          {% endif %}
-        </td>
-      </tr>
-      <tr>
         <th>{% trans "created at"|capfirst %}</th>
         <td>{{ control.created_at }}</td>
       </tr>
@@ -70,6 +60,9 @@
       </tr>
     </tbody>
   </table>
+  <br>
+  <h2>{% trans "documents"|capfirst %}</h2>
+  {% include "documents/includes/document_table.html" with object_list=control.documents.all %}
   <br>
   <h2>{% trans "related risks"|capfirst %}</h2>
   {% include "risks/includes/risk_table.html" with object_list=control.risks.all %}

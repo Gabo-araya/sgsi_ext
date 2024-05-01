@@ -22,7 +22,7 @@ class DocumentVersionForm(BaseModelForm):
 class ControlForm(BaseModelForm):
     class Meta:
         model = Control
-        fields = ("category", "title", "description", "document")
+        fields = ("category", "title", "description", "documents")
 
 
 class ControlCategoryForm(BaseModelForm):

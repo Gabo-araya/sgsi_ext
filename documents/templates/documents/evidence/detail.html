@@ -48,6 +48,14 @@
         <th>{% trans "shasum"|capfirst %}</th>
         <td>{{ evidence.shasum }}</td>
       </tr>
+      <tr>
+        <th>{% trans "created at"|capfirst %}</th>
+        <td>{{ evidence.created_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "created by"|capfirst %}</th>
+        <td>{{ evidence.created_by }}</td>
+      </tr>
     </tbody>
   </table>
 {% endblock content %}
