@@ -361,6 +361,23 @@ class UserForm(BaseModelForm):
 
 
 class GroupForm(BaseModelForm):
+    users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        required=False,
+    )
+
     class Meta:
         model = Group
-        fields = ("name", "permissions")
+        fields = ("name", "permissions", "users")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields["users"].initial = self.instance.user_set.all()
+
+    def save(self, commit: bool = ...) -> Group:
+        instance = super().save(commit)
+        if not commit:
+            return instance
+        instance.user_set.set(self.cleaned_data["users"])
+        return instance

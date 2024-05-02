@@ -40,6 +40,5 @@ class RiskForm(BaseModelForm):
         instance = super().save(commit)
         if not commit:
             return instance
-        for risk in self.cleaned_data["residual_risk_for"]:
-            risk.residual_risks.add(instance)
+        instance.residual_risk_for.set(self.cleaned_data["residual_risk_for"])
         return instance
