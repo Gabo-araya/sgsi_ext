@@ -35,7 +35,7 @@ urlpatterns = [
     path("regions/", include("regions.urls")),
     path("status/", misc_views.StatusView.as_view(), name="status"),
     path("api/v1/", include("dummy_app.urls")),
-    path("", misc_views.index, name="home"),
+    path("", misc_views.IndexView.as_view(), name="home"),
     path("", include("documents.urls")),
     path("", include("information_assets.urls")),
     path("risks/", include("risks.urls")),

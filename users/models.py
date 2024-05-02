@@ -33,6 +33,7 @@ from users.managers import UserManager
 gettext_noop("Users")
 
 if TYPE_CHECKING:
+    from processes.managers import ProcessInstanceQuerySet
     from processes.managers import ProcessQuerySet
 
 
@@ -164,3 +165,8 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         from processes.models.process import Process
 
         return Process.objects.instantiable_by_user(user=self)
+
+    def get_participating_process_instances(self) -> ProcessInstanceQuerySet:
+        from processes.models.process_instance import ProcessInstance
+
+        return ProcessInstance.objects.user_is_participant(user=self)

@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
+{% block content_title %}
+{% endblock content_title %}
+
 {% block content %}
-  <h1>Hello world!</h1>
-
-  <!--
-  Serialize backend data as a json to be used in react
-  components when an API call is unnecessary:
-  -->
-  {{ example_data|json_script:'json-example-data' }}
-
-  <!--
-  Use the data-props-source-id attribute in the component's container
-  to load the json with the same id as the component's props:
-  -->
-  <div id="react-example-component" data-props-source-id="json-example-data"></div>
+  {% if perms.processes.view_process %}
+    <h2>{% trans "instatiable processes"|capfirst %}</h2>
+    {% include "processes/includes/process_table.html" with object_list=view.request.user.get_instantiable_processes %}
+    <br>
+  {% endif %}
+  {% if perms.processes.view_processinstance %}
+    <h2>{% trans "instatiable processes"|capfirst %}</h2>
+    {% include "processes/includes/processinstance_table.html" with object_list=view.request.user.get_participating_process_instances %}
+  {% endif %}
 {% endblock content %}

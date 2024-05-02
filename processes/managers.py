@@ -32,6 +32,9 @@ class ProcessInstanceQuerySet(models.QuerySet):
     def not_completed(self):
         return self.filter(is_completed=False)
 
+    def user_is_participant(self, user: User):
+        return self.filter(activity_instances__assignee=user).distinct()
+
 
 class ProcessActivityInstanceQuerySet(models.QuerySet):
     def completed(self):
