@@ -210,7 +210,7 @@ package Processes {
         + process_version: ProcessVersion
         + order: int
         + description: text
-        + asignee_group: Group
+        + assignee_group: Group
     }
     class ProcessActivityInstance {
         + id: int
@@ -218,7 +218,7 @@ package Processes {
         + activity: Activity
         + order: int
         + description: text
-        + asignee: User
+        + assignee: User
         + is_completed: bool
         + completed_at: datetime
     }

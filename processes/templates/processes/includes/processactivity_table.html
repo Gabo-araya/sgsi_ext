@@ -4,7 +4,8 @@
   <thead>
     <tr>
       <th>{% trans "name"|capfirst %}</th>
-      <th>{% trans "asignee group"|capfirst %}</th>
+      <th>{% trans "description"|capfirst %}</th>
+      <th>{% trans "assignee group"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
       {% if processversion.can_be_updated %}
@@ -18,10 +19,11 @@
         <td>
           <a href="{{ process_activity.get_absolute_url }}">{{ process_activity }}</a>
         </td>
+        <td>{{ process_activity.description }}</td>
         <td>
-          {% with asignee_group=process_activity.asignee_group %}
-            {% if asignee_group is not None %}
-              <a href="{{ asignee_group.get_absolute_url }}">{{ asignee_group }}</a>
+          {% with assignee_group=process_activity.assignee_group %}
+            {% if assignee_group is not None %}
+              <a href="{{ assignee_group.get_absolute_url }}">{{ assignee_group }}</a>
             {% else %}
               -
             {% endif %}

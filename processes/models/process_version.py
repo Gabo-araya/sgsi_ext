@@ -75,7 +75,7 @@ class ProcessVersion(VersionModelBase, BaseModel):
         return not self.is_published
 
     def __str__(self) -> str:
-        return f"{self.process}  V{self.version}"
+        return f"{self.process} V{self.version}"
 
     def _get_increment_queryset(self) -> models.QuerySet[ProcessVersion]:
         return self.process.versions.all()

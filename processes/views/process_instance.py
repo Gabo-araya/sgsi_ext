@@ -31,9 +31,7 @@ class ProcessInstanceCreateView(BaseCreateView):
         return initial
 
     def get_form_kwargs(self) -> dict[str, Any]:
-        kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
+        return {**super().get_form_kwargs(), "user": self.request.user}
 
 
 class ProcessInstanceDetailView(BaseDetailView):

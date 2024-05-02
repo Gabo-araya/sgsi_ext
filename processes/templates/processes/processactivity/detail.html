@@ -47,24 +47,24 @@
         {% endwith %}
       </tr>
       <tr>
-        <th>{% trans "order"|capfirst %}</th>
-        <td>{{ processactivity.order }}</td>
-      </tr>
-      <tr>
         <th>{% trans "description"|capfirst %}</th>
         <td>{{ processactivity.description }}</td>
       </tr>
       <tr>
-        <th>{% trans "asignee group"|capfirst %}</th>
-        {% with asignee_group=processactivity.asignee_group %}
+        <th>{% trans "assignee group"|capfirst %}</th>
+        {% with assignee_group=processactivity.assignee_group %}
           <td>
-            {% if asignee_group is not None %}
-              <a href="{% url 'group_detail' asignee_group.pk %}">{{ asignee_group }}</a>
+            {% if assignee_group is not None %}
+              <a href="{% url 'group_detail' assignee_group.pk %}">{{ assignee_group }}</a>
             {% else %}
               -
             {% endif %}
           </td>
         {% endwith %}
+      </tr>
+      <tr>
+        <th>{% trans "email to notify"|capfirst %}</th>
+        <td>{{ processactivity.email_to_notify|default:"-" }}</td>
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>

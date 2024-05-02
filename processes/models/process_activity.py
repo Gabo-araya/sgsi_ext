@@ -13,7 +13,6 @@ from base.models.base_model import BaseModel
 from base.models.increment_field_mixin import IncrementFieldModelBase
 
 if TYPE_CHECKING:
-    from processes.models.process_activity_instance import ProcessActivityInstance
     from processes.models.process_instance import ProcessInstance
     from users.models import User
 
@@ -27,11 +26,15 @@ class ProcessActivity(IncrementFieldModelBase, BaseModel):
     )
     order = models.PositiveIntegerField(verbose_name=_("order"))
     description = models.TextField(verbose_name=_("description"))
-    asignee_group = models.ForeignKey(
-        verbose_name=_("asignee group"),
+    assignee_group = models.ForeignKey(
+        verbose_name=_("assignee group"),
         to=Group,
         on_delete=models.PROTECT,
         related_name="activities",
+    )
+    email_to_notify = models.EmailField(
+        verbose_name=_("email to notify"),
+        blank=True,
     )
 
     class Meta:
@@ -53,16 +56,16 @@ class ProcessActivity(IncrementFieldModelBase, BaseModel):
         return "order"
 
     def create_instance(
-        self, process_instance: ProcessInstance, asignee: User | None = None
-    ) -> ProcessActivityInstance:
+        self, process_instance: ProcessInstance, assignee: User | None = None
+    ) -> None:
         from processes.models.process_activity_instance import ProcessActivityInstance
 
-        if asignee is None:
-            asignee = process_instance.created_by
-        return ProcessActivityInstance.objects.create(
+        if assignee is None:
+            assignee = process_instance.created_by
+        ProcessActivityInstance.objects.create(
             process_instance=process_instance,
             activity=self,
-            asignee=asignee,
+            assignee=assignee,
         )
 
     def get_next_activity(self) -> ProcessActivity | None:

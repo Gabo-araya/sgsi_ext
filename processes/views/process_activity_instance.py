@@ -25,7 +25,7 @@ class ProcessActivityInstanceCompleteView(BaseUpdateView):
     permission_required = "processes.change_processactivityinstance"
 
     def get_queryset(self) -> QuerySet[Any]:
-        return super().get_queryset().not_completed().filter(asignee=self.request.user)
+        return super().get_queryset().not_completed().filter(assignee=self.request.user)
 
     def form_valid(self, form: type[ModelForm]) -> HttpResponse:
         self.object.mark_as_completed(form)

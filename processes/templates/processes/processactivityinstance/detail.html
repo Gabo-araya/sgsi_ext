@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.processes.change_processactivityinstance and not processactivityinstance.is_completed %}
+  {% if perms.processes.change_processactivityinstance and processactivityinstance.assignee == view.request.user and not processactivityinstance.is_completed %}
     <a class="btn btn-sm btn-success"
        href="{% url 'processactivityinstance_complete' processactivityinstance.pk %}">
       {% trans "Complete activity" %}
@@ -43,8 +43,8 @@
         </td>
       </tr>
       <tr>
-        <th>{% trans "asignee"|capfirst %}</th>
-        <td>{{ processactivityinstance.asignee.get_label }}</td>
+        <th>{% trans "assignee"|capfirst %}</th>
+        <td>{{ processactivityinstance.assignee.get_label }}</td>
       </tr>
       <tr>
         <th>{% trans "description"|capfirst %}</th>

@@ -32,7 +32,7 @@ def process_activity(process_version, group):
     return ProcessActivity.objects.create(
         process_version=process_version,
         description="test description",
-        asignee_group=group,
+        assignee_group=group,
     )
 
 
@@ -51,5 +51,5 @@ def process_activity_instance(process_instance, process_activity, superuser_user
     return ProcessActivityInstance.objects.create(
         process_instance=process_instance,
         activity=process_activity,
-        asignee=superuser_user,
+        assignee=superuser_user,
     )

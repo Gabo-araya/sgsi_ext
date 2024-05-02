@@ -1,0 +1,8 @@
+{% load i18n %}
+{% blocktrans %}
+  The following activity instance has been created:
+
+  Activity instance: <a href="{{ process_activity_instance_url }}">{{ process_activity_instance }}</a>
+  Assignee: {{ assignee }}
+  Description: {{ description }}
+{% endblocktrans %}
