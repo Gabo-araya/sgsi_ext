@@ -24,6 +24,7 @@ class DocumentDetailView(BaseDetailView):
     model = Document
     template_name = "documents/document/detail.html"
     permission_required = "documents.view_document"
+    slug_field = "code"
 
 
 class DocumentUpdateView(BaseUpdateView):
@@ -31,9 +32,11 @@ class DocumentUpdateView(BaseUpdateView):
     form_class = DocumentForm
     template_name = "documents/document/update.html"
     permission_required = "documents.change_document"
+    slug_field = "code"
 
 
 class DocumentDeleteView(BaseDeleteView):
     model = Document
     permission_required = "documents.delete_document"
     template_name = "documents/document/delete.html"
+    slug_field = "code"

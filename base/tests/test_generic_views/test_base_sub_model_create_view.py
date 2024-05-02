@@ -148,40 +148,10 @@ def test_base_sub_model_create_get_cancel_url(next_url, expected):
 
 
 def test_base_sub_model_create_get_parent_object():
-    with patch(
-        "base.views.generic.edit.get_object_or_404", return_value="parent_object"
-    ) as get_object_or_404:
-        view = MockBaseSubModelCreateView()
-        view.parent_pk_url_kwarg = "parent_pk"
-        view.kwargs = {"parent_pk": 1}
-        assert view.get_parent_object() == "parent_object"
-        get_object_or_404.assert_called_once_with(
-            MockModel._default_manager.all(), pk=1
-        )
-
-
-def test_base_sub_model_create_get_parent_queryset_with_parent_queryset_attr():
     view = MockBaseSubModelCreateView()
-    view.parent_queryset = MockQuerySet
-    assert view.get_parent_queryset() == MockQuerySet.all()
-
-
-def test_base_sub_model_create_get_parent_queryset_without_parent_queryset_attr():
-    view = MockBaseSubModelCreateView()
-    assert view.get_parent_queryset() == MockModel._default_manager.all()
-
-
-def test_base_sub_model_create_get_parent_queryset_raises():
-    view = MockBaseSubModelCreateView()
-    MockBaseSubModelCreateView.parent_model = None
-    class_name = MockBaseSubModelCreateView.__name__
-    msg = (
-        f"{class_name} is missing a parent QuerySet. Define "
-        f"{class_name}.parent_model, {class_name}.parent_queryset, or override "
-        f"{class_name}.get_parent_queryset()."
-    )
-    with pytest.raises(ImproperlyConfigured, match=msg):
-        view.get_parent_queryset()
+    view.parent_pk_url_kwarg = "parent_pk"
+    view.kwargs = {"parent_pk": 1}
+    assert view.get_parent_object() == MockQuerySet.filter().get()
 
 
 @pytest.mark.parametrize(
@@ -208,6 +178,30 @@ def test_base_sub_model_create_get_initial_object(
         view.kwargs = {"parent_pk": 1}
         view.parent_object = 1
         assert isinstance(view.get_initial_object(), MagicMock)
+
+
+def test_base_sub_model_create_get_parent_queryset_with_parent_queryset_attr():
+    view = MockBaseSubModelCreateView()
+    view.parent_queryset = MockQuerySet
+    assert view.get_parent_queryset() == MockQuerySet.all()
+
+
+def test_base_sub_model_create_get_parent_queryset_without_parent_queryset_attr():
+    view = MockBaseSubModelCreateView()
+    assert view.get_parent_queryset() == MockModel._default_manager.all()
+
+
+def test_base_sub_model_create_get_parent_queryset_raises():
+    view = MockBaseSubModelCreateView()
+    MockBaseSubModelCreateView.parent_model = None
+    class_name = MockBaseSubModelCreateView.__name__
+    msg = (
+        f"{class_name} is missing a parent QuerySet. Define "
+        f"{class_name}.parent_model, {class_name}.parent_queryset, or override "
+        f"{class_name}.get_parent_queryset()."
+    )
+    with pytest.raises(ImproperlyConfigured, match=msg):
+        view.get_parent_queryset()
 
 
 @pytest.mark.parametrize(

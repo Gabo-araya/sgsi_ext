@@ -85,4 +85,6 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
         return self.read_by.filter(pk=user.pk).exists()
 
     def get_absolute_url(self):
-        return reverse("documentversion_detail", args=(self.pk,))
+        return reverse(
+            "documentversion_detail", args=(self.document.code, self.version)
+        )

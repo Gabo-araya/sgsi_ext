@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -23,6 +24,21 @@ class Document(VersionableMixin, BaseModel):
     description = models.TextField(
         verbose_name=_("description"),
         blank=True,
+    )
+    code = models.CharField(
+        verbose_name=_("code"),
+        max_length=20,
+        unique=True,
+        db_index=True,
+        help_text=_(
+            "The code must have between 3 and 20 uppercase characters and be unique."
+        ),
+        validators=(
+            RegexValidator(
+                regex=r"[A-ZÑ\d]{3,20}",
+                message=_("Code doesn't comply with required format."),
+            ),
+        ),
     )
 
     class Meta:
@@ -47,4 +63,4 @@ class Document(VersionableMixin, BaseModel):
         return Process.objects.filter(versions__defined_in=self)
 
     def get_absolute_url(self) -> str:
-        return reverse("document_detail", args=(self.pk,))
+        return reverse("document_detail", args=(self.code,))

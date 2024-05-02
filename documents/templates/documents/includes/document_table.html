@@ -41,14 +41,14 @@
           <td class="text-end">
             {% if perms.documents.change_document %}
               <a class="btn btn-sm btn-outline-secondary"
-                 href="{% url 'document_update' document.id %}">
+                 href="{% url 'document_update' document.code %}">
                 {% trans "Update document" %}
                 <i class="fa fa-edit"></i>
               </a>
             {% endif %}
             {% if perms.documents.delete_document %}
               <a class="btn btn-sm btn-danger"
-                 href="{% url 'document_delete' document.id %}">
+                 href="{% url 'document_delete' document.code %}">
                 {% trans "Delete document" %}
                 <i class="fa fa-times"></i>
               </a>

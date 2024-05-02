@@ -5,8 +5,8 @@ from django.db import models
 from django.db.models import ForeignKey
 from django.db.models import ProtectedError
 from django.forms import Form
+from django.http import Http404
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
@@ -71,6 +71,9 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
     parent_model = None
     parent_object = None
     parent_pk_url_kwarg = "parent_pk"
+    parent_query_pk_and_slug = False
+    parent_slug_field = "slug"
+    parent_slug_url_kwarg = "parent_slug"
     model_parent_fk_field = None
     parent_queryset = None
     context_parent_object_name = None
@@ -94,11 +97,40 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
         self.pre_post(request, *args, **kwargs)
         return super(GenericBaseCreateView, self).post(request, *args, **kwargs)
 
-    def get_parent_object(self, parent_queryset=None):
-        if parent_queryset is None:
-            parent_queryset = self.get_parent_queryset()
-        parent_pk = self.kwargs.get(self.parent_pk_url_kwarg)
-        return get_object_or_404(parent_queryset, pk=parent_pk)
+    def get_parent_object(self, queryset=None):
+        """
+        Return the parent object the view is displaying.
+        Require `self.parent_queryset` and a `parent_pk` or `parent_slug` argument in
+        the URLconf. Subclasses can override this to return any object.
+        """
+        # Use a custom queryset if provided; this is required for subclasses
+        # like DateDetailView
+        if queryset is None:
+            queryset = self.get_parent_queryset()
+        # Next, try looking up by primary key.
+        pk = self.kwargs.get(self.parent_pk_url_kwarg)
+        slug = self.kwargs.get(self.parent_slug_url_kwarg)
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+        # Next, try looking up by slug.
+        if slug is not None and (pk is None or self.parent_query_pk_and_slug):
+            slug_field = self.get_parent_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
+        # If none of those are defined, it's an error.
+        if pk is None and slug is None:
+            raise AttributeError(
+                "Generic detail view %s must be called with either an object "
+                "parent_pk or a parent_slug in the URLconf." % self.__class__.__name__
+            )
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist as exc:
+            raise Http404(
+                _("No %(verbose_name)s found matching the query")
+                % {"verbose_name": queryset.model._meta.verbose_name}
+            ) from exc
+        return obj
 
     def get_parent_queryset(self):
         if self.parent_queryset is None:
@@ -112,6 +144,10 @@ class BaseSubModelCreateView(LoginPermissionRequiredMixin, CreateView):
             )
             raise ImproperlyConfigured(msg)
         return self.parent_queryset.all()
+
+    def get_parent_slug_field(self) -> str:
+        """Get the name of a slug parent field to be used to look up by slug."""
+        return self.parent_slug_field
 
     def pre_get(self, request, *args, **kwargs):
         """

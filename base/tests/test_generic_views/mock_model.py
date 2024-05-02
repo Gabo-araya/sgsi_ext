@@ -12,10 +12,16 @@ MockModel._meta = parent_meta
 MockModel.__str__.return_value = "Object"
 MockModel.__name__ = "MockModel"
 MockModel.get_absolute_url = MagicMock(return_value="/mockmodel/1/")
-MockModel.configure_mock(_default_manager=MagicMock(spec=models.Manager))
-MockModel.configure_mock(objects=MockModel._default_manager)
 
 MockQuerySet = MagicMock(spec=models.QuerySet)
+MockQuerySetmodel = MockModel
+
+MockManager = MagicMock(spec=models.Manager)
+MockManager._default_queryset = MockQuerySet
+MockManager.all = MagicMock(return_value=MockQuerySet)
+MockModel.configure_mock(_default_manager=MockManager)
+MockModel.configure_mock(objects=MockModel._default_manager)
+
 
 foreign_field_mock = MagicMock(spec=models.ForeignKey)
 foreign_field_mock.related_model = MockModel

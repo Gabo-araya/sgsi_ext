@@ -47,7 +47,7 @@ def document_version(document, django_file):
 @pytest.mark.django_db
 def document():
     return Document.objects.create(
-        title="test document", description="test description"
+        title="test document", description="test description", code="TESTDOC"
     )
 
 

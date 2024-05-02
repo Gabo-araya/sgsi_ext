@@ -24,7 +24,7 @@
       </div>
       <div class="modal-body">{% blocktrans %}Are you sure you want to approve {{documentversion}}?{% endblocktrans %}</div>
       <div class="modal-footer">
-        <form action="{% url 'documentversion_approve' documentversion.pk %}"
+        <form action="{% url 'documentversion_approve' documentversion.document.code documentversion.version %}"
               method="post">
           <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "cancel"|capfirst %}</button>

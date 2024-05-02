@@ -19,17 +19,17 @@ document_urlpatterns = [
         name="document_create",
     ),
     path(
-        "<int:pk>/",
+        "<slug:slug>/",
         document_views.DocumentDetailView.as_view(),
         name="document_detail",
     ),
     path(
-        "<int:pk>/update/",
+        "<slug:slug>/update/",
         document_views.DocumentUpdateView.as_view(),
         name="document_update",
     ),
     path(
-        "<int:pk>/delete/",
+        "<slug:slug>/delete/",
         document_views.DocumentDeleteView.as_view(),
         name="document_delete",
     ),
@@ -37,27 +37,27 @@ document_urlpatterns = [
 
 documentversion_urlpatterns = [
     path(
-        "<int:parent_pk>/versions/create/",
+        "<slug:parent_slug>/versions/create/",
         documentversion_views.DocumentVersionCreateView.as_view(),
         name="documentversion_create",
     ),
     path(
-        "versions/<int:pk>/",
+        "<slug:document_code>/V<int:version>/",
         documentversion_views.DocumentVersionDetailView.as_view(),
         name="documentversion_detail",
     ),
     path(
-        "versions/<int:pk>/update/",
+        "<slug:document_code>/V<int:version>/update/",
         documentversion_views.DocumentVersionUpdateView.as_view(),
         name="documentversion_update",
     ),
     path(
-        "versions/<int:pk>/delete/",
+        "<slug:document_code>/V<int:version>/delete/",
         documentversion_views.DocumentVersionDeleteView.as_view(),
         name="documentversion_delete",
     ),
     path(
-        "versions/<int:pk>/approve/",
+        "<slug:document_code>/V<int:version>/approve/",
         documentversion_views.DocumentVersionApproveView.as_view(),
         name="documentversion_approve",
     ),
