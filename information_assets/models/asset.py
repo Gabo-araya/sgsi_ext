@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models import BaseModel
 from information_assets.enums import ClassificationChoices
 from information_assets.enums import CriticalityChoices
+from information_assets.managers import AssetQuerySet
 from information_assets.models.asset_type import AssetType
 
 
@@ -40,6 +41,12 @@ class Asset(BaseModel):
         choices=ClassificationChoices.choices,
         max_length=10,
     )
+    is_archived = models.BooleanField(
+        verbose_name=_("is archived"),
+        default=False,
+    )
+
+    objects = AssetQuerySet.as_manager()
 
     class Meta:
         verbose_name = _("asset")
@@ -51,7 +58,13 @@ class Asset(BaseModel):
         )
 
     def __str__(self):
-        return f"{self.name} - {self.owner.get_full_name()}"
+        return (
+            f"{self.name} - {self.owner.get_full_name()}"
+            f"{' (archived)' if self.is_archived else ''}"
+        )
 
     def get_absolute_url(self):
         return reverse("asset_detail", args=(self.pk,))
+
+    def archive(self) -> None:
+        self.update(is_archived=True)

@@ -3,18 +3,14 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.information_assets.change_asset %}
+  {% if perms.information_assets.delete_asset and not object.is_archived %}
+    {% include "information_assets/includes/archive_modal.html" %}
+  {% endif %}
+  {% if perms.information_assets.change_asset and not object.is_archived %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'asset_update' asset.id %}">
       {% trans "Update asset" %}
       <i class="fa fa-edit"></i>
-    </a>
-  {% endif %}
-  {% if perms.information_assets.delete_asset %}
-    <a class="btn btn-sm btn-danger"
-       href="{% url 'asset_delete' asset.id %}">
-      {% trans "Delete asset" %}
-      <i class="fa fa-times"></i>
     </a>
   {% endif %}
 {% endblock options %}
@@ -38,7 +34,7 @@
       </tr>
       <tr>
         <th>{% trans "description"|capfirst %}</th>
-        <td>{{ asset.description }}</td>
+        <td>{{ asset.description|default:"-" }}</td>
       </tr>
       <tr>
         <th>{% trans "type"|capfirst %}</th>

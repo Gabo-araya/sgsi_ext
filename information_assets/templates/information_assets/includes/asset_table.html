@@ -9,7 +9,9 @@
       <th>{% trans "classification"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
-      {% if perms.information_assets.change_asset or perms.information_assets.delete_asset %}<th></th>{% endif %}
+      {% if not asset.is_archived %}
+        {% if perms.information_assets.change_asset or perms.information_assets.delete_asset %}<th></th>{% endif %}
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -25,23 +27,21 @@
         <td>{{ asset.get_classification_display }}</td>
         <td>{{ asset.updated_at }}</td>
         <td>{{ asset.updated_by.get_label }}</td>
-        {% if perms.information_assets.change_asset or perms.information_assets.delete_asset %}
-          <td class="text-end">
-            {% if perms.information_assets.change_asset %}
-              <a class="btn btn-sm btn-outline-secondary"
-                 href="{% url 'asset_update' asset.id %}">
-                {% trans "Update asset" %}
-                <i class="fa fa-edit"></i>
-              </a>
-            {% endif %}
-            {% if perms.information_assets.delete_asset %}
-              <a class="btn btn-sm btn-danger"
-                 href="{% url 'asset_delete' asset.id %}">
-                {% trans "Delete asset" %}
-                <i class="fa fa-times"></i>
-              </a>
-            {% endif %}
-          </td>
+        {% if not asset.is_archived %}
+          {% if perms.information_assets.change_asset or perms.information_assets.delete_asset %}
+            <td class="text-end">
+              {% if perms.information_assets.delete_asset %}
+                {% include "information_assets/includes/archive_modal.html" %}
+              {% endif %}
+              {% if perms.information_assets.change_asset %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{% url 'asset_update' asset.id %}">
+                  {% trans "Update asset" %}
+                  <i class="fa fa-edit"></i>
+                </a>
+              {% endif %}
+            </td>
+          {% endif %}
         {% endif %}
       </tr>
     {% endfor %}
