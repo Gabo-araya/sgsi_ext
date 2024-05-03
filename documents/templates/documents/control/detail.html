@@ -61,8 +61,8 @@
     </tbody>
   </table>
   <br>
-  <h2>{% trans "documents"|capfirst %}</h2>
-  {% include "documents/includes/document_table.html" with object_list=control.documents.all %}
+  <h2>{% trans "documented in"|capfirst %}</h2>
+  {% include "documents/includes/document_table.html" with object_list=control.documented_in.all %}
   <br>
   <h2>{% trans "related risks"|capfirst %}</h2>
   {% include "risks/includes/risk_table.html" with object_list=control.risks.all %}

@@ -10,7 +10,7 @@ from documents.models.document_version import DocumentVersion
 class DocumentForm(BaseModelForm):
     class Meta:
         model = Document
-        fields = ("title", "code", "description")
+        fields = ("title", "code", "description", "documented_controls")
 
 
 class DocumentVersionForm(BaseModelForm):
@@ -22,7 +22,7 @@ class DocumentVersionForm(BaseModelForm):
 class ControlForm(BaseModelForm):
     class Meta:
         model = Control
-        fields = ("category", "title", "description", "documents")
+        fields = ("category", "title", "description")
 
 
 class ControlCategoryForm(BaseModelForm):

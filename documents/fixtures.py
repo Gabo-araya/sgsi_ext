@@ -17,13 +17,11 @@ def control_category():
 @pytest.fixture
 @pytest.mark.django_db
 def control(control_category, document):
-    control = Control.objects.create(
+    return Control.objects.create(
         category=control_category,
         title="test control",
         description="test description",
     )
-    control.documents.set((document,))
-    return control
 
 
 @pytest.fixture

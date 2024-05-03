@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models import BaseModel
 from base.models.versionable_mixin import VersionableMixin
+from documents.models.control import Control
 
 if TYPE_CHECKING:
     from documents.models.document_version import DocumentVersion
@@ -40,10 +41,17 @@ class Document(VersionableMixin, BaseModel):
             ),
         ),
     )
+    documented_controls = models.ManyToManyField(
+        verbose_name=_("documented controls"),
+        to=Control,
+        related_name="documented_in",
+        blank=True,
+    )
 
     class Meta:
         verbose_name = _("document")
         verbose_name_plural = _("documents")
+        ordering = ("title",)
 
     def __str__(self) -> str:
         return self.title

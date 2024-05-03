@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models.base_model import BaseModel
 from documents.models.control_category import ControlCategory
-from documents.models.document import Document
 from documents.models.evidence import Evidence
 
 
@@ -24,12 +23,6 @@ class Control(BaseModel):
     )
     description = models.TextField(
         verbose_name=_("description"),
-        blank=True,
-    )
-    documents = models.ManyToManyField(
-        verbose_name=_("documents"),
-        to=Document,
-        related_name="controls",
         blank=True,
     )
 

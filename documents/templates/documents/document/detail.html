@@ -69,8 +69,8 @@
   <h2>{% trans "versions"|capfirst %}</h2>
   {% include "documents/includes/documentversion_table.html" with object_list=document.versions.all %}
   <br>
-  <h2>{% trans "related controls"|capfirst %}</h2>
-  {% include "documents/includes/control_table.html" with object_list=document.controls.all %}
+  <h2>{% trans "documented controls"|capfirst %}</h2>
+  {% include "documents/includes/control_table.html" with object_list=document.documented_controls.all %}
   <br>
   <h2>{% trans "processes defined by this document"|capfirst %}</h2>
   {% include "processes/includes/process_table.html" with object_list=document.defined_processes %}
