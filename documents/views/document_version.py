@@ -1,4 +1,7 @@
+from django.forms import BaseModelForm
 from django.http import Http404
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 
 from base.views.generic.detail import BaseDetailView
@@ -6,6 +9,7 @@ from base.views.generic.edit import BaseDeleteView
 from base.views.generic.edit import BaseSubModelCreateView
 from base.views.generic.edit import BaseUpdateRedirectView
 from base.views.generic.edit import BaseUpdateView
+from documents.forms import DocumentVersionApproveForm
 from documents.forms import DocumentVersionForm
 from documents.managers import DocumentVersionQuerySet
 from documents.models.document import Document
@@ -75,13 +79,24 @@ class DocumentVersionDeleteView(DocumentVersionGetObjectMixin, BaseDeleteView):
         return self.object.document.get_absolute_url()
 
 
-class DocumentVersionApproveView(DocumentVersionGetObjectMixin, BaseUpdateRedirectView):
+class DocumentVersionApproveView(DocumentVersionGetObjectMixin, BaseUpdateView):
     model = DocumentVersion
+    form_class = DocumentVersionApproveForm
+    template_name = "documents/documentversion/update.html"
     permission_required = "documents.approve_documentversion"
 
-    def do_action(self):
-        if not self.object.is_approved:
-            self.object.approve(self.request.user)
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        self.object.mark_as_approved(self.request.user, form)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_title(self):
+        return _("Approve document version")
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "submit_button_text": _("Approve"),
+        }
 
 
 class DocumentVersionMarkAsReadView(BaseUpdateRedirectView):

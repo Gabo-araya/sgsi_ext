@@ -11,6 +11,17 @@
 {% block content %}
   <table class="table table-striped table-hover table-sm">
     <tbody>
+      {% with approved_document_version=evidence.approved_document_version %}
+        {% if approved_document_version %}
+          <tr>
+            <th>{% trans "approved document version"|capfirst %}</th>
+            <td>
+              <a href="{{ approved_document_version.get_absolute_url }}">{{ approved_document_version }}
+              </td>
+            </a>
+          </tr>
+        {% endif %}
+      {% endwith %}
       {% with process_activity_instance=evidence.process_activity_instance %}
         {% if process_activity_instance %}
           <tr>

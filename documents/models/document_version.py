@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -10,7 +14,11 @@ from base.models.version_mixin import VersionModelBase
 from documents.managers import DocumentVersionQuerySet
 from documents.models.document import Document
 from documents.models.document_version_read_by_user import DocumentVersionReadByUser
+from documents.models.evidence import Evidence
 from users.models import User
+
+if TYPE_CHECKING:
+    from documents.forms import DocumentVersionApproveForm
 
 
 class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
@@ -27,6 +35,14 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
     is_approved = models.BooleanField(
         verbose_name=_("is approved"),
         default=False,
+    )
+    approval_evidence = models.OneToOneField(
+        verbose_name=_("approval evidence"),
+        to="documents.Evidence",
+        on_delete=models.PROTECT,
+        related_name="approved_document_version",
+        null=True,
+        blank=True,
     )
     approved_at = models.DateTimeField(
         verbose_name=_("approved at"),
@@ -72,11 +88,16 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
     def _get_increment_queryset(self) -> DocumentVersionQuerySet:
         return self.document.versions.all()
 
-    def approve(self, user: User) -> None:
+    def mark_as_approved(self, user: User, form: DocumentVersionApproveForm) -> None:
+        update_dict = self.get_approve_update_dict(user)
+        evidence = Evidence.create_from_form(form)
+        self.update(approval_evidence=evidence, **update_dict)
+
+    def get_approve_update_dict(self, user: User) -> None:
         update_dict = {"is_approved": True, "approved_at": timezone.now()}
         if user and not user.is_anonymous:
             update_dict["approved_by"] = user
-        self.update(**update_dict)
+        return update_dict
 
     def mark_as_read(self, user: User) -> None:
         self.read_by.add(user)

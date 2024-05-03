@@ -110,17 +110,10 @@ class ProcessActivityInstance(BaseModel):
         return reverse("processactivityinstance_detail", args=(self.pk,))
 
     def mark_as_completed(self, form: ProcessActivityInstanceCompleteForm) -> None:
-        evidence = self.create_evidence(form)
+        evidence = Evidence.create_from_form(form)
         self.create_next_activity_instance_if_exists(form)
         self.update(evidence=evidence, is_completed=True, completed_at=timezone.now())
         self.process_instance.check_if_completed()
-
-    def create_evidence(self, form: ProcessActivityInstanceCompleteForm) -> Evidence:
-        file = form.cleaned_data["evidence_file"]
-        if file:
-            return Evidence.objects.create(file=file)
-        url = form.cleaned_data["evidence_url"]
-        return Evidence.objects.create(url=url)
 
     def create_next_activity_instance_if_exists(
         self, form: ProcessActivityInstanceCompleteForm

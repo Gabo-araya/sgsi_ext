@@ -11,3 +11,11 @@
     <a href="{{ object.get_absolute_url }}">{{ object }}</a>
   </li>
 {% endblock breadcrumbs %}
+
+{% block submit_button_text %}
+  {% if submit_button_text %}
+    {{ submit_button_text }}
+  {% else %}
+    {% trans "Save" %}
+  {% endif %}
+{% endblock submit_button_text %}

@@ -12,7 +12,11 @@
     </a>
   {% endif %}
   {% if perms.documents.approve_documentversion and not documentversion.is_approved %}
-    {% include "documents/includes/approve_modal.html" %}
+    <a class="btn btn-sm btn-success"
+       href="{% url 'documentversion_approve' documentversion.document.code documentversion.version %}">
+      {% trans "Approve document version" %}
+      <i class="fa fa-check"></i>
+    </a>
   {% endif %}
   {% if perms.documents.delete_documentversion and documentversion.can_be_updated %}
     <a class="btn btn-sm btn-danger"
@@ -47,7 +51,7 @@
       </tr>
       <tr>
         <th>{% trans "comment"|capfirst %}</th>
-        <td>{{ documentversion.comment }}</td>
+        <td>{{ documentversion.comment|default:"-" }}</td>
       </tr>
       <tr>
         <th>{% trans "file"|capfirst %}</th>
@@ -70,6 +74,18 @@
       <tr>
         <th>{% trans "approved by"|capfirst %}</th>
         <td>{{ documentversion.approved_by.get_label }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "approval evidence"|capfirst %}</th>
+        {% with approval_evidence=documentversion.approval_evidence %}
+          <td>
+            {% if approval_evidence %}
+              <a href="{{ approval_evidence.get_absolute_url }}">{{ approval_evidence }}</a>
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        {% endwith %}
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>

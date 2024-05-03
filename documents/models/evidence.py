@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import hashlib
 
+from typing import TYPE_CHECKING
+
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.fields.base import BaseFileField
 from base.models.base_model import BaseModel
+
+if TYPE_CHECKING:
+    from documents.forms import EvidenceForm
 
 
 class Evidence(BaseModel):
@@ -39,6 +44,8 @@ class Evidence(BaseModel):
     def __str__(self) -> str:
         if hasattr(self, "process_activity_instance"):
             return f"Evidence for {self.process_activity_instance}"
+        if hasattr(self, "approved_document_version"):
+            return f"Evidence for {self.approved_document_version}"
         return "Evidence"
 
     def save(self, *args, **kwargs) -> None:
@@ -61,3 +68,9 @@ class Evidence(BaseModel):
 
     def get_absolute_url(self) -> str:
         return reverse("evidence_detail", args=(self.pk,))
+
+    @classmethod
+    def create_from_form(cls, form: type[EvidenceForm]) -> Evidence:
+        if file := form.cleaned_data["evidence_file"]:
+            return cls.objects.create(file=file)
+        return cls.objects.create(url=form.cleaned_data["evidence_url"])
