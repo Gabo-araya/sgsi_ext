@@ -64,6 +64,14 @@
         <td>{{ documentversion.is_approved|yesno|capfirst }}</td>
       </tr>
       <tr>
+        <th>{% trans "approved at"|capfirst %}</th>
+        <td>{{ documentversion.approved_at }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "approved by"|capfirst %}</th>
+        <td>{{ documentversion.approved_by.get_label }}</td>
+      </tr>
+      <tr>
         <th>{% trans "created at"|capfirst %}</th>
         <td>{{ documentversion.created_at }}</td>
       </tr>
