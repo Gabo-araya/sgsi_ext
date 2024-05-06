@@ -7,6 +7,10 @@ def branchesConfig = [
     inventory_name: 'staging',
     credentials_id: '910dbf9b-3658-41a2-83df-fa5fd5f7da4c'
   ],
+  master: [
+    inventory_name: 'production',
+    credentials_id: '910dbf9b-3658-41a2-83df-fa5fd5f7da4c'
+  ],
   fallback: [
     inventory_name: 'localhost',
     credentials_id: '910dbf9b-3658-41a2-83df-fa5fd5f7da4c'
@@ -111,7 +115,7 @@ pipeline {
       }
     }
     stage('Deploy') {
-      when { anyOf { branch 'release/0002'; } }
+      when { anyOf { branch 'release/0002'; branch 'main' } }
       agent {
         docker {
           image 'python:3.10-bullseye'
