@@ -77,7 +77,9 @@ pipeline {
               dir ('test-results') {
                 sh(script: '[ -d "coverage" ] && tar czf coverage.tar.gz coverage/*; exit 0', label: 'Compress coverage results (if exists)')
                 junit(testResults: 'pytest.xml', allowEmptyResults: true)
-                cobertura(coberturaReportFile: 'coverage.xml')
+                // patch file to remove container paths
+                sh(script: "sed -i 's/<source>\\/usr\\/src\\/app<\\/source>/<source>.<\\/source>/' coverage.xml", label: 'Patch coverage results')
+                recordCoverage(sourceDirectories: [[path: '..']], tools: [[parser: 'COBERTURA', pattern: 'coverage.xml']])
                 archiveArtifacts(
                   allowEmptyArchive: true,
                   artifacts: '*, **',
