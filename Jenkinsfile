@@ -7,7 +7,7 @@ def branchesConfig = [
     inventory_name: 'staging',
     credentials_id: '910dbf9b-3658-41a2-83df-fa5fd5f7da4c'
   ],
-  master: [
+  main: [
     inventory_name: 'production',
     credentials_id: '910dbf9b-3658-41a2-83df-fa5fd5f7da4c'
   ],
