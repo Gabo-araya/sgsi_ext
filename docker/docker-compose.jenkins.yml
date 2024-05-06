@@ -1,11 +1,10 @@
-version: '3.8'
 services:
   postgres:
     build:
       context: postgres
     env_file: "ci_env"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -14,24 +13,14 @@ services:
     build:
       context: ..
       target: test
+      args:
+        HOST_UID: "${HOST_UID:-2640}"
+        HOST_GID: "${HOST_GID:-2640}"
+        WHO: "${WHO:-magnet}"
     env_file: "ci_env"
     depends_on:
-      - postgres
-      - artifact-collector
+      postgres:
+        condition: service_healthy
     volumes:
-      - test-artifacts:/usr/src/app/test-results
-
-  artifact-collector:
-    image: busybox:stable
-    volumes:
-      - test-artifacts:/artifacts
-    init: true
-    command: |
-      sh -c "
-        chmod -R 777 /artifacts
-        echo Waiting for artifacts
-        sleep inf  # Wait a long time
-      "
-
-volumes:
-  test-artifacts:
+      - ../.git:/usr/src/app/.git
+      - ../test-results:/usr/src/app/test-results
