@@ -148,10 +148,15 @@ def test_base_sub_model_create_get_cancel_url(next_url, expected):
 
 
 def test_base_sub_model_create_get_parent_object():
-    view = MockBaseSubModelCreateView()
-    view.parent_pk_url_kwarg = "parent_pk"
-    view.kwargs = {"parent_pk": 1}
-    assert view.get_parent_object() == MockQuerySet.filter().get()
+    with patch.object(MockModel, "_default_manager") as mock_manager:
+        mock_manager.all.return_value = mock_manager
+        mock_manager.filter.return_value = mock_manager
+        mock_manager.get.return_value = "parent_object"
+        view = MockBaseSubModelCreateView()
+        view.parent_pk_url_kwarg = "parent_pk"
+        view.kwargs = {"parent_pk": 1}
+        assert view.get_parent_object() == "parent_object"
+        mock_manager.filter.assert_called_once_with(pk=1)
 
 
 @pytest.mark.parametrize(
