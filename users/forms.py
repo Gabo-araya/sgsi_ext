@@ -5,7 +5,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.template import loader
@@ -17,7 +19,20 @@ from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV3
 
 from base.forms import BaseModelForm
+from documents.models.control import Control
+from documents.models.control_category import ControlCategory
+from documents.models.document import Document
+from documents.models.document_version import DocumentVersion
+from documents.models.evidence import Evidence
+from information_assets.models.asset import Asset
+from information_assets.models.asset_type import AssetType
 from parameters.models import Parameter
+from processes.models.process import Process
+from processes.models.process_activity import ProcessActivity
+from processes.models.process_activity_instance import ProcessActivityInstance
+from processes.models.process_instance import ProcessInstance
+from processes.models.process_version import ProcessVersion
+from risks.models.risk import Risk
 from users.models import User
 
 
@@ -236,7 +251,14 @@ class UserCreationForm(BaseModelForm):
 
     class Meta:
         model = User
-        fields = ("email",)
+        fields = (
+            "email",
+            "first_name",
+            "last_name",
+            "password1",
+            "password2",
+            "groups",
+        )
 
     def clean_email(self):
         """checks that the email is unique"""
@@ -368,12 +390,48 @@ class GroupForm(BaseModelForm):
 
     class Meta:
         model = Group
-        fields = ("name", "permissions", "users")
+        fields = ("name", "users", "permissions")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["users"].label_from_instance = lambda obj: obj.get_label()
+        self.fields["permissions"].queryset = Permission.objects.filter(
+            content_type__in=self.get_permissable_content_types()
+        )
+        self.fields[
+            "permissions"
+        ].label_from_instance = (
+            lambda obj: f"{obj.content_type.name.title()}: {obj.name}"
+        )
         if self.instance.pk:
             self.fields["users"].initial = self.instance.user_set.all()
+
+    def get_permissable_content_types(self) -> tuple[ContentType, ...]:
+        permissable_models = (
+            # users
+            User,
+            Group,
+            # documents
+            ControlCategory,
+            Control,
+            DocumentVersion,
+            Document,
+            Evidence,
+            # information assets
+            AssetType,
+            Asset,
+            # risks
+            Risk,
+            # processes
+            ProcessActivityInstance,
+            ProcessActivity,
+            ProcessInstance,
+            ProcessVersion,
+            Process,
+        )
+        return (
+            ContentType.objects.get_for_model(model) for model in permissable_models
+        )
 
     def save(self, commit: bool = ...) -> Group:
         instance = super().save(commit)
