@@ -195,10 +195,20 @@ RUN VITE_MANIFEST=$VITE_MANIFEST npm run build
 
 FROM dev-base as test
 
+ARG WHO=magnet
+ARG HOST_UID=2640
+ARG HOST_GID=2640
+ENV NODE_ENV=ci
+
 USER root
 
-COPY . ./
-COPY --from=prod-js-builder /usr/src/app/assets/bundles/ ./assets/bundles/
+# node_modules for "npm run lint"
+WORKDIR /usr/src/app
+COPY --chown=$HOST_UID:$HOST_GID package.json package-lock.json ./
+RUN npm ci --omit="" --no-audit && rm -rf "$NPM_CACHE_DIR"/*
+
+
+COPY --chown=$HOST_UID:$HOST_GID . ./
 
 RUN mkdir -p ./project/media ./project/static
 RUN chown $HOST_UID:$HOST_GID /usr/src/app/project/static /usr/src/app/project/media
