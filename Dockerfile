@@ -190,7 +190,7 @@ COPY --chown=$HOST_UID:$HOST_GID assets ./assets/
 COPY vite.config.ts tsconfig.json .eslint* .stylelint* ./
 
 ARG VITE_MANIFEST="manifest.json"
-RUN VITE_MANIFEST=$VITE_MANIFEST npm run build
+RUN VITE_MANIFEST="$VITE_MANIFEST" npm run build
 
 
 FROM dev-base as test

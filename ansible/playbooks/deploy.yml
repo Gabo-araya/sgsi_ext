@@ -141,7 +141,7 @@
         build_args: >-
           --build-arg GIT_REF={{ git_ref.stdout }}
           --build-arg BUILD_TIME={{ build_time.stdout }}
-          --build-arg VITE_MANIFEST={{ git_ref_short.stdout }}
+          --build-arg VITE_MANIFEST="manifest-{{ git_ref_short.stdout }}.json"
         nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
         pull_arg:    "{{ '--pull'     if env_cache_ignore == '1' else '' }}"
         recreate_arg: "{{ '--force-recreate' if env_recreate == '1' else '' }}"
