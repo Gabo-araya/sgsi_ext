@@ -1786,7 +1786,7 @@ files = [
 name = "pyyaml"
 version = "6.0.1"
 description = "YAML parser and emitter for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
@@ -2398,4 +2398,4 @@ tests = ["coverage", "flake8", "wheel"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.10"
-content-hash = "48a58ec0e4568a4797a4dc8ccda021ad225b80042f1734dd61f9e985c5b692c8"
+content-hash = "1c2361537cacbfdcf0ca05652b924a1270aa26bdc2b7e8cd46f7ea6241846ca3"
