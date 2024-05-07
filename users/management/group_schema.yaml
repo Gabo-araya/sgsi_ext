@@ -6,7 +6,7 @@ Employee:
 
 Administrator:
   - auth.manage_group
-  - users.manage_users
+  - users.manage_user
   - documents.manage_all
   - informations_assets.manage_all
   - risks.manage_all
