@@ -26,8 +26,25 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
-  <h2>{% trans "assigned permissions"|capfirst %}</h2>
+  <h2>{% trans "users"|capfirst %}</h2>
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th>{% trans "name"|capfirst %}</th>
+        <th>{% trans "email"|capfirst %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in group.user_set.all %}
+        <tr>
+          <td>{{ user.get_full_name }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   <br>
+  <h2>{% trans "assigned permissions"|capfirst %}</h2>
   <table class="table table-striped table-hover table-sm">
     <thead>
       <tr>
@@ -44,24 +61,6 @@
           <td>{{ permission.codename }}</td>
           <td>{{ permission.content_type.app_label }}</td>
           <td>{{ permission.content_type.model }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <br>
-  <h2>{% trans "users"|capfirst %}</h2>
-  <table class="table table-striped table-sm">
-    <thead>
-      <tr>
-        <th>{% trans "name"|capfirst %}</th>
-        <th>{% trans "email"|capfirst %}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in group.user_set.all %}
-        <tr>
-          <td>{{ user.get_full_name }}</td>
-          <td>{{ user.email }}</td>
         </tr>
       {% endfor %}
     </tbody>
