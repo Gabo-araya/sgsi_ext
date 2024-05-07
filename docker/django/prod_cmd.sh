@@ -20,5 +20,10 @@ if [ "${DISABLE_BOOT_COLLECTSTATIC:-0}" -eq 0 ]; then
   dj collectstatic --noinput
 fi
 
+if [ "${DISABLE_BOOT_UPDATEGROUPS:-0}" -eq 0 ]; then
+  title_print "updategroups"
+  dj updategroups --sync
+fi
+
 title_print "gunicorn"
 gunicorn project.wsgi:application --config docker/django/gunicorn_conf.py

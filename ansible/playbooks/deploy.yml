@@ -66,7 +66,7 @@
       template:
         src: templates/nginx.env.j2
         dest: "{{ project_name }}/docker/nginx.env"
-        force: yes  # Overwrites in case server_domain changes
+        force: yes # Overwrites in case server_domain changes
 
     - name: symlink default override file to production compose
       # This is to use docker-compose CLI without "-f"
@@ -78,7 +78,7 @@
     - name: install apt packages
       apt:
         name:
-          - pv    # Progress for dump download
+          - pv # Progress for dump download
         state: present
       become: yes
 
@@ -86,7 +86,7 @@
       copy:
         src: files/docker_daemon.json
         dest: /etc/docker/daemon.json
-        force: yes  # We assume the server is exclusive for this project, so manage this file with Ansible only.
+        force: yes # We assume the server is exclusive for this project, so manage this file with Ansible only.
       become: yes
       register: docker_daemon
 
@@ -133,7 +133,7 @@
       # Note: "community.docker.docker_compose" requires docker-compose v1 and always disables BuildKit
       shell:
         chdir: "{{ project_name }}"
-        cmd: "{{ build_cmd }} && {{ up_cmd }}"  # Two commands because not all build flags are available in up
+        cmd: "{{ build_cmd }} && {{ up_cmd }}" # Two commands because not all build flags are available in up
       vars:
         build_cmd: docker compose build {{ build_args }} {{ nocache_arg }} {{ pull_arg }}
         up_cmd: docker compose up -d --remove-orphans {{ recreate_arg }}
@@ -143,14 +143,14 @@
           --build-arg BUILD_TIME={{ build_time.stdout }}
           --build-arg VITE_MANIFEST="manifest-{{ git_ref_short.stdout }}.json"
         nocache_arg: "{{ '--no-cache' if env_cache_ignore == '1' else '' }}"
-        pull_arg:    "{{ '--pull'     if env_cache_ignore == '1' else '' }}"
+        pull_arg: "{{ '--pull' if env_cache_ignore == '1' else '' }}"
         recreate_arg: "{{ '--force-recreate' if env_recreate == '1' else '' }}"
 
         env_recreate: "{{ lookup('env', 'deploy_recreate')|default('0') }}"
         env_cache_ignore: "{{ lookup('env', 'deploy_cache_ignore')|default('0') }}"
       environment:
         BUILDKIT_PROGRESS: plain
-      changed_when: true  # nvm
+      changed_when: true # nvm
       tags: update
 
     - name: run deployment checks
@@ -218,17 +218,28 @@
         msg: "{{ collectstatic_results.stdout }}\n{{ collectstatic_results.stderr }}"
       tags: always
 
+    - name: run updategroups
+      command: docker compose exec django dj updategroups --sync
+      args:
+        chdir: "{{ project_name }}"
+      register: updategroups_results
+      tags: always
+
+    - name: show updategroups results
+      debug:
+        msg: "{{ updategroups_results.stdout }}\n{{ updategroups_results.stderr }}"
+      tags: always
+
     - name: make a test request to https://{{ server_domain }}
       uri:
         url: https://{{ server_domain }}
-        force: yes  # Ensure no cache
+        force: yes # Ensure no cache
       tags: update
       # Skip this check on first deploy, because dhparams generation takes a long time:
       when: >
         stat_nginx_secrets is not defined
         or stat_nginx_secrets.stat.exists
       # "is not defined" because task that registers it has no "update" tag
-
       # Some retries because nginx may not be ready yet:
       # improvement: what if long migrations are running?
       register: test_req

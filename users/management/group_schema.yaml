@@ -1,0 +1,13 @@
+Employee:
+  - documents.view_all
+  - informations_assets.view_all
+  - risks.view_all
+  - processes.view_all
+
+Administrator:
+  - auth.manage_group
+  - users.manage_users
+  - documents.manage_all
+  - informations_assets.manage_all
+  - risks.manage_all
+  - processes.manage_all

@@ -45,6 +45,7 @@ fi
   enable_django_extensions=True
   disable_boot_migrate=0
   disable_boot_collectstatic=0
+  disable_boot_updategroups=0
   aws_access_key_id=
   aws_secret_access_key=
   bucket_name=
@@ -75,6 +76,7 @@ fi
   perl -pi -e "s|\{\{enable_django_extensions\}\}|$enable_django_extensions|g" $env_file
   perl -pi -e "s|\{\{disable_boot_migrate\}\}|$disable_boot_migrate|g" $env_file
   perl -pi -e "s|\{\{disable_boot_collectstatic\}\}|$disable_boot_collectstatic|g" $env_file
+  perl -pi -e "s|\{\{disable_boot_updategroups\}\}|$disable_boot_updategroups|g" $env_file
   perl -pi -e "s|\{\{aws_access_key_id\}\}|$aws_access_key_id|g" $env_file
   perl -pi -e "s|\{\{aws_secret_access_key\}\}|$aws_secret_access_key|g" $env_file
   perl -pi -e "s|\{\{bucket_name\}\}|$bucket_name|g" $env_file
