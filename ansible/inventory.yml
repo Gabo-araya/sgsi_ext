@@ -11,6 +11,7 @@ all:
     production:
       ansible_host: 209.97.154.158
       server_domain: compliance.magnet.cl
+      host_ssh_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrWx/AVzKGXZIwfOw8HEnRF7bfQ2VqXruJW2/SidMJf
       site_name: 'Compliance'
       branch: main
       docker_mountpoint: /
