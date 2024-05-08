@@ -3,8 +3,35 @@
 {% load i18n %}
 
 {% block options %}
-  <a class="btn btn-sm btn-outline-secondary" href="{% url 'user_edit' %}">{% trans "Edit" %}</a>
+  {% if perms.users.change_user %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'user_update' object.pk %}">
+      {% trans "Update user" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% else %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'user_profile_edit' %}">
+      {% trans "Edit profile" %}
+      <i class="fa fa-edit"></i>
+    </a>
+  {% endif %}
+  {% if perms.users.delete_user %}
+    <a class="btn btn-sm btn-danger"
+       href="{% url 'user_delete' object.pk %}">
+      {% trans "Delete user" %}
+      <i class="fa fa-times"></i>
+    </a>
+  {% endif %}
 {% endblock options %}
+
+{% block breadcrumbs %}
+  {% if perms.users.view_user %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'user_list' %}">{% trans "users"|capfirst %}</a>
+    </li>
+  {% endif %}
+{% endblock breadcrumbs %}
 
 {% block content %}
   <div class="detail">
@@ -13,15 +40,15 @@
         <table class="table table-striped table-hover table-bordered table-sm">
           <tr>
             <th>{% trans "first name"|capfirst %}</th>
-            <td>{{ user.first_name }}</td>
+            <td>{{ object.first_name }}</td>
           </tr>
           <tr>
             <th>{% trans "last name"|capfirst %}</th>
-            <td>{{ user.last_name }}</td>
+            <td>{{ object.last_name }}</td>
           </tr>
           <tr>
             <th>{% trans "email"|capfirst %}</th>
-            <td>{{ user.email }}</td>
+            <td>{{ object.email }}</td>
           </tr>
         </table>
       </div>

@@ -2,6 +2,8 @@
 
 {% load i18n static %}
 
-{% block content_title %}
-  <h1>{% blocktrans %}Create new account{% endblocktrans %}</h1>
-{% endblock content_title %}
+{% block breadcrumbs %}
+  <li class="breadcrumb-item">
+    <a href="{% url 'user_list' %}">{% trans "users"|capfirst %}</a>
+  </li>
+{% endblock breadcrumbs %}

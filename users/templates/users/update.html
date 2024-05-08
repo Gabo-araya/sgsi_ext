@@ -1,0 +1,20 @@
+{% extends "form.html" %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}
+  {% if perms.users.view_user %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'user_list' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    </li>
+  {% endif %}
+  {% if perms.users.view_user %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'user_detail' object.pk %}">{{ object }}</a>
+    </li>
+  {% else %}
+    <li class="breadcrumb-item">
+      <a href="{% url 'user_profile' %}">{% trans "My profile" %}</a>
+    </li>
+  {% endif %}
+{% endblock breadcrumbs %}

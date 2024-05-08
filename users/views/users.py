@@ -1,21 +1,21 @@
-""" The users app views"""
-
+"""The users app views"""
 
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import redirect
-from django.shortcuts import render
 from django.urls import reverse
 from django.utils.http import base36_to_int
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic.edit import CreateView
 
 # views
 from base.views.generic import BaseListView
+from base.views.generic.detail import BaseDetailView
+from base.views.generic.edit import BaseCreateView
+from base.views.generic.edit import BaseDeleteView
+from base.views.generic.edit import BaseUpdateView
 from parameters.models import Parameter
 
 # forms
@@ -23,7 +23,45 @@ from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserCreationForm
 from users.forms import UserForm
+from users.forms import UserWithGroupsForm
 from users.models import User
+
+
+# Doesn't need csrf_protect since no-one can guess the URL
+@sensitive_post_parameters()
+@never_cache
+def user_new_confirm(  # noqa: PLR0913
+    request,
+    uidb36=None,
+    token=None,
+    token_generator=default_token_generator,
+    current_app=None,
+    extra_context=None,
+):
+    """
+    View that checks the hash in a email confirmation link and activates
+    the user.
+    """
+    if uidb36 is None or token is None:
+        msg = "uidb36 and token are required"
+        raise ValueError(msg)
+    try:
+        uid_int = base36_to_int(uidb36)
+        user = User.objects.get(id=uid_int)
+    except (ValueError, User.DoesNotExist):
+        user = None
+
+    if user is not None and token_generator.check_token(user, token):
+        user.update(is_active=True)
+        messages.add_message(
+            request,
+            messages.INFO,
+            _("Your email address has been verified."),
+        )
+    else:
+        messages.add_message(request, messages.ERROR, _("Invalid verification link"))
+
+    return redirect("login")
 
 
 class LoginView(auth_views.LoginView):
@@ -86,17 +124,28 @@ class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = "registration/password_reset_complete.html"
 
 
-class UserCreateView(CreateView):
-    template_name = "users/create.html"
+class UserListView(BaseListView):
+    model = User
+    template_name = "users/list.html"
+    permission_required = "users.view_user"
+    ordering = ("first_name", "last_name")
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # search users
+        q = self.request.GET.get("q")
+        if q:
+            queryset = queryset.search(q)
+
+        return queryset.prefetch_related("groups")
+
+
+class UserCreateView(BaseCreateView):
+    model = User
     form_class = UserCreationForm  # TODO Consider using captcha
+    template_name = "users/create.html"
     title = _("Registration")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = self.title
-        context["cancel_url"] = reverse("user_list")
-
-        return context
 
     def form_valid(self, form):
         form.save(verify_email_address=True, request=self.request)
@@ -112,94 +161,58 @@ class UserCreateView(CreateView):
         return redirect("home")
 
 
-@login_required
-def user_edit(request):
-    if request.method == "POST":
-        form = UserForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                _("Your data has been successfully saved."),
-            )
-            return redirect("home")
-    else:
-        form = UserForm(instance=request.user)
-
-    context = {
-        "cancel_url": reverse("user_profile"),
-        "form": form,
-    }
-
-    return render(request, "users/edit.html", context)
-
-
-@login_required
-def user_profile(request):
-    context = {"title": _("My profile")}
-
-    return render(request, "users/detail.html", context)
-
-
-# Doesn't need csrf_protect since no-one can guess the URL
-@sensitive_post_parameters()
-@never_cache
-def user_new_confirm(  # noqa: PLR0913
-    request,
-    uidb36=None,
-    token=None,
-    token_generator=default_token_generator,
-    current_app=None,
-    extra_context=None,
-):
-    """
-    View that checks the hash in a email confirmation link and activates
-    the user.
-    """
-    if uidb36 is None or token is None:
-        msg = "uidb36 and token are required"
-        raise ValueError(msg)
-    try:
-        uid_int = base36_to_int(uidb36)
-        user = User.objects.get(id=uid_int)
-    except (ValueError, User.DoesNotExist):
-        user = None
-
-    if user is not None and token_generator.check_token(user, token):
-        user.update(is_active=True)
-        messages.add_message(
-            request,
-            messages.INFO,
-            _("Your email address has been verified."),
-        )
-    else:
-        messages.add_message(request, messages.ERROR, _("Invalid verification link"))
-
-    return redirect("login")
-
-
-class UserListView(BaseListView):
+class UserDetailView(BaseDetailView):
     model = User
-    template_name = "users/list.html"
-    ordering = ("first_name", "last_name")
+    template_name = "users/detail.html"
+    permission_required = "users.view_user"
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
+    def get_context_object_name(self, obj) -> str | None:
+        return None
 
-        # search users
-        q = self.request.GET.get("q")
-        if q:
-            queryset = queryset.search(q)
 
-        return queryset.prefetch_related("groups")
+class UserUpdateView(BaseUpdateView):
+    model = User
+    form_class = UserWithGroupsForm
+    template_name = "users/update.html"
+    permission_required = "users.change_user"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_object_name(self, obj) -> str | None:
+        return None
 
-        # we want to show a list of groups in each user, so we
-        # iterate through each user, and create a string with the groups
-        for obj in context["object_list"]:
-            obj.group_names = " ".join([g.name for g in obj.groups.all()])
+    def get_object_detail_url(self) -> str:
+        return reverse("user_detail", args=(self.object.pk,))
 
-        return context
+    def get_cancel_url(self):
+        return self.get_object_detail_url()
+
+    def get_success_url(self):
+        return self.get_object_detail_url()
+
+
+class UserDeleteView(BaseDeleteView):
+    model = User
+    template_name = "users/delete.html"
+    permission_required = "users.delete_user"
+
+    def get_context_object_name(self, obj) -> str | None:
+        return None
+
+
+class UserProfileView(UserDetailView):
+    permission_required = ()
+    title = _("My profile")
+
+    def get_object(self, queryset=None) -> User:
+        return self.request.user
+
+
+class UserProfileEditView(UserUpdateView):
+    form_class = UserForm
+    permission_required = ()
+    title = _("Edit profile")
+
+    def get_object(self, queryset=None) -> User:
+        return self.request.user
+
+    def get_object_detail_url(self) -> str:
+        return reverse("user_profile")

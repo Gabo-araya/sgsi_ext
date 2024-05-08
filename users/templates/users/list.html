@@ -33,15 +33,38 @@
         {% include "includes/list_th.html" with order_by="first_name" verbose_name="Nombre" %}
         {% include "includes/list_th.html" with order_by="email" verbose_name="Email" %}
         {% include "includes/list_th.html" with order_by="groups" verbose_name="Grupos" %}
+        {% if perms.users.change_user or perms.users.delete_user %}
+          {% include "includes/list_th.html" with verbose_name="" %}
+        {% endif %}
       </tr>
     </thead>
 
     <tbody>
       {% for iter_user in user_list %}
         <tr>
-          <td>{{ iter_user.get_full_name }}</td>
+          <td>
+            <a href="{% url 'user_detail' iter_user.pk %}">{{ iter_user.get_full_name }}</a>
+          </td>
           <td>{{ iter_user.email }}</td>
-          <td>{{ iter_user.group_names }}</td>
+          <td>{{ iter_user.groups.all|join:", " }}</td>
+          {% if perms.users.change_user or perms.users.delete_user %}
+            <td class="text-end">
+              {% if perms.users.change_user %}
+                <a class="btn btn-sm btn-outline-secondary"
+                   href="{% url 'user_update' iter_user.pk %}">
+                  {% trans "Update user" %}
+                  <i class="fa fa-edit"></i>
+                </a>
+              {% endif %}
+              {% if perms.documents.delete_document %}
+                <a class="btn btn-sm btn-danger"
+                   href="{% url 'user_delete' iter_user.pk %}">
+                  {% trans "Delete user" %}
+                  <i class="fa fa-times"></i>
+                </a>
+              {% endif %}
+            </td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>

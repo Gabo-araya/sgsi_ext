@@ -41,6 +41,9 @@ user_urlpatterns = [
         user_views.UserListView.as_view(),
         name="user_list",
     ),
+    path("<int:pk>/", user_views.UserDetailView.as_view(), name="user_detail"),
+    path("<int:pk>/update/", user_views.UserUpdateView.as_view(), name="user_update"),
+    path("<int:pk>/delete/", user_views.UserDeleteView.as_view(), name="user_delete"),
     path("login/", user_views.LoginView.as_view(), name="login"),
     path(
         "password-change/",
@@ -83,8 +86,8 @@ user_urlpatterns = [
         user_views.PasswordResetDoneView.as_view(),
         name="password_reset_done",
     ),
-    path("edit/", user_views.user_edit, name="user_edit"),
-    path("profile/", user_views.user_profile, name="user_profile"),
+    path("edit/", user_views.UserProfileEditView.as_view(), name="user_profile_edit"),
+    path("profile/", user_views.UserProfileView.as_view(), name="user_profile"),
 ]
 
 urlpatterns = [

@@ -382,6 +382,12 @@ class UserForm(BaseModelForm):
         fields = ("first_name", "last_name", "email")
 
 
+class UserWithGroupsForm(BaseModelForm):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email", "groups")
+
+
 class GroupForm(BaseModelForm):
     users = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
