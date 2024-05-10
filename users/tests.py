@@ -127,35 +127,38 @@ def test_user_login_form_show_correct_form(
     assert isinstance(response.context["form"], expected)
 
 
+@pytest.mark.django_db
 @pytest.mark.parametrize(
-    ("verify_email", "verify_email_calls", "commit", "commit_calls"),
+    ("verify_email", "verify_email_calls", "commit"),
     (
-        (True, 1, True, 1),
-        (False, 0, True, 1),
+        (True, 1, True),
+        (False, 0, True),
     ),
     ids=["verify_email_and_commit", "no_verify_email_and_dont_commit"],
 )
-def test_user_create_form_save(verify_email, verify_email_calls, commit, commit_calls):
-    user_mock = MagicMock()
+def test_user_create_form_save(verify_email, verify_email_calls, commit):
+    data = {
+        "email": "test@example.com",
+        "password1": "contrasenasegura-magnet-0405",
+        "password2": "contrasenasegura-magnet-0405",
+        "first_name": "test",
+        "last_name": "test",
+    }
     with (
-        patch("users.forms.BaseModelForm.save", return_value=user_mock),
         patch(
             "users.forms.UserCreationForm.send_verify_email"
         ) as send_verify_email_mock,
     ):
-        form = UserCreationForm()
-        form.cleaned_data = {
-            "password1": "test",
-            "first_name": "test",
-            "last_name": "test",
-        }
-        user_mock.save.return_value = "test"
-        assert form.save(verify_email_address=verify_email, commit=commit) == user_mock
-        assert user_mock.first_name == "test"
-        assert user_mock.last_name == "test"
-        user_mock.set_password.assert_called_once_with("test")
-        assert send_verify_email_mock.call_count == verify_email_calls
-        assert user_mock.save.call_count == commit_calls
+        form = UserCreationForm(data=data)
+        assert form.is_valid()
+        assert not form.errors
+        user: User = form.save(verify_email_address=verify_email, commit=commit)
+    assert user.email == data["email"]
+    assert user.first_name == data["first_name"]
+    assert user.last_name == data["last_name"]
+    assert user.check_password(data["password1"])
+    assert send_verify_email_mock.call_count == verify_email_calls
+    assert not bool(user.pk) ^ commit
 
 
 @pytest.mark.parametrize(
