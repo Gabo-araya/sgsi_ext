@@ -179,14 +179,11 @@ class UserUpdateView(BaseUpdateView):
     def get_context_object_name(self, obj) -> str | None:
         return None
 
-    def get_object_detail_url(self) -> str:
-        return reverse("user_detail", args=(self.object.pk,))
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_cancel_url(self):
-        return self.get_object_detail_url()
-
-    def get_success_url(self):
-        return self.get_object_detail_url()
+        return self.object.get_detail_url()
 
 
 class UserDeleteView(BaseDeleteView):
@@ -196,6 +193,9 @@ class UserDeleteView(BaseDeleteView):
 
     def get_context_object_name(self, obj) -> str | None:
         return None
+
+    def get_protected_error_url(self):
+        return self.object.get_detail_url()
 
 
 class UserProfileView(UserDetailView):
@@ -214,5 +214,8 @@ class UserProfileEditView(UserUpdateView):
     def get_object(self, queryset=None) -> User:
         return self.request.user
 
-    def get_object_detail_url(self) -> str:
+    def get_success_url(self) -> str:
+        return reverse("user_profile")
+
+    def get_cancel_url(self) -> str:
         return reverse("user_profile")

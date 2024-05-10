@@ -14,6 +14,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.template import loader
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -174,3 +175,6 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         from processes.models.process_instance import ProcessInstance
 
         return ProcessInstance.objects.user_is_participant(user=self)
+
+    def get_detail_url(self):
+        return reverse("user_detail", args=(self.id,))

@@ -367,7 +367,10 @@ class BaseDeleteView(
             messages.ERROR,
             _("This object cannot be deleted."),
         )
-        return HttpResponseRedirect(self.object.get_absolute_url())
+        return HttpResponseRedirect(self.get_protected_error_url())
+
+    def get_protected_error_url(self):
+        return self.object.get_absolute_url()
 
 
 class BaseUpdateRedirectView(
