@@ -19,7 +19,7 @@ class Asset(BaseModel):
     )
     name = models.CharField(
         verbose_name=_("name"),
-        max_length=30,
+        max_length=63,
     )
     description = models.TextField(
         verbose_name=_("description"),

@@ -145,12 +145,13 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         }
 
         subject_template_name = "registration/password_reset_subject.txt"
-        title = loader.render_to_string(subject_template_name, template_vars)
+        subject = loader.render_to_string(subject_template_name, template_vars)
+        subject = "".join(subject.splitlines())  # delete newlines
 
         email_manager.send_emails(
             emails=(self.email,),
             template_name=template,
-            subject=title,
+            subject=subject,
             context=template_vars,
         )
 

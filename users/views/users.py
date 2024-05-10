@@ -23,6 +23,7 @@ from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserCreationForm
 from users.forms import UserForm
+from users.forms import UserRegisterForm
 from users.forms import UserWithGroupsForm
 from users.models.user import User
 
@@ -89,6 +90,29 @@ class LoginView(auth_views.LoginView):
         return super().get_form_class()
 
 
+class UserRegisterView(BaseCreateView):
+    """View so that anyone can register into the platform."""
+
+    model = User
+    form_class = UserRegisterForm
+    template_name = "users/create.html"
+    login_required = False
+    permission_required = ()
+
+    def form_valid(self, form):
+        form.save(verify_email_address=True, request=self.request)
+        messages.add_message(
+            self.request,
+            messages.INFO,
+            _(
+                "An email has been sent to you. Please "
+                "check it to verify your email.",
+            ),
+        )
+
+        return redirect("home")
+
+
 class PasswordChangeView(auth_views.PasswordChangeView):
     """view that renders the password change form"""
 
@@ -142,23 +166,15 @@ class UserListView(BaseListView):
 
 
 class UserCreateView(BaseCreateView):
+    """View to crate users if the permissions are assigned."""
+
     model = User
     form_class = UserCreationForm  # TODO Consider using captcha
     template_name = "users/create.html"
-    title = _("Registration")
+    permission_required = "users.add_user"
 
-    def form_valid(self, form):
-        form.save(verify_email_address=True, request=self.request)
-        messages.add_message(
-            self.request,
-            messages.INFO,
-            _(
-                "An email has been sent to you. Please "
-                "check it to verify your email.",
-            ),
-        )
-
-        return redirect("home")
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
 
 class UserDetailView(BaseDetailView):

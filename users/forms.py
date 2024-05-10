@@ -219,7 +219,7 @@ class AdminCaptchaAuthenticationForm(
         self._configure_recaptcha_widget("captcha")
 
 
-class UserCreationForm(BaseModelForm):
+class UserRegisterForm(BaseModelForm):
     """
     A form that creates a user, with no privileges, from the given email and
     password.
@@ -251,12 +251,7 @@ class UserCreationForm(BaseModelForm):
             "last_name",
             "password1",
             "password2",
-            "groups",
         )
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.fields["groups"].initial = Group.get_default_group_queryset()
 
     def clean_email(self):
         """checks that the email is unique"""
@@ -350,6 +345,32 @@ class UserCreationForm(BaseModelForm):
         send_mail(subject, email, from_email, [user.email])
 
 
+class UserForm(BaseModelForm):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email")
+
+
+class UserWithGroupsForm(BaseModelForm):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email", "groups")
+
+
+class UserCreationForm(UserWithGroupsForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["groups"].initial = Group.get_default_group_queryset()
+
+    def save(self, commit: bool = True) -> User:
+        random_password = User.objects.make_random_password(length=30)
+        self.instance.set_password(random_password)
+        user: User = super().save(commit)
+        if commit:
+            user.send_recover_password_email()
+        return user
+
+
 class UserChangeForm(forms.ModelForm):
     class Meta:
         model = User
@@ -367,18 +388,6 @@ class UserChangeForm(forms.ModelForm):
         user_permissions.queryset = user_permissions.queryset.select_related(
             "content_type"
         )
-
-
-class UserForm(BaseModelForm):
-    class Meta:
-        model = User
-        fields = ("first_name", "last_name", "email")
-
-
-class UserWithGroupsForm(BaseModelForm):
-    class Meta:
-        model = User
-        fields = ("first_name", "last_name", "email", "groups")
 
 
 class GroupForm(BaseModelForm):

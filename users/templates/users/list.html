@@ -4,7 +4,11 @@
 
 {% block options %}
   {% if perms.users.add_user %}
-    <a class="btn btn-sm btn-outline-secondary" href="{% url 'register' %}">{% trans "Add user" %}</a>
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'user_create' %}">
+      {% trans "Add user" %}
+      <i class="fa fa-plus"></i>
+    </a>
   {% endif %}
 {% endblock options %}
 

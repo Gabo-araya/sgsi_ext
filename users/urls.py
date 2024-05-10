@@ -41,10 +41,16 @@ user_urlpatterns = [
         user_views.UserListView.as_view(),
         name="user_list",
     ),
+    path("create/", user_views.UserCreateView.as_view(), name="user_create"),
     path("<int:pk>/", user_views.UserDetailView.as_view(), name="user_detail"),
     path("<int:pk>/update/", user_views.UserUpdateView.as_view(), name="user_update"),
     path("<int:pk>/delete/", user_views.UserDeleteView.as_view(), name="user_delete"),
     path("login/", user_views.LoginView.as_view(), name="login"),
+    path(
+        "register/",
+        user_views.UserRegisterView.as_view(),
+        name="register",
+    ),
     path(
         "password-change/",
         user_views.PasswordChangeView.as_view(),
@@ -56,11 +62,6 @@ user_urlpatterns = [
         name="password_change_done",
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path(
-        "register/",
-        user_views.UserCreateView.as_view(),
-        name="register",
-    ),
     path(
         "password-reset/",
         user_views.PasswordResetView.as_view(),
