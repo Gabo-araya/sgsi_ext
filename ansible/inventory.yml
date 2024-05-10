@@ -4,15 +4,15 @@ all:
       ansible_host: 104.131.163.155
       server_domain: sgsi-stg.do.magnet.cl
       host_ssh_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHFfWzouk/Wt3ZHO/BpeK81C52quR9d7KqHY6lhp6lUm
-      site_name: 'SGSI Staging'
-      branch: release/0002
+      site_name: "SGSI Staging"
+      branch: release/0003
       docker_mountpoint: /
 
     production:
       ansible_host: 209.97.154.158
       server_domain: compliance.magnet.cl
       host_ssh_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBrWx/AVzKGXZIwfOw8HEnRF7bfQ2VqXruJW2/SidMJf
-      site_name: 'Compliance'
+      site_name: "Compliance"
       branch: main
       docker_mountpoint: /
 
