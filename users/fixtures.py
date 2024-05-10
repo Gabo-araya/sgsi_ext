@@ -1,9 +1,9 @@
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth.models import Group
 
 import pytest
 
-from users.models import User
+from users.models.group import Group
+from users.models.user import User
 
 
 @pytest.fixture

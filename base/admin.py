@@ -9,7 +9,7 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from users.models import User
+from users.models.user import User
 
 action_names = {
     ADDITION: "Addition",

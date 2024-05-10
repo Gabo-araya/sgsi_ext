@@ -28,6 +28,7 @@ from parameters.models import Parameter
 
 # managers
 from users.managers import UserManager
+from users.models.group import Group
 
 # mark for translation the app name
 gettext_noop("Users")
@@ -110,9 +111,12 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     # overwritten methods
     def save(self, *args, **kwargs):
         """store all emails in lowercase"""
+        adding = self._state.adding
         self.email = self.email.lower()
 
         super().save(*args, **kwargs)
+        if adding and (default_group := Group.get_default_group()):
+            self.groups.add(default_group)
 
     def send_example_email(self):
         email_manager.send_example_email(self.email)

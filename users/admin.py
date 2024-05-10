@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 # forms
 from users.forms import UserChangeForm
 from users.forms import UserCreationForm
-from users.models import User
+from users.models.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +93,7 @@ class UserAdmin(DjangoUserAdmin):
                     "last_name",
                     "password1",
                     "password2",
+                    "groups",
                 ),
             },
         ),

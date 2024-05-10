@@ -21,12 +21,13 @@ def test_something(test_model):
 ```
 
 ### Test parametrization
+
 To ease testing with varying parameters, parametrization can be used
 
 ```python
 import pytest
 
-from users.models import User
+from users.models.user import User
 
 @pytest.mark.parametrize(
     "user_role,expected_response",
@@ -56,8 +57,8 @@ Here's an example fixture:
 
 import pytest
 
-from django.contrib.auth.models import Group
-from users.models import User
+from users.models.group import Group
+from users.models.user import User
 
 # Simple fixture that requires DB access
 @pytest.fixture
@@ -94,6 +95,7 @@ pytest_plugins = [
 For more information, see the pytest [section about fixtures](https://docs.pytest.org/en/7.3.x/explanation/fixtures.html#about-fixtures).
 
 ### The `test_responses` test
+
 The hallmark of DPT. This test checks the entire urlconf in search of broken views and
 as such, it requires an instance of every possible model to be present in the database.
 
@@ -104,6 +106,7 @@ During the porting of this test to pytest, two major changes were performed:
 
 Even when mockup class is no longer used, test fixtures have to be somehow defined.
 The recommended way is to:
+
 1. Create a `fixtures.py` module on your app directory.
 2. Add the module path to the root's `conftest.py::pytest_plugins`
 3. In your fixtures module, define the required fixtures. The fixture should have the

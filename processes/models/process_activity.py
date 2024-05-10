@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from django.contrib.auth.models import Group
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -11,10 +10,11 @@ from inflection import ordinal
 
 from base.models.base_model import BaseModel
 from base.models.increment_field_mixin import IncrementFieldModelBase
+from users.models.group import Group
 
 if TYPE_CHECKING:
     from processes.models.process_instance import ProcessInstance
-    from users.models import User
+    from users.models.user import User
 
 
 class ProcessActivity(IncrementFieldModelBase, BaseModel):

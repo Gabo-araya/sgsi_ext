@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from django.db import models
 
 if TYPE_CHECKING:
-    from users.models import User
+    from users.models.user import User
 
 
 class ProcessQuerySet(models.QuerySet):

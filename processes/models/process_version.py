@@ -18,7 +18,7 @@ from processes.models.process import Process
 
 if TYPE_CHECKING:
     from processes.models.process_instance import ProcessInstance
-    from users.models import User
+    from users.models.user import User
 
 
 class ProcessVersion(VersionModelBase, BaseModel):

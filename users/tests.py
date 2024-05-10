@@ -18,7 +18,7 @@ from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserChangeForm
 from users.forms import UserCreationForm
-from users.models import User
+from users.models.user import User
 
 
 @pytest.fixture
@@ -291,13 +291,15 @@ def test_captcha_authentication_form_sets_score_for_v3_widget(settings):
 
 
 def test_user_send_example_email(regular_user):
-    with patch("users.models.email_manager.send_example_email") as send_example_email:
+    with patch(
+        "users.models.user.email_manager.send_example_email"
+    ) as send_example_email:
         regular_user.send_example_email()
         send_example_email.assert_called_once_with(regular_user.email)
 
 
 def test_send_recover_password_email(regular_user):
-    with patch("users.models.email_manager.send_emails") as send_emails:
+    with patch("users.models.user.email_manager.send_emails") as send_emails:
         regular_user.send_recover_password_email()
         send_emails.assert_called_once()
 

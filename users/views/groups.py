@@ -1,4 +1,3 @@
-from django.contrib.auth.models import Group
 from django.urls import reverse
 
 from base.views.generic.detail import BaseDetailView
@@ -7,6 +6,7 @@ from base.views.generic.edit import BaseDeleteView
 from base.views.generic.edit import BaseUpdateView
 from base.views.generic.list import BaseListView
 from users.forms import GroupForm
+from users.models.group import Group
 
 
 class GroupUrlMixin:

@@ -4,7 +4,6 @@ from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from django.contrib.auth import password_validation
-from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.contenttypes.models import ContentType
@@ -33,7 +32,8 @@ from processes.models.process_activity_instance import ProcessActivityInstance
 from processes.models.process_instance import ProcessInstance
 from processes.models.process_version import ProcessVersion
 from risks.models.risk import Risk
-from users.models import User
+from users.models.group import Group
+from users.models.user import User
 
 
 class CaptchaWidgetConfigurationMixin:
@@ -230,12 +230,6 @@ class UserCreationForm(BaseModelForm):
         "password_mismatch": _("The two password fields didn't match."),
     }
 
-    first_name = forms.CharField(
-        label=_("first name").capitalize(),
-    )
-    last_name = forms.CharField(
-        label=_("last name").capitalize(),
-    )
     password1 = forms.CharField(
         label=_("New password"),
         widget=forms.PasswordInput,
@@ -259,6 +253,10 @@ class UserCreationForm(BaseModelForm):
             "password2",
             "groups",
         )
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields["groups"].initial = Group.get_default_group_queryset()
 
     def clean_email(self):
         """checks that the email is unique"""
@@ -300,16 +298,11 @@ class UserCreationForm(BaseModelForm):
         Generates a one-use only link for resetting password and sends to the
         user.
         """
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        user.first_name = self.cleaned_data["first_name"]
-        user.last_name = self.cleaned_data["last_name"]
-        user.is_active = not verify_email_address
+        self.instance.set_password(self.cleaned_data["password1"])
+        self.instance.is_active = not verify_email_address
+        user = super().save(commit=commit)
 
-        if commit:
-            user.save()
-
-        if verify_email_address:
+        if commit and verify_email_address:
             self.send_verify_email(
                 user,
                 domain_override,

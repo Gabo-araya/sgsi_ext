@@ -8,7 +8,7 @@ from processes.models.process_activity import ProcessActivity
 from processes.models.process_activity_instance import ProcessActivityInstance
 from processes.models.process_instance import ProcessInstance
 from processes.models.process_version import ProcessVersion
-from users.models import User
+from users.models.user import User
 
 
 class ProcessForm(BaseModelForm):

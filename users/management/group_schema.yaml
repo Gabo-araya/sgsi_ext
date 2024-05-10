@@ -1,6 +1,6 @@
 Employee:
   - documents.view_all
-  - informations_assets.view_all
+  - information_assets.view_all
   - risks.view_all
   - processes.view_all
 
@@ -8,6 +8,6 @@ Administrator:
   - auth.manage_group
   - users.manage_user
   - documents.manage_all
-  - informations_assets.manage_all
+  - information_assets.manage_all
   - risks.manage_all
   - processes.manage_all

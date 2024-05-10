@@ -24,7 +24,7 @@ from users.forms import CaptchaAuthenticationForm
 from users.forms import UserCreationForm
 from users.forms import UserForm
 from users.forms import UserWithGroupsForm
-from users.models import User
+from users.models.user import User
 
 
 # Doesn't need csrf_protect since no-one can guess the URL

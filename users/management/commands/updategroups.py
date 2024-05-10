@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 # django
-from django.contrib.auth.models import Group
+from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
@@ -18,16 +18,15 @@ from django.db.models import Q
 
 import yaml
 
+from users.models.group import Group
+
 if TYPE_CHECKING:
     from django.db.models import QuerySet
 
-SCHEMA_FILEPATH = Path("users/management/group_schema.yaml")
 MANAGE_PREFIX = "manage_"
 MANAGE_ALL_SHORTCUT = "manage_all"
 VIEW_ALL_SHORTCUT = "view_all"
 PERMISSION_SEPARATOR = "."
-
-DEFAULT_GROUP_NAME = ""
 
 
 class Command(BaseCommand):
@@ -55,7 +54,6 @@ class Command(BaseCommand):
     """  # noqa: A003
 
     def add_arguments(self, parser):
-        # POLLISH: Add option to change default group name from args.
         parser.add_argument(
             "--sync",
             action="store_true",
@@ -67,7 +65,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, sync, *args, **options):
-        schema_path = SCHEMA_FILEPATH
+        schema_path = Path("users/management/group_schema.yaml")
         schema = self.get_group_schema(schema_path)
         schema = self.clean_schema(schema)
         msg = "Syncing groups..." if sync else "Updating groups..."
@@ -112,8 +110,7 @@ class Command(BaseCommand):
                 if not isinstance(perm, str):
                     msg = base_msg + "All permissions must be string."
                     raise CommandError(msg)
-                _, _, *extra = perm.split(PERMISSION_SEPARATOR)
-                if extra:
+                if perm.count(PERMISSION_SEPARATOR) != 1:
                     msg = base_msg + "Permissions format should be app.codename."
                     raise CommandError(msg)
 
@@ -144,6 +141,12 @@ class Command(BaseCommand):
                 else:
                     new_permissions.add(permission)
                     continue
+                if not queryset.exists():
+                    msg = (
+                        f'Cannot find any permissions for app "{app}" and codename '
+                        f'"{codename}"'
+                    )
+                    raise CommandError(msg)
                 new_permissions.update(self.get_permission_strings(queryset))
             new_schema[group] = new_permissions
         return new_schema
@@ -190,7 +193,8 @@ class Command(BaseCommand):
         """
         if queryset is None:
             queryset = Permission.objects.all()
-        return {f"{perm.content_type.app_label}.{perm.codename}" for perm in queryset}
+        values_list = queryset.values_list("content_type__app_label", "codename")
+        return {".".join(perm_tuple) for perm_tuple in values_list}
 
     def update_groups(self, schema: dict[str, set[str]], sync: bool = False) -> None:
         """
@@ -204,7 +208,7 @@ class Command(BaseCommand):
         if sync:
             self.delete_groups(schema)
 
-        default_perm_codenames = schema.get(DEFAULT_GROUP_NAME, set())
+        default_perm_codenames = schema.get(settings.DEFAULT_GROUP_NAME, set())
         for group_name, perm_codenames in schema.items():
             group, created = Group.objects.get_or_create(name=group_name)
             if created:
@@ -212,7 +216,7 @@ class Command(BaseCommand):
             else:
                 self.print_to_stdout(f"Group {group_name} exists.", True)
 
-            if group_name != DEFAULT_GROUP_NAME:
+            if group_name != settings.DEFAULT_GROUP_NAME:
                 perm_codenames.update(default_perm_codenames)
 
             self.update_permissions(group, perm_codenames, sync=sync)

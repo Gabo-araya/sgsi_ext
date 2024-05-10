@@ -15,7 +15,7 @@ from documents.managers import DocumentVersionQuerySet
 from documents.models.document import Document
 from documents.models.document_version_read_by_user import DocumentVersionReadByUser
 from documents.models.evidence import Evidence
-from users.models import User
+from users.models.user import User
 
 if TYPE_CHECKING:
     from documents.forms import DocumentVersionApproveForm
