@@ -3,13 +3,13 @@
 <button type="button"
         class="btn btn-sm btn-secondary"
         data-bs-toggle="modal"
-        data-bs-target="#archiveModal">
+        data-bs-target="#archiveModal-{{ asset.pk }}">
   {% trans "archive"|capfirst %}
   <i class="fa fa-archive"></i>
 </button>
 
 <div class="modal fade"
-     id="archiveModal"
+     id="archiveModal-{{ asset.pk }}"
      tabindex="-1"
      aria-labelledby="archiveModalLabel"
      aria-hidden="true">
