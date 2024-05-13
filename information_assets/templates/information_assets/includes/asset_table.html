@@ -9,9 +9,7 @@
       <th>{% trans "classification"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
-      {% if not asset.is_archived %}
-        {% if perms.information_assets.change_asset or perms.information_assets.delete_asset %}<th></th>{% endif %}
-      {% endif %}
+      {% if perms.information_assets.change_asset or perms.information_assets.delete_asset %}<th></th>{% endif %}
     </tr>
   </thead>
   <tbody>
