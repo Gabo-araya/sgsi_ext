@@ -1,5 +1,6 @@
 """The users app views"""
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.tokens import default_token_generator
@@ -23,6 +24,7 @@ from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserCreationForm
 from users.forms import UserForm
+from users.forms import UserRegisterForm
 from users.forms import UserWithGroupsForm
 from users.models.user import User
 
@@ -67,7 +69,7 @@ def user_new_confirm(  # noqa: PLR0913
 class LoginView(auth_views.LoginView):
     """view that renders the login"""
 
-    template_name = "registration/login.html"
+    template_name = "users/login.html"
     form_class = AuthenticationForm
     title = _("Login")
 
@@ -79,7 +81,7 @@ class LoginView(auth_views.LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.title
-
+        context["user_registration_enabled"] = settings.USER_REGISTRATION_ENABLED
         return context
 
     def get_form_class(self):
@@ -89,39 +91,65 @@ class LoginView(auth_views.LoginView):
         return super().get_form_class()
 
 
+class UserRegisterView(BaseCreateView):
+    """View so that anyone can register into the platform."""
+
+    model = User
+    form_class = UserRegisterForm
+    template_name = "users/create.html"
+    login_required = False
+    permission_required = ()
+
+    def has_permission(self) -> bool:
+        return settings.USER_REGISTRATION_ENABLED and super().has_permission()
+
+    def form_valid(self, form):
+        form.save(verify_email_address=True, request=self.request)
+        messages.add_message(
+            self.request,
+            messages.INFO,
+            _(
+                "An email has been sent to you. Please "
+                "check it to verify your email.",
+            ),
+        )
+
+        return redirect("home")
+
+
 class PasswordChangeView(auth_views.PasswordChangeView):
     """view that renders the password change form"""
 
-    template_name = "registration/password_change_form.html"
+    template_name = "users/password_change_form.html"
 
 
 class PasswordChangeDoneView(auth_views.PasswordChangeDoneView):
-    template_name = "registration/password_change_done.html"
+    template_name = "users/password_change_done.html"
 
 
 class PasswordResetView(auth_views.PasswordResetView):
     """view that handles the recover password process"""
 
-    template_name = "registration/password_reset_form.html"
+    template_name = "users/password_reset_form.html"
     email_template_name = "emails/password_reset.txt"
 
 
 class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     """view that handles the recover password process"""
 
-    template_name = "registration/password_reset_confirm.html"
+    template_name = "users/password_reset_confirm.html"
 
 
 class PasswordResetDoneView(auth_views.PasswordResetDoneView):
     """View that shows a success message to the user"""
 
-    template_name = "registration/password_reset_done.html"
+    template_name = "users/password_reset_done.html"
 
 
 class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     """View that shows a success message to the user"""
 
-    template_name = "registration/password_reset_complete.html"
+    template_name = "users/password_reset_complete.html"
 
 
 class UserListView(BaseListView):
@@ -142,23 +170,15 @@ class UserListView(BaseListView):
 
 
 class UserCreateView(BaseCreateView):
+    """View to crate users if the permissions are assigned."""
+
     model = User
     form_class = UserCreationForm  # TODO Consider using captcha
     template_name = "users/create.html"
-    title = _("Registration")
+    permission_required = "users.add_user"
 
-    def form_valid(self, form):
-        form.save(verify_email_address=True, request=self.request)
-        messages.add_message(
-            self.request,
-            messages.INFO,
-            _(
-                "An email has been sent to you. Please "
-                "check it to verify your email.",
-            ),
-        )
-
-        return redirect("home")
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
 
 class UserDetailView(BaseDetailView):

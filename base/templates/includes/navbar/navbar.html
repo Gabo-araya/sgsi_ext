@@ -26,7 +26,7 @@
                 {% include navbar_link_template with text="administration" url_name="admin:index" %}
                 {% include navbar_link_template with text="status" url_name="status" %}
               {% endif %}
-              {% if perms.users.view_user or perms.auth.view_group %}
+              {% if perms.users.view_user or perms.users.view_group %}
                 <li class="nav-item dropdown">
                   <a id="dropdownUsers"
                      class="nav-link dropdown-toggle"
@@ -38,7 +38,7 @@
                     {% if perms.users.view_user %}
                       {% include dropdown_link_template with text="users" url_name="user_list" %}
                     {% endif %}
-                    {% if perms.auth.view_group %}
+                    {% if perms.users.view_group %}
                       {% include dropdown_link_template with text="groups" url_name="group_list" %}
                     {% endif %}
                   </ul>

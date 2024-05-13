@@ -17,7 +17,7 @@ from users.forms import AdminCaptchaAuthenticationForm
 from users.forms import AuthenticationForm
 from users.forms import CaptchaAuthenticationForm
 from users.forms import UserChangeForm
-from users.forms import UserCreationForm
+from users.forms import UserRegisterForm
 from users.models.user import User
 
 
@@ -78,7 +78,7 @@ def test_user_creation_form_cleaning(db):
         "password1": "verysecretpleasedontcopy(c)magnet",
         "password2": "verysecretpleasedontcopy(c)magnet",
     }
-    form = UserCreationForm(data=input_data)
+    form = UserRegisterForm(data=input_data)
     form.full_clean()
     assert not form.errors
 
@@ -91,7 +91,7 @@ def test_user_creation_form_clean_duplicated_user(duplicated_user):
         "password1": "verysecretpleasedontcopy(c)magnet",
         "password2": "verysecretpleasedontcopy(c)magnet",
     }
-    form = UserCreationForm(data=input_data)
+    form = UserRegisterForm(data=input_data)
     form.full_clean()
     assert "email" in form.errors
 
@@ -104,7 +104,7 @@ def test_user_creation_form_clean_password_mismatch(db):
         "password1": "verysecretpleasedontcopy(c)magnet",
         "password2": "verysecretpleasedontsteal(c)magnet",
     }
-    form = UserCreationForm(data=input_data)
+    form = UserRegisterForm(data=input_data)
     form.full_clean()
     errors = form.errors
     assert "password2" in errors
@@ -146,10 +146,10 @@ def test_user_create_form_save(verify_email, verify_email_calls, commit):
     }
     with (
         patch(
-            "users.forms.UserCreationForm.send_verify_email"
+            "users.forms.UserRegisterForm.send_verify_email"
         ) as send_verify_email_mock,
     ):
-        form = UserCreationForm(data=data)
+        form = UserRegisterForm(data=data)
         assert form.is_valid()
         assert not form.errors
         user: User = form.save(verify_email_address=verify_email, commit=commit)
@@ -182,7 +182,7 @@ def test_user_create_form_send_verify_email(override, domain, regular_user):
         ),
         patch("users.forms.int_to_base36", return_value="test_int"),
     ):
-        UserCreationForm.send_verify_email(regular_user, domain_override=domain)
+        UserRegisterForm.send_verify_email(regular_user, domain_override=domain)
         assert get_current_site_mock.call_count == int(not override)
         assert send_mail_mock.call_count == 1
 

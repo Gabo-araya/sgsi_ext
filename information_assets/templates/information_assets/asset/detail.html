@@ -3,8 +3,8 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.information_assets.delete_asset and not object.is_archived %}
-    {% include "information_assets/includes/archive_modal.html" %}
+  {% if perms.information_assets.archive_asset %}
+    {% include "information_assets/includes/archive_modal_button.html" %}
   {% endif %}
   {% if perms.information_assets.change_asset and not object.is_archived %}
     <a class="btn btn-sm btn-outline-secondary"
@@ -27,6 +27,10 @@
       <tr>
         <th>{% trans "name"|capfirst %}</th>
         <td>{{ asset.name }}</td>
+      </tr>
+      <tr>
+        <th>{% trans "archived"|capfirst %}</th>
+        <td>{{ asset.is_archived|yesno|capfirst }}</td>
       </tr>
       <tr>
         <th>{% trans "owner"|capfirst %}</th>
@@ -71,4 +75,6 @@
   <br>
   <h2>{% trans "related risks"|capfirst %}</h2>
   {% include "risks/includes/risk_table.html" with object_list=asset.risks.all %}
+
+  {% include "information_assets/includes/archive_modal.html" %}
 {% endblock content %}

@@ -19,7 +19,7 @@ class Asset(BaseModel):
     )
     name = models.CharField(
         verbose_name=_("name"),
-        max_length=30,
+        max_length=63,
     )
     description = models.TextField(
         verbose_name=_("description"),
@@ -51,20 +51,19 @@ class Asset(BaseModel):
     class Meta:
         verbose_name = _("asset")
         verbose_name_plural = _("assets")
+        ordering = ("name", "owner")
         constraints = (
             models.UniqueConstraint(
                 fields=("name", "owner"), name="unique_asset_owner"
             ),
         )
+        permissions = (("archive_asset", _("Can archive asset")),)
 
     def __str__(self):
-        return (
-            f"{self.name} - {self.owner.get_full_name()}"
-            f"{' (archived)' if self.is_archived else ''}"
-        )
+        return f"{self.name} - {self.owner.get_full_name()}"
 
     def get_absolute_url(self):
         return reverse("asset_detail", args=(self.pk,))
 
-    def archive(self) -> None:
-        self.update(is_archived=True)
+    def toggle_archive(self) -> None:
+        self.update(is_archived=not self.is_archived)

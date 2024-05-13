@@ -37,10 +37,14 @@ class AssetUpdateView(BaseUpdateView):
         return super().get_queryset().not_archived()
 
 
-class AssetArchiveView(BaseUpdateRedirectView):
+class AssetToggleArchiveView(BaseUpdateRedirectView):
     model = Asset
-    permission_required = "information_assets.delete_asset"
+    permission_required = "information_assets.archive_asset"
 
     def do_action(self):
-        if not self.object.is_archived:
-            self.object.archive()
+        self.object.toggle_archive()
+
+    def get_redirect_url(self, *args, **kwargs):
+        return self.request.META.get(
+            "HTTP_REFERER", super().get_redirect_url(*args, **kwargs)
+        )
