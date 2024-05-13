@@ -43,3 +43,8 @@ class AssetToggleArchiveView(BaseUpdateRedirectView):
 
     def do_action(self):
         self.object.toggle_archive()
+
+    def get_redirect_url(self, *args, **kwargs):
+        return self.request.META.get(
+            "HTTP_REFERER", super().get_redirect_url(*args, **kwargs)
+        )
