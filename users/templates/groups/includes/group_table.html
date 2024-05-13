@@ -5,7 +5,7 @@
     <tr>
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "permissions"|capfirst %}</th>
-      {% if perms.auth.change_group or perms.auth.delete_group %}<th></th>{% endif %}
+      {% if perms.users.change_group or perms.auth.delete_group %}<th></th>{% endif %}
     </tr>
   </thead>
   <tbody>
@@ -15,16 +15,16 @@
           <a href="{% url 'group_detail' group.pk %}">{{ group }}</a>
         </td>
         <td>{{ group.permissions.count }}</td>
-        {% if perms.auth.change_group or perms.auth.delete_group %}
+        {% if perms.users.change_group or perms.auth.delete_group %}
           <td class="text-end">
-            {% if perms.auth.change_group %}
+            {% if perms.users.change_group %}
               <a class="btn btn-sm btn-outline-secondary"
                  href="{% url 'group_update' group.id %}">
                 {% trans "Update group" %}
                 <i class="fa fa-edit"></i>
               </a>
             {% endif %}
-            {% if perms.auth.delete_group %}
+            {% if perms.users.delete_group %}
               <a class="btn btn-sm btn-danger"
                  href="{% url 'group_delete' group.id %}">
                 {% trans "Delete group" %}

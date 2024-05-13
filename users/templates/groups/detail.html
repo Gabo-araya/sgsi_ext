@@ -3,14 +3,14 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.auth.change_group %}
+  {% if perms.users.change_group %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'group_update' group.id %}">
       {% trans "Update group" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.auth.delete_group %}
+  {% if perms.users.delete_group %}
     <a class="btn btn-sm btn-danger"
        href="{% url 'group_delete' group.id %}">
       {% trans "Delete group" %}
