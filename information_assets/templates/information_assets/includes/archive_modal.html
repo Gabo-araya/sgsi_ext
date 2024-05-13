@@ -34,7 +34,8 @@
         <form action="{% url 'asset_toggle_archive' asset.pk %}" method="post">
           <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "cancel"|capfirst %}</button>
-          <button type="submit" class="btn btn-success">
+          <button type="submit"
+                  class="btn {% if asset.is_archived %}btn-success{% else %}btn-danger{% endif %}">
             {% if asset.is_archived %}
               {% trans "unarchive"|capfirst %}
             {% else %}
