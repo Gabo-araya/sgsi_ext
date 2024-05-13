@@ -1,13 +1,5 @@
 {% load i18n %}
 
-<button type="button"
-        class="btn btn-sm btn-secondary"
-        data-bs-toggle="modal"
-        data-bs-target="#archiveModal-{{ asset.pk }}">
-  {% trans "archive"|capfirst %}
-  <i class="fa fa-archive"></i>
-</button>
-
 <div class="modal fade"
      id="archiveModal-{{ asset.pk }}"
      tabindex="-1"
@@ -16,18 +8,39 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="archiveModalLabel">{% blocktrans %}Archive {{asset}}{% endblocktrans %}</h1>
+        <h1 class="modal-title fs-5" id="archiveModalLabel">
+          {% if asset.is_archived %}
+            {% trans "unarchive"|capfirst %}
+          {% else %}
+            {% trans "archive"|capfirst %}
+          {% endif %}
+          {{ asset }}
+        </h1>
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label='{% trans "cancel"|capfirst %}'></button>
       </div>
-      <div class="modal-body">{% blocktrans %}Are you sure you want to archive {{asset}}?{% endblocktrans %}</div>
+      <div class="modal-body">
+        {% blocktrans %}Are you sure you want to {% endblocktrans %}
+        {% if asset.is_archived %}
+          {% trans "unarchive" %}
+        {% else %}
+          {% trans "archive" %}
+        {% endif %}
+        {{ asset }}?
+      </div>
       <div class="modal-footer">
-        <form action="{% url 'asset_archive' asset.pk %}" method="post">
+        <form action="{% url 'asset_toggle_archive' asset.pk %}" method="post">
           <input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}' />
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "cancel"|capfirst %}</button>
-          <button type="submit" class="btn btn-success">{% trans "archive"|capfirst %}</button>
+          <button type="submit" class="btn btn-success">
+            {% if asset.is_archived %}
+              {% trans "unarchive"|capfirst %}
+            {% else %}
+              {% trans "archive"|capfirst %}
+            {% endif %}
+          </button>
         </form>
       </div>
     </div>

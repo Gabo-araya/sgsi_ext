@@ -34,9 +34,9 @@
   <table class="table table-striped table-sm">
     <thead>
       <tr>
-        {% include "includes/list_th.html" with order_by="first_name" verbose_name="Nombre" %}
-        {% include "includes/list_th.html" with order_by="email" verbose_name="Email" %}
-        {% include "includes/list_th.html" with order_by="groups" verbose_name="Grupos" %}
+        {% include "includes/list_th.html" with order_by="first_name" verbose_name="name" %}
+        {% include "includes/list_th.html" with order_by="email" verbose_name="email" %}
+        {% include "includes/list_th.html" with order_by="groups" verbose_name="groups" %}
         {% if perms.users.change_user or perms.users.delete_user %}
           {% include "includes/list_th.html" with verbose_name="" %}
         {% endif %}

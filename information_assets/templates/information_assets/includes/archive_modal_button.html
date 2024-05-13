@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<button type="button"
+        class="btn btn-sm {% if asset.is_archived %}btn-success{% else %}btn-danger{% endif %}"
+        data-bs-toggle="modal"
+        data-bs-target="#archiveModal-{{ asset.pk }}">
+  {% if asset.is_archived %}
+    {% trans "unarchive"|capfirst %}
+  {% else %}
+    {% trans "archive"|capfirst %}
+  {% endif %}
+  <i class="fa fa-archive"></i>
+</button>

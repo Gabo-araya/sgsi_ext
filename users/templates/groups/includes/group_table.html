@@ -5,7 +5,7 @@
     <tr>
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "permissions"|capfirst %}</th>
-      {% if perms.auth.change_group or perms.auth.delete_group %}{% endif %}
+      {% if perms.auth.change_group or perms.auth.delete_group %}<th></th>{% endif %}
     </tr>
   </thead>
   <tbody>

@@ -26,9 +26,9 @@ assert_urlpatterns = [
         name="asset_update",
     ),
     path(
-        "<int:pk>/archive/",
-        asset_views.AssetArchiveView.as_view(),
-        name="asset_archive",
+        "<int:pk>/toggle-archive/",
+        asset_views.AssetToggleArchiveView.as_view(),
+        name="asset_toggle_archive",
     ),
 ]
 
