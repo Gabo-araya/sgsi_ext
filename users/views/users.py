@@ -1,5 +1,6 @@
 """The users app views"""
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.tokens import default_token_generator
@@ -80,7 +81,7 @@ class LoginView(auth_views.LoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.title
-
+        context["user_registration_enabled"] = settings.USER_REGISTRATION_ENABLED
         return context
 
     def get_form_class(self):
@@ -98,6 +99,9 @@ class UserRegisterView(BaseCreateView):
     template_name = "users/create.html"
     login_required = False
     permission_required = ()
+
+    def has_permission(self) -> bool:
+        return settings.USER_REGISTRATION_ENABLED and super().has_permission()
 
     def form_valid(self, form):
         form.save(verify_email_address=True, request=self.request)

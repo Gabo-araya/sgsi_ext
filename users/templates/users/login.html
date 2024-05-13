@@ -43,8 +43,10 @@
     <div>
       <a href="{% url 'password_reset' %}">{% trans "Forgotten your password?" %}</a>
     </div>
-    <div>
-      <a href="{% url 'register' %}">{% trans "New? Register here." %}</a>
-    </div>
+    {% if user_registration_enabled %}
+      <div>
+        <a href="{% url 'register' %}">{% trans "New? Register here." %}</a>
+      </div>
+    {% endif %}
   </form>
 {% endblock content %}
