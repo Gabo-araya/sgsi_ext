@@ -3,13 +3,13 @@
 <button type="button"
         class="btn btn-sm btn-success"
         data-bs-toggle="modal"
-        data-bs-target="#publishModal">
+        data-bs-target="#publishModal-{{ processversion.pk }}">
   {% trans "publish"|capfirst %}
   <i class="fa fa-check"></i>
 </button>
 
 <div class="modal fade"
-     id="publishModal"
+     id="publishModal-{{ processversion.pk }}"
      tabindex="-1"
      aria-labelledby="publishModalLabel"
      aria-hidden="true">
