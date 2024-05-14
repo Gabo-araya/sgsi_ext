@@ -3,14 +3,14 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.users.change_group %}
+  {% if perms.auth.change_group %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'group_update' group.id %}">
       {% trans "Update group" %}
       <i class="fa fa-edit"></i>
     </a>
   {% endif %}
-  {% if perms.users.delete_group %}
+  {% if perms.auth.delete_group %}
     <a class="btn btn-sm btn-danger"
        href="{% url 'group_delete' group.id %}">
       {% trans "Delete group" %}
@@ -26,43 +26,49 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
-  <h2>{% trans "users"|capfirst %}</h2>
-  <table class="table table-striped table-sm">
-    <thead>
-      <tr>
-        <th>{% trans "name"|capfirst %}</th>
-        <th>{% trans "email"|capfirst %}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in group.user_set.all %}
+  {% if perms.users.view_user %}
+    <h2>{% trans "users"|capfirst %}</h2>
+    <table class="table table-striped table-sm">
+      <thead>
         <tr>
-          <td>{{ user.get_full_name }}</td>
-          <td>{{ user.email }}</td>
+          <th>{% trans "name"|capfirst %}</th>
+          <th>{% trans "email"|capfirst %}</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <br>
-  <h2>{% trans "assigned permissions"|capfirst %}</h2>
-  <table class="table table-striped table-hover table-sm">
-    <thead>
-      <tr>
-        <th>{% trans "name"|capfirst %}</th>
-        <th>{% trans "codename"|capfirst %}</th>
-        <th>{% trans "app label"|capfirst %}</th>
-        <th>{% trans "model"|capfirst %}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for permission in group.permissions.all %}
+      </thead>
+      <tbody>
+        {% for user in group.user_set.all %}
+          <tr>
+            <td>
+              <a href="{% url 'user_detail' user.pk %}">{{ user.get_full_name }}</a>
+            </td>
+            <td>{{ user.email }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+  {% if perms.auth.view_permission %}
+    <br>
+    <h2>{% trans "assigned permissions"|capfirst %}</h2>
+    <table class="table table-striped table-hover table-sm">
+      <thead>
         <tr>
-          <td>{{ permission.name }}</td>
-          <td>{{ permission.codename }}</td>
-          <td>{{ permission.content_type.app_label }}</td>
-          <td>{{ permission.content_type.model }}</td>
+          <th>{% trans "name"|capfirst %}</th>
+          <th>{% trans "codename"|capfirst %}</th>
+          <th>{% trans "app label"|capfirst %}</th>
+          <th>{% trans "model"|capfirst %}</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for permission in group.permissions.all %}
+          <tr>
+            <td>{{ permission.name }}</td>
+            <td>{{ permission.codename }}</td>
+            <td>{{ permission.content_type.app_label }}</td>
+            <td>{{ permission.content_type.model }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 {% endblock content %}

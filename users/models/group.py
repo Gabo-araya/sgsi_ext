@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import models as auth_models
+from django.urls import reverse
 
 from typing_extensions import Self
 
@@ -7,6 +8,7 @@ from typing_extensions import Self
 class Group(auth_models.Group):
     class Meta:
         proxy = True
+        default_permissions = ()
 
     @classmethod
     def get_default_group_name(cls) -> str:
@@ -21,3 +23,6 @@ class Group(auth_models.Group):
     @classmethod
     def get_default_group_queryset(cls):
         return cls.objects.filter(name=cls.get_default_group_name())
+
+    def get_absolute_url(self):
+        return reverse("group_detail", args=(self.pk,))

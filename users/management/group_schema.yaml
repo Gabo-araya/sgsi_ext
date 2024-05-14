@@ -5,7 +5,8 @@ Employee:
   - processes.view_all
 
 Administrator:
-  - users.manage_all
+  - auth.manage_group
+  - users.manage_user
   - documents.manage_all
   - information_assets.manage_all
   - risks.manage_all

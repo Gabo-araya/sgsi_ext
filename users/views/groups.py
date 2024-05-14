@@ -1,4 +1,4 @@
-from django.urls import reverse
+from typing import Any
 
 from base.views.generic.detail import BaseDetailView
 from base.views.generic.edit import BaseCreateView
@@ -9,45 +9,40 @@ from users.forms import GroupForm
 from users.models.group import Group
 
 
-class GroupUrlMixin:
-    def get_object_detail_url(self):
-        return reverse("group_detail", args=(self.object.pk,))
-
-    def get_success_url(self):
-        return self.get_object_detail_url()
-
-
 class GroupListView(BaseListView):
     model = Group
     ordering = ("name",)
     template_name = "groups/list.html"
-    permission_required = "users.view_group"
+    permission_required = "auth.view_group"
 
 
-class GroupCreateView(GroupUrlMixin, BaseCreateView):
+class GroupCreateView(BaseCreateView):
     model = Group
     form_class = GroupForm
     template_name = "groups/create.html"
-    permission_required = "users.add_group"
+    permission_required = "auth.add_group"
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        return {**super().get_form_kwargs(), "user": self.request.user}
 
 
 class GroupDetailView(BaseDetailView):
     model = Group
     template_name = "groups/detail.html"
-    permission_required = "users.view_group"
+    permission_required = "auth.view_group"
 
 
-class GroupUpdateView(GroupUrlMixin, BaseUpdateView):
+class GroupUpdateView(BaseUpdateView):
     model = Group
     form_class = GroupForm
     template_name = "groups/update.html"
-    permission_required = "users.change_group"
+    permission_required = "auth.change_group"
 
-    def get_cancel_url(self):
-        return self.get_object_detail_url()
+    def get_form_kwargs(self) -> dict[str, Any]:
+        return {**super().get_form_kwargs(), "user": self.request.user}
 
 
 class GroupDeleteView(BaseDeleteView):
     model = Group
     template_name = "groups/delete.html"
-    permission_required = "users.delete_group"
+    permission_required = "auth.delete_group"

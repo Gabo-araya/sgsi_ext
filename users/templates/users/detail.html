@@ -54,7 +54,9 @@
       </div>
     </div>
   </div>
-  <br>
-  <h2>{% trans "assigned groups"|capfirst %}</h2>
-  {% include "groups/includes/group_table.html" with object_list=object.groups.all %}
+  {% if perms.auth.view_group %}
+    <br>
+    <h2>{% trans "assigned groups"|capfirst %}</h2>
+    {% include "groups/includes/group_table.html" with object_list=object.groups.all %}
+  {% endif %}
 {% endblock content %}

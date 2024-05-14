@@ -1,3 +1,5 @@
+from collections.abc import Iterable
+
 from django import forms
 from django.conf import settings
 from django.contrib.admin.forms import AdminAuthenticationForm
@@ -400,22 +402,29 @@ class GroupForm(BaseModelForm):
         model = Group
         fields = ("name", "users", "permissions")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user: User, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["users"].label_from_instance = lambda obj: obj.get_label()
-        self.fields["permissions"].queryset = Permission.objects.filter(
-            content_type__in=self.get_permissable_content_types()
-        )
-        self.fields[
-            "permissions"
-        ].label_from_instance = (
-            lambda obj: f"{obj.content_type.name.title()}: {obj.name}"
-        )
+        if user.has_perm("auth.view_permission"):
+            self.configure_permission_field()
+        else:
+            self.hide_permission_field()
         if self.instance.pk:
             self.fields["users"].initial = self.instance.user_set.all()
 
-    def get_permissable_content_types(self) -> tuple[ContentType, ...]:
-        permissable_models = (
+    def configure_permission_field(self) -> None:
+        permission_field = self.fields["permissions"]
+        permission_field.queryset = Permission.objects.filter(
+            content_type__in=self.get_permissible_content_types()
+        )
+        if self.instance.pk:
+            permission_field.queryset |= self.instance.permissions.all()
+        permission_field.label_from_instance = (
+            lambda obj: f"{obj.content_type.name.title()}: {obj.name}"
+        )
+
+    def get_permissible_content_types(self) -> Iterable[ContentType]:
+        permissible_models = (
             # users
             User,
             Group,
@@ -437,11 +446,12 @@ class GroupForm(BaseModelForm):
             ProcessVersion,
             Process,
         )
-        return (
-            ContentType.objects.get_for_model(model) for model in permissable_models
-        )
+        return ContentType.objects.get_for_models(*permissible_models).values()
 
-    def save(self, commit: bool = ...) -> Group:
+    def hide_permission_field(self) -> None:
+        self.fields["permissions"].widget = forms.HiddenInput()
+
+    def save(self, commit: bool = True) -> Group:
         instance = super().save(commit)
         if not commit:
             return instance

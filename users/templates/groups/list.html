@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block options %}
-  {% if perms.users.add_group %}
+  {% if perms.auth.add_group %}
     <a class="btn btn-sm btn-outline-secondary"
        href="{% url 'group_create' %}">
       {% trans "Add group" %}
