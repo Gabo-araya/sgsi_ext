@@ -26,6 +26,14 @@ class DocumentDetailView(BaseDetailView):
     permission_required = "documents.view_document"
     slug_field = "code"
 
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "versions": self.object.versions.annotate_is_read_by_user(
+                self.request.user
+            ),
+        }
+
 
 class DocumentUpdateView(BaseUpdateView):
     model = Document

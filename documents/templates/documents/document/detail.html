@@ -67,7 +67,7 @@
   </table>
   <br>
   <h2>{% trans "versions"|capfirst %}</h2>
-  {% include "documents/includes/documentversion_table.html" with object_list=document.versions.all %}
+  {% include "documents/includes/documentversion_table.html" with object_list=versions %}
   <br>
   <h2>{% trans "documented controls"|capfirst %}</h2>
   {% include "documents/includes/control_table.html" with object_list=document.documented_controls.all %}

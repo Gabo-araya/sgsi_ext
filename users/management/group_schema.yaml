@@ -1,5 +1,6 @@
 Employee:
   - documents.view_all
+  - documents.add_documentversionreadbyuser
   - information_assets.view_all
   - risks.view_all
   - processes.view_all

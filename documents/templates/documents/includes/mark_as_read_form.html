@@ -1,0 +1,7 @@
+<div class="d-none">
+  <form id="markAsReadForm-{{ documentversion.pk }}"
+        action="{% url 'documentversion_mark_as_read' documentversion.document.code documentversion.version %}"
+        method="post">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+  </form>
+</div>

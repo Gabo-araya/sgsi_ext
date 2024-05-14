@@ -102,7 +102,7 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
     def mark_as_read(self, user: User) -> None:
         self.read_by.add(user)
 
-    def was_read_by_user(self, user: User) -> bool:
+    def is_read_by_user(self, user: User) -> bool:
         return self.read_by.filter(pk=user.pk).exists()
 
     def get_absolute_url(self):

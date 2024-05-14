@@ -56,6 +56,12 @@ class DocumentVersionDetailView(DocumentVersionGetObjectMixin, BaseDetailView):
     template_name = "documents/documentversion/detail.html"
     permission_required = "documents.view_documentversion"
 
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            "is_read_by_user": self.object.is_read_by_user(self.request.user),
+        }
+
 
 class DocumentVersionUpdateView(DocumentVersionGetObjectMixin, BaseUpdateView):
     model = DocumentVersion
@@ -99,7 +105,9 @@ class DocumentVersionApproveView(DocumentVersionGetObjectMixin, BaseUpdateView):
         }
 
 
-class DocumentVersionMarkAsReadView(BaseUpdateRedirectView):
+class DocumentVersionMarkAsReadView(
+    DocumentVersionGetObjectMixin, BaseUpdateRedirectView
+):
     model = DocumentVersion
     permission_required = "documents.add_documentversionreadbyuser"
 

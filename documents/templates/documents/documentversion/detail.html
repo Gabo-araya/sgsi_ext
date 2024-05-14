@@ -25,6 +25,9 @@
       <i class="fa fa-times"></i>
     </a>
   {% endif %}
+  {% if perms.documents.add_documentversionreadbyuser and documentversion.is_approved and not is_read_by_user %}
+    {% include "documents/includes/mark_as_read_button.html" %}
+  {% endif %}
 {% endblock options %}
 
 {% block breadcrumbs %}
@@ -121,4 +124,8 @@
       {% endfor %}
     </tbody>
   </table>
+
+  {% if perms.documents.add_documentversionreadbyuser and documentversion.is_approved and not is_read_by_user %}
+    {% include "documents/includes/mark_as_read_form.html" %}
+  {% endif %}
 {% endblock content %}
