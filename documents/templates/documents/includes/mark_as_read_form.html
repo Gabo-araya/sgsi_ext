@@ -3,5 +3,8 @@
         action="{% url 'documentversion_mark_as_read' documentversion.document.code documentversion.version %}"
         method="post">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+    <input type="hidden"
+           name="verification_code"
+           value="{{ request.GET.verification_code }}" />
   </form>
 </div>

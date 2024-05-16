@@ -57,9 +57,15 @@ class DocumentVersionDetailView(DocumentVersionGetObjectMixin, BaseDetailView):
     permission_required = "documents.view_documentversion"
 
     def get_context_data(self, **kwargs):
+        show_mark_as_read = (
+            self.object.is_approved
+            and not self.object.is_read_by_user(self.request.user)
+            and self.object.verification_code
+            == self.request.GET.get("verification_code")
+        )
         return {
             **super().get_context_data(**kwargs),
-            "is_read_by_user": self.object.is_read_by_user(self.request.user),
+            "show_mark_as_read": show_mark_as_read,
         }
 
 
@@ -115,4 +121,6 @@ class DocumentVersionMarkAsReadView(
         return super().get_queryset().approved()
 
     def do_action(self):
+        if self.request.POST.get("verification_code") != self.object.verification_code:
+            raise Http404(_("Verification code is not correct"))
         self.object.mark_as_read(self.request.user)

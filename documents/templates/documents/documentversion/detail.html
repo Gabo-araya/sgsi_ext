@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
-{% load i18n %}
-{% load file %}
+{% load i18n file path_to_uri %}
 
 {% block options %}
   {% if perms.documents.change_documentversion and documentversion.can_be_updated %}
@@ -25,7 +24,7 @@
       <i class="fa fa-times"></i>
     </a>
   {% endif %}
-  {% if perms.documents.add_documentversionreadbyuser and documentversion.is_approved and not is_read_by_user %}
+  {% if perms.documents.add_documentversionreadbyuser and show_mark_as_read %}
     {% include "documents/includes/mark_as_read_button.html" %}
   {% endif %}
 {% endblock options %}
@@ -62,6 +61,12 @@
           <a href="{{ documentversion.file.url }}">{{ documentversion.file|filename }}</a>
         </td>
       </tr>
+      {% if perms.documents.view_documentversion_verification_code %}
+        <tr>
+          <th>{% trans "mark as read url"|capfirst %}</th>
+          <td>{{ documentversion.get_absolute_url|path_to_uri }}?verification_code={{ documentversion.verification_code }}</td>
+        </tr>
+      {% endif %}
       <tr>
         <th>sha256sum</th>
         <td>{{ documentversion.shasum }}</td>
@@ -125,7 +130,7 @@
     </tbody>
   </table>
 
-  {% if perms.documents.add_documentversionreadbyuser and documentversion.is_approved and not is_read_by_user %}
+  {% if perms.documents.add_documentversionreadbyuser and show_mark_as_read %}
     {% include "documents/includes/mark_as_read_form.html" %}
   {% endif %}
 {% endblock content %}

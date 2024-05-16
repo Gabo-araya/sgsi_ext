@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import secrets
+import string
+
 from typing import TYPE_CHECKING
 
 from django.conf import settings
@@ -19,6 +22,11 @@ from users.models.user import User
 
 if TYPE_CHECKING:
     from documents.forms import DocumentVersionApproveForm
+
+
+def generate_verification_code():
+    alphabet = string.ascii_letters + string.digits
+    return "".join(secrets.choice(alphabet) for _ in range(8))
 
 
 class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
@@ -57,6 +65,12 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
         null=True,
         blank=True,
     )
+    verification_code = models.CharField(
+        verbose_name=_("verification code"),
+        max_length=8,
+        editable=False,
+        default=generate_verification_code,
+    )
     read_by = models.ManyToManyField(
         verbose_name=_("read by users"),
         to=settings.AUTH_USER_MODEL,
@@ -76,7 +90,13 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
                 fields=["document", "version"], name="unique_document_version"
             ),
         )
-        permissions = (("approve_documentversion", _("Can approve document version")),)
+        permissions = (
+            ("approve_documentversion", _("Can approve document version")),
+            (
+                "view_documentversion_verification_code",
+                _("Can view document version verification code"),
+            ),
+        )
 
     @property
     def can_be_updated(self) -> bool:

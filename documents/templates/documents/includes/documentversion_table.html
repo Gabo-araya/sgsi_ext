@@ -9,7 +9,7 @@
       <th>{% trans "is read"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
-      {% if perms.documents.change_documentversion or perms.documents.approve_documentversion or perms.documents.add_documentversionreadbyuser or perms.documents.delete_documentversion %}
+      {% if perms.documents.change_documentversion or perms.documents.approve_documentversion or perms.documents.delete_documentversion %}
         <th></th>
       {% endif %}
     </tr>
@@ -43,9 +43,6 @@
                 <i class="fa fa-check"></i>
               </a>
             {% endif %}
-            {% if perms.documents.add_documentversionreadbyuser and documentversion.is_approved and not documentversion.is_read_by_user %}
-              {% include "documents/includes/mark_as_read_button.html" %}
-            {% endif %}
             {% if perms.documents.delete_documentversion and documentversion.can_be_updated %}
               <a class="btn btn-sm btn-danger"
                  href="{% url 'documentversion_delete' documentversion.document.code documentversion.version %}">
@@ -56,9 +53,6 @@
           </td>
         {% endif %}
       </tr>
-      {% if perms.documents.add_documentversionreadbyuser and documentversion.is_approved and not documentversion.is_read_by_user %}
-        {% include "documents/includes/mark_as_read_form.html" %}
-      {% endif %}
     {% endfor %}
   </tbody>
 </table>
