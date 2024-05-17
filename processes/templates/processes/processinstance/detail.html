@@ -30,6 +30,10 @@
         </td>
       </tr>
       <tr>
+        <th>{{ processinstance.process_version.comment_label|capfirst }}</th>
+        <td>{{ processinstance.comment }}</td>
+      </tr>
+      <tr>
         <th>{% trans "created at"|capfirst %}</th>
         <td>{{ processinstance.created_at }}</td>
       </tr>

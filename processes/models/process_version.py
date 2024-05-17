@@ -39,6 +39,11 @@ class ProcessVersion(VersionModelBase, BaseModel):
         to=Control,
         related_name="process_versions",
     )
+    comment_label = models.CharField(
+        verbose_name=_("comment label"),
+        max_length=31,
+        blank=True,
+    )
     recurrency = models.CharField(
         verbose_name=_("recurrency"),
         max_length=255,

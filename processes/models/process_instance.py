@@ -15,6 +15,7 @@ class ProcessInstance(BaseModel):
         on_delete=models.PROTECT,
         related_name="instances",
     )
+    comment = models.TextField(verbose_name=_("comment"), blank=True)
     is_completed = models.BooleanField(verbose_name=_("is completed"), default=False)
     completed_at = models.DateTimeField(
         verbose_name=_("completed at"), blank=True, null=True

@@ -23,6 +23,7 @@ class ProcessVersionForm(BaseModelForm):
         fields = (
             "defined_in",
             "controls",
+            "comment_label",
             "recurrency",
         )
 
@@ -42,11 +43,16 @@ class ProcessInstanceForm(BaseModelForm):
 
     class Meta:
         model = ProcessInstance
-        fields = ("process",)
+        fields = ("process", "comment")
 
     def __init__(self, user: User, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["process"].queryset = user.get_instantiable_processes()
+        if (process := self.initial.get("process")) is not None:
+            comment_field = self.fields["comment"]
+            comment_field.label = (
+                process.last_published_version.comment_label.capitalize()
+            )
 
     def save(self, commit: bool = True) -> ProcessInstance:
         self.instance.process_version = self.cleaned_data.get(

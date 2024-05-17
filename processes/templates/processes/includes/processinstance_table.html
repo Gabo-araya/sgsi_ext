@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>{% trans "name"|capfirst %}</th>
+      <th>{% trans "comment"|capfirst %}</th>
       <th>{% trans "update at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
       <th>{% trans "completed"|capfirst %}</th>
@@ -17,6 +18,12 @@
         <td>
           <a href="{{ process_instance.get_absolute_url }}">{{ process_instance }}</a>
         </td>
+        {% with comment_label=process_instance.process_version.comment_label %}
+          <td>
+            {% if comment_label %}{{ comment_label }}:{% endif %}
+            {{ process_instance.comment|default:"-" }}
+          </td>
+        {% endwith %}
         <td>{{ process_instance.created_at }}</td>
         <td>{{ process_instance.created_by.get_label }}</td>
         <td>{{ process_instance.is_completed|yesno|capfirst }}</td>
