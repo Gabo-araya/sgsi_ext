@@ -40,6 +40,7 @@ urlpatterns = [
     path("", include("information_assets.urls")),
     path("risks/", include("risks.urls")),
     path("", include("processes.urls")),
+    path("", include("social_django.urls", namespace="social")),
 ]
 
 if settings.DEBUG:

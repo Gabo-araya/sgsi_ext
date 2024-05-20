@@ -364,11 +364,13 @@ class UserCreationForm(UserWithGroupsForm):
         super().__init__(*args, **kwargs)
         self.fields["groups"].initial = Group.get_default_group_queryset()
 
-    def save(self, commit: bool = True) -> User:
+    def save(
+        self, commit: bool = True, *, send_recover_password_email: bool = False
+    ) -> User:
         random_password = User.objects.make_random_password(length=30)
         self.instance.set_password(random_password)
         user: User = super().save(commit)
-        if commit:
+        if commit and send_recover_password_email:
             user.send_recover_password_email()
         return user
 

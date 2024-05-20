@@ -7,46 +7,57 @@
 {% endblock legacy_javascripts %}
 
 {% block content %}
-  <form id="login-form"
-        class="mt-4"
-        action=""
-        method="post"
-        data-username-field-id="id_{{ form.email_field.name }}">
-    {% csrf_token %}
+  {% if google_oauth_enabled %}
+    <form action='{% url "social:begin" "google-oauth2" %}' method="post">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+      <button type="submit" class="btn btn-danger">
+        <i class="fa fa-google"></i>
+        Log in with Google
+      </button>
+    </form>
+  {% endif %}
+  {% if django_auth_enabled %}
+    <form id="login-form"
+          class="mt-4"
+          action=""
+          method="post"
+          data-username-field-id="id_{{ form.email_field.name }}">
+      {% csrf_token %}
 
-    {% if form.non_field_errors %}
-      {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
-    {% endif %}
-    {% if "captcha" in form.errors %}<div class="alert alert-danger">{{ form.captcha.errors }}</div>{% endif %}
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
+      {% endif %}
+      {% if "captcha" in form.errors %}<div class="alert alert-danger">{{ form.captcha.errors }}</div>{% endif %}
 
-    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-    <input id="id_next" type="hidden" name="next" value="{{ next }}" />
+      {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+      <input id="id_next" type="hidden" name="next" value="{{ next }}" />
 
-    {% for field in form.visible_fields %}
+      {% for field in form.visible_fields %}
+        <div class="row">
+          <div class="mb-3 col-6">
+            <label for="id_{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<div class="invalid-feedback">{{ field.errors|striptags }}</div>{% endif %}
+
+            {% if field.help_text %}<small class="form-text" id="{{ field.name }}Help">{{ field.help_text }}</small>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
       <div class="row">
-        <div class="mb-3 col-6">
-          <label for="id_{{ field.name }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.errors %}<div class="invalid-feedback">{{ field.errors|striptags }}</div>{% endif %}
-
-          {% if field.help_text %}<small class="form-text" id="{{ field.name }}Help">{{ field.help_text }}</small>{% endif %}
+        <div class="mb-3 col-sm-6 text-end">
+          <button class="btn btn-primary" type="submit" value="">{% trans "Log in" %}</button>
         </div>
       </div>
-    {% endfor %}
 
-    <div class="row">
-      <div class="mb-3 col-sm-6 text-end">
-        <button class="btn btn-primary" type="submit" value="">{% trans "Log in" %}</button>
-      </div>
-    </div>
-
-    <div>
-      <a href="{% url 'password_reset' %}">{% trans "Forgotten your password?" %}</a>
-    </div>
-    {% if user_registration_enabled %}
       <div>
-        <a href="{% url 'register' %}">{% trans "New? Register here." %}</a>
+        <a href="{% url 'password_reset' %}">{% trans "Forgotten your password?" %}</a>
       </div>
-    {% endif %}
-  </form>
+      {% if user_registration_enabled %}
+        <div>
+          <a href="{% url 'register' %}">{% trans "New? Register here." %}</a>
+        </div>
+      {% endif %}
+    </form>
+  {% endif %}
 {% endblock content %}

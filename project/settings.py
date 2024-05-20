@@ -104,6 +104,7 @@ INSTALLED_APPS = [
     "django_celery_beat",
     "rest_framework",
     "django_recaptcha",
+    "social_django",
     # internal
     "parameters.apps.ParametersConfig",
     "regions.apps.RegionsConfig",
@@ -241,6 +242,16 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "users.User"
 DEFAULT_GROUP_NAME = "Employee"
 USER_REGISTRATION_ENABLED = False
+
+DJANGO_AUTH_ENABLED = get_bool_from_env("DJANGO_AUTH_ENABLED", True)
+GOOGLE_OAUTH_ENABLED = get_bool_from_env("GOOGLE_OAUTH_ENABLED", False)
+
+AUTHENTICATION_BACKENDS = []
+if DJANGO_AUTH_ENABLED:
+    AUTHENTICATION_BACKENDS.append("django.contrib.auth.backends.ModelBackend")
+if GOOGLE_OAUTH_ENABLED:
+    AUTHENTICATION_BACKENDS.append("social_core.backends.google.GoogleOAuth2")
+    AUTHENTICATION_BACKENDS.append("social_core.backends.google.GoogleOAuth")
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -622,3 +633,24 @@ API_CLIENT_LOG_MAX_AGE_DAYS = int(
         default_if_blank=True,
     )
 )
+
+# social auth
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+SOCIAL_AUTH_REQUIRE_POST = True
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.social_auth.associate_by_email",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
+)
+if GOOGLE_OAUTH_ENABLED:
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = get_env_value(
+        "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", None, default_if_blank=True
+    )
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = get_env_value(
+        "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", None, default_if_blank=True
+    )

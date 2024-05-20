@@ -4,6 +4,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.tokens import default_token_generator
+from django.forms import BaseModelForm
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import base36_to_int
@@ -82,6 +85,8 @@ class LoginView(auth_views.LoginView):
         context = super().get_context_data(**kwargs)
         context["title"] = self.title
         context["user_registration_enabled"] = settings.USER_REGISTRATION_ENABLED
+        context["django_auth_enabled"] = settings.DJANGO_AUTH_ENABLED
+        context["google_oauth_enabled"] = settings.GOOGLE_OAUTH_ENABLED
         return context
 
     def get_form_class(self):
@@ -104,7 +109,9 @@ class UserRegisterView(BaseCreateView):
         return settings.USER_REGISTRATION_ENABLED and super().has_permission()
 
     def form_valid(self, form):
-        form.save(verify_email_address=True, request=self.request)
+        form.save(
+            verify_email_address=settings.DJANGO_AUTH_ENABLED, request=self.request
+        )
         messages.add_message(
             self.request,
             messages.INFO,
@@ -179,6 +186,12 @@ class UserCreateView(BaseCreateView):
 
     def get_success_url(self):
         return self.object.get_detail_url()
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        self.object = form.save(
+            send_recover_password_email=settings.DJANGO_AUTH_ENABLED
+        )
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class UserDetailView(BaseDetailView):
