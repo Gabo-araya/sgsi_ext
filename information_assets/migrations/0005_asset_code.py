@@ -38,16 +38,16 @@ class Migration(migrations.Migration):
             model_name="asset",
             name="unique_asset_owner",
         ),
-        migrations.AddConstraint(
-            model_name="asset",
-            constraint=models.UniqueConstraint(
-                fields=("code", "owner"), name="unique_asset_owner"
-            ),
-        ),
         migrations.RunPython(apply_migration, migrations.RunPython.noop),
         migrations.AlterField(
             model_name="asset",
             name="code",
             field=models.CharField(max_length=20, unique=True, verbose_name="code"),
+        ),
+        migrations.AddConstraint(
+            model_name="asset",
+            constraint=models.UniqueConstraint(
+                fields=("code", "owner"), name="unique_asset_owner"
+            ),
         ),
     ]
