@@ -356,7 +356,7 @@ class UserForm(BaseModelForm):
 class UserWithGroupsForm(BaseModelForm):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email", "groups")
+        fields = ("first_name", "last_name", "email", "is_active", "groups")
 
 
 class UserCreationForm(UserWithGroupsForm):

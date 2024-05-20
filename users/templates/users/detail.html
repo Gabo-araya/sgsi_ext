@@ -50,6 +50,10 @@
             <th>{% trans "email"|capfirst %}</th>
             <td>{{ object.email }}</td>
           </tr>
+          <tr>
+            <th>{% trans "is active"|capfirst %}</th>
+            <td>{{ object.is_active|yesno|capfirst }}</td>
+          </tr>
         </table>
       </div>
     </div>
