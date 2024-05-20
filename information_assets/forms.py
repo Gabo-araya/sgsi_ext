@@ -8,6 +8,7 @@ class AssetForm(BaseModelForm):
         model = Asset
         fields = (
             "name",
+            "code",
             "owner",
             "description",
             "asset_type",

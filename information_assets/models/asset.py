@@ -17,6 +17,11 @@ class Asset(BaseModel):
         on_delete=models.PROTECT,
         related_name="assets",
     )
+    code = models.CharField(
+        verbose_name=_("code"),
+        max_length=20,
+        unique=True,
+    )
     name = models.CharField(
         verbose_name=_("name"),
         max_length=63,
@@ -51,10 +56,10 @@ class Asset(BaseModel):
     class Meta:
         verbose_name = _("asset")
         verbose_name_plural = _("assets")
-        ordering = ("name", "owner")
+        ordering = ("code",)
         constraints = (
             models.UniqueConstraint(
-                fields=("name", "owner"), name="unique_asset_owner"
+                fields=("code", "owner"), name="unique_asset_owner"
             ),
         )
         permissions = (("archive_asset", _("Can archive asset")),)

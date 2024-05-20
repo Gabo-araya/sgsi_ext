@@ -3,8 +3,9 @@
 <table class="table table-striped table-hover table-sm">
   <thead>
     <tr>
-      {% include "includes/list_th.html" with order_by="id" verbose_name="id" %}
+      {% include "includes/list_th.html" with order_by="code" verbose_name="code" %}
       {% include "includes/list_th.html" with order_by="name" verbose_name="name" %}
+      {% include "includes/list_th.html" with order_by="owner" verbose_name="owner" %}
       {% include "includes/list_th.html" with order_by="asset_type" verbose_name="type" %}
       {% include "includes/list_th.html" with order_by="criticality" verbose_name="criticality" %}
       {% include "includes/list_th.html" with order_by="classification" verbose_name="classification" %}
@@ -18,11 +19,12 @@
     {% for asset in object_list %}
       <tr>
         <td>
-          <a href="{{ asset.get_absolute_url }}">{{ asset.id }}</a>
+          <a href="{{ asset.get_absolute_url }}">{{ asset.code }}</a>
         </td>
         <td>
-          <a href="{{ asset.get_absolute_url }}">{{ asset }}</a>
+          <a href="{{ asset.get_absolute_url }}">{{ asset.name }}</a>
         </td>
+        <td>{{ asset.owner.get_label }}</td>
         <td>
           <a href="{{ asset.asset_type.get_absolute_url }}">{{ asset.asset_type }}</a>
         </td>
