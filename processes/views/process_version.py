@@ -58,6 +58,9 @@ class ProcessVersionDeleteView(BaseDeleteView):
     def get_queryset(self) -> ProcessVersionQuerySet:
         return super().get_queryset().not_published()
 
+    def get_success_url(self):
+        return self.object.process.get_absolute_url()
+
 
 class ProcessVersionPublishView(BaseUpdateRedirectView):
     model = ProcessVersion
