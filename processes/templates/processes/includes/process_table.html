@@ -7,7 +7,7 @@
       <th>{% trans "last version"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
-      {% if perms.processes.change_process or perms.processes.delete_process or perms.processes.add_processinstance %}
+      {% if perms.processes.change_process or perms.processes.delete_process or perms.processes.add_processinstance or perms.processes.add_processversion %}
         <th></th>
       {% endif %}
     </tr>
@@ -29,12 +29,19 @@
         </td>
         <td>{{ process.latest_update }}</td>
         <td>{{ process.latest_updator }}</td>
-        {% if perms.processes.change_process or perms.processes.delete_process %}
+        {% if perms.processes.change_process or perms.processes.delete_process or perms.processes.add_processinstance or perms.processes.add_processversion %}
           <td class="text-end">
             {% if perms.processes.add_processinstance %}
               <a class="btn btn-sm btn-outline-secondary"
                  href="{% url 'processinstance_create' %}?process_pk={{ process.pk }}">
-                {% trans "Create instance" %}
+                {% trans "Start process" %}
+                <i class="fa fa-plus"></i>
+              </a>
+            {% endif %}
+            {% if process.can_add_new_versions and perms.processes.add_processversion %}
+              <a class="btn btn-sm btn-outline-secondary"
+                 href="{% url 'processversion_create' process.pk %}">
+                {% trans "Add process version" %}
                 <i class="fa fa-plus"></i>
               </a>
             {% endif %}

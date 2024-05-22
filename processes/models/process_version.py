@@ -82,6 +82,22 @@ class ProcessVersion(VersionModelBase, BaseModel):
     def __str__(self) -> str:
         return f"{self.process} V{self.version}"
 
+    def save(self, *args, **kwargs):
+        adding = self._state.adding
+        previous_version = self.process.last_published_version
+        super().save(*args, **kwargs)
+        self._copy_activities_from_previous_version(adding, previous_version)
+
+    def _copy_activities_from_previous_version(
+        self, adding: bool, previous_version: ProcessVersion
+    ) -> None:
+        if not adding or previous_version is None:
+            return
+        for activity in previous_version.activities.all():
+            activity.pk = None
+            activity.process_version = self
+            activity.save()
+
     def _get_increment_queryset(self) -> models.QuerySet[ProcessVersion]:
         return self.process.versions.all()
 

@@ -4,6 +4,8 @@ Employee:
   - information_assets.view_all
   - risks.view_all
   - processes.view_all
+  - processes.add_processinstance
+  - processes.change_processactivityinstance
 
 Administrator:
   - auth.manage_group
