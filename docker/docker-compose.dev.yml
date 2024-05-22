@@ -71,6 +71,8 @@ services:
     volumes:
       - ./:/usr/src/app/
     command:
+      - dotenv
+      - run
       - celery
       - --app=project.celeryconf:app
       - worker

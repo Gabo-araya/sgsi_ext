@@ -14,7 +14,7 @@ except ImportError:
 def main():
     """Run administrative tasks."""
     if HAVE_DOTENV:
-        dotenv.load_dotenv()
+        dotenv.load_dotenv(override=True)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
     try:
         from django.core.management import execute_from_command_line

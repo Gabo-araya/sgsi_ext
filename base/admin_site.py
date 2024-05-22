@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.http import HttpResponseRedirect
@@ -34,6 +35,8 @@ class BaseAdminSite(admin.AdminSite):
             "title": _("Log in"),
             "app_path": request.get_full_path(),
             "username": request.user.get_username(),
+            "django_auth_enabled": settings.DJANGO_AUTH_ENABLED,
+            "google_oauth_enabled": settings.GOOGLE_OAUTH_ENABLED,
         }
         if (
             REDIRECT_FIELD_NAME not in request.GET
