@@ -21,6 +21,8 @@ package Documents {
             + id: int
             + title: char
             + description: text
+            + code: char
+            + documented_controls: Control[]
         }
         together {
             class DocumentVersion {
@@ -29,7 +31,13 @@ package Documents {
                 + version: int
                 + file: file
                 + shasum: char
+                + comment: text
                 + is_approved: bool
+                + approval_evidence: Evidence
+                + approved_at: datetime
+                + approved_by: User
+                + verification_code: char
+                + read_by: User[]
             }
             class DocumentVersionReadByUser {
                 + id: int
@@ -40,15 +48,9 @@ package Documents {
     }
     class Control {
         + id: int
-        + category: ControlCategory
+        + category: ControlCategory | None
         + title: char
         + description: text
-        + document: Document
-    }
-    class ControlGuidingText {
-        + id: int
-        + control: Control
-        + text: text
     }
     class ControlCategory {
         + id: int
@@ -56,29 +58,22 @@ package Documents {
     }
     class Evidence {
         + id: int
-        + document_version: DocumentVersion
-        + process_activity_instance: ProcessActivityInstance
         + file: file
+        + url: URL
         + shasum: char
     }
-}
-
-class Processes.ProcessActivityInstance {
-    ...
 }
 
 class Users.User {
     ...
 }
 
-Documents.Control --* Documents.Document
-Documents.Control -* Documents.ControlCategory
-Documents.Control --* Documents.ControlGuidingText
-Documents.DocumentVersion -up-* Documents.Document
-Documents.DocumentVersion --* Documents.DocumentVersionReadByUser
-Documents.Evidence -up-* Processes.ProcessActivityInstance
-Documents.Evidence -* Documents.DocumentVersion
-Documents.DocumentVersionReadByUser -* Users.User
+Documents.Control <--> Documents.Document
+Documents.Control -> Documents.ControlCategory
+Documents.DocumentVersion -up-> Documents.Document
+Documents.DocumentVersion <-- Documents.DocumentVersionReadByUser
+Documents.Evidence <- Documents.DocumentVersion
+Documents.DocumentVersionReadByUser -> Users.User
 ```
 
 Then we have the assets module
@@ -88,11 +83,13 @@ package Assets {
     class Asset {
         + id: int
         + owner: User
+        + code: char
         + name: char
         + description: text
         + asset_type: AssetType
         + criticality: CriticalityChoices
         + classification: ClassificationChoices
+        + is_archived: bool
     }
     class AssetType {
         + id: int
@@ -116,10 +113,10 @@ class Users.User {
     ...
 }
 
-Assets.Asset -right* Users.User
-Assets.Asset -left* Assets.AssetType
-Assets.Asset --* Assets.CriticalityChoices
-Assets.Asset --* Assets.ClassificationChoices
+Assets.Asset -right> Users.User
+Assets.Asset -left> Assets.AssetType
+Assets.Asset --> Assets.CriticalityChoices
+Assets.Asset --> Assets.ClassificationChoices
 ```
 
 And the risk module
@@ -128,15 +125,14 @@ And the risk module
 package Risks {
     class Risk {
         + id: int
-        + asset: Asset
-        + control: Control
+        + assets: Asset[]
+        + controls: Control[]
         + title: char
         + description: text
         + responsible: User
         + severity: SeverityChoices
         + likelihood: LikelihoodChoices
         + treatment: TreatmentChoices
-        + process_instance: ProcessInstance
         + residual_risk: Risk
     }
     enum LikelihoodChoices {
@@ -169,17 +165,12 @@ class Documents.Control {
     ...
 }
 
-class Processes.ProcessInstance {
-    ...
-}
-
-Risks.Risk -up-* Assets.Asset
-Risks.Risk -up-* Documents.Control
-Risks.Risk -up-* Processes.ProcessInstance
-Risks.Risk -left* Risks.LikelihoodChoices
-Risks.Risk --* Risks.TreatmentChoices
-Risks.Risk --* Risks.SeverityChoices
-Risks.Risk -* Risks.Risk
+Risks.Risk <-up-> Assets.Asset
+Risks.Risk <-up-> Documents.Control
+Risks.Risk -left> Risks.LikelihoodChoices
+Risks.Risk --> Risks.TreatmentChoices
+Risks.Risk --> Risks.SeverityChoices
+Risks.Risk -> Risks.Risk
 ```
 
 And lastly the processes module
@@ -194,14 +185,18 @@ package Processes {
         + id: int
         + process: Process
         + version: int
-        + control: Control
+        + defined_in: Document
+        + controls: Control[]
+        + comment_label: char
         + recurrency: TimeFrameChoices | None
+        + is_published: bool
+        + published_at: datetime
+        + published_by: User
     }
     class ProcessInstance {
         + id: int
         + process_version: ProcessVersion
-        + name: char
-        + control: Control
+        + comment: text
         + is_completed: bool
         + completed_at: datetime
     }
@@ -211,16 +206,16 @@ package Processes {
         + order: int
         + description: text
         + assignee_group: Group
+        + email_to_notify: email
     }
     class ProcessActivityInstance {
         + id: int
         + process_instance: ProcessInstance
-        + activity: Activity
-        + order: int
-        + description: text
+        + activity: ProcessActivity
         + assignee: User
         + is_completed: bool
         + completed_at: datetime
+        + evidence: Evidence
     }
     enum TimeFrameChoices {
         DAILY
@@ -232,21 +227,37 @@ package Processes {
     }
 }
 
+class Documents.Document {
+    ...
+}
+
 class Documents.Control {
     ...
 }
 
-class Documents.DocumentVersion {
+class Documents.Evidence {
+    ...
+}
+
+class Users.User {
+    ...
+}
+
+class Users.Group {
     ...
 }
 
 
-Processes.ProcessVersion -up-* Documents.Control
-Processes.ProcessVersion --* Processes.TimeFrameChoices
-Processes.ProcessInstance -up-* Documents.DocumentVersion
-Processes.ProcessInstance -left* Processes.ProcessVersion
-Processes.ProcessActivity --* Processes.ProcessVersion
-Processes.ProcessVersion -left-* Processes.Process
-Processes.ProcessActivityInstance -* Processes.ProcessActivity
-Processes.ProcessActivityInstance -up-* Processes.ProcessInstance
+Processes.ProcessVersion --> Users.User
+Processes.ProcessVersion -> Documents.Document
+Processes.ProcessVersion <---> Documents.Control
+Processes.ProcessVersion --> Processes.TimeFrameChoices
+Processes.ProcessInstance -> Processes.ProcessVersion
+Processes.ProcessActivity --> Processes.ProcessVersion
+Processes.ProcessActivity -> Users.Group
+Processes.ProcessVersion --> Processes.Process
+Processes.ProcessActivityInstance -> Processes.ProcessActivity
+Processes.ProcessActivityInstance -> Users.User
+Processes.ProcessActivityInstance -> Documents.Evidence
+Processes.ProcessActivityInstance --> Processes.ProcessInstance
 ```
