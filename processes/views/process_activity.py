@@ -48,3 +48,6 @@ class ProcessActivityDeleteView(BaseDeleteView):
 
     def get_queryset(self):
         return super().get_queryset().filter(process_version__is_published=False)
+
+    def get_success_url(self):
+        return self.object.process_version.get_absolute_url()

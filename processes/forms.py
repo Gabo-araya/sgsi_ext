@@ -47,8 +47,9 @@ class ProcessInstanceForm(BaseModelForm):
 
     def __init__(self, user: User, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["process"].queryset = user.get_instantiable_processes()
-        if (process := self.initial.get("process")) is not None:
+        queryset = user.get_instantiable_processes()
+        self.fields["process"].queryset = queryset
+        if (process := self.initial.get("process")) is not None and process in queryset:
             comment_field = self.fields["comment"]
             if comment_label := process.last_published_version.comment_label:
                 comment_field.label = comment_label.capitalize()

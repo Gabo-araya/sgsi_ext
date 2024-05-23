@@ -31,7 +31,7 @@
         <td>{{ process.latest_updator }}</td>
         {% if perms.processes.change_process or perms.processes.delete_process or perms.processes.add_processinstance or perms.processes.add_processversion %}
           <td class="text-end">
-            {% if perms.processes.add_processinstance %}
+            {% if perms.processes.add_processinstance and process in user.get_instantiable_processes %}
               <a class="btn btn-sm btn-outline-secondary"
                  href="{% url 'processinstance_create' %}?process_pk={{ process.pk }}">
                 {% trans "Start process" %}
