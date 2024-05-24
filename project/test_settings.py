@@ -26,6 +26,8 @@ CACHES = {
 # and pytest overrides are applied after
 ENABLE_DEBUG_TOOLBAR = False
 
+DJANGO_AUTH_ENABLED = True
+USER_REGISTRATION_ENABLED = True
 
 # Define URL namespaces to be ignored during URLs test
 URLS_TEST_IGNORED_NAMESPACES = [
