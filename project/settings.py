@@ -246,9 +246,7 @@ USER_REGISTRATION_ENABLED = False
 DJANGO_AUTH_ENABLED = get_bool_from_env("DJANGO_AUTH_ENABLED", True)
 GOOGLE_OAUTH_ENABLED = get_bool_from_env("GOOGLE_OAUTH_ENABLED", False)
 
-AUTHENTICATION_BACKENDS = []
-if DJANGO_AUTH_ENABLED:
-    AUTHENTICATION_BACKENDS.append("django.contrib.auth.backends.ModelBackend")
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 if GOOGLE_OAUTH_ENABLED:
     AUTHENTICATION_BACKENDS.append("social_core.backends.google.GoogleOAuth2")
     AUTHENTICATION_BACKENDS.append("social_core.backends.google.GoogleOAuth")
