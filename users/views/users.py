@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.tokens import default_token_generator
 from django.forms import BaseModelForm
+from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -32,6 +33,13 @@ from users.forms import UserWithGroupsForm
 from users.models.user import User
 
 
+class DjangoAuthEnabledMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not settings.DJANGO_AUTH_ENABLED:
+            raise Http404
+        return super().dispatch(request, *args, **kwargs)
+
+
 # Doesn't need csrf_protect since no-one can guess the URL
 @sensitive_post_parameters()
 @never_cache
@@ -47,6 +55,8 @@ def user_new_confirm(  # noqa: PLR0913
     View that checks the hash in a email confirmation link and activates
     the user.
     """
+    if not settings.USER_REGISTRATION_ENABLED or not settings.DJANGO_AUTH_ENABLED:
+        raise Http404
     if uidb36 is None or token is None:
         msg = "uidb36 and token are required"
         raise ValueError(msg)
@@ -96,7 +106,7 @@ class LoginView(auth_views.LoginView):
         return super().get_form_class()
 
 
-class UserRegisterView(BaseCreateView):
+class UserRegisterView(DjangoAuthEnabledMixin, BaseCreateView):
     """View so that anyone can register into the platform."""
 
     model = User
@@ -105,8 +115,10 @@ class UserRegisterView(BaseCreateView):
     login_required = False
     permission_required = ()
 
-    def has_permission(self) -> bool:
-        return settings.USER_REGISTRATION_ENABLED and super().has_permission()
+    def dispatch(self, request, *args, **kwargs):
+        if not settings.USER_REGISTRATION_ENABLED:
+            raise Http404
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.save(
@@ -124,36 +136,40 @@ class UserRegisterView(BaseCreateView):
         return redirect("home")
 
 
-class PasswordChangeView(auth_views.PasswordChangeView):
+class PasswordChangeView(DjangoAuthEnabledMixin, auth_views.PasswordChangeView):
     """view that renders the password change form"""
 
     template_name = "users/password_change_form.html"
 
 
-class PasswordChangeDoneView(auth_views.PasswordChangeDoneView):
+class PasswordChangeDoneView(DjangoAuthEnabledMixin, auth_views.PasswordChangeDoneView):
     template_name = "users/password_change_done.html"
 
 
-class PasswordResetView(auth_views.PasswordResetView):
+class PasswordResetView(DjangoAuthEnabledMixin, auth_views.PasswordResetView):
     """view that handles the recover password process"""
 
     template_name = "users/password_reset_form.html"
     email_template_name = "emails/password_reset.txt"
 
 
-class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+class PasswordResetConfirmView(
+    DjangoAuthEnabledMixin, auth_views.PasswordResetConfirmView
+):
     """view that handles the recover password process"""
 
     template_name = "users/password_reset_confirm.html"
 
 
-class PasswordResetDoneView(auth_views.PasswordResetDoneView):
+class PasswordResetDoneView(DjangoAuthEnabledMixin, auth_views.PasswordResetDoneView):
     """View that shows a success message to the user"""
 
     template_name = "users/password_reset_done.html"
 
 
-class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+class PasswordResetCompleteView(
+    DjangoAuthEnabledMixin, auth_views.PasswordResetCompleteView
+):
     """View that shows a success message to the user"""
 
     template_name = "users/password_reset_complete.html"
