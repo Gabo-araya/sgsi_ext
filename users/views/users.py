@@ -91,6 +91,11 @@ class LoginView(auth_views.LoginView):
             return redirect("home")
         return super().get(*args, **kwargs)
 
+    def post(self, *args, **kwargs):
+        if not settings.DJANGO_AUTH_ENABLED:
+            return self.http_method_not_allowed(*args, **kwargs)
+        return super().post(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.title
