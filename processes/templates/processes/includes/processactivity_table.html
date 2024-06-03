@@ -19,7 +19,7 @@
         <td>
           <a href="{{ process_activity.get_absolute_url }}">{{ process_activity }}</a>
         </td>
-        <td>{{ process_activity.description }}</td>
+        <td>{{ process_activity.description|linebreaks }}</td>
         <td>
           {% with assignee_group=process_activity.assignee_group %}
             {% if assignee_group is not None %}

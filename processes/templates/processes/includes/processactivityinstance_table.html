@@ -19,7 +19,7 @@
         <td>
           <a href="{{ process_activity_instance.get_absolute_url }}">{{ process_activity_instance }}</a>
         </td>
-        <td>{{ process_activity_instance.activity.description }}</td>
+        <td>{{ process_activity_instance.activity.description|linebreaks }}</td>
         <td>{{ process_activity_instance.assignee.get_label }}</td>
         <td>{{ process_activity_instance.is_completed|yesno|capfirst }}</td>
         <td>{{ process_activity_instance.completed_at|default_if_none:"-" }}</td>

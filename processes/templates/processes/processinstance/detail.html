@@ -31,7 +31,7 @@
       </tr>
       <tr>
         <th>{{ processinstance.process_version.comment_label|capfirst }}</th>
-        <td>{{ processinstance.comment }}</td>
+        <td>{{ processinstance.comment|linebreaks }}</td>
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>

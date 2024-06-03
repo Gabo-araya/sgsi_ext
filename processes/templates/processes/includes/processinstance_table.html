@@ -21,7 +21,7 @@
         {% with comment_label=process_instance.process_version.comment_label %}
           <td>
             {% if comment_label %}{{ comment_label }}:{% endif %}
-            {{ process_instance.comment|default:"-" }}
+            {{ process_instance.comment|linebreaks|default:"-" }}
           </td>
         {% endwith %}
         <td>{{ process_instance.created_at }}</td>

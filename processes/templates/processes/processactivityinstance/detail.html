@@ -48,7 +48,7 @@
       </tr>
       <tr>
         <th>{% trans "description"|capfirst %}</th>
-        <td>{{ processactivityinstance.activity.description }}</td>
+        <td>{{ processactivityinstance.activity.description|linebreaks }}</td>
       </tr>
       <tr>
         <th>{% trans "completed"|capfirst %}</th>

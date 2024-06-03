@@ -42,7 +42,7 @@
       </tr>
       <tr>
         <th>{% trans "description"|capfirst %}</th>
-        <td>{{ asset.description|default:"-" }}</td>
+        <td>{{ asset.description|linebreaks|default:"-" }}</td>
       </tr>
       <tr>
         <th>{% trans "type"|capfirst %}</th>
