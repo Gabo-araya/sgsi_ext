@@ -48,6 +48,10 @@
         <td>{{ document.description }}</td>
       </tr>
       <tr>
+        <th>{% trans "drive folder"|capfirst %}</th>
+        <td>{{ document.drive_folder|urlize }}</td>
+      </tr>
+      <tr>
         <th>{% trans "created at"|capfirst %}</th>
         <td>{{ document.created_at }}</td>
       </tr>

@@ -41,6 +41,10 @@ class Document(VersionableMixin, BaseModel):
             ),
         ),
     )
+    drive_folder = models.URLField(
+        verbose_name=_("drive folder"),
+        blank=True,
+    )
     documented_controls = models.ManyToManyField(
         verbose_name=_("documented controls"),
         to=Control,

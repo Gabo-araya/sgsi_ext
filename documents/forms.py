@@ -14,7 +14,7 @@ from documents.models.document_version import DocumentVersion
 class DocumentForm(BaseModelForm):
     class Meta:
         model = Document
-        fields = ("title", "code", "description", "documented_controls")
+        fields = ("title", "code", "description", "drive_folder", "documented_controls")
 
 
 class DocumentVersionForm(BaseModelForm):
