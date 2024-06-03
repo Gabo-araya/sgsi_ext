@@ -119,7 +119,9 @@
                    data-bs-toggle="dropdown">{% trans "Logged in as" %} {{ user.email }}</a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownLoggedIn">
                   {% include dropdown_link_template with text="My profile" url_name="user_profile" %}
-                  {% include dropdown_link_template with text="Change password" url_name="password_change" %}
+                  {% if django_auth_enabled %}
+                    {% include dropdown_link_template with text="Change password" url_name="password_change" %}
+                  {% endif %}
                   {% include dropdown_button_link_template with text="Logout" url_name=request.session.loginas_from_user|yesno:"loginas-logout,logout" %}
                 </ul>
               </li>

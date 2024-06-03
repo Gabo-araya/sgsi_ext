@@ -261,3 +261,39 @@ Processes.ProcessActivityInstance -> Users.User
 Processes.ProcessActivityInstance -> Documents.Evidence
 Processes.ProcessActivityInstance --> Processes.ProcessInstance
 ```
+
+```plantuml
+package Users {
+    class User {
+        + id: int
+        + email: email
+        + password: char
+        + first_name: char
+        + last_name: char
+        + is_active: bool
+        + is_staff: bool
+        + is_superuser: bool
+        + date_joined: datetime
+        + groups: Group[]
+        + user_permissions: Permission[]
+    }
+}
+
+package Auth {
+    class Group {
+        + id: int
+        + name: char
+        + permissions: Permission[]
+    }
+    class Permission {
+        + id: int
+        + content_type: ContentType
+        + name: char
+        + codename: char
+    }
+}
+
+Users.User --> Auth.Group
+Auth.Group -> Auth.Permission
+Users.User -> Auth.Permission
+```

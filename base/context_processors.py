@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.templatetags.static import static
 
 import project
@@ -37,3 +38,10 @@ def react_context(request):
         "last_name": user.last_name,
     }
     return context
+
+
+def auth_methods_context(request):
+    return {
+        "django_auth_enabled": settings.DJANGO_AUTH_ENABLED,
+        "google_oauth_enabled": settings.GOOGLE_OAUTH_ENABLED,
+    }

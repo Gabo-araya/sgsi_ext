@@ -19,7 +19,7 @@
         <td>
           <a href="{% url 'group_detail' group.pk %}">{{ group }}</a>
         </td>
-        {% if perms.users.view_user %}<td>{{ group.permissions.count }}</td>{% endif %}
+        {% if perms.users.view_user %}<td>{{ group.user_set.count }}</td>{% endif %}
         {% if perms.auth.view_permission %}<td>{{ group.permissions.count }}</td>{% endif %}
         {% if perms.auth.change_group or perms.auth.delete_group %}
           <td class="text-end">

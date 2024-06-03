@@ -182,6 +182,7 @@ TEMPLATES = [
                 "django.template.context_processors.i18n",
                 "base.context_processors.build_info",
                 "base.context_processors.react_context",
+                "base.context_processors.auth_methods_context",
             ],
         },
     },

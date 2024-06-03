@@ -100,8 +100,6 @@ class LoginView(auth_views.LoginView):
         context = super().get_context_data(**kwargs)
         context["title"] = self.title
         context["user_registration_enabled"] = settings.USER_REGISTRATION_ENABLED
-        context["django_auth_enabled"] = settings.DJANGO_AUTH_ENABLED
-        context["google_oauth_enabled"] = settings.GOOGLE_OAUTH_ENABLED
         return context
 
     def get_form_class(self):

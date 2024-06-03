@@ -1,5 +1,3 @@
-import secrets
-
 from collections.abc import Iterable
 
 from django import forms
@@ -369,7 +367,7 @@ class UserCreationForm(UserWithGroupsForm):
     def save(
         self, commit: bool = True, *, send_recover_password_email: bool = False
     ) -> User:
-        self.instance.password = secrets.token_urlsafe()
+        self.instance.set_unusable_password()
         user: User = super().save(commit)
         if commit and send_recover_password_email:
             user.send_recover_password_email()
