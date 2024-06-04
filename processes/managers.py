@@ -13,7 +13,7 @@ class ProcessQuerySet(models.QuerySet):
         return self.filter(
             versions__is_published=True,
             versions__activities__order=1,
-            versions__activities__assignee_group__user=user,
+            versions__activities__assignee_groups__user=user,
         ).distinct()
 
 

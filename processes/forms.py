@@ -31,7 +31,7 @@ class ProcessVersionForm(BaseModelForm):
 class ProcessActivityForm(BaseModelForm):
     class Meta:
         model = ProcessActivity
-        fields = ("description", "assignee_group", "email_to_notify")
+        fields = ("title", "description", "assignee_groups", "email_to_notify")
 
 
 class ProcessInstanceForm(BaseModelForm):
@@ -73,17 +73,25 @@ class ProcessActivityInstanceCompleteForm(EvidenceForm, BaseModelForm):
             self.add_next_activity_fields(next_activity)
 
     def add_next_activity_fields(self, next_activity: ProcessActivity):
-        users_qs = next_activity.assignee_group.user_set.all()
+        users_qs = User.objects.filter(
+            groups__in=next_activity.assignee_groups.all()
+        ).distinct()
         self.fields["next_activity_assignee"] = forms.ModelChoiceField(
             label=_("Next activity assignee"),
             queryset=users_qs,
             required=True,
             help_text=_(
-                "Next activity: {next_activity_description}, assignee group: "
-                "{next_activity_asginee_group}."
+                "Next activity:\n{next_activity_description}\n\nAssignee groups:\n"
+                "{next_activity_assignee_groups}."
             ).format(
                 next_activity_description=next_activity.description,
-                next_activity_asginee_group=next_activity.assignee_group,
+                next_activity_assignee_groups=(
+                    ", ".join(
+                        next_activity.assignee_groups.values_list("name", flat=True)
+                    )
+                    if next_activity.assignee_groups.count() > 1
+                    else next_activity.assignee_groups.first().name
+                ),
             ),
         )
         if users_qs.count() == 1:

@@ -5,7 +5,7 @@
     <tr>
       <th>{% trans "name"|capfirst %}</th>
       <th>{% trans "comment"|capfirst %}</th>
-      <th>{% trans "update at"|capfirst %}</th>
+      <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
       <th>{% trans "completed"|capfirst %}</th>
       <th>{% trans "completed at"|capfirst %}</th>
@@ -21,7 +21,7 @@
         {% with comment_label=process_instance.process_version.comment_label %}
           <td>
             {% if comment_label %}{{ comment_label }}:{% endif %}
-            {{ process_instance.comment|linebreaks|default:"-" }}
+            {{ process_instance.comment|default:"-"|linebreaks }}
           </td>
         {% endwith %}
         <td>{{ process_instance.created_at }}</td>

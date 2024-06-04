@@ -30,8 +30,14 @@
         </td>
       </tr>
       <tr>
-        <th>{{ processinstance.process_version.comment_label|capfirst }}</th>
-        <td>{{ processinstance.comment|linebreaks }}</td>
+        {% with comment_label=processinstance.process_version.comment_label %}
+          {% if comment_label %}
+            <th>{{ processinstance.process_version.comment_label|capfirst }}</th>
+          {% else %}
+            <th>{% trans "comment"|capfirst %}</th>
+          {% endif %}
+        {% endwith %}
+        <td>{{ processinstance.comment|default:"-"|linebreaks }}</td>
       </tr>
       <tr>
         <th>{% trans "created at"|capfirst %}</th>

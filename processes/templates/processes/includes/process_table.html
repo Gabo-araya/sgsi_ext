@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>{% trans "name"|capfirst %}</th>
+      <th>{% trans "last published version"|capfirst %}</th>
       <th>{% trans "last version"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
@@ -17,6 +18,15 @@
       <tr>
         <td>
           <a href="{{ process.get_absolute_url }}">{{ process }}</a>
+        </td>
+        <td>
+          {% with last_published_version=process.last_published_version %}
+            {% if last_published_version is not None %}
+              <a href="{{ last_published_version.get_absolute_url }}">{{ last_published_version }}</a>
+            {% else %}
+              -
+            {% endif %}
+          {% endwith %}
         </td>
         <td>
           {% with last_version=process.last_version %}

@@ -51,16 +51,8 @@
         <td>{{ processactivity.description|linebreaks }}</td>
       </tr>
       <tr>
-        <th>{% trans "assignee group"|capfirst %}</th>
-        {% with assignee_group=processactivity.assignee_group %}
-          <td>
-            {% if assignee_group is not None %}
-              <a href="{% url 'group_detail' assignee_group.pk %}">{{ assignee_group }}</a>
-            {% else %}
-              -
-            {% endif %}
-          </td>
-        {% endwith %}
+        <th>{% trans "assignee groups"|capfirst %}</th>
+        <td>{{ processactivity.assignee_groups.all|join:", " }}</td>
       </tr>
       <tr>
         <th>{% trans "email to notify"|capfirst %}</th>

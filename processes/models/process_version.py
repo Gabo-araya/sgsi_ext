@@ -94,9 +94,11 @@ class ProcessVersion(VersionModelBase, BaseModel):
         if not adding or previous_version is None:
             return
         for activity in previous_version.activities.all():
+            assignee_groups = tuple(activity.assignee_groups.all())
             activity.pk = None
             activity.process_version = self
             activity.save()
+            activity.assignee_groups.set(assignee_groups)
 
     def _get_increment_queryset(self) -> models.QuerySet[ProcessVersion]:
         return self.process.versions.all()

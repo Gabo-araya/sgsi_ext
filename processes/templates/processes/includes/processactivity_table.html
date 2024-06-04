@@ -3,9 +3,9 @@
 <table class="table table-striped table-hover table-sm">
   <thead>
     <tr>
-      <th>{% trans "name"|capfirst %}</th>
+      <th>{% trans "title"|capfirst %}</th>
       <th>{% trans "description"|capfirst %}</th>
-      <th>{% trans "assignee group"|capfirst %}</th>
+      <th>{% trans "assignee groups"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
       <th>{% trans "updated by"|capfirst %}</th>
       {% if processversion.can_be_updated %}
@@ -20,15 +20,7 @@
           <a href="{{ process_activity.get_absolute_url }}">{{ process_activity }}</a>
         </td>
         <td>{{ process_activity.description|linebreaks }}</td>
-        <td>
-          {% with assignee_group=process_activity.assignee_group %}
-            {% if assignee_group is not None %}
-              <a href="{{ assignee_group.get_absolute_url }}">{{ assignee_group }}</a>
-            {% else %}
-              -
-            {% endif %}
-          {% endwith %}
-        </td>
+        <td>{{ process_activity.assignee_groups.all|join:", " }}</td>
         <td>{{ process_activity.updated_at }}</td>
         <td>{{ process_activity.updated_by.get_label }}</td>
         {% if processversion.can_be_updated %}

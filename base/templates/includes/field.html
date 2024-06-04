@@ -31,7 +31,7 @@
           <div>
             <label>&nbsp;</label>
           </div>
-          <small class="form-text" id="{{ field.name }}_help">{{ field.help_text|safe }}</small>
+          <small class="form-text" id="{{ field.name }}_help">{{ field.help_text|safe|linebreaks }}</small>
         </div>
       </div>
     {% endif %}

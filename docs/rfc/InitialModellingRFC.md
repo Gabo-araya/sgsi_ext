@@ -202,10 +202,11 @@ package Processes {
     }
     class ProcessActivity {
         + id: int
+        + title: char
         + process_version: ProcessVersion
         + order: int
         + description: text
-        + assignee_group: Group
+        + assignee_groups: Group[]
         + email_to_notify: email
     }
     class ProcessActivityInstance {

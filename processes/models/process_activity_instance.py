@@ -4,12 +4,9 @@ from typing import TYPE_CHECKING
 
 from django.conf import settings
 from django.db import models
-from django.db import transaction
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-from inflection import ordinal
 
 from base.models.base_model import BaseModel
 from base.utils import build_absolute_url_wo_req
@@ -67,18 +64,7 @@ class ProcessActivityInstance(BaseModel):
         verbose_name_plural = _("process activity instances")
 
     def __str__(self) -> str:
-        return (
-            f"{self.activity.order}{ordinal(self.activity.order)} Activity Instance of "
-            f"{self.process_instance}"
-        )
-
-    def save(self, *args, **kwargs):
-        adding = self._state.adding
-        super().save(*args, **kwargs)
-        if adding:
-            transaction.on_commit(
-                lambda: send_activity_instance_notification.delay(self.pk)
-            )
+        return str(self.activity)
 
     def send_email_notification(self) -> None:
         context = {
@@ -92,7 +78,7 @@ class ProcessActivityInstance(BaseModel):
         send_emails(
             emails=(self.get_email_to_notify(),),
             template_name="processactivityinstance_notification",
-            subject=_("New activity instance created"),
+            subject=self.activity.title,
             context=context,
         )
 
@@ -121,7 +107,8 @@ class ProcessActivityInstance(BaseModel):
         next_activity = self.get_next_activity()
         if next_activity is None:
             return
-        next_activity.create_instance(
+        next_instance = next_activity.create_instance(
             process_instance=self.process_instance,
             assignee=form.cleaned_data["next_activity_assignee"],
         )
+        send_activity_instance_notification.delay(next_instance.pk)

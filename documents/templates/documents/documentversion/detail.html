@@ -53,7 +53,7 @@
       </tr>
       <tr>
         <th>{% trans "comment"|capfirst %}</th>
-        <td>{{ documentversion.comment|linebreaks|default:"-" }}</td>
+        <td>{{ documentversion.comment|default:"-"|linebreaks }}</td>
       </tr>
       <tr>
         <th>{% trans "file"|capfirst %}</th>
