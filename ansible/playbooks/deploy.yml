@@ -219,7 +219,7 @@
       tags: always
 
     - name: run updategroups
-      command: docker compose exec django dj updategroups --sync
+      command: docker compose exec django dj updategroups
       args:
         chdir: "{{ project_name }}"
       register: updategroups_results

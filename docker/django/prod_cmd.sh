@@ -22,7 +22,7 @@ fi
 
 if [ "${DISABLE_BOOT_UPDATEGROUPS:-0}" -eq 0 ]; then
   title_print "updategroups"
-  dj updategroups --sync
+  dj updategroups
 fi
 
 title_print "gunicorn"

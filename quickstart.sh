@@ -96,7 +96,7 @@ if [[ $input_lower == y ]]; then
   prompt "\n\nWould you like to run updategroups? [Y/n]" "Y"
   input_lower=${input,,}
   if [[ $input_lower == y ]]; then
-    echo "docker compose exec django dj updategroups --sync" | newgrp docker
+    echo "docker compose exec django dj updategroups" | newgrp docker
   fi
 fi
 

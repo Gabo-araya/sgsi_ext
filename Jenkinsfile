@@ -60,7 +60,7 @@ pipeline {
               sh(script: 'docker compose run --rm app-test poetry run ./manage.py makemigrations --check --dry-run', label: 'Check migrations')
               sh(script: 'docker compose run --rm app-test poetry run ./manage.py collectstatic --noinput', label: 'Collect static files')
               sh(script: 'docker compose run --rm app-test poetry run ./manage.py migrate', label: 'Apply migrations')
-              sh(script: 'docker compose run --rm app-test poetry run ./manage.py updategroups --sync', label: 'Update groups')
+              sh(script: 'docker compose run --rm app-test poetry run ./manage.py updategroups', label: 'Update groups')
               sh(script: 'docker compose run --rm app-test poetry run django-admin compilemessages', label: 'Check translations')
               sh(script: 'docker compose run --rm app-test npm run lint', label: 'Run node linters')
             }
