@@ -1,8 +1,33 @@
-{% load i18n %}
-{% blocktrans %}
-  The following activity instance has been created:
+Proceso:
+Título: {{ process_instance }} ({{ process_instance_url }})
 
-  Activity instance: {{ process_activity_instance }} ({{ process_activity_instance_url }})
-  Assignee: {{ assignee }}
-  Description: {{ description }}
-{% endblocktrans %}
+{% with process_version=process_instance.process_version %}
+  {% if process_version.comment_label %}
+    {{ process_version.comment_label }}:
+  {% else %}
+    Comentario:
+  {% endif %}
+{% endwith %}
+{{ process_instance.comment|default:"-" }}
+
+---
+
+Actividad anterior:
+Título de la actividad: {{ previous_activity_instance }}
+Detalle de la actividad:
+{{ previous_activity_instance.activity.description }}
+Persona asignada: {{ previous_activity_instance.assignee }}
+
+---
+
+Por favor, continúa con la siguiente actividad:
+Título: {{ activity_instance }} ({{ activity_instance_url }})
+Detalle:
+{{ activity_instance.activity.description }}
+Persona asignada: {{ activity_instance.assignee }}
+
+---
+
+Gracias,
+
+Equipo Compliance

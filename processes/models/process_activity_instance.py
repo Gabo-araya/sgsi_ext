@@ -68,17 +68,19 @@ class ProcessActivityInstance(BaseModel):
 
     def send_email_notification(self) -> None:
         context = {
-            "assignee": self.assignee,
-            "description": self.activity.description,
-            "process_activity_instance": self,
-            "process_activity_instance_url": build_absolute_url_wo_req(
-                self.get_absolute_url()
+            "process_instance": self.process_instance,
+            "process_instance_url": build_absolute_url_wo_req(
+                self.process_instance.get_absolute_url()
             ),
+            # NOTE: should always exists as we only send emails between activities
+            "previous_activity_instance": self.get_previous_activity_instance(),
+            "activity_instance": self,
+            "activity_instance_url": build_absolute_url_wo_req(self.get_absolute_url()),
         }
         send_emails(
             emails=(self.get_email_to_notify(),),
             template_name="processactivityinstance_notification",
-            subject=self.activity.title,
+            subject=str(self),
             context=context,
         )
 
@@ -91,6 +93,14 @@ class ProcessActivityInstance(BaseModel):
 
     def get_next_activity(self) -> ProcessActivity | None:
         return self.activity.get_next_activity()
+
+    def get_previous_activity_instance(self) -> ProcessActivityInstance | None:
+        qs = self.process_instance.activity_instances.filter(
+            activity__order__lt=self.activity.order
+        )
+        if qs.exists():
+            return qs.latest("activity__order")
+        return None
 
     def get_absolute_url(self) -> str:
         return reverse("processactivityinstance_detail", args=(self.pk,))

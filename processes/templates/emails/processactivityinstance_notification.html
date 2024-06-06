@@ -1,8 +1,52 @@
-{% load i18n %}
-{% blocktrans %}
-  The following activity instance has been created:
+<h2>Proceso:</h2>
+<p>
+  <strong>Título:</strong> <a href="{{ process_instance_url }}">{{ process_instance }}</a>
+</p>
+<p>
+  <strong>
+    {% with process_version=process_instance.process_version %}
+      {% if process_version.comment_label %}
+        {{ process_version.comment_label }}:
+      {% else %}
+        Comentario:
+      {% endif %}
+    {% endwith %}
+  </strong>
+  <br>
+  {{ process_instance.comment|default:"-"|linebreaksbr }}
+</p>
 
-  Activity instance: <a href="{{ process_activity_instance_url }}">{{ process_activity_instance }}</a>
-  Assignee: {{ assignee }}
-  Description: {{ description }}
-{% endblocktrans %}
+<hr>
+
+<h3>Actividad anterior:</h3>
+<p>
+  <strong>Título de la actividad:</strong> {{ previous_activity_instance }}
+</p>
+<p>
+  <strong>Detalle de la actividad:</strong>
+  <br>
+  {{ previous_activity_instance.activity.description|linebreaksbr }}
+</p>
+<p>
+  <strong>Persona asignada:</strong> {{ previous_activity_instance.assignee }}
+</p>
+
+<hr>
+
+<h3>Por favor, continúa con la siguiente actividad:</h3>
+<p>
+  <strong>Título:</strong> <a href="{{ activity_instance_url }}">{{ activity_instance }}</a>
+</p>
+<p>
+  <strong>Detalle:</strong>
+  <br>
+  {{ activity_instance.activity.description|linebreaksbr }}
+</p>
+<p>
+  <strong>Persona asignada:</strong> {{ activity_instance.assignee }}
+</p>
+
+<hr>
+
+<p>Gracias,</p>
+<p>Equipo Compliance</p>
