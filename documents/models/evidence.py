@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 
 from typing import TYPE_CHECKING
 
@@ -10,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.fields.base import BaseFileField
 from base.models.base_model import BaseModel
+from base.utils import build_absolute_url_wo_req
 
 if TYPE_CHECKING:
     from documents.forms import EvidenceForm
@@ -25,18 +27,28 @@ class Evidence(BaseModel):
         verbose_name=_("url"),
         blank=True,
     )
-    shasum = models.CharField(verbose_name=_("shasum"), max_length=64)
+    text = models.TextField(
+        verbose_name=_("text"),
+        blank=True,
+    )
+    shasum = models.CharField(
+        verbose_name=_("shasum"),
+        max_length=64,
+    )
 
     class Meta:
         verbose_name = _("evidence")
         verbose_name_plural = _("evidences")
         constraints = (
             models.CheckConstraint(
-                check=(models.Q(file__isnull=True) | models.Q(file=""))
-                ^ (models.Q(url__isnull=True) | models.Q(url="")),
-                name="file_xor_url",
+                check=(
+                    (~models.Q(file="") & models.Q(url="") & models.Q(text=""))
+                    | (models.Q(file="") & ~models.Q(url="") & models.Q(text=""))
+                    | (models.Q(file="") & models.Q(url="") & ~models.Q(text=""))
+                ),
+                name="file_url_or_text",
                 violation_error_message=_(
-                    "An evidence must have a file or a url, but not both."
+                    "An evidence must have either a file, a url or text."
                 ),
             ),
         )
@@ -69,8 +81,34 @@ class Evidence(BaseModel):
     def get_absolute_url(self) -> str:
         return reverse("evidence_detail", args=(self.pk,))
 
+    def get_html_content(self) -> str:
+        if self.file:
+            url = (
+                build_absolute_url_wo_req(self.file.url)
+                if self.file.url.startswith("/")
+                else self.file.url
+            )
+            return f'<a href="{url}">{os.path.basename(self.file.name)}</a>'
+        if self.url:
+            return f'<a href="{self.url}">{self.url}</a>'
+        return self.text
+
+    def get_text_content(self) -> str:
+        if self.file:
+            url = (
+                build_absolute_url_wo_req(self.file.url)
+                if self.file.url.startswith("/")
+                else self.file.url
+            )
+            return f"{os.path.basename(self.file.name)} ({url})"
+        if self.url:
+            return self.url
+        return self.text
+
     @classmethod
     def create_from_form(cls, form: type[EvidenceForm]) -> Evidence:
         if file := form.cleaned_data["evidence_file"]:
             return cls.objects.create(file=file)
-        return cls.objects.create(url=form.cleaned_data["evidence_url"])
+        if url := form.cleaned_data["evidence_url"]:
+            return cls.objects.create(url=url)
+        return cls.objects.create(text=form.cleaned_data["text"])

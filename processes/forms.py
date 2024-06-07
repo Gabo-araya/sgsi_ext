@@ -69,7 +69,10 @@ class ProcessActivityInstanceCompleteForm(EvidenceForm, BaseModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         next_activity = self.instance.get_next_activity()
-        if next_activity is not None:
+        self._last_activity = next_activity is None
+        if self._last_activity:
+            self.add_last_activity_fields()
+        else:
             self.add_next_activity_fields(next_activity)
 
     def add_next_activity_fields(self, next_activity: ProcessActivity):
@@ -80,19 +83,12 @@ class ProcessActivityInstanceCompleteForm(EvidenceForm, BaseModelForm):
             label=_("Next activity assignee"),
             queryset=users_qs,
             required=True,
-            help_text=_(
-                "Next activity:\n{next_activity_description}\n\nAssignee groups:\n"
-                "{next_activity_assignee_groups}."
-            ).format(
-                next_activity_description=next_activity.description,
-                next_activity_assignee_groups=(
-                    ", ".join(
-                        next_activity.assignee_groups.values_list("name", flat=True)
-                    )
-                    if next_activity.assignee_groups.count() > 1
-                    else next_activity.assignee_groups.first().name
-                ),
-            ),
         )
         if users_qs.count() == 1:
             self.fields["next_activity_assignee"].initial = users_qs.first()
+
+    def add_last_activity_fields(self):
+        self.fields["email_to_notify"] = forms.EmailField(
+            label=_("Email to notify"),
+            required=False,
+        )

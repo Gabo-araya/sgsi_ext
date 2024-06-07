@@ -107,18 +107,29 @@ class ProcessActivityInstance(BaseModel):
 
     def mark_as_completed(self, form: ProcessActivityInstanceCompleteForm) -> None:
         evidence = Evidence.create_from_form(form)
-        self.create_next_activity_instance_if_exists(form)
+        next_activity_instance = self.create_next_activity_instance_if_exists(form)
+        self.notify_if_required(form, next_activity_instance)
         self.update(evidence=evidence, is_completed=True, completed_at=timezone.now())
         self.process_instance.check_if_completed()
 
     def create_next_activity_instance_if_exists(
         self, form: ProcessActivityInstanceCompleteForm
-    ) -> None:
+    ) -> ProcessActivityInstance | None:
         next_activity = self.get_next_activity()
         if next_activity is None:
-            return
-        next_instance = next_activity.create_instance(
+            return None
+        return next_activity.create_instance(
             process_instance=self.process_instance,
             assignee=form.cleaned_data["next_activity_assignee"],
         )
-        send_activity_instance_notification.delay(next_instance.pk)
+
+    def notify_if_required(
+        self,
+        form: ProcessActivityInstanceCompleteForm,
+        next_activity_instance: ProcessActivityInstance,
+    ) -> None:
+        if next_activity_instance is not None:
+            send_activity_instance_notification.delay(next_activity_instance.pk)
+        elif form.cleaned_data["email_to_notify"]:
+            # TODO: handle this case
+            return

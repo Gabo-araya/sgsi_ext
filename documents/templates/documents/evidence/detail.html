@@ -32,28 +32,10 @@
           </tr>
         {% endif %}
       {% endwith %}
-      {% with file=evidence.file %}
-        {% if file %}
-          <tr>
-            <th>{% trans "file"|capfirst %}</th>
-            <td>
-              <a href="{{ file.url }}">{{ file|filename }}
-              </td>
-            </a>
-          </tr>
-        {% endif %}
-      {% endwith %}
-      {% with url=evidence.url %}
-        {% if url %}
-          <tr>
-            <th>{% trans "url"|capfirst %}</th>
-            <td>
-              <a href="{{ url }}">{{ url }}
-              </td>
-            </a>
-          </tr>
-        {% endif %}
-      {% endwith %}
+      <tr>
+        <th>{% trans "evidence"|capfirst %}</th>
+        <td>{{ evidence.get_html_content|safe }}</td>
+      </tr>
       <tr>
         <th>{% trans "shasum"|capfirst %}</th>
         <td>{{ evidence.shasum }}</td>

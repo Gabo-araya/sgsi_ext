@@ -30,6 +30,9 @@
 <p>
   <strong>Persona asignada:</strong> {{ previous_activity_instance.assignee }}
 </p>
+<p>
+  <strong>Evidencia:</strong> {{ previous_activity_instance.evidence.get_html_content|safe }}
+</p>
 
 <hr>
 

@@ -14,10 +14,27 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
-  <div class="py-3">
-    <p class="fs-5">
-      <strong>Description:</strong> {{ processactivityinstance.activity.description|linebreaks }}
+  <div>
+    <p>
+      <strong>{% trans "description"|capfirst %}:</strong>
+      <br>
+      {{ processactivityinstance.activity.description|linebreaksbr }}
     </p>
+    <hr>
+    {{ block.super }}
+    {% with next_activity=processactivityinstance.get_next_activity %}
+      {% if next_activity %}
+        <hr>
+        <h3>{% trans "next activity"|capfirst %}:</h3>
+        <p>
+          <strong>{% trans "title"|capfirst %}:</strong> {{ next_activity }}
+        </p>
+        <p>
+          <strong>{% trans "description"|capfirst %}:</strong>
+          <br>
+          {{ next_activity.description|linebreaksbr }}
+        </p>
+      {% endif %}
+    {% endwith %}
   </div>
-  {{ block.super }}
 {% endblock content %}

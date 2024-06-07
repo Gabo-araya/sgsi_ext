@@ -24,6 +24,9 @@ class ProcessActivityInstanceCompleteView(BaseUpdateView):
     template_name = "processes/processactivityinstance/update.html"
     permission_required = "processes.change_processactivityinstance"
 
+    def get_title(self):
+        return str(self.object)
+
     def get_queryset(self) -> QuerySet[Any]:
         return super().get_queryset().not_completed().filter(assignee=self.request.user)
 

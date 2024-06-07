@@ -17,6 +17,7 @@ Título de la actividad: {{ previous_activity_instance }}
 Detalle de la actividad:
 {{ previous_activity_instance.activity.description }}
 Persona asignada: {{ previous_activity_instance.assignee }}
+Evidencia: {{ previous_activity_instance.evidence.get_text_content }}
 
 ---
 

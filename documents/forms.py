@@ -46,21 +46,32 @@ class EvidenceForm(BaseForm):
         required=False,
         help_text=_("URL to the evidence of the activity completion."),
     )
+    text = forms.CharField(
+        label=_("Text"),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 3}),
+        help_text=_("Text as evidence of the activity completion."),
+    )
 
     class Meta:
         fields = ("evidence_file", "evidence_url")
 
     def clean(self) -> dict[str, Any]:
         cleaned_data = super().clean()
-        self.evidence_file_xor_url(cleaned_data)
+        self.check_only_one_evidence(cleaned_data)
         return cleaned_data
 
-    def evidence_file_xor_url(self, cleaned_data: dict[str, Any]):
+    def check_only_one_evidence(self, cleaned_data: dict[str, Any]) -> None:
         evidence_file = cleaned_data.get("evidence_file")
         evidence_url = cleaned_data.get("evidence_url")
-        if bool(evidence_file) ^ bool(evidence_url):
+        text = cleaned_data.get("text")
+        if evidence_url and not evidence_file and not text:
             return
-        msg = _("You must provide either a file or a URL as evidence.")
+        if not evidence_url and evidence_file and not text:
+            return
+        if not evidence_url and not evidence_file and text:
+            return
+        msg = _("You must provide either a file, a URL or text as evidence.")
         self.add_error(None, msg)
 
 
