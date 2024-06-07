@@ -4,6 +4,7 @@ from information_assets.enums import ClassificationChoices
 from information_assets.enums import CriticalityChoices
 from information_assets.models.asset import Asset
 from information_assets.models.asset_role import AssetRole
+from information_assets.models.asset_role_user import AssetRoleUser
 from information_assets.models.asset_type import AssetType
 
 
@@ -32,3 +33,9 @@ def asset(regular_user, asset_type):
 @pytest.mark.django_db
 def asset_role(asset):
     return AssetRole.objects.create(asset=asset, name="test asset role")
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def asset_role_user(asset_role, regular_user):
+    return AssetRoleUser.objects.create(role=asset_role, user=regular_user)

@@ -42,4 +42,30 @@
       </tr>
     </tbody>
   </table>
+  {% if perms.users.view_user %}
+    <br>
+    <h2>{% trans "users"|capfirst %}</h2>
+    {% if assetrole.users.exists %}
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>{% trans "name"|capfirst %}</th>
+            <th>{% trans "email"|capfirst %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in assetrole.users.all %}
+            <tr>
+              <td>
+                <a href="{% url 'user_detail' user.pk %}">{{ user.get_full_name }}</a>
+              </td>
+              <td>{{ user.email }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>{% trans "no data to show"|capfirst %}</p>
+    {% endif %}
+  {% endif %}
 {% endblock content %}
