@@ -5,7 +5,7 @@ all:
       server_domain: sgsi-stg.do.magnet.cl
       host_ssh_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHFfWzouk/Wt3ZHO/BpeK81C52quR9d7KqHY6lhp6lUm
       site_name: "SGSI Staging"
-      branch: release/0005
+      branch: release/0006
       docker_mountpoint: /
 
     production:

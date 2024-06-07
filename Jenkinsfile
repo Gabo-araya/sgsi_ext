@@ -3,7 +3,7 @@ import groovy.transform.Field
 // Deployment definitions
 @Field
 def branchesConfig = [
-  'release/0005': [
+  'release/0006': [
     inventory_name: 'staging',
     credentials_id: '910dbf9b-3658-41a2-83df-fa5fd5f7da4c'
   ],
@@ -117,7 +117,7 @@ pipeline {
       }
     }
     stage('Deploy') {
-      when { anyOf { branch 'release/0005'; branch 'main' } }
+      when { anyOf { branch 'release/0006'; branch 'main' } }
       agent {
         docker {
           image 'python:3.10-bullseye'
