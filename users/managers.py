@@ -2,6 +2,22 @@
 
 
 from django.contrib.auth.models import BaseUserManager
+from django.db.models import Q
+
+from base.managers import BaseQuerySet
+
+
+class UserQuerySet(BaseQuerySet):
+    def search(self, query):
+        # Possible improvement: use a search vector field
+        return self.filter(
+            Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(email__icontains=query)
+        )
+
+    def active(self):
+        return self.filter(is_active=True)
 
 
 class UserManager(BaseUserManager):
@@ -54,6 +70,3 @@ class UserManager(BaseUserManager):
             raise ValueError(msg)
 
         return self._create_user(email, first_name, last_name, password, **extra_fields)
-
-    def get_or_none(self, **fields):
-        return self.get_queryset().get_or_none(**fields)

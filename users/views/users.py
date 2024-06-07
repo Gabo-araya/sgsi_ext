@@ -186,12 +186,9 @@ class UserListView(BaseListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-
         # search users
-        q = self.request.GET.get("q")
-        if q:
+        if q := self.request.GET.get("q"):
             queryset = queryset.search(q)
-
         return queryset.prefetch_related("groups")
 
 

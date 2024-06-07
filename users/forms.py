@@ -395,7 +395,7 @@ class UserChangeForm(forms.ModelForm):
 
 class GroupForm(BaseModelForm):
     users = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
+        queryset=User.objects.active(),
         required=False,
     )
 

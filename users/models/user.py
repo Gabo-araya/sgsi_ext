@@ -29,6 +29,7 @@ from parameters.models import Parameter
 
 # managers
 from users.managers import UserManager
+from users.managers import UserQuerySet
 from users.models.group import Group
 
 # mark for translation the app name
@@ -83,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         help_text=_("The date this user was created in the database"),
     )
     # Use UserManager to get the create_user method, etc.
-    objects = UserManager()
+    objects = UserManager.from_queryset(UserQuerySet)()
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
