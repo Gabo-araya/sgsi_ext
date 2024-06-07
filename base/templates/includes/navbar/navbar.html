@@ -65,7 +65,7 @@
                   </ul>
                 </li>
               {% endif %}
-              {% if perms.information_assets.view_assettype or perms.information_assets.view_asset %}
+              {% if perms.information_assets.view_assettype or perms.information_assets.view_asset or perms.information_assets.view_assetrole %}
                 <li class="nav-item dropdown">
                   <a id="dropdownAssets"
                      class="nav-link dropdown-toggle"
@@ -79,6 +79,9 @@
                     {% endif %}
                     {% if perms.information_assets.view_asset %}
                       {% include dropdown_link_template with text="assets" url_name="asset_list" %}
+                    {% endif %}
+                    {% if perms.information_assets.view_assetrole %}
+                      {% include dropdown_link_template with text="asset roles" url_name="assetrole_list" %}
                     {% endif %}
                   </ul>
                 </li>

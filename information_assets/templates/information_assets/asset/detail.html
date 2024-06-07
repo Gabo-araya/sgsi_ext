@@ -3,6 +3,13 @@
 {% load i18n %}
 
 {% block options %}
+  {% if perms.information_assets.add_assetrole %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'assetrole_create' %}?asset_pk={{ asset.pk }}">
+      {% trans "Add asset role" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
   {% if perms.information_assets.archive_asset %}
     {% include "information_assets/includes/archive_modal_button.html" %}
   {% endif %}
@@ -76,9 +83,24 @@
       </tr>
     </tbody>
   </table>
-  <br>
-  <h2>{% trans "related risks"|capfirst %}</h2>
-  {% include "risks/includes/risk_table.html" with object_list=asset.risks.all %}
+  {% if perms.information_assets.view_assetrole %}
+    <br>
+    <h2>{% trans "roles"|capfirst %}</h2>
+    {% if asset.roles.exists %}
+      {% include "information_assets/includes/assetrole_table.html" with object_list=asset.roles.all %}
+    {% else %}
+      <p>{% trans "no data to show"|capfirst %}</p>
+    {% endif %}
+  {% endif %}
+  {% if perms.risks.view_risk %}
+    <br>
+    <h2>{% trans "related risks"|capfirst %}</h2>
+    {% if assets.risks.exists %}
+      {% include "risks/includes/risk_table.html" with object_list=asset.risks.all %}
+    {% else %}
+      <p>{% trans "no data to show"|capfirst %}</p>
+    {% endif %}
+  {% endif %}
 
   {% include "information_assets/includes/archive_modal.html" %}
 {% endblock content %}

@@ -1,5 +1,6 @@
 from base.forms import BaseModelForm
 from information_assets.models.asset import Asset
+from information_assets.models.asset_role import AssetRole
 from information_assets.models.asset_type import AssetType
 
 
@@ -28,3 +29,18 @@ class AssetTypeForm(BaseModelForm):
             "name",
             "description",
         )
+
+
+class AssetRoleForm(BaseModelForm):
+    class Meta:
+        model = AssetRole
+        fields = (
+            "asset",
+            "name",
+        )
+
+
+class AssetRoleChangeForm(BaseModelForm):
+    class Meta:
+        model = AssetRole
+        fields = ("name",)

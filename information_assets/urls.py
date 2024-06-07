@@ -2,6 +2,7 @@ from django.urls import include
 from django.urls import path
 
 from information_assets.views import asset as asset_views
+from information_assets.views import asset_role as assetrole_views
 from information_assets.views import asset_type as assettype_views
 
 assert_urlpatterns = [
@@ -33,7 +34,11 @@ assert_urlpatterns = [
 ]
 
 assettype_urlpatterns = [
-    path("", assettype_views.AssetTypeListView.as_view(), name="assettype_list"),
+    path(
+        "",
+        assettype_views.AssetTypeListView.as_view(),
+        name="assettype_list",
+    ),
     path(
         "create/",
         assettype_views.AssetTypeCreateView.as_view(),
@@ -56,7 +61,36 @@ assettype_urlpatterns = [
     ),
 ]
 
+assetrole_urlpatterns = [
+    path(
+        "",
+        assetrole_views.RoleListView.as_view(),
+        name="assetrole_list",
+    ),
+    path(
+        "create/",
+        assetrole_views.RoleCreateView.as_view(),
+        name="assetrole_create",
+    ),
+    path(
+        "<int:pk>/",
+        assetrole_views.RoleDetailView.as_view(),
+        name="assetrole_detail",
+    ),
+    path(
+        "<int:pk>/update/",
+        assetrole_views.RoleUpdateView.as_view(),
+        name="assetrole_update",
+    ),
+    path(
+        "<int:pk>/delete/",
+        assetrole_views.RoleDeleteView.as_view(),
+        name="assetrole_delete",
+    ),
+]
+
 urlpatterns = [
     path("assets/", include(assert_urlpatterns)),
+    path("assets-roles/", include(assetrole_urlpatterns)),
     path("asset-types/", include(assettype_urlpatterns)),
 ]

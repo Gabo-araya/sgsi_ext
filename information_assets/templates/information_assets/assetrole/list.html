@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block options %}
+  {% if perms.information_assets.add_assetrole %}
+    <a class="btn btn-sm btn-outline-secondary"
+       href="{% url 'assetrole_create' %}">
+      {% trans "Add asset role" %}
+      <i class="fa fa-plus"></i>
+    </a>
+  {% endif %}
+{% endblock options %}
+
+{% block content %}
+  {% include "information_assets/includes/assetrole_table.html" %}
+  {% include "includes/pagination.html" %}
+{% endblock content %}
