@@ -9,7 +9,7 @@
       <th>{% trans "updated by"|capfirst %}</th>
       <th>{% trans "completed"|capfirst %}</th>
       <th>{% trans "completed at"|capfirst %}</th>
-      {% if perms.processes.delete_processinstance and not process_instance.is_completed %}<th></th>{% endif %}
+      {% if perms.processes.delete_processinstance %}<th></th>{% endif %}
     </tr>
   </thead>
   <tbody>
@@ -28,9 +28,9 @@
         <td>{{ process_instance.created_by.get_label }}</td>
         <td>{{ process_instance.is_completed|yesno|capfirst }}</td>
         <td>{{ process_instance.completed_at|default_if_none:"-" }}</td>
-        {% if perms.processes.delete_processinstance and not process_instance.is_completed %}
+        {% if perms.processes.delete_processinstance %}
           <td class="text-end">
-            {% if perms.processes.delete_processinstance %}
+            {% if perms.processes.delete_processinstance and not process_instance.is_completed %}
               <a class="btn btn-sm btn-danger"
                  href="{% url 'processinstance_delete' process_instance.id %}">
                 {% trans "Delete process instance" %}
