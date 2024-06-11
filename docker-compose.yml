@@ -1,5 +1,3 @@
-version: '3.8'
-
 x-base: &base-app
   env_file: .env
   restart: unless-stopped
