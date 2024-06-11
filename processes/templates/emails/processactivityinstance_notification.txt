@@ -13,11 +13,13 @@ Título: {{ process_instance }} ({{ process_instance_url }})
 ---
 
 Actividad anterior:
-Título de la actividad: {{ previous_activity_instance }}
-Detalle de la actividad:
+Título: {{ previous_activity_instance }}
+Detalle:
 {{ previous_activity_instance.activity.description }}
+Entregables:
+{{ previous_activity_instance.activity.deliverables|default:"-" }}
 Persona asignada: {{ previous_activity_instance.assignee }}
-Evidencia: {{ previous_activity_instance.evidence.get_text_content }}
+Evidencia: {{ previous_activity_instance.evidence.get_html_content }}
 
 ---
 
@@ -25,6 +27,8 @@ Por favor, continúa con la siguiente actividad:
 Título: {{ activity_instance }} ({{ activity_instance_url }})
 Detalle:
 {{ activity_instance.activity.description }}
+Entregables:
+{{ activity_instance.activity.deliverables|default:"-" }}
 Persona asignada: {{ activity_instance.assignee }}
 
 ---

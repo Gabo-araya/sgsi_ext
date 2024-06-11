@@ -20,12 +20,17 @@
 
 <h3>Actividad anterior:</h3>
 <p>
-  <strong>Título de la actividad:</strong> {{ previous_activity_instance }}
+  <strong>Título:</strong> {{ previous_activity_instance }}
 </p>
 <p>
-  <strong>Detalle de la actividad:</strong>
+  <strong>Detalle:</strong>
   <br>
   {{ previous_activity_instance.activity.description|linebreaksbr }}
+</p>
+<p>
+  <strong>Entregables:</strong>
+  <br>
+  {{ previous_activity_instance.activity.deliverables|default:"-"|linebreaksbr }}
 </p>
 <p>
   <strong>Persona asignada:</strong> {{ previous_activity_instance.assignee }}
@@ -44,6 +49,11 @@
   <strong>Detalle:</strong>
   <br>
   {{ activity_instance.activity.description|linebreaksbr }}
+</p>
+<p>
+  <strong>Entregables:</strong>
+  <br>
+  {{ activity_instance.activity.deliverables|default:"-"|linebreaksbr }}
 </p>
 <p>
   <strong>Persona asignada:</strong> {{ activity_instance.assignee }}

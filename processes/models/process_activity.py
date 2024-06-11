@@ -34,6 +34,10 @@ class ProcessActivity(IncrementFieldModelBase, BaseModel):
         to=Group,
         related_name="activities",
     )
+    deliverables = models.TextField(
+        verbose_name=_("deliverables"),
+        blank=True,
+    )
     email_to_notify = models.EmailField(
         verbose_name=_("email to notify"),
         blank=True,

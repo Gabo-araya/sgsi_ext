@@ -51,6 +51,10 @@
         <td>{{ processactivityinstance.activity.description|linebreaks }}</td>
       </tr>
       <tr>
+        <th>{% trans "deliverables"|capfirst %}</th>
+        <td>{{ processactivityinstance.activity.deliverables|default:"-"|linebreaks }}</td>
+      </tr>
+      <tr>
         <th>{% trans "completed"|capfirst %}</th>
         <td>{{ processactivityinstance.is_completed|yesno|capfirst }}</td>
       </tr>

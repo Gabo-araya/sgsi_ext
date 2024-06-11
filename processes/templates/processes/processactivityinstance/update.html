@@ -20,6 +20,11 @@
       <br>
       {{ processactivityinstance.activity.description|linebreaksbr }}
     </p>
+    <p>
+      <strong>{% trans "deliverables"|capfirst %}:</strong>
+      <br>
+      {{ processactivityinstance.activity.deliverables|default:"-"|linebreaksbr }}
+    </p>
     <hr>
     {{ block.super }}
     {% with next_activity=processactivityinstance.get_next_activity %}
@@ -33,6 +38,11 @@
           <strong>{% trans "description"|capfirst %}:</strong>
           <br>
           {{ next_activity.description|linebreaksbr }}
+        </p>
+        <p>
+          <strong>{% trans "deliverables"|capfirst %}:</strong>
+          <br>
+          {{ next_activity.activity.deliverables|default:"-"|linebreaksbr }}
         </p>
       {% endif %}
     {% endwith %}

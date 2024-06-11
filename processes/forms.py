@@ -31,7 +31,13 @@ class ProcessVersionForm(BaseModelForm):
 class ProcessActivityForm(BaseModelForm):
     class Meta:
         model = ProcessActivity
-        fields = ("title", "description", "assignee_groups", "email_to_notify")
+        fields = (
+            "title",
+            "description",
+            "deliverables",
+            "assignee_groups",
+            "email_to_notify",
+        )
 
 
 class ProcessInstanceForm(BaseModelForm):
