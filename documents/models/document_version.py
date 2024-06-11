@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import secrets
 import string
 
@@ -11,8 +12,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from base.fields.base import BaseFileField
 from base.models.base_model import BaseModel
-from base.models.file_integrity_mixin import FileIntegrityModelBase
 from base.models.version_mixin import VersionModelBase
 from documents.managers import DocumentVersionQuerySet
 from documents.models.document import Document
@@ -29,16 +30,35 @@ def generate_verification_code():
     return "".join(secrets.choice(alphabet) for _ in range(8))
 
 
-class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
+class DocumentVersion(VersionModelBase, BaseModel):
     document = models.ForeignKey(
         verbose_name=_("document"),
         to=Document,
         on_delete=models.PROTECT,
         related_name="versions",
     )
+    author = models.ForeignKey(
+        verbose_name=_("author"),
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="authored_document_versions",
+        null=True,
+    )
     comment = models.TextField(
         verbose_name=_("comment"),
         blank=True,
+    )
+    file = BaseFileField(
+        verbose_name=_("file"),
+        blank=True,
+    )
+    file_url = models.URLField(
+        verbose_name=_("file url"),
+        blank=True,
+    )
+    shasum = models.CharField(
+        verbose_name=_("shasum"),
+        max_length=64,
     )
     is_approved = models.BooleanField(
         verbose_name=_("is approved"),
@@ -89,6 +109,11 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
             models.UniqueConstraint(
                 fields=["document", "version"], name="unique_document_version"
             ),
+            models.CheckConstraint(
+                check=models.Q(file="") ^ models.Q(file_url=""),
+                name="file_xor_file_url",
+                violation_error_message=_("Either file or file url must be set"),
+            ),
         )
         permissions = (
             ("approve_documentversion", _("Can approve document version")),
@@ -101,6 +126,24 @@ class DocumentVersion(VersionModelBase, FileIntegrityModelBase, BaseModel):
     @property
     def can_be_updated(self) -> bool:
         return not self.is_approved
+
+    def save(self, *args, **kwargs) -> None:
+        self._set_shasum()
+        return super().save(*args, **kwargs)
+
+    def _set_shasum(self) -> str:
+        self.shasum = (
+            self.get_shasum_of_file() if self.file else self.get_shasum_of_file_url()
+        )
+
+    def get_shasum_of_file(self) -> str:
+        sha256 = hashlib.sha256()
+        for chunk in self.file.chunks():
+            sha256.update(chunk)
+        return sha256.hexdigest()
+
+    def get_shasum_of_file_url(self) -> str:
+        return hashlib.sha256(self.file_url.encode()).hexdigest()
 
     def __str__(self) -> str:
         return f"{self.document.title} - V{self.version}"

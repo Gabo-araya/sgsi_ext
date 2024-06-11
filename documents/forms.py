@@ -20,7 +20,24 @@ class DocumentForm(BaseModelForm):
 class DocumentVersionForm(BaseModelForm):
     class Meta:
         model = DocumentVersion
-        fields = ("file", "comment")
+        fields = ("author", "file", "file_url", "comment")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["author"].label_from_instance = lambda obj: obj.get_label()
+
+    def clean(self) -> dict[str, Any]:
+        cleaned_data = super().clean()
+        self.check_only_one_file(cleaned_data)
+        return cleaned_data
+
+    def check_only_one_file(self, cleaned_data: dict[str, Any]) -> None:
+        file = cleaned_data.get("file")
+        file_url = cleaned_data.get("file_url")
+        if bool(file) ^ bool(file_url):
+            return
+        msg = _("You must provide either a file or a URL.")
+        self.add_error(None, msg)
 
 
 class ControlForm(BaseModelForm):

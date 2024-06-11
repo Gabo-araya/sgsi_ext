@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th>{% trans "name"|capfirst %}</th>
-      <th>{% trans "document"|capfirst %}</th>
+      <th>{% trans "author"|capfirst %}</th>
       <th>{% trans "approved"|capfirst %}</th>
       <th>{% trans "is read"|capfirst %}</th>
       <th>{% trans "updated at"|capfirst %}</th>
@@ -21,7 +21,13 @@
           <a href="{{ documentversion.get_absolute_url }}">{{ documentversion }}</a>
         </td>
         <td>
-          <a href="{{ documentversion.document.get_absolute_url }}">{{ documentversion.document }}</a>
+          {% with author=documentversion.author %}
+            {% if perms.users.view_user %}
+              <a href="{% url 'user_detail' author.pk %}">{{ author.get_label }}</a>
+            {% else %}
+              {{ author.get_label }}
+            {% endif %}
+          {% endwith %}
         </td>
         <td>{{ documentversion.is_approved|yesno|capfirst }}</td>
         <td>{{ documentversion.is_read_by_user|yesno|capfirst }}</td>

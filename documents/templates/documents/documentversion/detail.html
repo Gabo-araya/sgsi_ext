@@ -48,6 +48,18 @@
         </td>
       </tr>
       <tr>
+        <th>{% trans "author"|capfirst %}</th>
+        {% with author=documentversion.author %}
+          <td>
+            {% if perms.users.view_user %}
+              <a href="{% url 'user_detail' author.pk %}">{{ author.get_label }}</a>
+            {% else %}
+              {{ author.get_label }}
+            {% endif %}
+          </td>
+        {% endwith %}
+      </tr>
+      <tr>
         <th>{% trans "version"|capfirst %}</th>
         <td>{{ documentversion.version }}</td>
       </tr>
@@ -58,7 +70,11 @@
       <tr>
         <th>{% trans "file"|capfirst %}</th>
         <td>
-          <a href="{{ documentversion.file.url }}">{{ documentversion.file|filename }}</a>
+          {% if documentversion.file %}
+            <a href="{{ documentversion.file.url }}">{{ documentversion.file|filename }}</a>
+          {% else %}
+            <a target="_blank" href="{{ documentversion.file_url }}">{{ documentversion.file_url }}</a>
+          {% endif %}
         </td>
       </tr>
       {% if perms.documents.view_documentversion_verification_code %}
