@@ -8,13 +8,21 @@ from base.forms import BaseModelForm
 from documents.models.control import Control
 from documents.models.control_category import ControlCategory
 from documents.models.document import Document
+from documents.models.document_type import DocumentType
 from documents.models.document_version import DocumentVersion
 
 
 class DocumentForm(BaseModelForm):
     class Meta:
         model = Document
-        fields = ("title", "code", "description", "drive_folder", "documented_controls")
+        fields = (
+            "title",
+            "code",
+            "document_type",
+            "description",
+            "drive_folder",
+            "documented_controls",
+        )
 
 
 class DocumentVersionForm(BaseModelForm):
@@ -96,3 +104,9 @@ class DocumentVersionApproveForm(EvidenceForm, BaseModelForm):
     class Meta:
         model = DocumentVersion
         fields = ("evidence_file", "evidence_url")
+
+
+class DocumentTypeForm(BaseModelForm):
+    class Meta:
+        model = DocumentType
+        fields = ("name",)

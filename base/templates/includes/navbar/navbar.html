@@ -44,7 +44,7 @@
                   </ul>
                 </li>
               {% endif %}
-              {% if perms.documents.view_controlcategory or perms.documents.view_control or perms.documents.view_document %}
+              {% if perms.documents.view_controlcategory or perms.documents.view_control or perms.documents.view_document or perms.documents.view_documenttype %}
                 <li class="nav-item dropdown">
                   <a id="dropdownDocuments"
                      class="nav-link dropdown-toggle"
@@ -58,6 +58,9 @@
                     {% endif %}
                     {% if perms.documents.view_control %}
                       {% include dropdown_link_template with text="controls" url_name="control_list" %}
+                    {% endif %}
+                    {% if perms.documents.view_documenttype %}
+                      {% include dropdown_link_template with text="document types" url_name="documenttype_list" %}
                     {% endif %}
                     {% if perms.documents.view_document %}
                       {% include dropdown_link_template with text="documents" url_name="document_list" %}

@@ -3,6 +3,7 @@ import pytest
 from documents.models.control import Control
 from documents.models.control_category import ControlCategory
 from documents.models.document import Document
+from documents.models.document_type import DocumentType
 from documents.models.document_version import DocumentVersion
 from documents.models.document_version_read_by_user import DocumentVersionReadByUser
 from documents.models.evidence import Evidence
@@ -53,3 +54,9 @@ def document():
 @pytest.mark.django_db
 def evidence(django_file):
     return Evidence.objects.create(file=django_file)
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def document_type():
+    return DocumentType.objects.create(name="test document type")

@@ -2,6 +2,7 @@ Employee:
   - documents.view_control
   - documents.view_controlcategory
   - documents.view_document
+  - documents.view_documenttype
   - documents.view_documentversion
   - documents.add_documentversionreadbyuser
   - documents.view_documentversionreadbyuser

@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models import BaseModel
 from base.models.versionable_mixin import VersionableMixin
 from documents.models.control import Control
+from documents.models.document_type import DocumentType
 
 if TYPE_CHECKING:
     from documents.models.document_version import DocumentVersion
@@ -21,6 +22,14 @@ class Document(VersionableMixin, BaseModel):
         verbose_name=_("title"),
         max_length=255,
         unique=True,
+    )
+    document_type = models.ForeignKey(
+        verbose_name=_("document type"),
+        to=DocumentType,
+        on_delete=models.PROTECT,
+        related_name="documents",
+        null=True,
+        blank=True,
     )
     description = models.TextField(
         verbose_name=_("description"),

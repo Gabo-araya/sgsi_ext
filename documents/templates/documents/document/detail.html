@@ -44,6 +44,18 @@
         <td>{{ document.code }}</td>
       </tr>
       <tr>
+        <th>{% trans "document type"|capfirst %}</th>
+        <td>
+          {% with document_type=document.document_type %}
+            {% if document_type %}
+              <a href="{{ document_type.get_absolute_url }}">{{ document_type }}</a>
+            {% else %}
+              -
+            {% endif %}
+          {% endwith %}
+        </td>
+      </tr>
+      <tr>
         <th>{% trans "description"|capfirst %}</th>
         <td>{{ document.description|linebreaks }}</td>
       </tr>

@@ -4,6 +4,7 @@ from django.urls import path
 from documents.views import control as control_views
 from documents.views import control_category as controlcategory_views
 from documents.views import document as document_views
+from documents.views import document_type as documenttype_views
 from documents.views import document_version as documentversion_views
 from documents.views import evidence as evidence_views
 
@@ -132,10 +133,39 @@ evidence_urlpatterns = [
     )
 ]
 
+documenttype_urlpatterns = [
+    path(
+        "",
+        documenttype_views.DocumentTypeListView.as_view(),
+        name="documenttype_list",
+    ),
+    path(
+        "create/",
+        documenttype_views.DocumentTypeCreateView.as_view(),
+        name="documenttype_create",
+    ),
+    path(
+        "<int:pk>/",
+        documenttype_views.DocumentTypeDetailView.as_view(),
+        name="documenttype_detail",
+    ),
+    path(
+        "<int:pk>/update/",
+        documenttype_views.DocumentTypeUpdateView.as_view(),
+        name="documenttype_update",
+    ),
+    path(
+        "<int:pk>/delete/",
+        documenttype_views.DocumentTypeDeleteView.as_view(),
+        name="documenttype_delete",
+    ),
+]
+
 
 urlpatterns = [
     path("documents/", include(document_urlpatterns)),
     path("documents/", include(documentversion_urlpatterns)),
+    path("document-types/", include(documenttype_urlpatterns)),
     path("controls/", include(control_urlpatterns)),
     path("control-categories/", include(controlcatergory_urlpatterns)),
     path("evidences/", include(evidence_urlpatterns)),
