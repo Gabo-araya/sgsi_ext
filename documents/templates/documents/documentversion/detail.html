@@ -51,10 +51,12 @@
         <th>{% trans "author"|capfirst %}</th>
         {% with author=documentversion.author %}
           <td>
-            {% if perms.users.view_user %}
+            {% if perms.users.view_user and author %}
               <a href="{% url 'user_detail' author.pk %}">{{ author.get_label }}</a>
-            {% else %}
+            {% elif author %}
               {{ author.get_label }}
+            {% else %}
+              -
             {% endif %}
           </td>
         {% endwith %}
