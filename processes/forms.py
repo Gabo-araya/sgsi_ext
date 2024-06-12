@@ -68,33 +68,48 @@ class ProcessInstanceForm(BaseModelForm):
 
 
 class ProcessActivityInstanceCompleteForm(EvidenceForm, BaseModelForm):
+    next_activity_assignee = forms.ModelChoiceField(
+        label=_("Next activity assignee"),
+        queryset=User.objects.all(),
+        required=False,
+    )
+    email_to_notify = forms.EmailField(
+        label=_("Email to notify"),
+        required=False,
+    )
+
     class Meta:
         model = ProcessActivityInstance
-        fields = ("evidence_file", "evidence_url")
+        fields = (
+            "evidence_file",
+            "evidence_url",
+            "text",
+            "next_activity_assignee",
+            "email_to_notify",
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         next_activity = self.instance.get_next_activity()
         self._last_activity = next_activity is None
         if self._last_activity:
-            self.add_last_activity_fields()
+            self.hide_next_activity_fields()
         else:
-            self.add_next_activity_fields(next_activity)
+            self.setup_next_activity_fields(next_activity)
+            self.hide_last_activity_fields()
 
-    def add_next_activity_fields(self, next_activity: ProcessActivity):
+    def setup_next_activity_fields(self, next_activity: ProcessActivity):
         users_qs = User.objects.filter(
             groups__in=next_activity.assignee_groups.all()
         ).distinct()
-        self.fields["next_activity_assignee"] = forms.ModelChoiceField(
-            label=_("Next activity assignee"),
-            queryset=users_qs,
-            required=True,
-        )
+        next_activity_assignee_field = self.fields["next_activity_assignee"]
+        next_activity_assignee_field.required = True
+        next_activity_assignee_field.queryset = users_qs
         if users_qs.count() == 1:
-            self.fields["next_activity_assignee"].initial = users_qs.first()
+            next_activity_assignee_field.initial = users_qs.first()
 
-    def add_last_activity_fields(self):
-        self.fields["email_to_notify"] = forms.EmailField(
-            label=_("Email to notify"),
-            required=False,
-        )
+    def hide_next_activity_fields(self):
+        self.hide_field("next_activity_assignee")
+
+    def hide_last_activity_fields(self):
+        self.hide_field("email_to_notify")

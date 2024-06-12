@@ -62,6 +62,7 @@ class ProcessActivityInstance(BaseModel):
     class Meta:
         verbose_name = _("process activity instance")
         verbose_name_plural = _("process activity instances")
+        ordering = ("-pk",)
 
     def __str__(self) -> str:
         return str(self.activity)

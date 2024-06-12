@@ -79,7 +79,7 @@ class EvidenceForm(BaseForm):
     )
 
     class Meta:
-        fields = ("evidence_file", "evidence_url")
+        fields = ("evidence_file", "evidence_url", "text")
 
     def clean(self) -> dict[str, Any]:
         cleaned_data = super().clean()

@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING
 
 from django.db import models
 from django.urls import reverse
+from django.utils.html import escape
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from base.fields.base import BaseFileField
@@ -88,10 +90,16 @@ class Evidence(BaseModel):
                 if self.file.url.startswith("/")
                 else self.file.url
             )
-            return f'<a href="{url}">{os.path.basename(self.file.name)}</a>'
+            return format_html(
+                '<a target="_blank" href="{}">{}</a>',
+                url,
+                os.path.basename(self.file.name),
+            )
         if self.url:
-            return f'<a href="{self.url}">{self.url}</a>'
-        return self.text
+            return format_html(
+                '<a target="_blank" href="{}">{}</a>', self.url, self.url
+            )
+        return escape(self.text)
 
     def get_text_content(self) -> str:
         if self.file:
