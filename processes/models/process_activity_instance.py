@@ -15,6 +15,7 @@ from messaging.email_manager import send_emails
 from processes.managers import ProcessActivityInstanceQuerySet
 from processes.models.process_activity import ProcessActivity
 from processes.models.process_instance import ProcessInstance
+from processes.tasks import send_activity_instance_completion_notification
 from processes.tasks import send_activity_instance_notification
 
 if TYPE_CHECKING:
@@ -73,7 +74,6 @@ class ProcessActivityInstance(BaseModel):
             "process_instance_url": build_absolute_url_wo_req(
                 self.process_instance.get_absolute_url()
             ),
-            # NOTE: should always exists as we only send emails between activities
             "previous_activity_instance": self.get_previous_activity_instance(),
             "activity_instance": self,
             "activity_instance_url": build_absolute_url_wo_req(self.get_absolute_url()),
@@ -90,6 +90,22 @@ class ProcessActivityInstance(BaseModel):
             self.activity.email_to_notify
             if self.activity.email_to_notify
             else self.assignee.email
+        )
+
+    def send_email_completion_notification(self, email_to_notify) -> None:
+        context = {
+            "process_instance": self.process_instance,
+            "process_instance_url": build_absolute_url_wo_req(
+                self.process_instance.get_absolute_url()
+            ),
+            "activity_instance": self,
+            "activity_instance_url": build_absolute_url_wo_req(self.get_absolute_url()),
+        }
+        send_emails(
+            emails=(email_to_notify,),
+            template_name="processactivityinstance_completion_notification",
+            subject=f"{self.process_instance.process_version.process.name} finalizado",
+            context=context,
         )
 
     def get_next_activity(self) -> ProcessActivity | None:
@@ -109,8 +125,8 @@ class ProcessActivityInstance(BaseModel):
     def mark_as_completed(self, form: ProcessActivityInstanceCompleteForm) -> None:
         evidence = Evidence.create_from_form(form)
         next_activity_instance = self.create_next_activity_instance_if_exists(form)
-        self.notify_if_required(form, next_activity_instance)
         self.update(evidence=evidence, is_completed=True, completed_at=timezone.now())
+        self.notify_if_required(form, next_activity_instance)
         self.process_instance.check_if_completed()
 
     def create_next_activity_instance_if_exists(
@@ -131,6 +147,7 @@ class ProcessActivityInstance(BaseModel):
     ) -> None:
         if next_activity_instance is not None:
             send_activity_instance_notification.delay(next_activity_instance.pk)
-        elif form.cleaned_data["email_to_notify"]:
-            # TODO: handle this case
-            return
+        elif email_to_notify := form.cleaned_data["email_to_notify"]:
+            send_activity_instance_completion_notification.delay(
+                self.pk, email_to_notify
+            )

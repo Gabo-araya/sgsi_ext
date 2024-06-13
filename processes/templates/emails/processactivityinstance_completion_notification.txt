@@ -1,6 +1,6 @@
 Estimado {{ activity_instance.assignee.get_full_name }},
 
-Proceso:
+Proceso Completado:
 Título: {{ process_instance }} ({{ process_instance_url }})
 
 {% with process_version=process_instance.process_version %}
@@ -14,26 +14,18 @@ Título: {{ process_instance }} ({{ process_instance_url }})
 
 ---
 
-Actividad anterior:
-Título: {{ previous_activity_instance }}
-Detalle:
-{{ previous_activity_instance.activity.description }}
-Entregables:
-{{ previous_activity_instance.activity.deliverables|default:"-" }}
-Persona asignada: {{ previous_activity_instance.assignee.get_label }}
-Evidencia: {{ previous_activity_instance.evidence.get_html_content }}
-
----
-
-Por favor, continúa con la siguiente actividad:
-Título: {{ activity_instance }} ({{ activity_instance_url }})
+Última Actividad Completada:
+Título: {{ activity_instance }}
 Detalle:
 {{ activity_instance.activity.description }}
 Entregables:
 {{ activity_instance.activity.deliverables|default:"-" }}
 Persona asignada: {{ activity_instance.assignee.get_label }}
+Evidencia: {{ activity_instance.evidence.get_html_content }}
 
 ---
+
+El proceso ha sido completado exitosamente. Gracias por tu colaboración.
 
 Gracias,
 

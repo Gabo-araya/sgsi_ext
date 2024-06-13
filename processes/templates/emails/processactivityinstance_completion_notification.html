@@ -1,6 +1,6 @@
 <p>Estimado {{ activity_instance.assignee.get_full_name }},</p>
 
-<h2>Proceso:</h2>
+<h2>Proceso Completado:</h2>
 <p>
   <strong>Título:</strong> <a href="{{ process_instance_url }}">{{ process_instance }}</a>
 </p>
@@ -20,32 +20,9 @@
 
 <hr>
 
-<h3>Actividad anterior:</h3>
+<h3>Última Actividad Completada:</h3>
 <p>
-  <strong>Título:</strong> {{ previous_activity_instance }}
-</p>
-<p>
-  <strong>Detalle:</strong>
-  <br>
-  {{ previous_activity_instance.activity.description|linebreaksbr }}
-</p>
-<p>
-  <strong>Entregables:</strong>
-  <br>
-  {{ previous_activity_instance.activity.deliverables|default:"-"|linebreaksbr }}
-</p>
-<p>
-  <strong>Persona asignada:</strong> {{ previous_activity_instance.assignee.get_label }}
-</p>
-<p>
-  <strong>Evidencia:</strong> {{ previous_activity_instance.evidence.get_html_content|safe }}
-</p>
-
-<hr>
-
-<h3>Por favor, continúa con la siguiente actividad:</h3>
-<p>
-  <strong>Título:</strong> <a href="{{ activity_instance_url }}">{{ activity_instance }}</a>
+  <strong>Título:</strong> {{ activity_instance }}
 </p>
 <p>
   <strong>Detalle:</strong>
@@ -60,8 +37,13 @@
 <p>
   <strong>Persona asignada:</strong> {{ activity_instance.assignee.get_label }}
 </p>
+<p>
+  <strong>Evidencia:</strong> {{ activity_instance.evidence.get_html_content|safe }}
+</p>
 
 <hr>
+
+<p>El proceso ha sido completado exitosamente. Gracias por tu colaboración.</p>
 
 <p>Gracias,</p>
 <p>Equipo Compliance</p>
