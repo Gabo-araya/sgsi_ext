@@ -25,6 +25,7 @@ class ProcessVersionForm(BaseModelForm):
             "controls",
             "comment_label",
             "recurrency",
+            "email_to_notify_completion",
         )
 
 
@@ -93,6 +94,7 @@ class ProcessActivityInstanceCompleteForm(EvidenceForm, BaseModelForm):
         next_activity = self.instance.get_next_activity()
         self._last_activity = next_activity is None
         if self._last_activity:
+            self.setup_last_activity_fields()
             self.hide_next_activity_fields()
         else:
             self.setup_next_activity_fields(next_activity)
@@ -107,6 +109,11 @@ class ProcessActivityInstanceCompleteForm(EvidenceForm, BaseModelForm):
         next_activity_assignee_field.queryset = users_qs
         if users_qs.count() == 1:
             next_activity_assignee_field.initial = users_qs.first()
+
+    def setup_last_activity_fields(self):
+        self.fields[
+            "email_to_notify"
+        ].initial = self.instance.activity.process_version.email_to_notify_completion
 
     def hide_next_activity_fields(self):
         self.hide_field("next_activity_assignee")

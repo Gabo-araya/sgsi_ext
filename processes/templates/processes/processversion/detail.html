@@ -66,6 +66,10 @@
         <td>{{ processversion.get_recurrency_display|default:"-" }}</td>
       </tr>
       <tr>
+        <th>{% trans "email to notifiy completion"|capfirst %}</th>
+        <td>{{ processversion.email_to_notify_completion|default:"-" }}</td>
+      </tr>
+      <tr>
         <th>{% trans "created at"|capfirst %}</th>
         <td>{{ processversion.created_at }}</td>
       </tr>

@@ -1,5 +1,3 @@
-Estimado {{ activity_instance.assignee.get_full_name }},
-
 Proceso Completado:
 Título: {{ process_instance }} ({{ process_instance_url }})
 

@@ -50,6 +50,10 @@ class ProcessVersion(VersionModelBase, BaseModel):
         choices=TimeFrameChoices.choices,
         blank=True,
     )
+    email_to_notify_completion = models.EmailField(
+        verbose_name=_("email to notify completion"),
+        blank=True,
+    )
     is_published = models.BooleanField(
         verbose_name=_("published"),
         default=False,

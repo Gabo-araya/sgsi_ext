@@ -28,6 +28,8 @@ class ProcessVersionCreateView(BaseSubModelCreateView):
         initial = {
             "defined_in": last_version.defined_in,
             "controls": last_version.controls.all(),
+            "comment_label": last_version.comment_label,
+            "email_to_notify_completion": last_version.email_to_notify_completion,
             "recurrency": last_version.recurrency,
         }
         initial.update(super().get_initial())
