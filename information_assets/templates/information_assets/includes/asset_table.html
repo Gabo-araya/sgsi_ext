@@ -6,7 +6,7 @@
       {% include "includes/list_th.html" with order_by="code" verbose_name="code" %}
       {% include "includes/list_th.html" with order_by="name" verbose_name="name" %}
       {% include "includes/list_th.html" with order_by="owner" verbose_name="owner" %}
-      {% include "includes/list_th.html" with order_by="asset_type" verbose_name="type" %}
+      {% include "includes/list_th.html" with order_by="asset_types" verbose_name="types" %}
       {% include "includes/list_th.html" with order_by="criticality" verbose_name="criticality" %}
       {% include "includes/list_th.html" with order_by="classification" verbose_name="classification" %}
       {% include "includes/list_th.html" with order_by="is_archived" verbose_name="archived" %}
@@ -25,9 +25,7 @@
           <a href="{{ asset.get_absolute_url }}">{{ asset.name }}</a>
         </td>
         <td>{{ asset.owner.get_label }}</td>
-        <td>
-          <a href="{{ asset.asset_type.get_absolute_url }}">{{ asset.asset_type }}</a>
-        </td>
+        <td>{{ asset.asset_types.all|join:", " }}</td>
         <td>{{ asset.get_criticality_display }}</td>
         <td>{{ asset.get_classification_display }}</td>
         <td>{{ asset.is_archived|yesno|capfirst }}</td>

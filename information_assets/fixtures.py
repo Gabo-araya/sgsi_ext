@@ -19,14 +19,15 @@ def asset_type():
 @pytest.fixture
 @pytest.mark.django_db
 def asset(regular_user, asset_type):
-    return Asset.objects.create(
+    asset = Asset.objects.create(
         owner=regular_user,
         name="test asset",
         description="test description",
-        asset_type=asset_type,
         criticality=CriticalityChoices.MEDIUM,
         classification=ClassificationChoices.INTERNAL,
     )
+    asset.asset_types.set((asset_type,))
+    return asset
 
 
 @pytest.fixture

@@ -52,10 +52,8 @@
         <td>{{ asset.description|default:"-"|linebreaks }}</td>
       </tr>
       <tr>
-        <th>{% trans "type"|capfirst %}</th>
-        <td>
-          {% with asset_type=asset.asset_type %}<a href="{{ asset_type.get_absolute_url }}">{{ asset_type }}</a>{% endwith %}
-        </td>
+        <th>{% trans "types"|capfirst %}</th>
+        <td>{{ asset.asset_types.all|join:", " }}</td>
       </tr>
       <tr>
         <th>{% trans "criticality"|capfirst %}</th>

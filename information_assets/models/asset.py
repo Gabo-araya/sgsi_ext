@@ -30,10 +30,9 @@ class Asset(BaseModel):
         verbose_name=_("description"),
         blank=True,
     )
-    asset_type = models.ForeignKey(
-        verbose_name=_("type"),
+    asset_types = models.ManyToManyField(
+        verbose_name=_("types"),
         to=AssetType,
-        on_delete=models.PROTECT,
         related_name="assets",
     )
     criticality = models.CharField(

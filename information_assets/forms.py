@@ -19,7 +19,7 @@ class AssetForm(BaseModelForm):
             "code",
             "owner",
             "description",
-            "asset_type",
+            "asset_types",
             "criticality",
             "classification",
         )

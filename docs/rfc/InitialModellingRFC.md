@@ -86,7 +86,7 @@ package Assets {
         + code: char
         + name: char
         + description: text
-        + asset_type: AssetType
+        + asset_types: AssetType[]
         + criticality: CriticalityChoices
         + classification: ClassificationChoices
         + is_archived: bool
