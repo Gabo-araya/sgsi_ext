@@ -20,6 +20,7 @@ class Risk(BaseModel):
         Control,
         verbose_name=_("control"),
         related_name="risks",
+        blank=True,
     )
     title = models.CharField(verbose_name=_("title"), max_length=255, unique=True)
     description = models.TextField(verbose_name=_("description"), blank=True)
