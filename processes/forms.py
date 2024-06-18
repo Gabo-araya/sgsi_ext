@@ -84,7 +84,7 @@ class ProcessActivityInstanceCompleteForm(EvidenceForm, BaseModelForm):
         fields = (
             "evidence_file",
             "evidence_url",
-            "text",
+            "evidence_text",
             "next_activity_assignee",
             "email_to_notify",
         )

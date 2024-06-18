@@ -119,4 +119,4 @@ class Evidence(BaseModel):
             return cls.objects.create(file=file)
         if url := form.cleaned_data["evidence_url"]:
             return cls.objects.create(url=url)
-        return cls.objects.create(text=form.cleaned_data["text"])
+        return cls.objects.create(text=form.cleaned_data["evidence_text"])

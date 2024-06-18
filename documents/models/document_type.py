@@ -12,7 +12,7 @@ class DocumentType(BaseModel):
     )
 
     class Meta:
-        verbose_name = _("docuemnt type")
+        verbose_name = _("document type")
         verbose_name_plural = _("document types")
 
     def __str__(self):

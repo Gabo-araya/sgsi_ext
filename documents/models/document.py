@@ -81,7 +81,7 @@ class Document(VersionableMixin, BaseModel):
     def defined_processes(self) -> models.QuerySet[Process]:
         from processes.models.process import Process
 
-        return Process.objects.filter(versions__defined_in=self)
+        return Process.objects.filter(versions__defined_in=self).distinct()
 
     def get_absolute_url(self) -> str:
         return reverse("document_detail", args=(self.code,))

@@ -71,15 +71,15 @@ class EvidenceForm(BaseForm):
         required=False,
         help_text=_("URL to the evidence of the activity completion."),
     )
-    text = forms.CharField(
-        label=_("Text"),
+    evidence_text = forms.CharField(
+        label=_("Evidence text"),
         required=False,
         widget=forms.Textarea(attrs={"rows": 3}),
         help_text=_("Text as evidence of the activity completion."),
     )
 
     class Meta:
-        fields = ("evidence_file", "evidence_url", "text")
+        fields = ("evidence_file", "evidence_url", "evidence_text")
 
     def clean(self) -> dict[str, Any]:
         cleaned_data = super().clean()
@@ -89,12 +89,12 @@ class EvidenceForm(BaseForm):
     def check_only_one_evidence(self, cleaned_data: dict[str, Any]) -> None:
         evidence_file = cleaned_data.get("evidence_file")
         evidence_url = cleaned_data.get("evidence_url")
-        text = cleaned_data.get("text")
-        if evidence_url and not evidence_file and not text:
+        evidence_text = cleaned_data.get("evidence_text")
+        if evidence_url and not evidence_file and not evidence_text:
             return
-        if not evidence_url and evidence_file and not text:
+        if not evidence_url and evidence_file and not evidence_text:
             return
-        if not evidence_url and not evidence_file and text:
+        if not evidence_url and not evidence_file and evidence_text:
             return
         msg = _("You must provide either a file, a URL or text as evidence.")
         self.add_error(None, msg)
@@ -103,7 +103,7 @@ class EvidenceForm(BaseForm):
 class DocumentVersionApproveForm(EvidenceForm, BaseModelForm):
     class Meta:
         model = DocumentVersion
-        fields = ("evidence_file", "evidence_url")
+        fields = ("evidence_file", "evidence_url", "evidence_text")
 
 
 class DocumentTypeForm(BaseModelForm):
