@@ -326,6 +326,10 @@ if AWS_STORAGE_BUCKET_NAME:
     # Note: this applies to static files only
     # (specifically to storages with `default_acl="public-read"` only)
 
+    AWS_S3_REGION_NAME = get_env_value(
+        "AWS_S3_REGION_NAME", None, default_if_blank=True
+    )
+
     DO_SPACES_REGION = os.environ.get("DO_SPACES_REGION", None)
     DO_SPACES_CDN_ENABLED = False
 
