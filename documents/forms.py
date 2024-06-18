@@ -103,7 +103,7 @@ class EvidenceForm(BaseForm):
 class DocumentVersionApproveForm(EvidenceForm, BaseModelForm):
     class Meta:
         model = DocumentVersion
-        fields = ("evidence_file", "evidence_url", "evidence_text")
+        fields = ("approved_by", "evidence_file", "evidence_url", "evidence_text")
 
 
 class DocumentTypeForm(BaseModelForm):

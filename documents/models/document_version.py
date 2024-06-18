@@ -152,13 +152,17 @@ class DocumentVersion(VersionModelBase, BaseModel):
         return self.document.versions.all()
 
     def mark_as_approved(self, user: User, form: DocumentVersionApproveForm) -> None:
-        update_dict = self.get_approve_update_dict(user)
+        update_dict = self.get_approve_update_dict(user, form)
         evidence = Evidence.create_from_form(form)
         self.update(approval_evidence=evidence, **update_dict)
 
-    def get_approve_update_dict(self, user: User) -> None:
+    def get_approve_update_dict(
+        self, user: User, form: DocumentVersionApproveForm
+    ) -> None:
         update_dict = {"is_approved": True, "approved_at": timezone.now()}
-        if user and not user.is_anonymous:
+        if approved_by := form.cleaned_data["approved_by"]:
+            update_dict["approved_by"] = approved_by
+        elif user and not user.is_anonymous:
             update_dict["approved_by"] = user
         return update_dict
 
