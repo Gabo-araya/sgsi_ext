@@ -1,3 +1,44 @@
+# Plataforma de Cumplimiento de Auditoría SGSI
+
+Este repositorio contiene el código desarrollado para mi proyecto de tesis titulado "Desarrollo de una Plataforma para la Auditoría de Cumplimiento del Sistema de Gestión de Seguridad de la Información (SGSI)", como parte de mi titulación en Ingeniería Civil en Computación en la Universidad de Chile. El propósito de esta plataforma es ayudar a las empresas, específicamente a [Magnet](https://magnet.cl), a gestionar y auditar sus Sistemas de Gestión de Seguridad de la Información (SGSI) para alinearse con los estándares de ISO 27001.
+
+## Documentación de la Tesis
+
+Para una explicación detallada del proyecto, puedes consultar el documento completo de la tesis [aquí](https://github.com/gabrielrojasc/informe-memoria/blob/main/main.pdf).
+
+## Descripción General del Proyecto
+
+En el panorama digital actual, las organizaciones enfrentan desafíos crecientes para mantener una seguridad de la información sólida. Esta plataforma fue desarrollada para cubrir las necesidades específicas de Magnet, una empresa que ofrece soluciones tecnológicas personalizadas, permitiéndoles gestionar la seguridad de la información de manera efectiva y autónoma. Los principales componentes de la plataforma incluyen:
+
+- **Gestión de Documentos**: Centraliza y versiona documentos esenciales, facilitando el cumplimiento con ISO 27001.
+- **Gestión de Activos**: Registra y organiza los activos críticos para la seguridad de la información.
+- **Gestión de Riesgos**: Evalúa y rastrea riesgos, proporcionando herramientas para mitigarlos de manera efectiva.
+- **Gestión de Procesos**: Define y realiza un seguimiento de los procesos, generando evidencia de cumplimiento según los requisitos de ISO.
+
+## Tecnologías Utilizadas
+
+- **Backend**: Django
+- **Base de Datos**: PostgreSQL
+- **Frontend**: HTML, CSS y TypeScript
+- **Despliegue**: Contenedores Docker
+- **Colas de Tareas**: Celery con Redis
+- **Servidor Web**: Nginx y Gunicorn
+
+## Objetivos del Proyecto
+
+1. **Gestión Eficiente de SGSI**: Proveer herramientas para gestionar documentos, activos y riesgos de manera efectiva.
+2. **Cumplimiento de ISO 27001**: Apoyar el objetivo de Magnet de obtener la certificación ISO 27001.
+3. **Escalabilidad y Adaptabilidad**: Utilizar tecnologías robustas para asegurar que la plataforma evolucione con las necesidades de seguridad cambiantes.
+4. **Sostenibilidad y Reducción de Costos**: Reducir la dependencia de software externo, asegurando la continuidad operativa.
+
+Esta plataforma representa una solución a medida para fortalecer la postura de seguridad, minimizando los costos de cumplimiento para empresas como Magnet y sirve como referencia para otras organizaciones que buscan mejorar su gestión de la seguridad de la información.
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT.
+
+---
+
 # Django Project Template™
 
 Django Project Template™ provides a common starting point for Django projects, it provides known and tested approaches for the most common features found on Magnet projects.
@@ -12,11 +53,11 @@ your computer.
 
 Add the magnet-dpt bitbucket repo as a remote repository:
 
-* `git remote add template git@bitbucket.org:magnet-cl/magnet-dpt.git`
+- `git remote add template git@bitbucket.org:magnet-cl/magnet-dpt.git`
 
 Pull the code from the project template:
 
-* `git pull template main`
+- `git pull template main`
 
 Search and replace all occurrences of `project-name-placeholder` to your desired project name
 
@@ -24,7 +65,7 @@ Configure `git_repo` in `ansible/group_vars/all.yaml`
 
 Push to your own repo:
 
-* `git push origin master`
+- `git push origin master`
 
 Now you have your own django project in your repository.
 
@@ -34,12 +75,12 @@ Remove the `LICENSE` if your new project does not have an MIT license.
 
 The `quickstart.sh` script includes the following actions:
 
-* Create a local .env file if not present.
-* Install docker and compose plugin.
-* Build and start the containers.
-* Prompt to run django migrations.
-* Prompt to create a superuser.
-* Apply settings to use vscode devcontainers.
+- Create a local .env file if not present.
+- Install docker and compose plugin.
+- Build and start the containers.
+- Prompt to run django migrations.
+- Prompt to create a superuser.
+- Apply settings to use vscode devcontainers.
 
 ### Running the project
 
@@ -61,6 +102,7 @@ devcontainer open
 ```
 
 to open the project.
+
 </details>
 
 Then in a VSCode terminal, run:
@@ -131,35 +173,37 @@ This takes time, you can press the `(show log)` button to view the progress.
 
 This template is based on Django 4.2.x, which is supported up to mid-2026. Some introduced features are:
 
-* psycopg 3 support
-* Comments on columns and tables
-* Constraint validation
-* Migrations are automatically formatted using Black if present
-* In-memory file storage, useful for tests
-* Custom file storages
-* Native Redis caching
-* Template-based form rendering
-* Updated admin site with system font stack and dark/light theme support
-* Hardened password hashing
-* Support for prefetching sliced QuerySets
-* Asynchronous support for ORM and view handlers.
+- psycopg 3 support
+- Comments on columns and tables
+- Constraint validation
+- Migrations are automatically formatted using Black if present
+- In-memory file storage, useful for tests
+- Custom file storages
+- Native Redis caching
+- Template-based form rendering
+- Updated admin site with system font stack and dark/light theme support
+- Hardened password hashing
+- Support for prefetching sliced QuerySets
+- Asynchronous support for ORM and view handlers.
 
 Some deprecations are, but not limit to:
-* `pytz` in favor of standard `zoneinfo`
-* Database support for:
-  * MariaDB <= 10.3
-  * MySQL <= 5.7
-  * PostgreSQL <= 11
-* Support for `MemcachedCache` backend
-* `index_together` option in favor of `indexes`
-* Passing encoded JSON string literals to JSONField
-* `BaseUserManager.make_random_password()`. Use `secrets` instead
-* `DEFAULT_FILE_STORAGE` and `STATICFILES_STORAGE`. Use `STORAGES["default"]` and `STORAGES["staticfiles"]` instead
-* Log out via GET, use POST instead
-* DeleteView now uses FormMixin to handle POST requests. Any custom deletion logic in delete() handlers should be moved to form_valid(), or a shared helper method, if required.
+
+- `pytz` in favor of standard `zoneinfo`
+- Database support for:
+  - MariaDB <= 10.3
+  - MySQL <= 5.7
+  - PostgreSQL <= 11
+- Support for `MemcachedCache` backend
+- `index_together` option in favor of `indexes`
+- Passing encoded JSON string literals to JSONField
+- `BaseUserManager.make_random_password()`. Use `secrets` instead
+- `DEFAULT_FILE_STORAGE` and `STATICFILES_STORAGE`. Use `STORAGES["default"]` and `STORAGES["staticfiles"]` instead
+- Log out via GET, use POST instead
+- DeleteView now uses FormMixin to handle POST requests. Any custom deletion logic in delete() handlers should be moved to form_valid(), or a shared helper method, if required.
 
 Future changes are:
-* Setting update_fields in Model.save() may now be required
+
+- Setting update_fields in Model.save() may now be required
 
 ### TypeScript and Vite
 
@@ -240,6 +284,6 @@ ln -s /usr/src/app/manage.py $(poetry env info --path)/bin/dj
 
 Or just recreate the container (as the symlink is included in the image).
 
-
 ## Further documentation
+
 Previous information found on this file can be now found in the `docs/` directory.
